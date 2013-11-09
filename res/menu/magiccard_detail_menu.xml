@@ -1,0 +1,13 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item
+        android:id="@+id/oracle_tab"
+        android:enabled="false"
+        android:showAsAction="always"
+        android:title="Oracle"/>
+    <item
+        android:id="@+id/pictures_tab"
+        android:showAsAction="always"
+        android:title="Pictures"/>
+
+</menu>

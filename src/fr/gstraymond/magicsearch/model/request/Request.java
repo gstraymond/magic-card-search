@@ -1,0 +1,60 @@
+package fr.gstraymond.magicsearch.model.request;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+import fr.gstraymond.biz.SearchOptions;
+import fr.gstraymond.constants.FacetConst;
+import fr.gstraymond.magicsearch.model.request.facet.Facet;
+
+public class Request {
+
+	private Query query;
+	private Integer from;
+	private Integer size;
+	private Map<String, Facet> facets;
+	private List<String> sort;
+
+	public Request(SearchOptions options) {
+		this.query = new Query(options);
+		this.from = options.getFrom();
+		this.size = options.getSize();
+		this.facets = FacetConst.getFacets();
+		// default sort
+		this.sort = new ArrayList<String>();
+		this.sort.add("_uid");
+	}
+
+	public Query getQuery() {
+		return query;
+	}
+
+	public void setQuery(Query query) {
+		this.query = query;
+	}
+
+	public Integer getFrom() {
+		return from;
+	}
+
+	public void setFrom(Integer from) {
+		this.from = from;
+	}
+
+	public Integer getSize() {
+		return size;
+	}
+
+	public void setSize(Integer size) {
+		this.size = size;
+	}
+
+	public Map<String, Facet> getFacets() {
+		return facets;
+	}
+
+	public List<String> getSort() {
+		return sort;
+	}
+}

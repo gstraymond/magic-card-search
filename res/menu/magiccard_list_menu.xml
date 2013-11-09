@@ -1,0 +1,18 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item
+        android:id="@+id/list_tab"
+        android:enabled="false"
+        android:showAsAction="always"
+        android:title="Cards"/>
+    <item
+        android:id="@+id/facet_tab"
+        android:showAsAction="always"
+        android:title="Facets"/>
+    <item
+        android:id="@+id/search_tab"
+        android:icon="@android:drawable/ic_menu_search"
+        android:showAsAction="always"
+        android:title="Search"/>
+
+</menu>
