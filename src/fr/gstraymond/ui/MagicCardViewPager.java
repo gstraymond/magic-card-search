@@ -6,10 +6,11 @@ import android.content.Context;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
 import android.widget.TextView;
+import fr.gstraymond.magicsearch.model.response.Publication;
 
 public class MagicCardViewPager extends ViewPager {
 
-	private List<String> publications;
+	private List<Publication> publications;
 	private TextView publicationTextView;
 	
 	public MagicCardViewPager(Context context) {
@@ -26,8 +27,8 @@ public class MagicCardViewPager extends ViewPager {
 		String itemIdDisplayed = (itemId + 1) + "";
 		if (! publicationTextView.getText().toString().startsWith(itemIdDisplayed)) {
 			int count = getAdapter().getCount();
-			String publication = publications.get(itemId);
-			String text = publication.split("\\|")[0];
+			Publication publication = publications.get(itemId);
+			String text = publication.getEdition() + " (" + publication.getRarity() + ")";
 			if (count > 1) {
 				text += " — " + itemIdDisplayed + "/" + count;
 			}
@@ -36,7 +37,7 @@ public class MagicCardViewPager extends ViewPager {
 		super.computeScroll();
 	}
 
-	public MagicCardViewPager setPublications(List<String> publications) {
+	public MagicCardViewPager setPublications(List<Publication> publications) {
 		this.publications = publications;
 		return this;
 	}

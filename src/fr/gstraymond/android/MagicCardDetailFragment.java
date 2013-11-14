@@ -1,6 +1,5 @@
 package fr.gstraymond.android;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import android.os.Bundle;
@@ -52,14 +51,12 @@ public class MagicCardDetailFragment extends Fragment {
 			TextView publicationTextView = (TextView) rootView.findViewById(R.id.publication);
 			TextView textView = (TextView) rootView.findViewById(R.id.magiccard_detail);
 			textView.setText(formatCard(card, textView));
-
-			List<String> publications = getCardPublications(card.getPublications());
 			
 			MagicCardViewPager viewPager = ((MagicCardViewPager) rootView.findViewById(R.id.pager))
-					.setPublications(publications)
+					.setPublications(card.getPublications())
 					.setPublicationTextView(publicationTextView);
 			MagicCardPagerAdapter pagerAdapter = new MagicCardPagerAdapter(getFragmentManager())
-				.setPublications(publications);
+				.setPublications(card.getPublications());
 			viewPager.setAdapter(pagerAdapter);
 		}
 
@@ -75,7 +72,7 @@ public class MagicCardDetailFragment extends Fragment {
 		String PT = card.getPower() != null ? "<p>" + card.getPower() + " / " + card.getToughness() + "</p>" : "";
 		String type = "<p>" + card.getType() + "</p>";
 		String description = descriptionFormatter.format(card.getDescription());
-		String publications = "";
+		String publications = getCardPublications(card.getPublications());
 		String html = title + frenchTitle + castingCost + PT + type + description + publications;
 
 		CustomApplication applicationContext = (CustomApplication) getActivity().getApplicationContext();
@@ -83,11 +80,16 @@ public class MagicCardDetailFragment extends Fragment {
 		return Html.fromHtml(html, new AssetLoader(castingCostAssetLoader), null);
 	}
 	
-	private List<String> getCardPublications(List<Publication> publications) {
-		final List<String> cardPictures = new ArrayList<String>();
+	private String getCardPublications(List<Publication> publications) {
+		final StringBuilder html = new StringBuilder("<p>");
 		for (Publication publication : publications) {
-			cardPictures.add(publication.getEdition() + "|" + publication.getImage());
+			html.append(" • ");
+			html.append(publication.getEdition());
+			html.append(" (");
+			html.append(publication.getRarity());
+			html.append(")");
+			html.append("<br />");
 		}
-		return cardPictures;
+		return html.append("</p>").toString();
 	}
 }
