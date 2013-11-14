@@ -34,9 +34,13 @@ public class MagicCardDetailActivity extends FragmentActivity {
 			getSupportFragmentManager().beginTransaction()
 					.add(R.id.magiccard_detail_container, fragment).commit();
 			
-			String frenchTitle = card.getFrenchTitle() != null ? " / " + card.getFrenchTitle() : "";
-			setTitle(card.getTitle() + frenchTitle);
+			setTitle(getFullTitle(card));
 		}
+	}
+	
+	private String getFullTitle(MagicCard card) {
+		String frenchTitle = card.getFrenchTitle() != null ? " / " + card.getFrenchTitle() : "";
+		return card.getTitle() + frenchTitle;
 	}
 
 	@Override

@@ -70,7 +70,7 @@ public class MagicCardDetailFragment extends Fragment {
 		String frenchTitle = card.getFrenchTitle() != null ? "<p>" + card.getFrenchTitle() + "</p>" : "";
 		String castingCost = card.getCastingCost() != null ? "<p>" + castingCostFormatter.format(card.getCastingCost()) + "</p>" : "";
 		String PT = card.getPower() != null ? "<p>" + card.getPower() + " / " + card.getToughness() + "</p>" : "";
-		String type = "<p>" + card.getType() + "</p>";
+		String type = "<p>" + formatType(card) + "</p>";
 		String description = descriptionFormatter.format(card.getDescription());
 		String publications = getCardPublications(card.getPublications());
 		String html = title + frenchTitle + castingCost + PT + type + description + publications;
@@ -78,6 +78,10 @@ public class MagicCardDetailFragment extends Fragment {
 		CustomApplication applicationContext = (CustomApplication) getActivity().getApplicationContext();
 		CastingCostAssetLoader castingCostAssetLoader = applicationContext.getCastingCostAssetLoader();
 		return Html.fromHtml(html, new AssetLoader(castingCostAssetLoader), null);
+	}
+	
+	private String formatType(MagicCard card) {
+		return card.getType().replaceAll("--", "—");
 	}
 	
 	private String getCardPublications(List<Publication> publications) {

@@ -13,7 +13,7 @@ public class DescriptionFormatter {
 	}
 	
 	public String format(String description) {
-		String tmpDescription = description;
+		String tmpDescription = description.replaceAll("--", "—");
 		if (description.contains("{")) {
 
 			Matcher matcher = pattern.matcher(description);

@@ -15,14 +15,10 @@ public class CustomApplication extends Application {
 	
 	private ElasticSearchClient elasticSearchClient;
 	private CastingCostAssetLoader castingCostAssetLoader;
-
-	@Override
-	public void onCreate() {
-		super.onCreate();
-
+	
+	public void init() {
 		this.elasticSearchClient = initElasticSearchClient();
-		this.castingCostAssetLoader = new CastingCostAssetLoader();
-		castingCostAssetLoader.init(this);
+		this.castingCostAssetLoader = initCastingCostAssetLoader();
 	}
 
 	private ElasticSearchClient initElasticSearchClient() {
@@ -34,8 +30,17 @@ public class CustomApplication extends Application {
 		}
 		return null;
 	}
+	
+	private CastingCostAssetLoader initCastingCostAssetLoader() {
+		CastingCostAssetLoader loader = new CastingCostAssetLoader();
+		loader.init(this);
+		return loader;
+	}
 
 	public ElasticSearchClient getElasticSearchClient() {
+		if (elasticSearchClient == null) {
+			initElasticSearchClient();
+		}
 		return elasticSearchClient;
 	}
 
@@ -45,6 +50,9 @@ public class CustomApplication extends Application {
 
 
 	public CastingCostAssetLoader getCastingCostAssetLoader() {
+		if (castingCostAssetLoader == null) {
+			initCastingCostAssetLoader();
+		}
 		return castingCostAssetLoader;
 	}
 
