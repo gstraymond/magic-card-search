@@ -53,7 +53,7 @@ public class ElasticSearchClient {
 			long now = System.currentTimeMillis();
 			HttpResponse response = httpClient.execute(getRequest);
 			Log.i(getClass().getName(), "\thttp client execute " + (System.currentTimeMillis() - now) + "ms");
-			progressBar.setProgress(66);
+			progressBar.setProgress(33);
 			return parse(response.getEntity().getContent(), progressBar);
 		} catch (ClientProtocolException e) {
 			Log.e(getClass().getName(), "process", e);
@@ -76,7 +76,7 @@ public class ElasticSearchClient {
 			Log.e(getClass().getName(), "parse", e);
 		} finally {
 			Log.i(getClass().getName(), "\tparse took " + (System.currentTimeMillis() - now) + "ms");
-			progressBar.setProgress(100);
+			progressBar.setProgress(66);
 		}
 		return searchResult;
 	}

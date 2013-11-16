@@ -42,10 +42,8 @@ public class SearchProcessor extends AsyncTask<String, Void, Boolean> {
 
 		disableSearch();
 		storeCurrentSearch(options);
-		
+
 		progressBar.setProgress(0);
-		progressBar.setVisibility(View.VISIBLE);
-		welcomeTextView.setVisibility(View.GONE);
 		this.options = options;
 	}
 
@@ -90,14 +88,12 @@ public class SearchProcessor extends AsyncTask<String, Void, Boolean> {
 	@Override
 	protected void onPostExecute(Boolean result) {
 		long now = System.currentTimeMillis();
-		progressBar.setProgress(33);
+		progressBar.setProgress(100);
 
 		updateUI();
 		enableSearch();
 		closeKeyboard();
 		
-		progressBar.setVisibility(View.GONE);
-		welcomeTextView.setVisibility(View.VISIBLE);
 		Log.i(getClass().getName(), "ui update took " + (System.currentTimeMillis() - now) + "ms");
 	}
 
