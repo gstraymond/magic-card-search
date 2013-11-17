@@ -1,6 +1,5 @@
 package fr.gstraymond.android;
 
-import android.app.ActionBar;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -17,28 +16,13 @@ import fr.gstraymond.biz.SearchProcessor;
 import fr.gstraymond.ui.EndScrollListener;
 import fr.gstraymond.ui.TextListener;
 
-/**
- * An activity representing a list of MagicCards. This activity has different
- * presentations for handset and tablet-size devices. On handsets, the activity
- * presents a list of items, which when touched, lead to a
- * {@link MagicCardDetailActivity} representing item details. On tablets, the
- * activity presents the list of items and item details side-by-side using two
- * vertical panes.
- * <p>
- * The activity makes heavy use of fragments. The list of items is a
- * {@link MagicCardListFragment} and the item details (if present) is a
- * {@link MagicCardDetailFragment}.
- * <p>
- * This activity also implements the required
- * {@link MagicCardListFragment.Callbacks} interface to listen for item
- * selections.
- */
 public class MagicCardListActivity extends FragmentActivity implements
 		MagicCardListFragment.Callbacks {
 	private boolean mTwoPane;
 
 	private TextListener textListener;
 	private EndScrollListener endScrollListener;
+	private SearchView searchView;
 	private Menu menu;
 
 	private SearchOptions currentSearch;
@@ -55,18 +39,8 @@ public class MagicCardListActivity extends FragmentActivity implements
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_magiccard_list);
 
-		final ActionBar actionBar = getActionBar();
-		actionBar.setDisplayShowTitleEnabled(true);
-
 		if (findViewById(R.id.magiccard_detail_container) != null) {
-			// The detail container view will be present only in the
-			// large-screen layouts (res/values-large and
-			// res/values-sw600dp). If this view is present, then the
-			// activity should be in two-pane mode.
 			mTwoPane = true;
-
-			// In two-pane mode, list items should be given the
-			// 'activated' state when touched.
 			((MagicCardListFragment) getSupportFragmentManager()
 					.findFragmentById(R.id.magiccard_list))
 					.setActivateOnItemClick(true);
@@ -112,11 +86,10 @@ public class MagicCardListActivity extends FragmentActivity implements
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.magiccard_list_menu, menu);
 
-		
-//		SearchViewCompat sv = (SearchViewCompat) SearchViewCompat.newSearchView(this);
-		SearchView sv = new SearchView(this);
-		sv.setOnQueryTextListener(textListener);
-		menu.findItem(R.id.search_tab).setActionView(sv);
+		searchView = new SearchView(this);
+		searchView.setOnQueryTextListener(textListener);
+		searchView.setQueryHint("black lotus, draw, sacrifice...");
+		menu.findItem(R.id.search_tab).setActionView(searchView);
 
 		return true;
 	}
@@ -126,20 +99,53 @@ public class MagicCardListActivity extends FragmentActivity implements
 		switch (item.getItemId()) {
 
 		case R.id.list_tab:
-			findViewById(R.id.facet_list).setVisibility(View.GONE);
-			findViewById(R.id.magiccard_list).setVisibility(View.VISIBLE);
-			item.setEnabled(false);
-			menu.findItem(R.id.facet_tab).setEnabled(true);
+			hide(getFacetView());
+			show(getCardView());
+			item.setVisible(false);
+			menu.findItem(R.id.facet_tab).setVisible(true);
 			return true;
 
 		case R.id.facet_tab:
-			findViewById(R.id.magiccard_list).setVisibility(View.GONE);
-			findViewById(R.id.facet_list).setVisibility(View.VISIBLE);
-			item.setEnabled(false);
-			menu.findItem(R.id.list_tab).setEnabled(true);
+			hide(getCardView());
+			show(getFacetView());
+			item.setVisible(false);
+			menu.findItem(R.id.list_tab).setVisible(true);
+			return true;
+
+		case R.id.clear_tab:
+			resetSearchView();
+			SearchOptions options = new SearchOptions().setQuery("*");
+			new SearchProcessor(this, options).execute();
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
+	}
+	
+	private void resetSearchView() {
+		// buggy
+        MenuItem menuItem = menu.findItem(R.id.search_tab);
+		menuItem.collapseActionView();
+		searchView.setIconified(true); 
+        menuItem.collapseActionView();
+		searchView.setIconified(true);
+        searchView.setQuery("", false);
+	}
+	
+	private void hide(View view) {
+		view.setVisibility(View.GONE);
+	}
+	
+	private void show(View view) {
+		view.setVisibility(View.VISIBLE);
+		Log.d(getClass().getName(), view.getId() + " isFocusable() " + getCardView().isFocusable());
+	}
+
+	public View getCardView() {
+		return findViewById(R.id.magiccard_list);
+	}
+
+	public View getFacetView() {
+		return findViewById(R.id.facet_list);
 	}
 
 	public TextListener getTextListener() {
@@ -164,5 +170,9 @@ public class MagicCardListActivity extends FragmentActivity implements
 
 	public void setCurrentSearch(SearchOptions currentSearch) {
 		this.currentSearch = currentSearch;
+	}
+
+	public SearchView getSearchView() {
+		return searchView;
 	}
 }

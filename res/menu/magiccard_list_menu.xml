@@ -2,17 +2,24 @@
 
     <item
         android:id="@+id/list_tab"
-        android:enabled="false"
-        android:showAsAction="always"
-        android:title="Cards"/>
+        android:visible="false"
+        android:showAsAction="never"
+        android:title="@string/list_menu_cards"/>
+    
     <item
         android:id="@+id/facet_tab"
-        android:showAsAction="always"
-        android:title="Facets"/>
+        android:showAsAction="never"
+        android:title="@string/list_menu_facets"/>
+    
+    <item
+        android:id="@+id/clear_tab"
+        android:showAsAction="never"
+        android:title="@string/list_menu_clear"/>
+    
     <item
         android:id="@+id/search_tab"
         android:icon="@android:drawable/ic_menu_search"
         android:showAsAction="always"
-        android:title="Search"/>
+        android:title="@string/list_menu_search"/>
 
 </menu>

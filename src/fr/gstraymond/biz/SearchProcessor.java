@@ -2,14 +2,12 @@ package fr.gstraymond.biz;
 
 import java.util.ArrayList;
 
-import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
@@ -92,17 +90,10 @@ public class SearchProcessor extends AsyncTask<String, Void, Boolean> {
 
 		updateUI();
 		enableSearch();
-		closeKeyboard();
+		// suppression du focus sur le search et fermeture du clavier
+		getActivity().getSearchView().clearFocus();
 		
 		Log.i(getClass().getName(), "ui update took " + (System.currentTimeMillis() - now) + "ms");
-	}
-
-	private void closeKeyboard() {
-		InputMethodManager inputManager = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
-		View currentFocus = activity.getCurrentFocus();
-		if (currentFocus != null) {
-			inputManager.hideSoftInputFromWindow(currentFocus.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
-		}
 	}
 
 	private void updateUI() {
