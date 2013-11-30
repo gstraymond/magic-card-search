@@ -14,15 +14,6 @@ import fr.gstraymond.magicsearch.model.response.MagicCard;
 import fr.gstraymond.ui.CastingCostAssetLoader;
 import fr.gstraymond.ui.MagicCardArrayAdapter;
 
-/**
- * A list fragment representing a list of MagicCards. This fragment also
- * supports tablet devices by allowing list items to be given an 'activated'
- * state upon selection. This helps indicate which item is currently being
- * viewed in a {@link MagicCardDetailFragment}.
- * <p>
- * Activities containing this fragment MUST implement the {@link Callbacks}
- * interface.
- */
 public class MagicCardListFragment extends ListFragment {
 
 	public static String CARDS = "cards";
@@ -35,12 +26,7 @@ public class MagicCardListFragment extends ListFragment {
 	private int mActivatedPosition = ListView.INVALID_POSITION;
 	private ArrayAdapter<MagicCard> arrayAdapter;
 
-	public interface Callbacks
-
-	/**
-	 * Mandatory empty constructor for the fragment manager to instantiate the
-	 * fragment (e.g. upon screen orientation changes).
-	 */ {
+	public interface Callbacks {
 		public void onItemSelected(Parcelable id);
 	}
 

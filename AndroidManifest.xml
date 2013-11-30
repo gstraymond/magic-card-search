@@ -16,11 +16,10 @@
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name" >
 
-        <!-- Splash screen -->
+        <!-- MAIN : Splash screen -->
         <activity
             android:name="fr.gstraymond.android.SplashScreen"
             android:label="@string/app_name"
-            android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Black.NoTitleBar" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -28,19 +27,25 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <!-- Card list -->
         <activity
             android:name="fr.gstraymond.android.MagicCardListActivity"
-            android:label="@string/app_name"
-            android:screenOrientation="portrait" >
+            android:label="@string/app_name" >
         </activity>
+
+        <!-- Card detail -->
         <activity
             android:name="fr.gstraymond.android.MagicCardDetailActivity"
             android:label="@string/title_magiccard_detail"
-            android:parentActivityName="fr.gstraymond.android.MagicCardListActivity"
-            android:screenOrientation="portrait" >
+            android:parentActivityName="fr.gstraymond.android.MagicCardListActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MagicCardListActivity" />
+        </activity>
+
+        <!-- Help -->
+        <activity android:name="fr.gstraymond.android.HelpActivity" >
         </activity>
     </application>
 

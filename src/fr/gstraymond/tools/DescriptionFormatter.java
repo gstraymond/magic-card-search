@@ -33,7 +33,7 @@ public class DescriptionFormatter {
 		
 		StringBuffer lines = new StringBuffer();
 		for (String line : tmpDescription.split("\n")) {
-			lines.append("<p>").append(line).append("</p>");
+			lines.append("<p>" + line + "</p>");
 		}
 		return lines.toString();
 	}

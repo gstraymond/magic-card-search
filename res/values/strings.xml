@@ -10,5 +10,7 @@
     <string name="list_menu_facets">Show facets</string>
     <string name="list_menu_clear">Clear search</string>
     <string name="list_menu_search">Search</string>
+    <string name="list_menu_help_en">Help !</string>
+    <string name="list_menu_help_fr">A l\'aide !</string>
 
 </resources>

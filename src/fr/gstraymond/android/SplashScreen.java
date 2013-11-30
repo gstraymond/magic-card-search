@@ -15,15 +15,11 @@ public class SplashScreen extends Activity {
 
 		new ApplicationLoader(this).execute();
 	}
-	
-	public void startNextActivity() {
-		// This method will be executed once the timer is over
-		// Start your app main activity
-		Intent i = new Intent(SplashScreen.this,
-				MagicCardListActivity.class);
-		startActivity(i);
 
-		// close this activity
+	public void startNextActivity() {
+		Intent intent = new Intent(this, MagicCardListActivity.class);
+		startActivity(intent);
+
 		finish();
 	}
 }

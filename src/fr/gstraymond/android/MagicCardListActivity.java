@@ -38,6 +38,14 @@ public class MagicCardListActivity extends FragmentActivity implements
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_magiccard_list);
+		
+		if (savedInstanceState != null) {
+			Parcelable savedSearch = savedInstanceState.getParcelable("currentSearch");
+			if (savedSearch != null) {
+				currentSearch = savedInstanceState.getParcelable("currentSearch");
+				Log.d(getClass().getName(), "Restored search : " + currentSearch);
+			}
+		}
 
 		if (findViewById(R.id.magiccard_detail_container) != null) {
 			mTwoPane = true;
@@ -52,8 +60,11 @@ public class MagicCardListActivity extends FragmentActivity implements
 	protected void onPostCreate(Bundle savedInstanceState) {
 		super.onPostCreate(savedInstanceState);
 		Log.i(getClass().getName(), "onPostCreate");
-		SearchOptions options = new SearchOptions().setQuery("*");
-		new SearchProcessor(this, options).execute();
+		
+		if (currentSearch == null) {
+			currentSearch = new SearchOptions().setQuery("*");
+		}
+		new SearchProcessor(this, currentSearch).execute();
 	}
 
 	/**
@@ -117,8 +128,24 @@ public class MagicCardListActivity extends FragmentActivity implements
 			SearchOptions options = new SearchOptions().setQuery("*");
 			new SearchProcessor(this, options).execute();
 			return true;
+
+		case R.id.help_en_tab:
+			startHelpActivity(HelpActivity.EN);
+			return true;
+
+		case R.id.help_fr_tab:
+			startHelpActivity(HelpActivity.FR);
+			return true;
 		}
+		
 		return super.onOptionsItemSelected(item);
+	}
+
+	private void startHelpActivity(String language) {
+		Intent intent = new Intent(this,
+				HelpActivity.class);
+		intent.putExtra(HelpActivity.LANGUAGE, language);
+		startActivity(intent);
 	}
 	
 	private void resetSearchView() {
@@ -137,7 +164,12 @@ public class MagicCardListActivity extends FragmentActivity implements
 	
 	private void show(View view) {
 		view.setVisibility(View.VISIBLE);
-		Log.d(getClass().getName(), view.getId() + " isFocusable() " + getCardView().isFocusable());
+	}
+
+	@Override
+	protected void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+		outState.putParcelable("currentSearch", currentSearch);
 	}
 
 	public View getCardView() {

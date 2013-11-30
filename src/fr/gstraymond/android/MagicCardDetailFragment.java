@@ -87,7 +87,7 @@ public class MagicCardDetailFragment extends Fragment {
 	private String getCardPublications(List<Publication> publications) {
 		final StringBuilder html = new StringBuilder("<p>");
 		for (Publication publication : publications) {
-			html.append(" • ");
+			html.append("\t\t\t●\t\t");
 			html.append(publication.getEdition());
 			html.append(" (");
 			html.append(publication.getRarity());

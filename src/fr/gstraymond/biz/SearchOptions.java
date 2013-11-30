@@ -5,16 +5,63 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.util.Log;
 
-public class SearchOptions {
+public class SearchOptions implements Parcelable {
 
 	private String query;
 	private boolean append = false;
 	private boolean random = false;
-	private Integer from = null;
-	private Integer size = 20;
+	private int from = 0;
+	private int size = 20;
 	private Map<String, List<String>> facets = new HashMap<String, List<String>>();
+
+
+	public static final Parcelable.Creator<SearchOptions> CREATOR = new Parcelable.Creator<SearchOptions>() {
+		@Override
+		public SearchOptions createFromParcel(Parcel source) {
+			return new SearchOptions(source);
+		}
+
+		@Override
+		public SearchOptions[] newArray(int size) {
+			return new SearchOptions[size];
+		}
+	};
+
+	public SearchOptions(Parcel source) {
+		query = source.readString();
+		append = source.readInt() == 0 ? true : false;
+		random = source.readInt() == 0 ? true : false;
+		from = source.readInt();
+		size = source.readInt();
+		// readMap
+	}
+
+	public SearchOptions() {
+	}
+
+	@Override
+	public int describeContents() {
+		return 0;
+	}
+
+	@Override
+	public void writeToParcel(Parcel dest, int flags) {
+		dest.writeString(query);
+		dest.writeInt(append ? 0 : 1);
+		dest.writeInt(random ? 0 : 1);
+		dest.writeInt(from);
+		dest.writeInt(size);
+		writeMap(dest);
+	}
+
+	private void writeMap(Parcel dest) {
+		// TODO Auto-generated method stub
+		
+	}
 
 	public String getQuery() {
 		return query;
