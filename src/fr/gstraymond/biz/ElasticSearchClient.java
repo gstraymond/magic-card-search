@@ -15,12 +15,9 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import android.util.Log;
 import android.widget.ProgressBar;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
 
 import fr.gstraymond.magicsearch.model.request.Request;
 import fr.gstraymond.magicsearch.model.response.SearchResult;
@@ -32,14 +29,11 @@ public class ElasticSearchClient {
 	private HttpClient httpClient;
 	private ObjectMapper objectMapper;
 	
-	public ElasticSearchClient(URL url) {
+	public ElasticSearchClient(URL url, ObjectMapper objectMapper) {
 		super();
 		this.url = url;
 		this.httpClient = new DefaultHttpClient();
-		this.objectMapper = new ObjectMapper()
-				.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
-				.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false)
-				.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+		this.objectMapper = objectMapper;
 	}
 
 	public SearchResult process(SearchOptions options, ProgressBar progressBar) {

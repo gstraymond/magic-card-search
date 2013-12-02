@@ -60,7 +60,7 @@ public class HelpActivity extends Activity {
 	}
 
 	private HelpText parse(InputStream inputStream) {
-		ObjectMapper objectMapper = new ObjectMapper();
+		ObjectMapper objectMapper = getObjectMapper();
 		try {
 			return objectMapper.readValue(inputStream, HelpText.class);
 		} catch (JsonParseException e) {
@@ -126,7 +126,7 @@ public class HelpActivity extends Activity {
 		}
 		StringBuilder builder = new StringBuilder("<p>");
 		for (String item : items) {
-			builder.append("\t\t\t●\t\t" + item + "<br />");
+			builder.append("\t\t●\t" + item + "<br />");
 		}
 		return builder.toString() + "</p>";
 	}
@@ -141,5 +141,13 @@ public class HelpActivity extends Activity {
 
 	private TextView getTextView() {
 		return (TextView) findViewById(R.id.help_text_view);
+	}
+
+	private CustomApplication getCustomApplication() {
+		return (CustomApplication) getApplicationContext();
+	}
+	
+	private ObjectMapper getObjectMapper() {
+		return getCustomApplication().getObjectMapper();
 	}
 }

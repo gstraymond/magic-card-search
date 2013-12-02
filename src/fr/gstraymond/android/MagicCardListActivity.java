@@ -10,14 +10,20 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.SearchView;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import fr.gstraymond.R;
 import fr.gstraymond.biz.SearchOptions;
 import fr.gstraymond.biz.SearchProcessor;
+import fr.gstraymond.biz.UIUpdater;
 import fr.gstraymond.ui.EndScrollListener;
 import fr.gstraymond.ui.TextListener;
 
 public class MagicCardListActivity extends FragmentActivity implements
 		MagicCardListFragment.Callbacks {
+	public static final String MAGIC_CARD_RESULT = "result";
+
 	private boolean mTwoPane;
 
 	private TextListener textListener;
@@ -59,12 +65,17 @@ public class MagicCardListActivity extends FragmentActivity implements
 	@Override
 	protected void onPostCreate(Bundle savedInstanceState) {
 		super.onPostCreate(savedInstanceState);
-		Log.i(getClass().getName(), "onPostCreate");
 		
 		if (currentSearch == null) {
 			currentSearch = new SearchOptions().setQuery("*");
 		}
-		new SearchProcessor(this, currentSearch).execute();
+		
+		String resultAsString = getIntent().getExtras().getString(MAGIC_CARD_RESULT);
+		if (resultAsString != null) {
+			new UIUpdater(this, resultAsString).execute();
+		} else {
+			new SearchProcessor(this, currentSearch).execute();	
+		}
 	}
 
 	/**
@@ -178,6 +189,14 @@ public class MagicCardListActivity extends FragmentActivity implements
 
 	public View getFacetView() {
 		return findViewById(R.id.facet_list);
+	}
+
+	private CustomApplication getCustomApplication() {
+		return (CustomApplication) getApplicationContext();
+	}
+	
+	public ObjectMapper getObjectMapper() {
+		return getCustomApplication().getObjectMapper();
 	}
 
 	public TextListener getTextListener() {

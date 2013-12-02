@@ -8,7 +8,6 @@ public class SearchResult {
 	
 	private int took;
 	private Hits hits;
-//	private Facets facets;
 	private Map<String, Facet> facets;
 	
 	public int getTook() {
@@ -26,14 +25,6 @@ public class SearchResult {
 	public void setHits(Hits hits) {
 		this.hits = hits;
 	}
-//	
-//	public Facets getFacets() {
-//		return facets;
-//	}
-//	
-//	public void setFacets(Facets facets) {
-//		this.facets = facets;
-//	}
 
 	public Map<String, Facet> getFacets() {
 		return facets;
