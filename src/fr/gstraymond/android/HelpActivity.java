@@ -10,6 +10,7 @@ import android.text.Html;
 import android.text.Spanned;
 import android.text.method.LinkMovementMethod;
 import android.util.Log;
+import android.view.MenuItem;
 import android.widget.TextView;
 
 import com.fasterxml.jackson.core.JsonParseException;
@@ -17,6 +18,7 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import fr.gstraymond.R;
+import fr.gstraymond.biz.AssetLoader;
 import fr.gstraymond.magicsearch.help.HelpText;
 
 public class HelpActivity extends Activity {
@@ -29,18 +31,23 @@ public class HelpActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_help);
+		
+		AssetLoader assetLoader = new AssetLoader(getCustomApplication().getCastingCostAssetLoader());
 
 		String language = EN;
 		if (getIntent().getExtras() != null) {
 			language = getIntent().getExtras().getString(LANGUAGE);
 		}
 		HelpText helpText = getHelpText(language);
-		Spanned text = format(helpText);
+		Spanned text = format(helpText, assetLoader);
 
 		TextView view = getTextView();
 		view.setText(text);
-		// rends les liens cliquavles + scroll
+		// rends les liens cliquables + scroll
 		view.setMovementMethod(LinkMovementMethod.getInstance());
+
+		// Show the Up button in the action bar.
+		getActionBar().setDisplayHomeAsUpEnabled(true);
 
 		setActivityTitle(language);
 	}
@@ -73,10 +80,10 @@ public class HelpActivity extends Activity {
 		return null;
 	}
 
-	private Spanned format(HelpText helpText) {
+	private Spanned format(HelpText helpText, AssetLoader assetLoader) {
 		StringBuilder html = new StringBuilder();
 		recursiveFormat(html, helpText, 1, "");
-		return Html.fromHtml(html.toString(), null, null);
+		return Html.fromHtml(html.toString(), assetLoader, null);
 	}
 
 	private void recursiveFormat(StringBuilder html, HelpText helpText,
@@ -137,6 +144,16 @@ public class HelpActivity extends Activity {
 		} else {
 			setTitle(getString(R.string.list_menu_help_fr));
 		}
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case android.R.id.home:
+			finish();
+			return true;
+		}
+		return super.onOptionsItemSelected(item);
 	}
 
 	private TextView getTextView() {

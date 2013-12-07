@@ -94,8 +94,7 @@ public class MagicCardListActivity extends FragmentActivity implements
 					.commit();
 
 		} else {
-			Intent detailIntent = new Intent(this,
-					MagicCardDetailActivity.class);
+			Intent detailIntent = new Intent(this, MagicCardDetailActivity.class);
 			detailIntent.putExtra(MagicCardDetailFragment.MAGIC_CARD, item);
 			startActivity(detailIntent);
 		}
@@ -153,8 +152,7 @@ public class MagicCardListActivity extends FragmentActivity implements
 	}
 
 	private void startHelpActivity(String language) {
-		Intent intent = new Intent(this,
-				HelpActivity.class);
+		Intent intent = new Intent(this, HelpActivity.class);
 		intent.putExtra(HelpActivity.LANGUAGE, language);
 		startActivity(intent);
 	}

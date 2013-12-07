@@ -18,7 +18,7 @@ import fr.gstraymond.tools.CastingCostFormatter;
 
 public class MagicCardArrayAdapter extends ArrayAdapter<MagicCard> {
 
-	private CastingCostAssetLoader castingCostAssetLoader;
+	private AssetLoader assetLoader;
 	private CastingCostFormatter castingCostFormatter;
 
 	public MagicCardArrayAdapter(Context context, int resource,
@@ -26,7 +26,7 @@ public class MagicCardArrayAdapter extends ArrayAdapter<MagicCard> {
 			CastingCostAssetLoader castingCostAssetLoader) {
 		
 		super(context, resource, textViewResourceId, objects);
-		this.castingCostAssetLoader = castingCostAssetLoader;
+		this.assetLoader = new AssetLoader(castingCostAssetLoader);
 		this.castingCostFormatter = new CastingCostFormatter();
 	}
 
@@ -58,7 +58,6 @@ public class MagicCardArrayAdapter extends ArrayAdapter<MagicCard> {
 
 		String line = (position + 1) + ". " + cc + " " + card.getTitle();
 
-		return Html.fromHtml(line, new AssetLoader(
-				castingCostAssetLoader), null);
+		return Html.fromHtml(line, assetLoader, null);
 	}
 }

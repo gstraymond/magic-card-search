@@ -4,7 +4,7 @@
         "Welcome on this card search engine for Magic : The Gathering.",
         "This is mobile version of <a href=\"http://magic-card-search.com\">magic-card-search.com</a>.",
         "This search engine contains all card until the last extension Theros.",
-        "Ih has been made for simple and powerful search thanks to :"
+        "It has been made for simple and powerful search thanks to :"
     ],
     "items": [
         "text search",
@@ -60,23 +60,23 @@
                             "items": [
                                 "White / Blue / Black / Red / Green : filter based on color",
                                 "Uncolored / Gold / 1 color / ... / 5 colors : filter based on colors number",
-                                "Guild : relates to symbols __TODO__",
-                                "X : relates to symbol __TODO__",
-                                "Life : relates to symbols __TODO__"
+                                "Guild : relates to symbols <img src='WU.jpeg'> <img src='RW.jpeg'> <img src='UB.jpeg'> <img src='BG.jpeg'> <img src='RG.jpeg'> <img src='UR.jpeg'> <img src='WB.jpeg'> <img src='BR.jpeg'> <img src='GW.jpeg'>",
+                                "X : relates to symbol <img src='X.jpeg'>",
+                                "Life : relates to symbols <img src='WP.jpeg'> <img src='UP.jpeg'> <img src='BP.jpeg'> <img src='GP.jpeg'> <img src='RP.jpeg'>"
                             ]
                         },
                         {
                             "title": "Devotion",
                             "descriptions": [
                                 "Filters search results based on devotion value. Devotion for a card color is calculated on number of mana symbol in casting cost.",
-                                "For instance, Abhorrent Overlord has 2 in devotion for black : __TODO__"
+                                "For instance, Abhorrent Overlord has 2 in devotion for black : <img src='5.jpeg'><img src='B.jpeg'><img src='B.jpeg'>"
                             ]
                         },
                         {
                             "title": "Converted mana cost (CMC)",
                             "descriptions": [
                                 "Filters seach results based on CMC : card casting cost mana sum.",
-                                "For instance, Abhorrent Overlord has 7 for CMC : __TODO__"
+                                "For instance, Abhorrent Overlord has 7 for CMC : <img src='5.jpeg'><img src='B.jpeg'><img src='B.jpeg'>"
                             ]
                         },
                         {
@@ -151,7 +151,7 @@
                                 "mythic",
                                 "special : promo cards, magazine gifts, builded decks",
                                 "land : basic land",
-                                "c1 / c2 / ... / r3 / : old classification (Legends set, The Dark set...)"
+                                "c1 / c2 / ... / r3 : old classification (Legends set, The Dark set...)"
                             ]
                         },
                         {

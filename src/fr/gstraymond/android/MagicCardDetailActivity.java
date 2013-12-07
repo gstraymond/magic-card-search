@@ -12,6 +12,7 @@ import fr.gstraymond.magicsearch.model.response.MagicCard;
 
 public class MagicCardDetailActivity extends FragmentActivity {
 
+	private static final String MAGIC_CARD = "magicCard";
 	private Menu menu;
 	private MagicCard magicCard;
 
@@ -21,13 +22,12 @@ public class MagicCardDetailActivity extends FragmentActivity {
 		setContentView(R.layout.activity_magiccard_detail);
 
 		if (savedInstanceState != null) {
-			Parcelable savedCard = savedInstanceState.getParcelable("magicCard");
+			Parcelable savedCard = savedInstanceState.getParcelable(MAGIC_CARD);
 			if (savedCard != null) {
-				magicCard = savedInstanceState.getParcelable("magicCard");
+				magicCard = savedInstanceState.getParcelable(MAGIC_CARD);
 			}
 		} else {
-			magicCard = getIntent().getParcelableExtra(
-					MagicCardDetailFragment.MAGIC_CARD);
+			magicCard = getIntent().getParcelableExtra(MagicCardDetailFragment.MAGIC_CARD);
 		}
 
 		// Show the Up button in the action bar.
@@ -86,6 +86,6 @@ public class MagicCardDetailActivity extends FragmentActivity {
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
-		outState.putParcelable("magicCard", magicCard);
+		outState.putParcelable(MAGIC_CARD, magicCard);
 	}
 }
