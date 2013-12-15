@@ -31,8 +31,8 @@ public class MagicCardArrayAdapter extends ArrayAdapter<MagicCard> {
 	}
 
 	@Override
-	public View getView(int position, View convertView, ViewGroup parent) {
-		TextView text = (TextView) convertView;
+	public View getView(int position, View view, ViewGroup parent) {
+		TextView text = (TextView) view;
 
 		if (text == null) {
 			text = new TextView(getContext());
@@ -51,12 +51,12 @@ public class MagicCardArrayAdapter extends ArrayAdapter<MagicCard> {
 
 	private Spanned formatCard(MagicCard card, int position) {
 
-		String cc = "";
+		String castingCost = "";
 		if (card.getCastingCost() != null) {
-			cc = castingCostFormatter.format(card.getCastingCost());
+			castingCost = castingCostFormatter.format(card.getCastingCost());
 		}
 
-		String line = (position + 1) + ". " + cc + " " + card.getTitle();
+		String line = (position + 1) + ". " + castingCost + " " + card.getTitle();
 
 		return Html.fromHtml(line, assetLoader, null);
 	}

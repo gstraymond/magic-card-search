@@ -10,6 +10,7 @@ import android.support.v4.app.ListFragment;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import fr.gstraymond.R;
 import fr.gstraymond.magicsearch.model.response.MagicCard;
 import fr.gstraymond.ui.CastingCostAssetLoader;
 import fr.gstraymond.ui.MagicCardArrayAdapter;
@@ -20,6 +21,7 @@ public class MagicCardListFragment extends ListFragment {
 	public static String TOTAL_CARD_COUNT = "totalCardCount";
 	private List<MagicCard> cards; 
 	private int totalCardCount;
+	private boolean twoPaneMode;
 
 	private static final String STATE_ACTIVATED_POSITION = "activated_position";
 	private Callbacks mCallbacks = sDummyCallbacks;
@@ -46,11 +48,16 @@ public class MagicCardListFragment extends ListFragment {
 		if (getArguments() != null && getArguments().getParcelableArrayList(CARDS) != null) {
 			cards = getArguments().getParcelableArrayList(CARDS);
 			
-			if (getArguments().getInt	(TOTAL_CARD_COUNT) != 0) {
+			if (getArguments().getInt(TOTAL_CARD_COUNT) != 0) {
 				totalCardCount = getArguments().getInt(TOTAL_CARD_COUNT);
 			}
 		} else {
 			cards = new ArrayList<MagicCard>();
+		}
+
+
+		if (getActivity().findViewById(R.id.magiccard_detail_container) != null) {
+			twoPaneMode = true;
 		}
 
 		CustomApplication applicationContext = (CustomApplication) getActivity().getApplicationContext();
@@ -152,5 +159,17 @@ public class MagicCardListFragment extends ListFragment {
 
 	public int getTotalCardCount() {
 		return totalCardCount;
+	}
+
+	@Override
+	public void onActivityCreated(Bundle savedInstanceState) {
+		super.onActivityCreated(savedInstanceState);
+		
+		// select the first element
+		if (twoPaneMode && getListAdapter().getCount() > 0) {
+			long itemId = getListAdapter().getItemId(0);
+			View view = getListAdapter().getView(0, null, null);
+			getListView().performItemClick(view, 0, itemId);	
+		}
 	}
 }

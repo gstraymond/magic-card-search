@@ -22,8 +22,8 @@
         android:id="@+id/progress_bar"
         style="@android:style/Widget.Holo.ProgressBar.Horizontal"
         android:layout_width="match_parent"
-        android:progress="100"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:progress="100" />
     <!--
     <fragment
         android:id="@+id/magiccard_list"

@@ -60,15 +60,15 @@ public class MagicCardDetailActivity extends FragmentActivity {
 		case R.id.oracle_tab:
 			findViewById(R.id.pictures_layout).setVisibility(View.GONE);
 			findViewById(R.id.magiccard_detail).setVisibility(View.VISIBLE);
-			item.setEnabled(false);
-			menu.findItem(R.id.pictures_tab).setEnabled(true);
+			item.setVisible(false);
+			menu.findItem(R.id.pictures_tab).setVisible(true);
 			return true;
 
 		case R.id.pictures_tab:
 			findViewById(R.id.magiccard_detail).setVisibility(View.GONE);
 			findViewById(R.id.pictures_layout).setVisibility(View.VISIBLE);
-			item.setEnabled(false);
-			menu.findItem(R.id.oracle_tab).setEnabled(true);
+			item.setVisible(false);
+			menu.findItem(R.id.oracle_tab).setVisible(true);
 			return true;
 		}
 		return super.onOptionsItemSelected(item);

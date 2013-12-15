@@ -3,6 +3,7 @@ package fr.gstraymond.android;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -24,7 +25,7 @@ public class MagicCardListActivity extends FragmentActivity implements
 		MagicCardListFragment.Callbacks {
 	public static final String MAGIC_CARD_RESULT = "result";
 
-	private boolean mTwoPane;
+	private boolean twoPaneMode;
 
 	private TextListener textListener;
 	private EndScrollListener endScrollListener;
@@ -54,10 +55,9 @@ public class MagicCardListActivity extends FragmentActivity implements
 		}
 
 		if (findViewById(R.id.magiccard_detail_container) != null) {
-			mTwoPane = true;
-			((MagicCardListFragment) getSupportFragmentManager()
-					.findFragmentById(R.id.magiccard_list))
-					.setActivateOnItemClick(true);
+			twoPaneMode = true;
+			Fragment listFragment = getSupportFragmentManager().findFragmentById(R.id.magiccard_list);
+			((MagicCardListFragment) listFragment).setActivateOnItemClick(true);
 		}
 
 	}
@@ -84,7 +84,7 @@ public class MagicCardListActivity extends FragmentActivity implements
 	 */
 	@Override
 	public void onItemSelected(Parcelable item) {
-		if (mTwoPane) {
+		if (twoPaneMode) {
 			Bundle arguments = new Bundle();
 			arguments.putParcelable(MagicCardDetailFragment.MAGIC_CARD, item);
 			MagicCardDetailFragment fragment = new MagicCardDetailFragment();
@@ -105,7 +105,12 @@ public class MagicCardListActivity extends FragmentActivity implements
 		this.menu = menu;
 
 		MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.menu.magiccard_list_menu, menu);
+		
+		if (twoPaneMode) {
+			inflater.inflate(R.menu.magiccard_twopane_menu, menu);
+		} else {
+			inflater.inflate(R.menu.magiccard_list_menu, menu);
+		}
 
 		searchView = new SearchView(this);
 		searchView.setOnQueryTextListener(textListener);
@@ -137,6 +142,20 @@ public class MagicCardListActivity extends FragmentActivity implements
 			resetSearchView();
 			SearchOptions options = new SearchOptions().setQuery("*");
 			new SearchProcessor(this, options).execute();
+			return true;
+
+		case R.id.oracle_tab:
+			hide(getPicturesView());
+			show(getDetailView());
+			item.setVisible(false);
+			menu.findItem(R.id.pictures_tab).setVisible(true);
+			return true;
+
+		case R.id.pictures_tab:
+			hide(getDetailView());
+			show(getPicturesView());
+			item.setVisible(false);
+			menu.findItem(R.id.oracle_tab).setVisible(true);
 			return true;
 
 		case R.id.help_en_tab:
@@ -187,6 +206,14 @@ public class MagicCardListActivity extends FragmentActivity implements
 
 	public View getFacetView() {
 		return findViewById(R.id.facet_list);
+	}
+
+	public View getPicturesView() {
+		return findViewById(R.id.pictures_layout);
+	}
+
+	public View getDetailView() {
+		return findViewById(R.id.magiccard_detail);
 	}
 
 	private CustomApplication getCustomApplication() {

@@ -2,12 +2,12 @@
 
     <item
         android:id="@+id/oracle_tab"
-        android:enabled="false"
+        android:visible="false"
         android:showAsAction="always"
-        android:title="Oracle"/>
+        android:title="@string/detail_menu_oracle"/>
     <item
         android:id="@+id/pictures_tab"
         android:showAsAction="always"
-        android:title="Pictures"/>
+        android:title="@string/detail_menu_pictures"/>
 
 </menu>
