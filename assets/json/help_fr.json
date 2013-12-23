@@ -61,23 +61,23 @@
                             "items": [
                                 "White / Blue / Black / Red / Green : filtre suivant la couleur",
                                 "Uncolored / Gold / 1 color / ... / 5 colors : filtre suivant le nombre de couleur",
-                                "Guild : correspond aux symboles <img src='WU.jpeg'> <img src='RW.jpeg'> <img src='UB.jpeg'> <img src='BG.jpeg'> <img src='RG.jpeg'> <img src='UR.jpeg'> <img src='WB.jpeg'> <img src='BR.jpeg'> <img src='GW.jpeg'>",
-                                "X : correspond au symbole <img src='X.jpeg'>",
-                                "Life : correspond aux symboles <img src='WP.jpeg'> <img src='UP.jpeg'> <img src='BP.jpeg'> <img src='GP.jpeg'> <img src='RP.jpeg'>"
+                                "Guild : correspond aux symboles <img src='WU.png'> <img src='RW.png'> <img src='UB.png'> <img src='BG.png'> <img src='RG.png'> <img src='UR.png'> <img src='WB.png'> <img src='BR.png'> <img src='GW.png'>",
+                                "X : correspond au symbole <img src='X.png'>",
+                                "Life : correspond aux symboles <img src='WP.png'> <img src='UP.png'> <img src='BP.png'> <img src='GP.png'> <img src='RP.png'>"
                             ]
                         },
                         {
                             "title": "Devotion — Dévotion",
                             "descriptions": [
                                 "Filtre les permanents selon leur valeur en dévotion. La dévotion d'une couleur correspond au nombre de symbole de cette couleur dans le coût d'invocation de la carte.",
-                                "Par exemple, Suzerain abject a une dévotion de 2 en noir : <img src='5.jpeg'><img src='B.jpeg'><img src='B.jpeg'>"
+                                "Par exemple, Suzerain abject a une dévotion de 2 en noir : <img src='5.png'><img src='B.png'><img src='B.png'>"
                             ]
                         },
                         {
                             "title": "Converted mana cost — Coût converti de mana (CMC)",
                             "descriptions": [
                                 "Filtre les cartes suivant leurs CMC : total de mana correspondant au coût de lancement d'un sort.",
-                                "Par exemple, Suzerain abject a un CMC de 7 : <img src='5.jpeg'><img src='B.jpeg'><img src='B.jpeg'>"
+                                "Par exemple, Suzerain abject a un CMC de 7 : <img src='5.png'><img src='B.png'><img src='B.png'>"
                             ]
                         },
                         {

@@ -28,7 +28,7 @@ public class CastingCostFormatter {
 			tempCost = cost.replace("/", "");
 		}
 
-		return "<img src='" + tempCost + ".jpeg' />";
+		return "<img src='" + tempCost + ".png' />";
 	}
 
 }

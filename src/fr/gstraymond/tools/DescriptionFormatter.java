@@ -58,7 +58,7 @@ public class DescriptionFormatter {
 	}
 
 	private String formatManaSymbol(String tempCost) {
-		return "<img src='" + tempCost + ".jpeg' />";
+		return "<img src='" + tempCost + ".png' />";
 	}
 
 }
