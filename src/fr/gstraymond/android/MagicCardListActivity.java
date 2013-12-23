@@ -92,6 +92,10 @@ public class MagicCardListActivity extends FragmentActivity implements
 			getSupportFragmentManager().beginTransaction()
 					.replace(R.id.magiccard_detail_container, fragment)
 					.commit();
+			
+			// reset card menu items
+			menu.findItem(R.id.pictures_tab).setVisible(true);
+			menu.findItem(R.id.oracle_tab).setVisible(false);
 
 		} else {
 			Intent detailIntent = new Intent(this, MagicCardDetailActivity.class);

@@ -2,11 +2,13 @@
 
     <item
         android:id="@+id/oracle_tab"
-        android:visible="false"
+        android:icon="@drawable/text_letter"
         android:showAsAction="always"
-        android:title="@string/detail_menu_oracle"/>
+        android:title="@string/detail_menu_oracle"
+        android:visible="false"/>
     <item
         android:id="@+id/pictures_tab"
+        android:icon="@drawable/picture"
         android:showAsAction="always"
         android:title="@string/detail_menu_pictures"/>
 

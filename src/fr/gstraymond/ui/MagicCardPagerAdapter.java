@@ -4,11 +4,11 @@ import java.util.List;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
 import android.util.Log;
 import fr.gstraymond.magicsearch.model.response.Publication;
 
-public class MagicCardPagerAdapter extends FragmentPagerAdapter {
+public class MagicCardPagerAdapter extends FragmentStatePagerAdapter {
 	
 	private List<Publication> publications;
 

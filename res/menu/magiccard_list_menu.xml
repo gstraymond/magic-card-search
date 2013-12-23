@@ -7,24 +7,29 @@
         android:title="@string/list_menu_search"/>
     <item
         android:id="@+id/list_tab"
-        android:showAsAction="never"
+        android:icon="@drawable/list_num"
+        android:showAsAction="ifRoom"
         android:title="@string/list_menu_cards"
         android:visible="false"/>
     <item
         android:id="@+id/facet_tab"
-        android:showAsAction="never"
+        android:icon="@drawable/list_bullets"
+        android:showAsAction="ifRoom"
         android:title="@string/list_menu_facets"/>
     <item
         android:id="@+id/clear_tab"
-        android:showAsAction="never"
+        android:icon="@drawable/delete"
+        android:showAsAction="ifRoom"
         android:title="@string/list_menu_clear"/>
     <item
         android:id="@+id/help_en_tab"
-        android:showAsAction="never"
+        android:icon="@drawable/info"
+        android:showAsAction="ifRoom"
         android:title="@string/list_menu_help_en"/>
     <item
         android:id="@+id/help_fr_tab"
-        android:showAsAction="never"
+        android:icon="@drawable/info"
+        android:showAsAction="ifRoom"
         android:title="@string/list_menu_help_fr"/>
 
 </menu>
