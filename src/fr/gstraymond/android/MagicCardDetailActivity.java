@@ -9,6 +9,7 @@ import android.view.MenuItem;
 import android.view.View;
 import fr.gstraymond.R;
 import fr.gstraymond.magicsearch.model.response.MagicCard;
+import fr.gstraymond.tools.LanguageUtil;
 
 public class MagicCardDetailActivity extends FragmentActivity {
 
@@ -45,9 +46,11 @@ public class MagicCardDetailActivity extends FragmentActivity {
 	}
 
 	private String getFullTitle(MagicCard card) {
-		String frenchTitle = card.getFrenchTitle() != null ? " / "
-				+ card.getFrenchTitle() : "";
-		return card.getTitle() + frenchTitle;
+		if (LanguageUtil.showFrench(this) && card.getFrenchTitle() != null) {
+			return card.getFrenchTitle();
+		}
+		
+		return card.getTitle();
 	}
 
 	@Override

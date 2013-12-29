@@ -2,18 +2,30 @@
 <resources>
 
     <string name="app_name">Magic Card Search</string>
-    <string name="title_magiccard_detail">MagicCard Detail</string>
-    <string name="welcome_text">Welcome to Magic Card Search</string>
+    <string name="welcome_text"></string>
+    <string name="progress_card_found">card found</string>
+    <string name="progress_cards_found">cards found</string>
     <string name="website_url">magic-card-search.com</string>
     <string name="logo">logo</string>
     <string name="list_menu_cards">Show card list</string>
-    <string name="list_menu_facets">Show facets</string>
+    <string name="list_menu_facets">Show filters</string>
     <string name="list_menu_clear">Clear search</string>
     <string name="list_menu_search">Search</string>
-    <string name="list_menu_help_en">Help !</string>
-    <string name="list_menu_help_fr">A l\'aide !</string>
+    <string name="list_menu_help">Help !</string>
     <string name="detail_menu_oracle">Oracle</string>
     <string name="detail_menu_pictures">Pictures</string>
+    
+    <string name="facet_ability">Ability</string>
+    <string name="facet_artist">Artist</string>
+    <string name="facet_color">Color</string>
+    <string name="facet_cmc">Converted Mana Cost</string>
+    <string name="facet_devotion">Devotion</string>
+    <string name="facet_format">Format</string>
+    <string name="facet_power">Power</string>
+    <string name="facet_rarity">Rarity</string>
+    <string name="facet_set">Set</string>
+    <string name="facet_toughness">Toughness</string>
+    <string name="facet_type">Type</string>
 
 	<string name="mode">smartphone</string>
 </resources>

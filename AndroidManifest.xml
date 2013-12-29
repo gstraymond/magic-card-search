@@ -47,7 +47,6 @@
         <activity
             android:name="fr.gstraymond.android.MagicCardDetailActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
-            android:label="@string/title_magiccard_detail"
             android:parentActivityName="fr.gstraymond.android.MagicCardListActivity"
             android:screenOrientation="portrait" >
             <meta-data
@@ -57,7 +56,6 @@
         <activity
             android:name="fr.gstraymond.android.tablet.MagicCardDetailActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
-            android:label="@string/title_magiccard_detail"
             android:parentActivityName="fr.gstraymond.android.MagicCardListActivity"
             android:screenOrientation="landscape" >
             <meta-data
@@ -69,11 +67,13 @@
         <activity
             android:name="fr.gstraymond.android.HelpActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
+            android:label="@string/list_menu_help"
             android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name="fr.gstraymond.android.tablet.HelpActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
+            android:label="@string/list_menu_help"
             android:screenOrientation="landscape" >
         </activity>
     </application>

@@ -15,11 +15,13 @@ import fr.gstraymond.R;
 import fr.gstraymond.biz.AssetLoader;
 import fr.gstraymond.magicsearch.model.response.MagicCard;
 import fr.gstraymond.tools.CastingCostFormatter;
+import fr.gstraymond.tools.LanguageUtil;
 
 public class MagicCardArrayAdapter extends ArrayAdapter<MagicCard> {
 
 	private AssetLoader assetLoader;
 	private CastingCostFormatter castingCostFormatter;
+	private boolean showFrenchTitle;
 
 	public MagicCardArrayAdapter(Context context, int resource,
 			int textViewResourceId, List<MagicCard> objects,
@@ -28,6 +30,7 @@ public class MagicCardArrayAdapter extends ArrayAdapter<MagicCard> {
 		super(context, resource, textViewResourceId, objects);
 		this.assetLoader = new AssetLoader(castingCostAssetLoader);
 		this.castingCostFormatter = new CastingCostFormatter();
+		this.showFrenchTitle = LanguageUtil.showFrench(context);
 	}
 
 	@Override
@@ -56,8 +59,15 @@ public class MagicCardArrayAdapter extends ArrayAdapter<MagicCard> {
 			castingCost = castingCostFormatter.format(card.getCastingCost());
 		}
 
-		String line = (position + 1) + ". " + castingCost + " " + card.getTitle();
+		String line = (position + 1) + ". " + castingCost + " " + getTitle(card);
 
 		return Html.fromHtml(line, assetLoader, null);
+	}
+	
+	private String getTitle(MagicCard card) {
+		if (showFrenchTitle && card.getFrenchTitle() != null) {
+			return card.getFrenchTitle();
+		}
+		return card.getTitle();
 	}
 }

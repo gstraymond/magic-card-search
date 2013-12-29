@@ -33,14 +33,9 @@
         android:showAsAction="ifRoom"
         android:title="@string/list_menu_clear"/>
     <item
-        android:id="@+id/help_en_tab"
+        android:id="@+id/help_tab"
         android:showAsAction="ifRoom"
         android:icon="@drawable/info"
-        android:title="@string/list_menu_help_en"/>
-    <item
-        android:id="@+id/help_fr_tab"
-        android:showAsAction="ifRoom"
-        android:icon="@drawable/info"
-        android:title="@string/list_menu_help_fr"/>
+        android:title="@string/list_menu_help"/>
 
 </menu>

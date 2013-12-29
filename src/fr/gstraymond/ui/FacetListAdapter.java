@@ -22,6 +22,7 @@ import fr.gstraymond.magicsearch.model.response.facet.Term;
 
 public class FacetListAdapter extends BaseAdapter {
 
+	private static final int HOLO_BLUE = Color.rgb(51, 181, 229);
 	private List<Term> terms;
 	private Map<String, Facet> facets;
 	private List<Term> selectedTerms;
@@ -96,19 +97,19 @@ public class FacetListAdapter extends BaseAdapter {
 	}
 
 	@Override
-	public View getView(int position, View convertView, ViewGroup parent) {
+	public View getView(int position, View view, ViewGroup parent) {
 		TextView textView = new TextView(parent.getContext());
 		textView.setGravity(Gravity.CENTER);
 		Term term = terms.get(position);
 		
 		if (term.getCount() == -1) {
-			textView.setBackgroundColor(Color.GRAY);
+			textView.setBackgroundColor(Color.WHITE);
 			textView.setTextAppearance(parent.getContext(), TextAppearance_DeviceDefault_Large_Inverse);
-			String text = FacetConst.getFacetName(term.getTerm());
+			String text = FacetConst.getFacetName(term.getTerm(), parent.getContext());
 			textView.setText(text);
 		} else {
 			if (selectedTerms.contains(term)) {
-				textView.setBackgroundColor(Color.GRAY);
+				textView.setBackgroundColor(HOLO_BLUE);
 				textView.setTextAppearance(parent.getContext(), TextAppearance_DeviceDefault_Medium_Inverse);
 			} else {
 				textView.setTextAppearance(parent.getContext(), TextAppearance_DeviceDefault_Medium);

@@ -16,6 +16,7 @@ import fr.gstraymond.magicsearch.model.response.MagicCard;
 import fr.gstraymond.magicsearch.model.response.Publication;
 import fr.gstraymond.tools.CastingCostFormatter;
 import fr.gstraymond.tools.DescriptionFormatter;
+import fr.gstraymond.tools.LanguageUtil;
 import fr.gstraymond.ui.CastingCostAssetLoader;
 import fr.gstraymond.ui.MagicCardPagerAdapter;
 import fr.gstraymond.ui.MagicCardViewPager;
@@ -66,18 +67,24 @@ public class MagicCardDetailFragment extends Fragment {
 	private Spanned formatCard(MagicCard card, final TextView textView) {
 		DescriptionFormatter descriptionFormatter = new DescriptionFormatter();
 		
-		String title = "<p>" + card.getTitle() + "</p>";
-		String frenchTitle = card.getFrenchTitle() != null ? "<p>" + card.getFrenchTitle() + "</p>" : "";
 		String castingCost = card.getCastingCost() != null ? "<p>" + castingCostFormatter.format(card.getCastingCost()) + "</p>" : "";
 		String PT = card.getPower() != null ? "<p>" + card.getPower() + " / " + card.getToughness() + "</p>" : "";
 		String type = "<p>" + formatType(card) + "</p>";
 		String description = descriptionFormatter.format(card.getDescription());
 		String publications = getCardPublications(card.getPublications());
-		String html = title + frenchTitle + castingCost + PT + type + description + publications;
+		String html = formatTitle(card) + castingCost + PT + type + description + publications;
 
 		CustomApplication applicationContext = (CustomApplication) getActivity().getApplicationContext();
 		CastingCostAssetLoader castingCostAssetLoader = applicationContext.getCastingCostAssetLoader();
 		return Html.fromHtml(html, new AssetLoader(castingCostAssetLoader), null);
+	}
+	
+	private String formatTitle(MagicCard card) {
+		if (LanguageUtil.showFrench(getActivity()) && card.getFrenchTitle() != null) {
+			return "<p>" + card.getFrenchTitle() + "<br/>(" + card.getTitle() + ")</p>";
+		}
+		
+		return "<p>" + card.getTitle() + "</p>";
 	}
 	
 	private String formatType(MagicCard card) {

@@ -34,6 +34,7 @@ public class MagicCardListActivity extends FragmentActivity implements
 	private Menu menu;
 
 	private SearchOptions currentSearch;
+	private boolean isRestored = false;
 
 	public MagicCardListActivity() {
 		super();
@@ -51,6 +52,7 @@ public class MagicCardListActivity extends FragmentActivity implements
 			Parcelable savedSearch = savedInstanceState.getParcelable("currentSearch");
 			if (savedSearch != null) {
 				currentSearch = savedInstanceState.getParcelable("currentSearch");
+				isRestored = true;
 				Log.d(getClass().getName(), "Restored search : " + currentSearch);
 			}
 		}
@@ -66,13 +68,13 @@ public class MagicCardListActivity extends FragmentActivity implements
 	@Override
 	protected void onPostCreate(Bundle savedInstanceState) {
 		super.onPostCreate(savedInstanceState);
-		
+
 		if (currentSearch == null) {
 			currentSearch = new SearchOptions().setQuery("*");
 		}
 		
-		String resultAsString = getIntent().getExtras().getString(MAGIC_CARD_RESULT);
-		if (resultAsString != null) {
+		String resultAsString = getIntent().getStringExtra(MAGIC_CARD_RESULT);
+		if (resultAsString != null && !isRestored) {
 			new UIUpdater(this, resultAsString).execute();
 		} else {
 			new SearchProcessor(this, currentSearch).execute();	
@@ -163,21 +165,17 @@ public class MagicCardListActivity extends FragmentActivity implements
 			menu.findItem(R.id.oracle_tab).setVisible(true);
 			return true;
 
-		case R.id.help_en_tab:
-			startHelpActivity(HelpActivity.EN);
+		case R.id.help_tab:
+			startHelpActivity();
 			return true;
-
-		case R.id.help_fr_tab:
-			startHelpActivity(HelpActivity.FR);
-			return true;
+			
 		}
 		
 		return super.onOptionsItemSelected(item);
 	}
 
-	private void startHelpActivity(String language) {
+	private void startHelpActivity() {
 		Intent intent = ActivityUtil.getIntent(this, HelpActivity.class);
-		intent.putExtra(HelpActivity.LANGUAGE, language);
 		startActivity(intent);
 	}
 	
@@ -202,6 +200,7 @@ public class MagicCardListActivity extends FragmentActivity implements
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
+		Log.d(getClass().getName(), "onSaveInstanceState " + outState);
 		outState.putParcelable("currentSearch", currentSearch);
 	}
 

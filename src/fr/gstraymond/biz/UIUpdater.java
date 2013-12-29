@@ -70,7 +70,15 @@ public class UIUpdater extends AsyncTask<Void, Void, SearchResult> {
 				cards.add(hit.get_source());
 			}
 		}
-		getWelcomeTextView().setText(totalCardCount + " card(s) found" + (getOptions().isRandom() ? " at random" : ""));
+		
+		String text = totalCardCount + " ";
+		if (totalCardCount > 1) {
+			text += activity.getString(R.string.progress_cards_found);
+		} else {
+			text += activity.getString(R.string.progress_card_found);
+		}
+		
+		getWelcomeTextView().setText(text);
 		
 		updateUIList(totalCardCount, cards);
 		updateUIFacets(result);

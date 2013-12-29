@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -37,7 +38,37 @@ public class SearchOptions implements Parcelable {
 		random = source.readInt() == 0 ? true : false;
 		from = source.readInt();
 		size = source.readInt();
-		// readMap
+		facets = readMap(source);
+	}
+
+	private Map<String, List<String>> readMap(Parcel source) {
+		Map<String, List<String>> facets = new HashMap<String, List<String>>();
+		String facetsAsString = source.readString();
+		
+		if (facetsAsString == null || facetsAsString.isEmpty()) {
+			return facets;
+		}
+		
+		Log.d(getClass().getName(), "readMap " + facetsAsString);
+		
+		String[] firstSplit = facetsAsString.split("\\|");
+		for (String facet : firstSplit) {
+			Log.d(getClass().getName(), "readMap facet " + facet);
+			String[] keyValues = facet.split("=");
+			String key = keyValues[0];
+			Log.d(getClass().getName(), "readMap key " + key);
+			
+			String valuesAsString = keyValues[1];
+			String[] secondSplit = valuesAsString.split(",");
+			List<String> values = new ArrayList<String>();
+			for (String value : secondSplit) {
+				Log.d(getClass().getName(), "readMap value " + value);
+				values.add(value);
+			}
+
+			facets.put(key, values);
+		}
+		return facets;
 	}
 
 	public SearchOptions() {
@@ -55,12 +86,28 @@ public class SearchOptions implements Parcelable {
 		dest.writeInt(random ? 0 : 1);
 		dest.writeInt(from);
 		dest.writeInt(size);
-		writeMap(dest);
+		writeMap(dest, facets);
 	}
 
-	private void writeMap(Parcel dest) {
-		// TODO Auto-generated method stub
+	private void writeMap(Parcel dest, Map<String, List<String>> facets) {
+		StringBuilder facetsAsString = new StringBuilder();
+		String firstSep = "";
+		for (Entry<String, List<String>> entry : facets.entrySet()) {
+			facetsAsString.append(firstSep);
+			facetsAsString.append(entry.getKey());
+			facetsAsString.append("=");
+			String secondSep = "";
+			for (String value : entry.getValue()) {
+				facetsAsString.append(secondSep);
+				facetsAsString.append(value);
+				secondSep = ",";
+			}
+			firstSep = "|";
+		}
 		
+		Log.d(getClass().getName(), "writeMap " + facetsAsString);
+		
+		dest.writeString(facetsAsString.toString());
 	}
 
 	public String getQuery() {

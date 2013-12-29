@@ -20,6 +20,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.gstraymond.R;
 import fr.gstraymond.biz.AssetLoader;
 import fr.gstraymond.magicsearch.help.HelpText;
+import fr.gstraymond.tools.LanguageUtil;
 
 public class HelpActivity extends Activity {
 
@@ -34,10 +35,7 @@ public class HelpActivity extends Activity {
 		
 		AssetLoader assetLoader = new AssetLoader(getCustomApplication().getCastingCostAssetLoader());
 
-		String language = EN;
-		if (getIntent().getExtras() != null) {
-			language = getIntent().getExtras().getString(LANGUAGE);
-		}
+		String language = LanguageUtil.showFrench(this) ? FR : EN;
 		HelpText helpText = getHelpText(language);
 		Spanned text = format(helpText, assetLoader);
 
@@ -48,8 +46,6 @@ public class HelpActivity extends Activity {
 
 		// Show the Up button in the action bar.
 		getActionBar().setDisplayHomeAsUpEnabled(true);
-
-		setActivityTitle(language);
 	}
 
 	private HelpText getHelpText(String language) {
@@ -136,14 +132,6 @@ public class HelpActivity extends Activity {
 			builder.append("\t\t●\t" + item + "<br />");
 		}
 		return builder.toString() + "</p>";
-	}
-
-	private void setActivityTitle(String language) {
-		if (EN.equals(language)) {
-			setTitle(getString(R.string.list_menu_help_en));
-		} else {
-			setTitle(getString(R.string.list_menu_help_fr));
-		}
 	}
 
 	@Override
