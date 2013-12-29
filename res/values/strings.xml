@@ -15,4 +15,5 @@
     <string name="detail_menu_oracle">Oracle</string>
     <string name="detail_menu_pictures">Pictures</string>
 
+	<string name="mode">smartphone</string>
 </resources>

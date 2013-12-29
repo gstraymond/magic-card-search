@@ -18,6 +18,7 @@ import fr.gstraymond.R;
 import fr.gstraymond.biz.SearchOptions;
 import fr.gstraymond.biz.SearchProcessor;
 import fr.gstraymond.biz.UIUpdater;
+import fr.gstraymond.tools.ActivityUtil;
 import fr.gstraymond.ui.EndScrollListener;
 import fr.gstraymond.ui.TextListener;
 
@@ -98,7 +99,7 @@ public class MagicCardListActivity extends FragmentActivity implements
 			menu.findItem(R.id.oracle_tab).setVisible(false);
 
 		} else {
-			Intent detailIntent = new Intent(this, MagicCardDetailActivity.class);
+			Intent detailIntent = ActivityUtil.getIntent(this, MagicCardDetailActivity.class);
 			detailIntent.putExtra(MagicCardDetailFragment.MAGIC_CARD, item);
 			startActivity(detailIntent);
 		}
@@ -175,7 +176,7 @@ public class MagicCardListActivity extends FragmentActivity implements
 	}
 
 	private void startHelpActivity(String language) {
-		Intent intent = new Intent(this, HelpActivity.class);
+		Intent intent = ActivityUtil.getIntent(this, HelpActivity.class);
 		intent.putExtra(HelpActivity.LANGUAGE, language);
 		startActivity(intent);
 	}

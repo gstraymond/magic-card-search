@@ -2,4 +2,5 @@
 
     <item name="activity_magiccard_list" type="layout">@layout/activity_magiccard_twopane</item>
 
+    <string name="tablet">true</string> 
 </resources>

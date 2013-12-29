@@ -15,7 +15,7 @@ public class SearchOptions implements Parcelable {
 	private boolean append = false;
 	private boolean random = false;
 	private int from = 0;
-	private int size = 20;
+	private int size = 30;
 	private Map<String, List<String>> facets = new HashMap<String, List<String>>();
 
 

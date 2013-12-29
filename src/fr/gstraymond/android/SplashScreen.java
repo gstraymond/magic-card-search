@@ -13,6 +13,7 @@ import fr.gstraymond.biz.ApplicationLoader;
 import fr.gstraymond.biz.SearchOptions;
 import fr.gstraymond.biz.SplashProcessor;
 import fr.gstraymond.magicsearch.model.response.SearchResult;
+import fr.gstraymond.tools.ActivityUtil;
 
 public class SplashScreen extends Activity {
 
@@ -32,7 +33,8 @@ public class SplashScreen extends Activity {
 	public void startNextActivity(SearchResult result) {
 		String resultAsString = getResultAsString(result);
 		
-		Intent intent = new Intent(this, MagicCardListActivity.class);
+		Intent intent = ActivityUtil.getIntent(this, MagicCardListActivity.class);
+		
 		intent.putExtra(MagicCardListActivity.MAGIC_CARD_RESULT, resultAsString);
 		startActivity(intent);
 

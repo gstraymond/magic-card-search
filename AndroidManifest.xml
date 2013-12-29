@@ -19,6 +19,7 @@
         <!-- MAIN : Splash screen -->
         <activity
             android:name="fr.gstraymond.android.SplashScreen"
+            android:configChanges="keyboardHidden|orientation|screenSize"
             android:label="@string/app_name"
             android:theme="@android:style/Theme.Black.NoTitleBar" >
             <intent-filter>
@@ -31,21 +32,49 @@
         <!-- Card list -->
         <activity
             android:name="fr.gstraymond.android.MagicCardListActivity"
-            android:label="@string/app_name" >
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="fr.gstraymond.android.tablet.MagicCardListActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:label="@string/app_name"
+            android:screenOrientation="landscape" >
         </activity>
 
         <!-- Card detail -->
         <activity
             android:name="fr.gstraymond.android.MagicCardDetailActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
             android:label="@string/title_magiccard_detail"
-            android:parentActivityName="fr.gstraymond.android.MagicCardListActivity" >
+            android:parentActivityName="fr.gstraymond.android.MagicCardListActivity"
+            android:screenOrientation="portrait" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MagicCardListActivity" />
+        </activity>
+        <activity
+            android:name="fr.gstraymond.android.tablet.MagicCardDetailActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:label="@string/title_magiccard_detail"
+            android:parentActivityName="fr.gstraymond.android.MagicCardListActivity"
+            android:screenOrientation="landscape" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MagicCardListActivity" />
         </activity>
 
         <!-- Help -->
-        <activity android:name="fr.gstraymond.android.HelpActivity" >
+        <activity
+            android:name="fr.gstraymond.android.HelpActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="fr.gstraymond.android.tablet.HelpActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:screenOrientation="landscape" >
         </activity>
     </application>
 
