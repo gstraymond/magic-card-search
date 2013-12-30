@@ -77,7 +77,7 @@ public class MagicCardListActivity extends FragmentActivity implements
 		if (resultAsString != null && !isRestored) {
 			new UIUpdater(this, resultAsString).execute();
 		} else {
-			new SearchProcessor(this, currentSearch).execute();	
+			new SearchProcessor(this, currentSearch, R.string.loading_initial).execute();	
 		}
 	}
 
@@ -148,7 +148,7 @@ public class MagicCardListActivity extends FragmentActivity implements
 		case R.id.clear_tab:
 			resetSearchView();
 			SearchOptions options = new SearchOptions().setQuery("*");
-			new SearchProcessor(this, options).execute();
+			new SearchProcessor(this, options, R.string.loading_clear).execute();
 			return true;
 
 		case R.id.oracle_tab:

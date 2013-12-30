@@ -4,6 +4,7 @@ import android.os.AsyncTask;
 import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import fr.gstraymond.R;
 import fr.gstraymond.android.CustomApplication;
 import fr.gstraymond.android.MagicCardListActivity;
@@ -14,20 +15,24 @@ public class SearchProcessor extends AsyncTask<Void, Void, Boolean> {
 
 	private MagicCardListActivity activity;
 	private ProgressBar progressBar;
+	private TextView welcomeTextView;
+	
 	private SearchOptions options = new SearchOptions();
 	 
 	private SearchResult searchResult;
 
-	public SearchProcessor(MagicCardListActivity activity, SearchOptions options) {
+	public SearchProcessor(MagicCardListActivity activity, SearchOptions options, int loadingText) {
 		super();
 		this.activity = activity;
 		this.progressBar = getProgressBar();
+		this.welcomeTextView = getWelcomeTextView();
+		this.options = options;
 
 		disableSearch();
 		storeCurrentSearch(options);
 
+		welcomeTextView.setText(activity.getString(loadingText));
 		progressBar.setProgress(0);
-		this.options = options;
 	}
 
 	private void storeCurrentSearch(SearchOptions options) {
@@ -37,6 +42,10 @@ public class SearchProcessor extends AsyncTask<Void, Void, Boolean> {
 	private ProgressBar getProgressBar() {
 		return (ProgressBar) activity.findViewById(R.id.progress_bar);
 	} 
+
+	private TextView getWelcomeTextView() {
+		return (TextView) activity.findViewById(R.id.welcome_text_view);
+	}
 	
 	@Override
 	protected Boolean doInBackground(Void... params) {

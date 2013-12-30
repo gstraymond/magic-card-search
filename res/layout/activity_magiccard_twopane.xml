@@ -3,66 +3,57 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:baselineAligned="false"
+    android:divider="?android:attr/dividerHorizontal"
     android:focusable="true"
     android:focusableInTouchMode="true"
-    android:orientation="vertical"
+    android:orientation="horizontal"
+    android:showDividers="middle"
     tools:context=".MagicCardListActivity" >
-
-    <TextView
-        android:id="@+id/welcome_text_view"
-        style="?android:attr/textAppearanceMedium"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="6dp"
-        android:layout_marginTop="8dp"
-        android:gravity="center"
-        android:text="@string/welcome_text" />
-
-    <ProgressBar
-        android:id="@+id/progress_bar"
-        style="@android:style/Widget.Holo.ProgressBar.Horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:progress="100" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_weight="1"
         android:baselineAligned="false"
-        android:divider="?android:attr/dividerHorizontal"
-        android:orientation="horizontal"
-        android:showDividers="middle"
+        android:orientation="vertical"
         tools:context=".MagicCardListActivity" >
 
-        <!--
-         <FrameLayout
-        android:id="@+id/magiccard_list"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-        -->
+        <TextView
+            android:id="@+id/welcome_text_view"
+            style="?android:attr/textAppearanceMedium"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="6dp"
+            android:layout_marginTop="8dp"
+            android:gravity="center"
+            android:text="@string/welcome_text" />
 
-		<!-- utiliser une framelayout au lieu d'un fragment -->
+        <ProgressBar
+            android:id="@+id/progress_bar"
+            style="@android:style/Widget.Holo.ProgressBar.Horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:progress="100" />
+
         <fragment
             android:id="@+id/magiccard_list"
             android:name="fr.gstraymond.android.MagicCardListFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="1"
             tools:layout="@android:layout/list_content" />
 
         <ListView
             android:id="@+id/facet_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="1"
             android:visibility="gone" >
         </ListView>
-
-        <FrameLayout
-            android:id="@+id/magiccard_detail_container"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1" />
     </LinearLayout>
+
+    <FrameLayout
+        android:id="@+id/magiccard_detail_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1" />
 
 </LinearLayout>

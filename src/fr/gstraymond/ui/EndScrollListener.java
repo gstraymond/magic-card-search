@@ -35,7 +35,7 @@ public class EndScrollListener implements OnScrollListener {
 			if (!allCardsLoaded) {
 				Log.i(this.getClass().getName(), "onScroll - endReached");
 				SearchOptions options = activity.getCurrentSearch().setAppend(true);
-				new SearchProcessor(activity, options).execute();
+				new SearchProcessor(activity, options, R.string.loading_more).execute();
 			}
 		}
 

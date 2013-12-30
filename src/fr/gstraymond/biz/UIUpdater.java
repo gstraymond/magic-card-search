@@ -118,7 +118,7 @@ public class UIUpdater extends AsyncTask<Void, Void, SearchResult> {
 						}
 						getOptions().setAppend(false);
 						getOptions().setFrom(0);
-						new SearchProcessor(activity, getOptions()).execute();
+						new SearchProcessor(activity, getOptions(), R.string.loading_facet).execute();
 					}
 				}
 			});
