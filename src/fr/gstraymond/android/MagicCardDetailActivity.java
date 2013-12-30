@@ -40,7 +40,7 @@ public class MagicCardDetailActivity extends FragmentActivity {
 		MagicCardDetailFragment fragment = new MagicCardDetailFragment();
 		fragment.setArguments(arguments);
 
-		getSupportFragmentManager().beginTransaction().add(R.id.magiccard_detail_container, fragment).commit();
+		getSupportFragmentManager().beginTransaction().replace(R.id.magiccard_detail_container, fragment).commit();
 
 		setTitle(getFullTitle(magicCard));
 	}

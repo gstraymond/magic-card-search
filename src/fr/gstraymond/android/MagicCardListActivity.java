@@ -24,6 +24,8 @@ import fr.gstraymond.ui.TextListener;
 
 public class MagicCardListActivity extends FragmentActivity implements
 		MagicCardListFragment.Callbacks {
+	private static final String CURRENT_SEARCH = "currentSearch";
+
 	public static final String MAGIC_CARD_RESULT = "result";
 
 	private boolean twoPaneMode;
@@ -49,9 +51,9 @@ public class MagicCardListActivity extends FragmentActivity implements
 		setContentView(R.layout.activity_magiccard_list);
 		
 		if (savedInstanceState != null) {
-			Parcelable savedSearch = savedInstanceState.getParcelable("currentSearch");
+			SearchOptions savedSearch = savedInstanceState.getParcelable(CURRENT_SEARCH);
 			if (savedSearch != null) {
-				currentSearch = savedInstanceState.getParcelable("currentSearch");
+				currentSearch = savedSearch;
 				isRestored = true;
 				Log.d(getClass().getName(), "Restored search : " + currentSearch);
 			}
@@ -200,8 +202,8 @@ public class MagicCardListActivity extends FragmentActivity implements
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
+		outState.putParcelable(CURRENT_SEARCH, currentSearch);
 		Log.d(getClass().getName(), "onSaveInstanceState " + outState);
-		outState.putParcelable("currentSearch", currentSearch);
 	}
 
 	public View getCardView() {
