@@ -1,9 +1,9 @@
 package fr.gstraymond.android;
 
+import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -61,8 +61,8 @@ public class MagicCardListActivity extends FragmentActivity implements
 
 		if (findViewById(R.id.magiccard_detail_container) != null) {
 			twoPaneMode = true;
-			Fragment listFragment = getSupportFragmentManager().findFragmentById(R.id.magiccard_list);
-			((MagicCardListFragment) listFragment).setActivateOnItemClick(true);
+			MagicCardListFragment listFragment = new MagicCardListFragment();
+			getFragmentManager().beginTransaction().replace(R.id.magiccard_list, listFragment).commit();
 		}
 
 	}
@@ -70,6 +70,9 @@ public class MagicCardListActivity extends FragmentActivity implements
 	@Override
 	protected void onPostCreate(Bundle savedInstanceState) {
 		super.onPostCreate(savedInstanceState);
+
+		Fragment listFragment = getFragmentManager().findFragmentById(R.id.magiccard_list);
+		((MagicCardListFragment) listFragment).setActivateOnItemClick(true);
 
 		if (currentSearch == null) {
 			currentSearch = new SearchOptions().setQuery("*");

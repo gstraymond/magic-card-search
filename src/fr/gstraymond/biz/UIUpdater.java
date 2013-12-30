@@ -3,10 +3,10 @@ package fr.gstraymond.biz;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import android.app.Fragment;
+import android.app.FragmentManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -134,7 +134,7 @@ public class UIUpdater extends AsyncTask<Void, Void, SearchResult> {
 	}
 
 	private FragmentManager getFragmentManager() {
-		return activity.getSupportFragmentManager();
+		return activity.getFragmentManager();
 	}
 
 	private MagicCardListFragment getMagicCardListFragment() {

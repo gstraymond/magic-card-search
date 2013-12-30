@@ -1,7 +1,7 @@
 package fr.gstraymond.biz;
 
+import android.app.FragmentManager;
 import android.os.AsyncTask;
-import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -87,7 +87,7 @@ public class SearchProcessor extends AsyncTask<Void, Void, Boolean> {
 	}
 
 	private FragmentManager getFragmentManager() {
-		return getActivity().getSupportFragmentManager();
+		return getActivity().getFragmentManager();
 	}
 
 	private MagicCardListFragment getMagicCardListFragment() {

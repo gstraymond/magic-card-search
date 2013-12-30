@@ -25,12 +25,10 @@
         android:layout_height="wrap_content"
         android:progress="100" />
 
-    <fragment
+    <FrameLayout
         android:id="@+id/magiccard_list"
-        android:name="fr.gstraymond.android.MagicCardListFragment"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:layout="@android:layout/list_content" />
+        android:layout_height="match_parent" />
 
     <ListView
         android:id="@+id/facet_list"
