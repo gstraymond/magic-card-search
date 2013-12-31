@@ -8,10 +8,6 @@ import android.app.FragmentManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.fasterxml.jackson.core.JsonParseException;
@@ -23,8 +19,6 @@ import fr.gstraymond.android.MagicCardListFragment;
 import fr.gstraymond.magicsearch.model.response.Hit;
 import fr.gstraymond.magicsearch.model.response.MagicCard;
 import fr.gstraymond.magicsearch.model.response.SearchResult;
-import fr.gstraymond.magicsearch.model.response.facet.Term;
-import fr.gstraymond.ui.FacetListAdapter;
 
 public class UIUpdater extends AsyncTask<Void, Void, SearchResult> {
 	
@@ -99,30 +93,31 @@ public class UIUpdater extends AsyncTask<Void, Void, SearchResult> {
 	}
 
 	private void updateUIFacets(SearchResult result) {
-		if (! getOptions().isAppend()) {
-			final FacetListAdapter facetListAdapter = new FacetListAdapter(result.getFacets(), getOptions());
-			getFacetListView().setAdapter(facetListAdapter);
-			getFacetListView().setOnItemClickListener(new OnItemClickListener() {
-	
-				@Override
-				public void onItemClick(AdapterView<?> parent, View view, int position,
-						long id) {
-					Term term = facetListAdapter.getTerm(position);
-					if (term.getCount() > -1) {
-						String facet = facetListAdapter.getFacet(term);
-
-						if (facetListAdapter.isTermSelected(term)) {
-							getOptions().removeFacet(facet, term.getTerm());
-						} else {
-							getOptions().addFacet(facet, term.getTerm());
-						}
-						getOptions().setAppend(false);
-						getOptions().setFrom(0);
-						new SearchProcessor(activity, getOptions(), R.string.loading_facet).execute();
-					}
-				}
-			});
-		}
+		activity.setCurrentResult(result);
+//		if (! getOptions().isAppend()) {
+//			final FacetListAdapter facetListAdapter = new FacetListAdapter(result.getFacets(), getOptions());
+//			getFacetListView().setAdapter(facetListAdapter);
+//			getFacetListView().setOnItemClickListener(new OnItemClickListener() {
+//	
+//				@Override
+//				public void onItemClick(AdapterView<?> parent, View view, int position,
+//						long id) {
+//					Term term = facetListAdapter.getTerm(position);
+//					if (term.getCount() > -1) {
+//						String facet = facetListAdapter.getFacet(term);
+//
+//						if (facetListAdapter.isTermSelected(term)) {
+//							getOptions().removeFacet(facet, term.getTerm());
+//						} else {
+//							getOptions().addFacet(facet, term.getTerm());
+//						}
+//						getOptions().setAppend(false);
+//						getOptions().setFrom(0);
+//						new SearchProcessor(activity, getOptions(), R.string.loading_facet).execute();
+//					}
+//				}
+//			});
+//		}
 	}
 
 	private TextView getWelcomeTextView() {
@@ -142,7 +137,7 @@ public class UIUpdater extends AsyncTask<Void, Void, SearchResult> {
 		return (MagicCardListFragment) fragment; 
 	}
 
-	private ListView getFacetListView() {
-		return (ListView) activity.findViewById(R.id.facet_list);
-	}
+//	private ListView getFacetListView() {
+//		return (ListView) activity.findViewById(R.id.facet_list);
+//	}
 }

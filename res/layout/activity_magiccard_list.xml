@@ -15,6 +15,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="6dp"
         android:layout_marginTop="8dp"
+        android:freezesText="true"
         android:gravity="center"
         android:text="@string/welcome_text" />
 
@@ -30,11 +31,17 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-    <ListView
+    <FrameLayout
+        android:id="@+id/magiccard_facet_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <!--
+         <fr.gstraymond.android.FacetListFragment
         android:id="@+id/facet_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="gone" >
-    </ListView>
+        android:visibility="gone" />
+    -->
 
 </LinearLayout>
