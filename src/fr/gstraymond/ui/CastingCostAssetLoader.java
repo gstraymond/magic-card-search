@@ -17,6 +17,7 @@ public class CastingCostAssetLoader {
 	private boolean init = false;
 
 	public void init(Context context) {
+		Log.d(getClass().getName(), "init : " + init);
 		if (! init) {
 			init = true;
 			this.context = context;
@@ -25,7 +26,6 @@ public class CastingCostAssetLoader {
 			String path = "cc/hd";
 			try {
 				for (String assetPath : context.getAssets().list(path)) {
-					Log.d(getClass().getName(), "assetPath : " + assetPath);
 					Drawable drawable = getDrawable(path + "/" + assetPath);
 					drawable.setBounds(0, 0, getAssetSize(), getAssetSize());
 					assets.put(assetPath, drawable);

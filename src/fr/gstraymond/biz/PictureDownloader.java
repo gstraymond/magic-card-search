@@ -28,8 +28,7 @@ public class PictureDownloader extends AsyncTask<Void, Void, Bitmap> {
     @Override
     protected void onPostExecute(Bitmap bitmap) {
 		imageView.setImageBitmap(bitmap);
-		Log.d(getClass().getName(), "height : " +  bitmap.getHeight());
-		Log.d(getClass().getName(), "width : " +  bitmap.getWidth());
+		Log.d(getClass().getName(), "height : " +  bitmap.getHeight() + " - width : " +  bitmap.getWidth());
     }
 
 	private Bitmap getBitmap() {
