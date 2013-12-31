@@ -190,12 +190,12 @@ public class SearchOptions implements Parcelable {
 
 	@Override
 	public String toString() {
-		return "search options:\n" +
-				"query: " + query + "\n" +
-				"append: " + append + "\n" +
-				"random: " + random + "\n" +
-				"from: " + from + "\n" +
-				"size: " + size + "\n" +
-				"facets:" + facets;
+		return "searchOptions:[" +
+				"query:" + query + "," +
+				"append:" + append + "," +
+				"random:" + random + "," +
+				"from:" + from + "," +
+				"size:" + size + "," +
+				"facets:" + facets + "]";
 	}
 }

@@ -77,8 +77,8 @@ public class MagicCardListFragment extends ListFragment {
 		// Restore the previously serialized activated item position.
 		if (savedInstanceState != null
 				&& savedInstanceState.containsKey(STATE_ACTIVATED_POSITION)) {
-			setActivatedPosition(savedInstanceState
-					.getInt(STATE_ACTIVATED_POSITION));
+			int position = savedInstanceState.getInt(STATE_ACTIVATED_POSITION);
+			setActivatedPosition(position);
 		}
 
 		MagicCardListActivity activity = (MagicCardListActivity) getActivity();

@@ -21,9 +21,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import fr.gstraymond.magicsearch.model.request.Request;
 import fr.gstraymond.magicsearch.model.response.SearchResult;
+import fr.gstraymond.tools.DisplaySizeUtil;
 
 public class ElasticSearchClient { 
-
+    
 	private static final String ENCODING = "UTF-8";
 	private URL url;
 	private HttpClient httpClient;
@@ -40,13 +41,14 @@ public class ElasticSearchClient {
 		Request request = new Request(options);
 		try {
 			String queryAsJson = objectMapper.writeValueAsString(request);
-			Log.d(getClass().getName(), "\n" + queryAsJson);
+			Log.d(getClass().getName(), "query as json : " + queryAsJson);
 			
 			String query = URLEncoder.encode(queryAsJson, ENCODING);
 			HttpGet getRequest = new HttpGet(url.toString() + "?source=" + query);
 			long now = System.currentTimeMillis();
 			HttpResponse response = httpClient.execute(getRequest);
-			Log.i(getClass().getName(), "\thttp client execute " + (System.currentTimeMillis() - now) + "ms");
+			String fileSize = DisplaySizeUtil.getFileSize(response.getEntity().getContentLength());
+			Log.i(getClass().getName(), "downloaded " + fileSize + " in " + (System.currentTimeMillis() - now) + "ms");
 			progressBar.setProgress(33);
 			return parse(response.getEntity().getContent(), progressBar);
 		} catch (ClientProtocolException e) {
@@ -60,6 +62,7 @@ public class ElasticSearchClient {
 	private SearchResult parse(InputStream stream, ProgressBar progressBar) {
 		SearchResult searchResult = null;
 		long now = System.currentTimeMillis();
+		
 		try {
 			searchResult = objectMapper.readValue(stream, SearchResult.class);
 		} catch (JsonParseException e) {
@@ -68,10 +71,10 @@ public class ElasticSearchClient {
 			Log.e(getClass().getName(), "parse", e);
 		} catch (IOException e) {
 			Log.e(getClass().getName(), "parse", e);
-		} finally {
-			Log.i(getClass().getName(), "\tparse took " + (System.currentTimeMillis() - now) + "ms");
-			progressBar.setProgress(66);
 		}
+		
+		Log.i(getClass().getName(), "parse took " + (System.currentTimeMillis() - now) + "ms");
+		progressBar.setProgress(66);
 		return searchResult;
 	}
 }

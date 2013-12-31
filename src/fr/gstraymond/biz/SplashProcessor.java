@@ -25,20 +25,20 @@ public class SplashProcessor extends AsyncTask<Void, Integer, SearchResult> {
 
 	@Override
 	protected SearchResult doInBackground(Void... params) {
-		CustomApplication applicationContext = (CustomApplication) activity.getApplicationContext();
-
-		Log.i(getClass().getName(), "launchSearch: " + options);
-
-		SearchResult searchResult = applicationContext.getElasticSearchClient().process(options, progressBar);
-		if (searchResult != null) {
-			Log.i(getClass().getName(), "Server search took " + searchResult.getTook() + " ms");
-			if (searchResult.getHits() != null) {
-				Log.i(getClass().getName(), "total cards " + searchResult.getHits().getTotal());
-			}
+		long now = System.currentTimeMillis();
+		SearchResult searchResult = getApplicationContext().getElasticSearchClient().process(options, progressBar);
+		
+		if (searchResult != null && searchResult.getHits() != null) {
+			Log.i(getClass().getName(), searchResult.getHits().getTotal() + " cards found in " + searchResult.getTook() + " ms");
 		}
+		Log.i(getClass().getName(), "search took " + (System.currentTimeMillis() - now) + "ms");
+		
 		return searchResult;
 	}
 
+	private CustomApplication getApplicationContext() {
+		return (CustomApplication) activity.getApplicationContext();
+	}
 
 	@Override
 	protected void onPostExecute(SearchResult result) {

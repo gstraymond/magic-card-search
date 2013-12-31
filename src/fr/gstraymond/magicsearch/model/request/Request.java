@@ -20,7 +20,10 @@ public class Request {
 		this.query = new Query(options);
 		this.from = options.getFrom();
 		this.size = options.getSize();
-		this.facets = FacetConst.getFacets();
+		// if appending results, facets don't need to be recalculated
+		if (! options.isAppend()) {
+			this.facets = FacetConst.getFacets();
+		}
 		// default sort
 		this.sort = new ArrayList<String>();
 		this.sort.add("_uid");

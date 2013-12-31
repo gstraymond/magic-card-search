@@ -75,15 +75,12 @@ public class SearchProcessor extends AsyncTask<Void, Void, Boolean> {
 
 	@Override
 	protected void onPostExecute(Boolean result) {
-		long now = System.currentTimeMillis();
 		progressBar.setProgress(100);
 
 		new UIUpdater(activity).onPostExecute(searchResult);
 		enableSearch();
 		// suppression du focus sur le search et fermeture du clavier
 		getActivity().getSearchView().clearFocus();
-		
-		Log.i(getClass().getName(), "ui update took " + (System.currentTimeMillis() - now) + "ms");
 	}
 
 	private FragmentManager getFragmentManager() {
@@ -98,19 +95,18 @@ public class SearchProcessor extends AsyncTask<Void, Void, Boolean> {
 		if (options.isAppend()) {
 			options.setFrom(getMagicCardListFragment().getCardListCount());
 		}
-
-		CustomApplication applicationContext = (CustomApplication) getActivity().getApplicationContext();
 		
-		Log.i(getClass().getName(), "launchSearch: " + options);
+		SearchResult searchResult = getApplicationContext().getElasticSearchClient().process(options, progressBar);
 		
-		SearchResult searchResult = applicationContext.getElasticSearchClient().process(options, progressBar);
-		if (searchResult != null) {
-			Log.i(getClass().getName(), "Server search took " + searchResult.getTook() + " ms");
-			if (searchResult.getHits() != null) {
-				Log.i(getClass().getName(), "total cards " + searchResult.getHits().getTotal());
-			}
+		if (searchResult != null && searchResult.getHits() != null) {
+			Log.i(getClass().getName(), searchResult.getHits().getTotal() + " cards found in " + searchResult.getTook() + " ms");
 		}
+		
 		return searchResult;
+	}
+
+	private CustomApplication getApplicationContext() {
+		return (CustomApplication) getActivity().getApplicationContext();
 	}
 
 	public MagicCardListActivity getActivity() {
