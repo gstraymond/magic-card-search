@@ -5,7 +5,6 @@ import java.util.List;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
-import android.util.Log;
 import fr.gstraymond.magicsearch.model.response.Publication;
 
 public class MagicCardPagerAdapter extends FragmentStatePagerAdapter {
@@ -19,7 +18,6 @@ public class MagicCardPagerAdapter extends FragmentStatePagerAdapter {
 	@Override
 	public Fragment getItem(int position) {
 		Publication publication = publications.get(position);
-		Log.d(getClass().getName(), "publication " + publication);
 		return new CardFragment().setCardUrl(publication.getImage());
 	}
 

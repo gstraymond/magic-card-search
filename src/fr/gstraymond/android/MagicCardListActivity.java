@@ -71,8 +71,10 @@ public class MagicCardListActivity extends FragmentActivity implements
 	protected void onPostCreate(Bundle savedInstanceState) {
 		super.onPostCreate(savedInstanceState);
 
-		Fragment listFragment = getFragmentManager().findFragmentById(R.id.magiccard_list);
-		((MagicCardListFragment) listFragment).setActivateOnItemClick(true);
+		if (twoPaneMode) {
+			Fragment listFragment = getFragmentManager().findFragmentById(R.id.magiccard_list);
+			((MagicCardListFragment) listFragment).setActivateOnItemClick(true);
+		}
 
 		if (currentSearch == null) {
 			currentSearch = new SearchOptions().setQuery("*");
