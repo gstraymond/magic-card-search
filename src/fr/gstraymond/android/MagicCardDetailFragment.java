@@ -4,6 +4,7 @@ import static fr.gstraymond.constants.Consts.MAGIC_CARD;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.text.Html;
+import android.text.Html.ImageGetter;
 import android.text.Spanned;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,9 +21,11 @@ import fr.gstraymond.ui.CastingCostAssetLoader;
 public class MagicCardDetailFragment extends Fragment {
 
 	private CastingCostFormatter castingCostFormatter;
+	private DescriptionFormatter descriptionFormatter;
 
 	public MagicCardDetailFragment() {
 		this.castingCostFormatter = new CastingCostFormatter();
+		this.descriptionFormatter = new DescriptionFormatter();
 	}
 
 	@Override
@@ -32,34 +35,75 @@ public class MagicCardDetailFragment extends Fragment {
 		View rootView = inflater.inflate(R.layout.fragment_magiccard_detail,
 				container, false);
 
+		TextView titleTextView = (TextView) rootView.findViewById(R.id.magiccard_detail_title);
+		titleTextView.setText(formatTitle(card));
+		
 		TextView textView = (TextView) rootView.findViewById(R.id.magiccard_detail);
-		textView.setText(formatCard(card, textView));
+		textView.setText(formatCard(card));
+		
 		return rootView;
 	}
 	
-	private Spanned formatCard(MagicCard card, final TextView textView) {
-		DescriptionFormatter descriptionFormatter = new DescriptionFormatter();
+	private Spanned formatCard(MagicCard card) {
+		String castingCost = formatCC(card);
+		String pt = formatPT(card);
+		String type = formatType(card);
+		String description = formatDescription(card);
+		String html = getHtml(castingCost, pt, type, description);
 		
-		String castingCost = card.getCastingCost() != null ? "<p>" + castingCostFormatter.format(card.getCastingCost()) + "</p>" : "";
-		String PT = card.getPower() != null ? "<p>" + card.getPower() + " / " + card.getToughness() + "</p>" : "";
-		String type = "<p>" + formatType(card) + "</p>";
-		String description = descriptionFormatter.format(card.getDescription());
-		String html = formatTitle(card) + castingCost + PT + type + description;
-
-		CustomApplication applicationContext = (CustomApplication) getActivity().getApplicationContext();
-		CastingCostAssetLoader castingCostAssetLoader = applicationContext.getCastingCostAssetLoader();
-		return Html.fromHtml(html, new CastingCostImageGetter(castingCostAssetLoader), null);
+		return Html.fromHtml(html, getImageGetter(), null);
 	}
-	
-	private String formatTitle(MagicCard card) {
-		if (LanguageUtil.showFrench(getActivity()) && card.getFrenchTitle() != null) {
-			return "<p>" + card.getFrenchTitle() + "<br/>(" + card.getTitle() + ")</p>";
+
+	private String getHtml(String... strings) {
+		StringBuilder builder = new StringBuilder();
+		for (String string : strings) {
+			if (!string.isEmpty() && !builder.toString().isEmpty()) {
+				builder.append("<br /><br />");
+			}
+			builder.append(string);
 		}
-		
-		return "<p>" + card.getTitle() + "</p>";
+		return builder.toString();
+	}
+
+	private String formatCC(MagicCard card) {
+		if (card.getCastingCost() == null) {
+			return "";
+		}
+		return castingCostFormatter.format(card.getCastingCost());
+	}
+
+	private String formatPT(MagicCard card) {
+		if (card.getPower() == null) {
+			return "";
+		}
+		return card.getPower() + " / " + card.getToughness();
 	}
 	
 	private String formatType(MagicCard card) {
 		return card.getType().replaceAll("--", "—");
+	}
+
+	private String formatDescription(MagicCard card) {
+		if (card.getDescription() == null) {
+			return "";
+		}
+		return descriptionFormatter.format(card.getDescription());
+	}
+	
+	private ImageGetter getImageGetter() {
+		return new CastingCostImageGetter(getAssetLoader());
+	}
+
+	private CastingCostAssetLoader getAssetLoader() {
+		CustomApplication applicationContext = (CustomApplication) getActivity().getApplicationContext();
+		return applicationContext.getCastingCostAssetLoader();
+	}
+	
+	private String formatTitle(MagicCard card) {
+		if (LanguageUtil.showFrench(getActivity()) && card.getFrenchTitle() != null) {
+			return card.getFrenchTitle() + "\n(" + card.getTitle() + ")";
+		}
+		
+		return card.getTitle();
 	}
 }

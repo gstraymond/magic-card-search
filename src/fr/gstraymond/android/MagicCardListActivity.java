@@ -168,6 +168,12 @@ public class MagicCardListActivity extends Activity implements
 			menu.findItem(R.id.list_tab).setVisible(true);
 			return true;
 
+		case R.id.pictures_tab:
+			Intent intent = ActivityUtil.getIntent(this, MagicCardPagerActivity.class);
+			intent.putExtra(MAGIC_CARD, currentCard);
+			startActivity(intent);
+			return true;
+			
 		case R.id.clear_tab:
 			resetSearchView();
 			SearchOptions options = new SearchOptions().setQuery("*");
