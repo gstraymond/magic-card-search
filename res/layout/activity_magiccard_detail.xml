@@ -1,7 +1,31 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/magiccard_detail_container"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".MagicCardDetailActivity"
-    tools:ignore="MergeRootFrame" />
+    android:id="@+id/magiccard_detail_scrollview"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:divider="?android:attr/dividerHorizontal"
+        android:orientation="vertical"
+        android:showDividers="middle" >
+
+        <FrameLayout
+            android:id="@+id/magiccard_detail_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:context=".MagicCardDetailActivity"
+            tools:ignore="MergeRootFrame" />
+
+        <FrameLayout
+            android:id="@+id/magiccard_set_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:context=".MagicCardDetailActivity"
+            tools:ignore="MergeRootFrame" >
+        </FrameLayout>
+    </LinearLayout>
+
+</ScrollView>

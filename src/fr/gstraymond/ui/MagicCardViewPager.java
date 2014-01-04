@@ -1,16 +1,15 @@
 package fr.gstraymond.ui;
 
-import java.util.List;
-
 import android.content.Context;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
 import android.widget.TextView;
+import fr.gstraymond.magicsearch.model.response.MagicCard;
 import fr.gstraymond.magicsearch.model.response.Publication;
 
 public class MagicCardViewPager extends ViewPager {
 
-	private List<Publication> publications;
+	private MagicCard card;
 	private TextView publicationTextView;
 	
 	public MagicCardViewPager(Context context) {
@@ -27,7 +26,7 @@ public class MagicCardViewPager extends ViewPager {
 		String itemIdDisplayed = (itemId + 1) + "";
 		if (! publicationTextView.getText().toString().startsWith(itemIdDisplayed)) {
 			int count = getAdapter().getCount();
-			Publication publication = publications.get(itemId);
+			Publication publication = card.getPublications().get(itemId);
 			String text = publication.getEdition() + " (" + publication.getRarity() + ")";
 			if (count > 1) {
 				text += " — " + itemIdDisplayed + "/" + count;
@@ -37,13 +36,13 @@ public class MagicCardViewPager extends ViewPager {
 		super.computeScroll();
 	}
 
-	public MagicCardViewPager setPublications(List<Publication> publications) {
-		this.publications = publications;
+	public MagicCardViewPager setPublicationTextView(TextView publicationTextView) {
+		this.publicationTextView = publicationTextView;
 		return this;
 	}
 
-	public MagicCardViewPager setPublicationTextView(TextView publicationTextView) {
-		this.publicationTextView = publicationTextView;
+	public MagicCardViewPager setCard(MagicCard card) {
+		this.card = card;
 		return this;
 	}
 }

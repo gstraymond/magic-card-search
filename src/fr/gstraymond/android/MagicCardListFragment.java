@@ -24,15 +24,15 @@ public class MagicCardListFragment extends ListFragment {
 	private boolean twoPaneMode;
 
 	private static final String STATE_ACTIVATED_POSITION = "activated_position";
-	private Callbacks mCallbacks = sDummyCallbacks;
-	private int mActivatedPosition = ListView.INVALID_POSITION;
+	private Callbacks callbacks = dummyCallbacks;
+	private int position = ListView.INVALID_POSITION;
 	private ArrayAdapter<MagicCard> arrayAdapter;
 
 	public interface Callbacks {
 		public void onItemSelected(Parcelable id);
 	}
 
-	private static Callbacks sDummyCallbacks = new Callbacks() {
+	private static Callbacks dummyCallbacks = new Callbacks() {
 		@Override
 		public void onItemSelected(Parcelable id) {
 		}
@@ -95,34 +95,28 @@ public class MagicCardListFragment extends ListFragment {
 					"Activity must implement fragment's callbacks.");
 		}
 
-		mCallbacks = (Callbacks) activity;
+		callbacks = (Callbacks) activity;
 	}
 
 	@Override
 	public void onDetach() {
 		super.onDetach();
-
-		// Reset the active callbacks interface to the dummy implementation.
-		mCallbacks = sDummyCallbacks;
+		callbacks = dummyCallbacks;
 	}
 
 	@Override
 	public void onListItemClick(ListView listView, View view, int position,
 			long id) {
 		super.onListItemClick(listView, view, position, id);
-
-		// Notify the active callbacks interface (the activity, if the
-		// fragment is attached to one) that an item has been selected.
-		
-		mCallbacks.onItemSelected(cards.get(position));
+		callbacks.onItemSelected(cards.get(position));
 	}
 
 	@Override
 	public void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
-		if (mActivatedPosition != ListView.INVALID_POSITION) {
+		if (position != ListView.INVALID_POSITION) {
 			// Serialize and persist the activated item position.
-			outState.putInt(STATE_ACTIVATED_POSITION, mActivatedPosition);
+			outState.putInt(STATE_ACTIVATED_POSITION, position);
 		}
 	}
 
@@ -140,12 +134,12 @@ public class MagicCardListFragment extends ListFragment {
 
 	private void setActivatedPosition(int position) {
 		if (position == ListView.INVALID_POSITION) {
-			getListView().setItemChecked(mActivatedPosition, false);
+			getListView().setItemChecked(position, false);
 		} else {
 			getListView().setItemChecked(position, true);
 		}
 
-		mActivatedPosition = position;
+		this.position = position;
 	}
 	
 	public void appendCards(List<MagicCard> cards) {

@@ -1,10 +1,12 @@
 package fr.gstraymond.android;
 
+import static fr.gstraymond.constants.Consts.MAGIC_CARD;
+import static fr.gstraymond.constants.Consts.POSITION;
+import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
-import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -18,12 +20,13 @@ import fr.gstraymond.R;
 import fr.gstraymond.biz.SearchOptions;
 import fr.gstraymond.biz.SearchProcessor;
 import fr.gstraymond.biz.UIUpdater;
+import fr.gstraymond.magicsearch.model.response.MagicCard;
 import fr.gstraymond.tools.ActivityUtil;
 import fr.gstraymond.ui.EndScrollListener;
 import fr.gstraymond.ui.TextListener;
 
-public class MagicCardListActivity extends FragmentActivity implements
-		MagicCardListFragment.Callbacks {
+public class MagicCardListActivity extends Activity implements
+		MagicCardListFragment.Callbacks, SetListFragment.Callbacks {
 	private static final String CURRENT_SEARCH = "currentSearch";
 
 	public static final String MAGIC_CARD_RESULT = "result";
@@ -35,6 +38,7 @@ public class MagicCardListActivity extends FragmentActivity implements
 	private SearchView searchView;
 	private Menu menu;
 
+	private MagicCard currentCard;
 	private SearchOptions currentSearch;
 	private boolean isRestored = false;
 
@@ -93,25 +97,37 @@ public class MagicCardListActivity extends FragmentActivity implements
 	 * that the item with the given ID was selected.
 	 */
 	@Override
-	public void onItemSelected(Parcelable item) {
+	public void onItemSelected(Parcelable card) {
+		currentCard = (MagicCard) card;
 		if (twoPaneMode) {
-			Bundle arguments = new Bundle();
-			arguments.putParcelable(MagicCardDetailFragment.MAGIC_CARD, item);
-			MagicCardDetailFragment fragment = new MagicCardDetailFragment();
-			fragment.setArguments(arguments);
-			getSupportFragmentManager().beginTransaction()
-					.replace(R.id.magiccard_detail_container, fragment)
-					.commit();
+			Bundle bundle = new Bundle();
+			bundle.putParcelable(MAGIC_CARD, card);
 			
-			// reset card menu items
-			menu.findItem(R.id.pictures_tab).setVisible(true);
-			menu.findItem(R.id.oracle_tab).setVisible(false);
+			MagicCardDetailFragment detailFragment = new MagicCardDetailFragment();
+			detailFragment.setArguments(bundle);
+			getFragmentManager().beginTransaction()
+				.replace(R.id.magiccard_detail_container, detailFragment)
+				.commit();
+			
+			Fragment setListFragment = new SetListFragment();
+			setListFragment.setArguments(bundle);
+			getFragmentManager().beginTransaction()
+				.replace(R.id.magiccard_set_list, setListFragment)
+				.commit();
 
 		} else {
-			Intent detailIntent = ActivityUtil.getIntent(this, MagicCardDetailActivity.class);
-			detailIntent.putExtra(MagicCardDetailFragment.MAGIC_CARD, item);
-			startActivity(detailIntent);
+			Intent intent = ActivityUtil.getIntent(this, MagicCardDetailActivity.class);
+			intent.putExtra(MAGIC_CARD, card);
+			startActivity(intent);
 		}
+	}
+
+	@Override
+	public void onItemSelected(int id) {
+		Intent intent = ActivityUtil.getIntent(this, MagicCardPagerActivity.class);
+		intent.putExtra(MAGIC_CARD, currentCard);
+		intent.putExtra(POSITION, id);
+		startActivity(intent);
 	}
 
 	@Override
@@ -158,32 +174,14 @@ public class MagicCardListActivity extends FragmentActivity implements
 			new SearchProcessor(this, options, R.string.loading_clear).execute();
 			return true;
 
-		case R.id.oracle_tab:
-			hide(getPicturesView());
-			show(getDetailView());
-			item.setVisible(false);
-			menu.findItem(R.id.pictures_tab).setVisible(true);
-			return true;
-
-		case R.id.pictures_tab:
-			hide(getDetailView());
-			show(getPicturesView());
-			item.setVisible(false);
-			menu.findItem(R.id.oracle_tab).setVisible(true);
-			return true;
-
 		case R.id.help_tab:
-			startHelpActivity();
+			Intent helpIntent = ActivityUtil.getIntent(this, HelpActivity.class);
+			startActivity(helpIntent);
 			return true;
 			
 		}
 		
 		return super.onOptionsItemSelected(item);
-	}
-
-	private void startHelpActivity() {
-		Intent intent = ActivityUtil.getIntent(this, HelpActivity.class);
-		startActivity(intent);
 	}
 	
 	private void resetSearchView() {

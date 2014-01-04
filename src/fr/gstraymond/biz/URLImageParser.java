@@ -1,39 +1,3 @@
-//package fr.gstraymond.biz;
-//
-//import android.graphics.drawable.Drawable;
-//import android.text.Html.ImageGetter;
-//import android.util.Log;
-//import android.view.View;
-//import android.widget.TextView;
-//
-//public class URLImageParser implements ImageGetter {
-//    private TextView textView;
-//
-//    public URLImageParser(TextView view) {
-//        this.textView = view;
-//    }
-//
-//	@Override
-//    public Drawable getDrawable(String source) {
-//        Drawable drawable = textView.getResources().getDrawable(android.R.drawable.ic_dialog_info);
-//        drawable.setBounds(0, 0, drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight());
-//
-//        new ImageGetterAsyncTask(textView, drawable, source).execute();
-//
-//        Log.i(getClass().getName(), "drawable.getLevel : " + drawable.getLevel());
-//        return drawable;
-//    }
-//
-//	public View getTextView() {
-//		return textView;
-//	}
-//
-//	public void setTextView(TextView view) {
-//		this.textView = view;
-//	}
-//
-//}
-
 package fr.gstraymond.biz;
 
 import android.graphics.drawable.Drawable;

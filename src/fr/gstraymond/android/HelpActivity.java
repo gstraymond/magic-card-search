@@ -18,7 +18,7 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import fr.gstraymond.R;
-import fr.gstraymond.biz.AssetLoader;
+import fr.gstraymond.biz.CastingCostImageGetter;
 import fr.gstraymond.magicsearch.help.HelpText;
 import fr.gstraymond.tools.LanguageUtil;
 
@@ -33,7 +33,7 @@ public class HelpActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_help);
 		
-		AssetLoader assetLoader = new AssetLoader(getCustomApplication().getCastingCostAssetLoader());
+		CastingCostImageGetter assetLoader = new CastingCostImageGetter(getCustomApplication().getCastingCostAssetLoader());
 
 		String language = LanguageUtil.showFrench(this) ? FR : EN;
 		HelpText helpText = getHelpText(language);
@@ -76,7 +76,7 @@ public class HelpActivity extends Activity {
 		return null;
 	}
 
-	private Spanned format(HelpText helpText, AssetLoader assetLoader) {
+	private Spanned format(HelpText helpText, CastingCostImageGetter assetLoader) {
 		StringBuilder html = new StringBuilder();
 		recursiveFormat(html, helpText, 1, "");
 		return Html.fromHtml(html.toString(), assetLoader, null);

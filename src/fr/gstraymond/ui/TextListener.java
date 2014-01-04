@@ -1,7 +1,6 @@
 package fr.gstraymond.ui;
 
 
-import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.widget.SearchView.OnQueryTextListener;
 import fr.gstraymond.R;
@@ -36,10 +35,6 @@ public class TextListener implements OnQueryTextListener {
 
 	public void setCanSearch(boolean canSearch) {
 		this.canSearch = canSearch;
-	}
-
-	public FragmentActivity getActivity() {
-		return activity;
 	}
 
 }

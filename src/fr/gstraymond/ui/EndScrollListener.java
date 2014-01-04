@@ -1,7 +1,6 @@
 package fr.gstraymond.ui;
 
 import android.app.FragmentManager;
-import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
@@ -43,10 +42,6 @@ public class EndScrollListener implements OnScrollListener {
 
 	@Override
 	public void onScrollStateChanged(AbsListView view, int arg1) {
-	}
-
-	public FragmentActivity getActivity() {
-		return activity;
 	}
 
 	public boolean isCanLoadMoreItems() {

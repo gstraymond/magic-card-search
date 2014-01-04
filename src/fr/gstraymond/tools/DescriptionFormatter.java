@@ -27,13 +27,11 @@ public class DescriptionFormatter {
 			}
 		}
 		
-		if (! tmpDescription.contains("\n")) {
-			return "<p>" + tmpDescription + "</p>";
-		}
-		
 		StringBuffer lines = new StringBuffer();
+		String sep = "";
 		for (String line : tmpDescription.split("\n")) {
-			lines.append("<p>" + line + "</p>");
+			lines.append(sep + line);
+			sep = "<br />";
 		}
 		return lines.toString();
 	}

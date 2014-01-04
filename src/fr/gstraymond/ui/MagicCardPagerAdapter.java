@@ -1,15 +1,14 @@
 package fr.gstraymond.ui;
 
-import java.util.List;
-
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentStatePagerAdapter;
+import android.app.Fragment;
+import android.app.FragmentManager;
+import android.support.v13.app.FragmentPagerAdapter;
+import fr.gstraymond.magicsearch.model.response.MagicCard;
 import fr.gstraymond.magicsearch.model.response.Publication;
 
-public class MagicCardPagerAdapter extends FragmentStatePagerAdapter {
+public class MagicCardPagerAdapter extends FragmentPagerAdapter {
 	
-	private List<Publication> publications;
+	private MagicCard card;
 
 	public MagicCardPagerAdapter(FragmentManager fm) {
 		super(fm);
@@ -17,17 +16,17 @@ public class MagicCardPagerAdapter extends FragmentStatePagerAdapter {
 
 	@Override
 	public Fragment getItem(int position) {
-		Publication publication = publications.get(position);
+		Publication publication = card.getPublications().get(position);
 		return new CardFragment().setCardUrl(publication.getImage());
 	}
 
 	@Override
 	public int getCount() {
-		return publications.size();
+		return card.getPublications().size();
 	}
 
-	public MagicCardPagerAdapter setPublications(List<Publication> publications) {
-		this.publications = publications;
+	public MagicCardPagerAdapter setCard(MagicCard card) {
+		this.card = card;
 		return this;
 	}
 }

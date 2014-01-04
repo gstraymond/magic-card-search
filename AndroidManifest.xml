@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="fr.gstraymond"
-    android:versionCode="3"
-    android:versionName="1.0.2" >
+    android:versionCode="4"
+    android:versionName="1.1.0" >
 
     <uses-sdk
         android:minSdkVersion="14"
@@ -61,6 +61,26 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MagicCardListActivity" />
+        </activity>
+
+        <!-- Card detail -->
+        <activity
+            android:name="fr.gstraymond.android.MagicCardPagerActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:parentActivityName="fr.gstraymond.android.MagicCardDetailActivity"
+            android:screenOrientation="portrait" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MagicCardDetailActivity" />
+        </activity>
+        <activity
+            android:name="fr.gstraymond.android.tablet.MagicCardPagerActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:parentActivityName="fr.gstraymond.android.MagicCardDetailActivity"
+            android:screenOrientation="landscape" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MagicCardDetailActivity" />
         </activity>
 
         <!-- Help -->

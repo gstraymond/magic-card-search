@@ -12,15 +12,15 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 import fr.gstraymond.R;
-import fr.gstraymond.biz.AssetLoader;
+import fr.gstraymond.biz.CastingCostImageGetter;
 import fr.gstraymond.magicsearch.model.response.MagicCard;
 import fr.gstraymond.tools.CastingCostFormatter;
 import fr.gstraymond.tools.LanguageUtil;
 
 public class MagicCardArrayAdapter extends ArrayAdapter<MagicCard> {
 
-	private AssetLoader assetLoader;
-	private CastingCostFormatter castingCostFormatter;
+	private CastingCostImageGetter imagetGetter;
+	private CastingCostFormatter formatter;
 	private boolean showFrenchTitle;
 
 	public MagicCardArrayAdapter(Context context, int resource,
@@ -28,8 +28,8 @@ public class MagicCardArrayAdapter extends ArrayAdapter<MagicCard> {
 			CastingCostAssetLoader castingCostAssetLoader) {
 		
 		super(context, resource, textViewResourceId, objects);
-		this.assetLoader = new AssetLoader(castingCostAssetLoader);
-		this.castingCostFormatter = new CastingCostFormatter();
+		this.imagetGetter = new CastingCostImageGetter(castingCostAssetLoader);
+		this.formatter = new CastingCostFormatter();
 		this.showFrenchTitle = LanguageUtil.showFrench(context);
 	}
 
@@ -56,12 +56,12 @@ public class MagicCardArrayAdapter extends ArrayAdapter<MagicCard> {
 
 		String castingCost = "";
 		if (card.getCastingCost() != null) {
-			castingCost = castingCostFormatter.format(card.getCastingCost());
+			castingCost = formatter.format(card.getCastingCost());
 		}
 
 		String line = (position + 1) + ". " + castingCost + " " + getTitle(card);
 
-		return Html.fromHtml(line, assetLoader, null);
+		return Html.fromHtml(line, imagetGetter, null);
 	}
 	
 	private String getTitle(MagicCard card) {

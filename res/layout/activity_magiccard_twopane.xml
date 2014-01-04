@@ -48,10 +48,34 @@
         </ListView>
     </LinearLayout>
 
-    <FrameLayout
-        android:id="@+id/magiccard_detail_container"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="1" />
+    <ScrollView
+        android:id="@+id/magiccard_detail_scrollview"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:divider="?android:attr/dividerHorizontal"
+            android:orientation="vertical"
+            android:showDividers="middle" >
+
+            <FrameLayout
+                android:id="@+id/magiccard_detail_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:context=".MagicCardDetailActivity"
+                tools:ignore="MergeRootFrame" />
+
+            <FrameLayout
+                android:id="@+id/magiccard_set_list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:context=".MagicCardDetailActivity"
+                tools:ignore="MergeRootFrame" >
+            </FrameLayout>
+        </LinearLayout>
+    </ScrollView>
 
 </LinearLayout>

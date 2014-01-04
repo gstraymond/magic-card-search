@@ -6,34 +6,12 @@
     android:orientation="vertical"
     tools:context=".MagicCardDetailFragment" >
 
-    <LinearLayout
-        android:id="@+id/pictures_layout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:visibility="gone" >
-
-        <TextView
-            android:id="@+id/publication"
-            style="?android:attr/textAppearanceMedium"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_horizontal" />
-
-        <fr.gstraymond.ui.MagicCardViewPager
-            android:id="@+id/pager"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-    </LinearLayout>
-
     <TextView
         android:id="@+id/magiccard_detail"
         style="?android:attr/textAppearanceLarge"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:padding="5dp"
+        android:padding="12dp"
         android:textIsSelectable="true" />
 
 </LinearLayout>
