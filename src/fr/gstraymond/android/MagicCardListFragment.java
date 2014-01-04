@@ -1,6 +1,7 @@
 package fr.gstraymond.android;
 
-import java.util.ArrayList;
+import static fr.gstraymond.constants.Consts.MAGIC_CARD_LIST;
+
 import java.util.List;
 
 import android.app.Activity;
@@ -17,10 +18,7 @@ import fr.gstraymond.ui.MagicCardArrayAdapter;
 
 public class MagicCardListFragment extends ListFragment {
 
-	public static String CARDS = "cards";
-	public static String TOTAL_CARD_COUNT = "totalCardCount";
 	private List<MagicCard> cards; 
-	private int totalCardCount;
 	private boolean twoPaneMode;
 
 	private static final String STATE_ACTIVATED_POSITION = "activated_position";
@@ -45,16 +43,7 @@ public class MagicCardListFragment extends ListFragment {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
-		if (getArguments() != null && getArguments().getParcelableArrayList(CARDS) != null) {
-			cards = getArguments().getParcelableArrayList(CARDS);
-			
-			if (getArguments().getInt(TOTAL_CARD_COUNT) != 0) {
-				totalCardCount = getArguments().getInt(TOTAL_CARD_COUNT);
-			}
-		} else {
-			cards = new ArrayList<MagicCard>();
-		}
-
+		cards = getArguments().getParcelableArrayList(MAGIC_CARD_LIST);
 
 		if (getActivity().findViewById(R.id.magiccard_detail_container) != null) {
 			twoPaneMode = true;
@@ -109,6 +98,7 @@ public class MagicCardListFragment extends ListFragment {
 			long id) {
 		super.onListItemClick(listView, view, position, id);
 		callbacks.onItemSelected(cards.get(position));
+//		getListView().setItemChecked(position, true);
 	}
 
 	@Override
@@ -118,18 +108,6 @@ public class MagicCardListFragment extends ListFragment {
 			// Serialize and persist the activated item position.
 			outState.putInt(STATE_ACTIVATED_POSITION, position);
 		}
-	}
-
-	/**
-	 * Turns on activate-on-click mode. When this mode is on, list items will be
-	 * given the 'activated' state when touched.
-	 */
-	public void setActivateOnItemClick(boolean activateOnItemClick) {
-		// When setting CHOICE_MODE_SINGLE, ListView will automatically
-		// give items the 'activated' state when touched.
-		getListView().setChoiceMode(
-				activateOnItemClick ? ListView.CHOICE_MODE_SINGLE
-						: ListView.CHOICE_MODE_NONE);
 	}
 
 	private void setActivatedPosition(int position) {
@@ -151,16 +129,14 @@ public class MagicCardListFragment extends ListFragment {
 		return arrayAdapter.getCount();
 	}
 
-	public int getTotalCardCount() {
-		return totalCardCount;
-	}
-
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 		
 		// select the first element
 		if (twoPaneMode && getListAdapter().getCount() > 0) {
+//			getListView().setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+			
 			long itemId = getListAdapter().getItemId(0);
 			View view = getListAdapter().getView(0, null, null);
 			getListView().performItemClick(view, 0, itemId);	

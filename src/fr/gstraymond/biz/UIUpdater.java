@@ -1,5 +1,7 @@
 package fr.gstraymond.biz;
 
+import static fr.gstraymond.constants.Consts.MAGIC_CARD_LIST;
+
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -42,10 +44,6 @@ public class UIUpdater extends AsyncTask<Void, Void, SearchResult> {
 
 	@Override
 	protected SearchResult doInBackground(Void... params) {
-		return getResult();
-	}
-
-	private SearchResult getResult() {
 		try {
 			return activity.getObjectMapper().readValue(resultAsString, SearchResult.class);
 		} catch (JsonParseException e) {
@@ -57,7 +55,6 @@ public class UIUpdater extends AsyncTask<Void, Void, SearchResult> {
 		}
 		return null;
 	}
-
 
 	@Override
 	protected void onPostExecute(SearchResult result) {
@@ -71,14 +68,12 @@ public class UIUpdater extends AsyncTask<Void, Void, SearchResult> {
 			}
 		}
 		
-		String text = totalCardCount + " ";
-		if (totalCardCount > 1) {
-			text += activity.getString(R.string.progress_cards_found);
-		} else {
-			text += activity.getString(R.string.progress_card_found);
+		int textId = R.string.progress_cards_found;
+		if (totalCardCount <= 1) {
+			textId = R.string.progress_card_found;
 		}
 		
-		getWelcomeTextView().setText(text);
+		getWelcomeTextView().setText(totalCardCount + " " + activity.getString(textId));
 		
 		updateUIList(totalCardCount, cards);
 		updateUIFacets(result);
@@ -90,11 +85,12 @@ public class UIUpdater extends AsyncTask<Void, Void, SearchResult> {
 			fragment.appendCards(cards);
 		} else {
 			Bundle bundle = new Bundle();
-			bundle.putParcelableArrayList(MagicCardListFragment.CARDS, cards);
-			bundle.putInt(MagicCardListFragment.TOTAL_CARD_COUNT, totalCardCount);
-			Fragment fragment = new MagicCardListFragment();
+			bundle.putParcelableArrayList(MAGIC_CARD_LIST, cards);
+			MagicCardListFragment fragment = new MagicCardListFragment();
 			fragment.setArguments(bundle);
 			getFragmentManager().beginTransaction().replace(R.id.magiccard_list, fragment).commit();
+			
+			activity.setTotalCardCount(totalCardCount);
 		}
 	}
 

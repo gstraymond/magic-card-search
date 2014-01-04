@@ -39,6 +39,7 @@ public class MagicCardListActivity extends Activity implements
 	private Menu menu;
 
 	private MagicCard currentCard;
+	private int totalCardCount;
 	private SearchOptions currentSearch;
 	private boolean isRestored = false;
 
@@ -65,8 +66,6 @@ public class MagicCardListActivity extends Activity implements
 
 		if (findViewById(R.id.magiccard_detail_container) != null) {
 			twoPaneMode = true;
-			MagicCardListFragment listFragment = new MagicCardListFragment();
-			getFragmentManager().beginTransaction().replace(R.id.magiccard_list, listFragment).commit();
 		}
 
 	}
@@ -74,11 +73,6 @@ public class MagicCardListActivity extends Activity implements
 	@Override
 	protected void onPostCreate(Bundle savedInstanceState) {
 		super.onPostCreate(savedInstanceState);
-
-		if (twoPaneMode) {
-			Fragment listFragment = getFragmentManager().findFragmentById(R.id.magiccard_list);
-			((MagicCardListFragment) listFragment).setActivateOnItemClick(true);
-		}
 
 		if (currentSearch == null) {
 			currentSearch = new SearchOptions().setQuery("*");
@@ -265,5 +259,13 @@ public class MagicCardListActivity extends Activity implements
 
 	public SearchView getSearchView() {
 		return searchView;
+	}
+
+	public int getTotalCardCount() {
+		return totalCardCount;
+	}
+
+	public void setTotalCardCount(int totalCardCount) {
+		this.totalCardCount = totalCardCount;
 	}
 }

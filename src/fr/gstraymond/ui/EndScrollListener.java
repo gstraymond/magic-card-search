@@ -1,12 +1,10 @@
 package fr.gstraymond.ui;
 
-import android.app.FragmentManager;
 import android.util.Log;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
 import fr.gstraymond.R;
 import fr.gstraymond.android.MagicCardListActivity;
-import fr.gstraymond.android.MagicCardListFragment;
 import fr.gstraymond.biz.SearchOptions;
 import fr.gstraymond.biz.SearchProcessor;
 
@@ -24,11 +22,8 @@ public class EndScrollListener implements OnScrollListener {
 			int totalCount) {
 		boolean endReached = totalCount > 10
 				&& firstVisible + visibleCount >= totalCount;
-		if (canLoadMoreItems && endReached) {
-
-			FragmentManager fragmentManager = activity.getFragmentManager();
-			MagicCardListFragment magicCardListFragment = (MagicCardListFragment) fragmentManager.findFragmentById(R.id.magiccard_list);
-			int cardListCount = magicCardListFragment.getTotalCardCount();
+		if (canLoadMoreItems && endReached) { 
+			int cardListCount = activity.getTotalCardCount();
 
 			boolean allCardsLoaded = totalCount == cardListCount;
 			if (!allCardsLoaded) {
