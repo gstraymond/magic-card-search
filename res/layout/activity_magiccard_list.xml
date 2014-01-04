@@ -8,6 +8,13 @@
     android:orientation="vertical"
     tools:context=".MagicCardListActivity" >
 
+    <SearchView
+        android:id="@+id/search_input"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:iconifiedByDefault="false"
+        android:queryHint="@string/search_hint" />
+
     <TextView
         android:id="@+id/welcome_text_view"
         style="?android:attr/textAppearanceMedium"

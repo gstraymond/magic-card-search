@@ -13,6 +13,7 @@
     <string name="list_menu_search">Search</string>
     <string name="list_menu_help">Help !</string>
     <string name="detail_menu_pictures">Pictures</string>
+    <string name="search_hint">black lotus, draw, sacrifice…</string>
     
     <string name="facet_ability">Ability</string>
     <string name="facet_artist">Artist</string>

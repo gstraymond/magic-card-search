@@ -68,6 +68,10 @@ public class MagicCardListActivity extends Activity implements
 			twoPaneMode = true;
 		}
 
+		if (findViewById(R.id.search_input) != null) {
+			searchView = (SearchView) findViewById(R.id.search_input);
+			searchView.setOnQueryTextListener(textListener);
+		}
 	}
 
 	@Override
@@ -136,10 +140,12 @@ public class MagicCardListActivity extends Activity implements
 			inflater.inflate(R.menu.magiccard_list_menu, menu);
 		}
 
-		searchView = new SearchView(this);
-		searchView.setOnQueryTextListener(textListener);
-		searchView.setQueryHint("black lotus, draw, sacrifice...");
-		menu.findItem(R.id.search_tab).setActionView(searchView);
+		if (menu.findItem(R.id.search_tab) != null) {
+			searchView = new SearchView(this);
+			searchView.setOnQueryTextListener(textListener);
+			searchView.setQueryHint(getString(R.string.search_hint));
+			menu.findItem(R.id.search_tab).setActionView(searchView);
+		}
 
 		return true;
 	}
@@ -187,9 +193,13 @@ public class MagicCardListActivity extends Activity implements
 	private void resetSearchView() {
 		// buggy
         MenuItem menuItem = menu.findItem(R.id.search_tab);
-		menuItem.collapseActionView();
+        if (menuItem != null) {
+        	menuItem.collapseActionView();
+        }
 		searchView.setIconified(true); 
-        menuItem.collapseActionView();
+        if (menuItem != null) {
+        	menuItem.collapseActionView();
+        }
 		searchView.setIconified(true);
         searchView.setQuery("", false);
 	}
