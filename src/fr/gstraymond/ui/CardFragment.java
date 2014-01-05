@@ -1,6 +1,8 @@
 package fr.gstraymond.ui;
 
 import android.app.Fragment;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
@@ -11,6 +13,7 @@ import android.view.ViewGroup.LayoutParams;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 import android.widget.LinearLayout;
+import fr.gstraymond.R;
 import fr.gstraymond.biz.PictureDownloader;
 
 public class CardFragment extends Fragment {
@@ -23,9 +26,9 @@ public class CardFragment extends Fragment {
             Bundle savedInstanceState) {
 
         ImageView imageView = new ImageView(getActivity());
+        imageView.setImageBitmap(getDefaultBitmap());
         imageView.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
-        imageView.setScaleType(ScaleType.FIT_XY);
-        imageView.setAdjustViewBounds(true);
+        imageView.setScaleType(ScaleType.CENTER);
         
         if (url == null) {
         	url = savedInstanceState.getString(URL);
@@ -43,9 +46,8 @@ public class CardFragment extends Fragment {
         return layout;
     }
 
-	public Fragment setCardUrl(String url) {
-		this.url = url;
-		return this;
+	private Bitmap getDefaultBitmap() {
+		return BitmapFactory.decodeResource(getActivity().getResources(), R.drawable.picture);
 	}
 
 	@Override
@@ -55,4 +57,8 @@ public class CardFragment extends Fragment {
 		Log.d(getClass().getName(), "onSaveInstanceState " + outState);
 	}
 
+	public Fragment setCardUrl(String url) {
+		this.url = url;
+		return this;
+	}
 }

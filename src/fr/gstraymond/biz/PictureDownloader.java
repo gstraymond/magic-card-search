@@ -8,6 +8,7 @@ import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.ImageView;
+import android.widget.ImageView.ScaleType;
 
 public class PictureDownloader extends AsyncTask<Void, Void, Bitmap> {
 
@@ -28,7 +29,8 @@ public class PictureDownloader extends AsyncTask<Void, Void, Bitmap> {
     @Override
     protected void onPostExecute(Bitmap bitmap) {
 		imageView.setImageBitmap(bitmap);
-		Log.d(getClass().getName(), "height : " +  bitmap.getHeight() + " - width : " +  bitmap.getWidth());
+        imageView.setScaleType(ScaleType.FIT_XY);
+        imageView.setAdjustViewBounds(true);
     }
 
 	private Bitmap getBitmap() {
