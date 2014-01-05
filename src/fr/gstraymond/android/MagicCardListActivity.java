@@ -3,7 +3,6 @@ package fr.gstraymond.android;
 import static fr.gstraymond.constants.Consts.MAGIC_CARD;
 import static fr.gstraymond.constants.Consts.POSITION;
 import android.app.Activity;
-import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -13,6 +12,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.SearchView;
+import android.widget.TextView;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -26,7 +26,7 @@ import fr.gstraymond.ui.EndScrollListener;
 import fr.gstraymond.ui.TextListener;
 
 public class MagicCardListActivity extends Activity implements
-		MagicCardListFragment.Callbacks, SetListFragment.Callbacks {
+		MagicCardListFragment.Callbacks, MagicCardDetailFragment.Callbacks {
 	private static final String CURRENT_SEARCH = "currentSearch";
 
 	public static final String MAGIC_CARD_RESULT = "result";
@@ -101,16 +101,13 @@ public class MagicCardListActivity extends Activity implements
 			Bundle bundle = new Bundle();
 			bundle.putParcelable(MAGIC_CARD, card);
 			
+			TextView titleTextView = (TextView) findViewById(R.id.magiccard_detail_title);
+			titleTextView.setText(MagicCardDetailActivity.formatTitle(this, currentCard));
+			
 			MagicCardDetailFragment detailFragment = new MagicCardDetailFragment();
 			detailFragment.setArguments(bundle);
 			getFragmentManager().beginTransaction()
 				.replace(R.id.magiccard_detail_container, detailFragment)
-				.commit();
-			
-			Fragment setListFragment = new SetListFragment();
-			setListFragment.setArguments(bundle);
-			getFragmentManager().beginTransaction()
-				.replace(R.id.magiccard_set_list, setListFragment)
 				.commit();
 
 		} else {
@@ -124,7 +121,8 @@ public class MagicCardListActivity extends Activity implements
 	public void onItemSelected(int id) {
 		Intent intent = ActivityUtil.getIntent(this, MagicCardPagerActivity.class);
 		intent.putExtra(MAGIC_CARD, currentCard);
-		intent.putExtra(POSITION, id);
+		// first element is a card
+		intent.putExtra(POSITION, id - 1);
 		startActivity(intent);
 	}
 
@@ -229,10 +227,6 @@ public class MagicCardListActivity extends Activity implements
 
 	public View getPicturesView() {
 		return findViewById(R.id.pictures_layout);
-	}
-
-	public View getDetailView() {
-		return findViewById(R.id.magiccard_detail);
 	}
 
 	private CustomApplication getCustomApplication() {
