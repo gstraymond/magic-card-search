@@ -49,20 +49,15 @@ public class SearchOptions implements Parcelable {
 			return facets;
 		}
 		
-		Log.d(getClass().getName(), "readMap " + facetsAsString);
-		
 		String[] firstSplit = facetsAsString.split("\\|");
 		for (String facet : firstSplit) {
-			Log.d(getClass().getName(), "readMap facet " + facet);
 			String[] keyValues = facet.split("=");
 			String key = keyValues[0];
-			Log.d(getClass().getName(), "readMap key " + key);
 			
 			String valuesAsString = keyValues[1];
 			String[] secondSplit = valuesAsString.split(",");
 			List<String> values = new ArrayList<String>();
 			for (String value : secondSplit) {
-				Log.d(getClass().getName(), "readMap value " + value);
 				values.add(value);
 			}
 
@@ -104,8 +99,6 @@ public class SearchOptions implements Parcelable {
 			}
 			firstSep = "|";
 		}
-		
-		Log.d(getClass().getName(), "writeMap " + facetsAsString);
 		
 		dest.writeString(facetsAsString.toString());
 	}

@@ -140,6 +140,7 @@ public class MagicCardListActivity extends Activity implements
 
 		if (menu.findItem(R.id.search_tab) != null) {
 			searchView = new SearchView(this);
+			searchView.setIconifiedByDefault(false);
 			searchView.setOnQueryTextListener(textListener);
 			searchView.setQueryHint(getString(R.string.search_hint));
 			menu.findItem(R.id.search_tab).setActionView(searchView);

@@ -40,7 +40,7 @@ public class MagicCardArrayAdapter extends ArrayAdapter<MagicCard> {
 		if (text == null) {
 			text = new TextView(getContext());
 			text.setTextAppearance(getContext(), TextAppearance_DeviceDefault_Medium);
-			text.setPadding(getTextPaddingBottom() * 2, 0, 0, getTextPaddingBottom());
+			text.setPadding(getTextPadding() * 2, 0, getTextPadding() * 2, getTextPadding());
 		}
 
 		text.setText(formatCard(getItem(position), position));
@@ -48,7 +48,7 @@ public class MagicCardArrayAdapter extends ArrayAdapter<MagicCard> {
 
 	}
 
-	private int getTextPaddingBottom() {
+	private int getTextPadding() {
 		return (int) getContext().getResources().getDimension(R.dimen.listTextPaddingBottom);
 	}	
 

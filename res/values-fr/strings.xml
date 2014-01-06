@@ -10,6 +10,7 @@
     <string name="list_menu_search">Recherche</string>
     <string name="list_menu_help">A l\'aide !</string>
     <string name="detail_menu_pictures">Images</string>
+    <string name="search_hint">anneau solaire, draw, sacrifice…</string>
     
     <string name="facet_ability">Capacité</string>
     <string name="facet_artist">Artiste</string>

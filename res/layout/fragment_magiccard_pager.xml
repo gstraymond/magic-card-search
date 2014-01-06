@@ -7,13 +7,6 @@
     android:orientation="vertical"
     tools:context=".MagicCardPagerFragment" >
 
-    <TextView
-        android:id="@+id/publication"
-        style="?android:attr/textAppearanceMedium"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_horizontal" />
-
     <fr.gstraymond.ui.MagicCardViewPager
         android:id="@+id/pager"
         android:layout_width="match_parent"

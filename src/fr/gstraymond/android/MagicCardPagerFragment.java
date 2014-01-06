@@ -5,11 +5,9 @@ import static fr.gstraymond.constants.Consts.POSITION;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 import fr.gstraymond.R;
 import fr.gstraymond.magicsearch.model.response.MagicCard;
 import fr.gstraymond.ui.MagicCardPagerAdapter;
@@ -29,12 +27,8 @@ public class MagicCardPagerFragment extends Fragment {
 		View rootView = inflater.inflate(R.layout.fragment_magiccard_pager,
 				container, false);
 
-		TextView publicationTextView = getPublicationView(rootView);
-		MagicCardViewPager viewPager = getViewPager(card, rootView)
-				.setPublicationTextView(publicationTextView);
+		MagicCardViewPager viewPager = getViewPager(card, rootView);
 		viewPager.setAdapter(getPagerAdapter(card));
-		
-		Log.d(getClass().getName(), "onCreateView position : " + position);
 		viewPager.setCurrentItem(position);
 
 		return rootView;
@@ -44,12 +38,6 @@ public class MagicCardPagerFragment extends Fragment {
 		MagicCardViewPager viewPager = ((MagicCardViewPager) rootView
 				.findViewById(R.id.pager)).setCard(card);
 		return viewPager;
-	}
-
-	private TextView getPublicationView(View rootView) {
-		TextView publicationTextView = (TextView) rootView
-				.findViewById(R.id.publication);
-		return publicationTextView;
 	}
 
 	private PagerAdapter getPagerAdapter(MagicCard card) {
