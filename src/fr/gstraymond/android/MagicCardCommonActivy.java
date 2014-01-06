@@ -4,7 +4,6 @@ import static fr.gstraymond.constants.Consts.MAGIC_CARD;
 import android.app.Activity;
 import android.app.Fragment;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.view.MenuItem;
 import fr.gstraymond.magicsearch.model.response.MagicCard;
 import fr.gstraymond.tools.LanguageUtil;
@@ -17,7 +16,7 @@ public abstract class MagicCardCommonActivy extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		card = getCard(savedInstanceState);
+		card = getIntent().getParcelableExtra(MAGIC_CARD);
 
 		// Show the Up button in the action bar.
 		getActionBar().setDisplayHomeAsUpEnabled(true);
@@ -29,16 +28,6 @@ public abstract class MagicCardCommonActivy extends Activity {
 		Bundle bundle = new Bundle();
 		bundle.putParcelable(MAGIC_CARD, card);
 		return bundle;
-	}
-	
-	private MagicCard getCard(Bundle savedInstanceState) {
-		if (savedInstanceState != null) {
-			Parcelable savedCard = savedInstanceState.getParcelable(MAGIC_CARD);
-			if (savedCard != null) {
-				return savedInstanceState.getParcelable(MAGIC_CARD);
-			}
-		}
-		return getIntent().getParcelableExtra(MAGIC_CARD);
 	}
 
 	private String getFullTitle(MagicCard card) {
@@ -63,13 +52,6 @@ public abstract class MagicCardCommonActivy extends Activity {
 		}
 		return super.onOptionsItemSelected(item);
 	}
-
-	@Override
-	protected void onSaveInstanceState(Bundle outState) {
-		super.onSaveInstanceState(outState);
-		outState.putParcelable(MAGIC_CARD, card);
-	}
-
 
 	protected MagicCard getCard() {
 		return card;

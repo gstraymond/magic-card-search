@@ -11,12 +11,9 @@ public class MagicCardPagerActivity extends MagicCardCommonActivy {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_magiccard_pager);
-
-
-		Bundle bundle = getBundle();
 		
 		Fragment fragment = new MagicCardPagerFragment();
-		fragment.setArguments(bundle);
+		fragment.setArguments(getBundle());
 		replaceFragment(fragment, R.id.magiccard_pager_container);
 	}
 
