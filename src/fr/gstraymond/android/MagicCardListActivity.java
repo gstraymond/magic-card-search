@@ -1,9 +1,12 @@
 package fr.gstraymond.android;
 
+import static android.widget.Toast.LENGTH_SHORT;
+import static android.widget.Toast.makeText;
 import static fr.gstraymond.constants.Consts.MAGIC_CARD;
 import static fr.gstraymond.constants.Consts.POSITION;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.util.Log;
@@ -72,6 +75,8 @@ public class MagicCardListActivity extends Activity implements
 			searchView = (SearchView) findViewById(R.id.search_input);
 			searchView.setOnQueryTextListener(textListener);
 		}
+		
+		getActionBar().setHomeButtonEnabled(true);
 	}
 
 	@Override
@@ -151,7 +156,12 @@ public class MagicCardListActivity extends Activity implements
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
+		
 		switch (item.getItemId()) {
+		
+		case android.R.id.home:
+			makeText(this, getVersionName(), LENGTH_SHORT).show();
+			return true;
 
 		case R.id.list_tab:
 			hide(getFacetView());
@@ -187,6 +197,17 @@ public class MagicCardListActivity extends Activity implements
 		}
 		
 		return super.onOptionsItemSelected(item);
+	}
+
+	private String getVersionName() {
+		try {
+			String versionName = getPackageManager().getPackageInfo(getPackageName(), 0).versionName;
+			return "Version " + versionName;
+		} catch (NameNotFoundException e) {
+			Log.e(getClass().getName(), "getVersionName", e);
+		}
+		
+		return null;
 	}
 	
 	private void resetSearchView() {
