@@ -20,12 +20,17 @@ import fr.gstraymond.magicsearch.model.response.MagicCard;
 import fr.gstraymond.magicsearch.model.response.Publication;
 import fr.gstraymond.tools.CastingCostFormatter;
 import fr.gstraymond.tools.DescriptionFormatter;
+import fr.gstraymond.tools.PowerToughnessFormatter;
+import fr.gstraymond.tools.TypeFormatter;
 
 
 public class SetArrayAdapter extends ArrayAdapter<Object> {
 
 	private CastingCostFormatter castingCostFormatter;
-	private DescriptionFormatter descriptionFormatter;
+	private DescriptionFormatter descFormatter;
+	private PowerToughnessFormatter ptFormatter;
+	private TypeFormatter typeFormatter;
+	
 	private SetImageGetter setImagetGetter;
 
 	public SetArrayAdapter(Context context, int resource,
@@ -33,7 +38,9 @@ public class SetArrayAdapter extends ArrayAdapter<Object> {
 		super(context, resource, textViewResourceId, objects);
 		this.setImagetGetter = new SetImageGetter(getContext());
 		this.castingCostFormatter = new CastingCostFormatter();
-		this.descriptionFormatter = new DescriptionFormatter();
+		this.descFormatter = new DescriptionFormatter();
+		this.ptFormatter = new PowerToughnessFormatter();
+		this.typeFormatter = new TypeFormatter();
 	}
 
 	@Override
@@ -53,13 +60,24 @@ public class SetArrayAdapter extends ArrayAdapter<Object> {
 	}
 	
 	private Spanned formatCard(MagicCard card) {
-		String castingCost = formatCC(card);
-		String pt = formatPT(card);
-		String type = formatType(card);
-		String description = formatDescription(card);
-		String html = getHtml(castingCost, pt, type, description);
+		String cc = formatCC(card);
+		String pt = ptFormatter.format(card);
+		String type = typeFormatter.format(card);
+		String description = descFormatter.format(card);
+		String cc_pt = formatCC_PT(cc, pt);
+		String html = getHtml(cc_pt, type, description);
 		
 		return Html.fromHtml(html, getCCImageGetter(), null);
+	}
+	
+	private String formatCC_PT(String cc, String pt) {
+		if (cc.length() == 0) {
+			return pt;
+		}
+		if (pt.length() == 0) {
+			return cc;
+		}
+		return cc + " — " + pt;
 	}
 	
 	private ImageGetter getCCImageGetter() {
@@ -89,24 +107,6 @@ public class SetArrayAdapter extends ArrayAdapter<Object> {
 		return castingCostFormatter.format(card.getCastingCost());
 	}
 
-	private String formatPT(MagicCard card) {
-		if (card.getPower() == null) {
-			return "";
-		}
-		return card.getPower() + " / " + card.getToughness();
-	}
-	
-	private String formatType(MagicCard card) {
-		return card.getType().replaceAll("--", "—");
-	}
-
-	private String formatDescription(MagicCard card) {
-		if (card.getDescription() == null) {
-			return "";
-		}
-		return descriptionFormatter.format(card.getDescription());
-	}
-
 	private Spanned formatPublication(Publication publication) {
 		String line = getEditionImage(publication) + " " + publication.getEdition();
 		return Html.fromHtml(line, setImagetGetter, null);
@@ -125,7 +125,7 @@ public class SetArrayAdapter extends ArrayAdapter<Object> {
 			return (TextView) getLayoutInflater().inflate(R.layout.card_textview, parent, false);
 		}
 		
-		/* Need optimisation
+		/* FIXME : Need optimisation
 		if (view != null) {
 			return (TextView) view;
 		}
