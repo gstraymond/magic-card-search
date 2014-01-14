@@ -26,7 +26,7 @@ public class SplashScreen extends Activity {
 		new ApplicationLoader(this).execute();
 		
 		/* lancement de la recherche */
-		SearchOptions options = new SearchOptions().setQuery("*");
+		SearchOptions options = new SearchOptions();
 		new SplashProcessor(this, options).execute();
 	}
 

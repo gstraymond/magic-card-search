@@ -14,12 +14,7 @@ public class Bool {
 
 	public Bool(SearchOptions options) {
 		must = new ArrayList<Object>();
-
-		if (options.isRandom()) {
-			must.add(new FunctionScore());
-		} else {
-			must.add(new QueryString(options));
-		}
+		must.add(new QueryString(options));
 
 		Map<String, List<String>> facets = options.getFacets();
 		for (Entry<String, List<String>> entry : facets.entrySet()) {

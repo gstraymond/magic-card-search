@@ -1,7 +1,6 @@
 package fr.gstraymond.ui;
 
 
-import android.util.Log;
 import android.widget.SearchView.OnQueryTextListener;
 import fr.gstraymond.R;
 import fr.gstraymond.android.MagicCardListActivity;
@@ -24,10 +23,8 @@ public class TextListener implements OnQueryTextListener {
 
 	@Override
 	public boolean onQueryTextSubmit(String text) {
-		Log.d(getClass().getName(), "text: " + text);
-		
-		if (text != null && text.length() > 0 && canSearch) {
-			SearchOptions options = new SearchOptions().setQuery(text);
+		if (canSearch) {
+			SearchOptions options = activity.getCurrentSearch().setQuery(text);
 			new SearchProcessor(activity, options, R.string.loading_initial).execute();
 		}
 		return true;

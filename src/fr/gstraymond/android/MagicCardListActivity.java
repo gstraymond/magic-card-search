@@ -84,7 +84,7 @@ public class MagicCardListActivity extends Activity implements
 		super.onPostCreate(savedInstanceState);
 
 		if (currentSearch == null) {
-			currentSearch = new SearchOptions().setQuery("*");
+			currentSearch = new SearchOptions();
 		}
 		
 		String resultAsString = getIntent().getStringExtra(MAGIC_CARD_RESULT);
@@ -185,7 +185,7 @@ public class MagicCardListActivity extends Activity implements
 			
 		case R.id.clear_tab:
 			resetSearchView();
-			SearchOptions options = new SearchOptions().setQuery("*");
+			SearchOptions options = new SearchOptions();
 			new SearchProcessor(this, options, R.string.loading_clear).execute();
 			return true;
 
