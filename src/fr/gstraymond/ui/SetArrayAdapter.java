@@ -20,6 +20,7 @@ import fr.gstraymond.magicsearch.model.response.MagicCard;
 import fr.gstraymond.magicsearch.model.response.Publication;
 import fr.gstraymond.tools.CastingCostFormatter;
 import fr.gstraymond.tools.DescriptionFormatter;
+import fr.gstraymond.tools.FormatFormatter;
 import fr.gstraymond.tools.PowerToughnessFormatter;
 import fr.gstraymond.tools.TypeFormatter;
 
@@ -28,6 +29,7 @@ public class SetArrayAdapter extends ArrayAdapter<Object> {
 
 	private CastingCostFormatter castingCostFormatter;
 	private DescriptionFormatter descFormatter;
+	private FormatFormatter formatFormatter;
 	private PowerToughnessFormatter ptFormatter;
 	private TypeFormatter typeFormatter;
 	
@@ -39,8 +41,9 @@ public class SetArrayAdapter extends ArrayAdapter<Object> {
 		this.setImagetGetter = new SetImageGetter(getContext());
 		this.castingCostFormatter = new CastingCostFormatter();
 		this.descFormatter = new DescriptionFormatter();
+		this.formatFormatter = new FormatFormatter(context);
 		this.ptFormatter = new PowerToughnessFormatter();
-		this.typeFormatter = new TypeFormatter();
+		this.typeFormatter = new TypeFormatter(context);
 	}
 
 	@Override
@@ -62,10 +65,11 @@ public class SetArrayAdapter extends ArrayAdapter<Object> {
 	private Spanned formatCard(MagicCard card) {
 		String cc = formatCC(card);
 		String pt = ptFormatter.format(card);
+		String cc_pt = formatCC_PT(cc, pt);
 		String type = typeFormatter.format(card);
 		String description = descFormatter.format(card);
-		String cc_pt = formatCC_PT(cc, pt);
-		String html = getHtml(cc_pt, type, description);
+		String formats = formatFormatter.format(card);
+		String html = getHtml(cc_pt, type, description, formats);
 		
 		return Html.fromHtml(html, getCCImageGetter(), null);
 	}

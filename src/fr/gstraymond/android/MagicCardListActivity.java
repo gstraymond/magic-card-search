@@ -4,7 +4,6 @@ import static android.widget.Toast.LENGTH_SHORT;
 import static android.widget.Toast.makeText;
 import static fr.gstraymond.constants.Consts.MAGIC_CARD;
 import static fr.gstraymond.constants.Consts.POSITION;
-import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Bundle;
@@ -16,9 +15,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.SearchView;
 import android.widget.TextView;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import fr.gstraymond.R;
 import fr.gstraymond.biz.SearchOptions;
 import fr.gstraymond.biz.SearchProcessor;
@@ -28,7 +24,7 @@ import fr.gstraymond.tools.ActivityUtil;
 import fr.gstraymond.ui.EndScrollListener;
 import fr.gstraymond.ui.TextListener;
 
-public class MagicCardListActivity extends Activity implements
+public class MagicCardListActivity extends CustomActivity implements
 		MagicCardListFragment.Callbacks, MagicCardDetailFragment.Callbacks {
 	private static final String CURRENT_SEARCH = "currentSearch";
 
@@ -89,7 +85,7 @@ public class MagicCardListActivity extends Activity implements
 		
 		String resultAsString = getIntent().getStringExtra(MAGIC_CARD_RESULT);
 		if (resultAsString != null && !isRestored) {
-			new UIUpdater(this, resultAsString).execute();
+			new UIUpdater(this, resultAsString, getObjectMapper()).execute();
 		} else {
 			new SearchProcessor(this, currentSearch, R.string.loading_initial).execute();	
 		}
@@ -249,14 +245,6 @@ public class MagicCardListActivity extends Activity implements
 
 	public View getPicturesView() {
 		return findViewById(R.id.pictures_layout);
-	}
-
-	private CustomApplication getCustomApplication() {
-		return (CustomApplication) getApplicationContext();
-	}
-	
-	public ObjectMapper getObjectMapper() {
-		return getCustomApplication().getObjectMapper();
 	}
 
 	public TextListener getTextListener() {

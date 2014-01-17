@@ -4,6 +4,8 @@ import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import android.text.TextUtils;
+
 import fr.gstraymond.magicsearch.model.response.MagicCard;
 
 public class DescriptionFormatter {
@@ -33,13 +35,7 @@ public class DescriptionFormatter {
 			}
 		}
 		
-		StringBuffer lines = new StringBuffer();
-		String sep = "";
-		for (String line : tmp.split("\n")) {
-			lines.append(sep + line);
-			sep = "<br /><br />";
-		}
-		return lines.toString();
+		return TextUtils.join("<br /><br />", tmp.split("\n"));
 	}
 
 	private String replace(String cost) {		

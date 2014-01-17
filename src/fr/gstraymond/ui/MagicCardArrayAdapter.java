@@ -36,7 +36,7 @@ public class MagicCardArrayAdapter extends ArrayAdapter<MagicCard> {
 		this.imagetGetter = new CastingCostImageGetter(castingCostAssetLoader);
 		this.ccFormatter = new CastingCostFormatter();
 		this.ptFormatter = new PowerToughnessFormatter();
-		this.typeFormatter = new TypeFormatter();
+		this.typeFormatter = new TypeFormatter(context);
 		this.showFrenchTitle = LanguageUtil.showFrench(context);
 	}
 

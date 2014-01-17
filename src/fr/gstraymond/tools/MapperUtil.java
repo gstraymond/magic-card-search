@@ -1,13 +1,10 @@
 package fr.gstraymond.tools;
 
-import java.io.IOException;
 import java.io.InputStream;
 
 import android.util.Log;
 
-import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class MapperUtil<T> {
@@ -23,11 +20,17 @@ public class MapperUtil<T> {
 	public T read(InputStream stream) {
 		try {
 			return objectMapper.readValue(stream, clazz);
-		} catch (JsonParseException e) {
+		} catch (Exception e) {
 			Log.e(getClass().getName(), "read", e);
-		} catch (JsonMappingException e) {
-			Log.e(getClass().getName(), "read", e);
-		} catch (IOException e) {
+		}
+		
+		return null;
+	}
+
+	public T read(String string) {
+		try {
+			return objectMapper.readValue(string, clazz);
+		} catch (Exception e) {
 			Log.e(getClass().getName(), "read", e);
 		}
 		

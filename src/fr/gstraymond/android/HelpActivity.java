@@ -2,29 +2,26 @@ package fr.gstraymond.android;
 
 import java.io.InputStream;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.text.Spanned;
 import android.text.method.LinkMovementMethod;
 import android.view.MenuItem;
 import android.widget.TextView;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import fr.gstraymond.R;
 import fr.gstraymond.biz.CastingCostImageGetter;
 import fr.gstraymond.magicsearch.help.HelpText;
 import fr.gstraymond.tools.HelpFormatter;
 import fr.gstraymond.tools.MapperUtil;
+import fr.gstraymond.ui.CastingCostAssetLoader;
 
-public class HelpActivity extends Activity {
+public class HelpActivity extends CustomActivity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_help);
 		
-		CastingCostImageGetter imageGetter = new CastingCostImageGetter(getCustomApplication().getCastingCostAssetLoader());
+		CastingCostImageGetter imageGetter = new CastingCostImageGetter(getCCAssetLoader());
 		HelpFormatter formatter = new HelpFormatter(imageGetter);
 		
 		Spanned text = formatter.format(getHelpText());
@@ -37,10 +34,13 @@ public class HelpActivity extends Activity {
 		getActionBar().setDisplayHomeAsUpEnabled(true);
 	}
 
+	private CastingCostAssetLoader getCCAssetLoader() {
+		return getCustomApplication().getCastingCostAssetLoader();
+	}
+
 	private HelpText getHelpText() {
 		InputStream stream = getResources().openRawResource(R.raw.help);
-		MapperUtil<HelpText> mapperUtil = new MapperUtil<HelpText>(getObjectMapper(), HelpText.class);
-		return mapperUtil.read(stream);
+		return new MapperUtil<HelpText>(getObjectMapper(), HelpText.class).read(stream);
 	}
 
 	@Override
@@ -55,13 +55,5 @@ public class HelpActivity extends Activity {
 
 	private TextView getTextView() {
 		return (TextView) findViewById(R.id.help_text_view);
-	}
-
-	private CustomApplication getCustomApplication() {
-		return (CustomApplication) getApplicationContext();
-	}
-	
-	private ObjectMapper getObjectMapper() {
-		return getCustomApplication().getObjectMapper();
 	}
 }

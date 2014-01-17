@@ -4,6 +4,7 @@ import java.util.List;
 
 import android.text.Html;
 import android.text.Spanned;
+import android.text.TextUtils;
 import fr.gstraymond.biz.CastingCostImageGetter;
 import fr.gstraymond.magicsearch.help.HelpText;
 
@@ -54,11 +55,9 @@ public class HelpFormatter {
 		if (descriptions == null) {
 			return "";
 		}
-		StringBuilder builder = new StringBuilder("<p>");
-		for (String description : descriptions) {
-			builder.append(description + "<br />");
-		}
-		return builder.toString() + "</p>";
+		
+		String text = TextUtils.join("<br />", descriptions);
+		return "<p>" + text + "</p>";
 	}
 
 	private String formatItems(HelpText helpText) {

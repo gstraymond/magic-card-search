@@ -3,6 +3,8 @@ package fr.gstraymond.tools;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.text.TextUtils;
+
 public class CastingCostFormatter {
 
 	public String format(String castingCost) {
@@ -15,11 +17,7 @@ public class CastingCostFormatter {
 			costs.add(replace(castingCost));
 		}
 		
-		StringBuilder stringBuilder = new StringBuilder();
-		for (String cost : costs) {
-			stringBuilder.append(cost);
-		}
-		return stringBuilder.toString();
+		return TextUtils.join("", costs);
 	}
 
 	private String replace(String cost) {
