@@ -32,7 +32,7 @@ public class CustomApplication extends Application {
 	private void initElasticSearchClient() {
 		try {
 			URL url = new URL("http://" + SEARCH_SERVER_HOST + "/magic/card/_search");
-			this.elasticSearchClient = new ElasticSearchClient(url, getObjectMapper());
+			this.elasticSearchClient = new ElasticSearchClient(url, getObjectMapper(), this);
 		} catch (MalformedURLException e) {
 			Log.e(getClass().getName(), "Error in constructor", e);
 		}

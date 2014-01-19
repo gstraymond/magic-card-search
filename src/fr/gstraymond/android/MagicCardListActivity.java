@@ -5,7 +5,6 @@ import static android.widget.Toast.makeText;
 import static fr.gstraymond.constants.Consts.MAGIC_CARD;
 import static fr.gstraymond.constants.Consts.POSITION;
 import android.content.Intent;
-import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.util.Log;
@@ -21,6 +20,7 @@ import fr.gstraymond.biz.SearchProcessor;
 import fr.gstraymond.biz.UIUpdater;
 import fr.gstraymond.magicsearch.model.response.MagicCard;
 import fr.gstraymond.tools.ActivityUtil;
+import fr.gstraymond.tools.VersionUtils;
 import fr.gstraymond.ui.EndScrollListener;
 import fr.gstraymond.ui.TextListener;
 
@@ -156,7 +156,8 @@ public class MagicCardListActivity extends CustomActivity implements
 		switch (item.getItemId()) {
 		
 		case android.R.id.home:
-			makeText(this, getVersionName(), LENGTH_SHORT).show();
+			String version = "Version " + VersionUtils.getAppVersion(this);
+			makeText(this, version, LENGTH_SHORT).show();
 			return true;
 
 		case R.id.list_tab:
@@ -193,17 +194,6 @@ public class MagicCardListActivity extends CustomActivity implements
 		}
 		
 		return super.onOptionsItemSelected(item);
-	}
-
-	private String getVersionName() {
-		try {
-			String versionName = getPackageManager().getPackageInfo(getPackageName(), 0).versionName;
-			return "Version " + versionName;
-		} catch (NameNotFoundException e) {
-			Log.e(getClass().getName(), "getVersionName", e);
-		}
-		
-		return null;
 	}
 	
 	private void resetSearchView() {

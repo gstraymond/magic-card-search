@@ -13,6 +13,7 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 
+import android.content.Context;
 import android.util.Log;
 import android.widget.ProgressBar;
 
@@ -22,6 +23,7 @@ import fr.gstraymond.magicsearch.model.request.Request;
 import fr.gstraymond.magicsearch.model.response.SearchResult;
 import fr.gstraymond.tools.DisplaySizeUtil;
 import fr.gstraymond.tools.MapperUtil;
+import fr.gstraymond.tools.VersionUtils;
 
 public class ElasticSearchClient { 
     
@@ -32,12 +34,16 @@ public class ElasticSearchClient {
 	private URL url;
 	private HttpClient httpClient;
 	private MapperUtil<SearchResult> mapperUtil;
+	private String appVersion;
+	private String osVersion;
 	
-	public ElasticSearchClient(URL url, ObjectMapper objectMapper) {
+	public ElasticSearchClient(URL url, ObjectMapper objectMapper, Context context) {
 		super();
 		this.url = url;
 		this.httpClient = new DefaultHttpClient();
 		this.mapperUtil = new MapperUtil<SearchResult>(objectMapper, SearchResult.class);
+		this.appVersion = VersionUtils.getAppVersion(context);
+		this.osVersion = VersionUtils.getOsVersion();
 	}
 
 	public SearchResult process(SearchOptions options, ProgressBar progressBar) {
@@ -47,8 +53,7 @@ public class ElasticSearchClient {
 		
 		try {
 			String query = URLEncoder.encode(queryAsJson, ENCODING);
-			HttpGet getRequest = new HttpGet(url.toString() + "?source=" + query);
-			getRequest.addHeader(ACCEPT_ENCODING, GZIP);
+			HttpGet getRequest = buildRequest(query);
 			
 			long now = System.currentTimeMillis();
 			HttpResponse response = httpClient.execute(getRequest);
@@ -62,6 +67,14 @@ public class ElasticSearchClient {
 			Log.e(getClass().getName(), "process", e);
 		}
 		return null;
+	}
+
+	private HttpGet buildRequest(String query) {
+		HttpGet getRequest = new HttpGet(url.toString() + "?source=" + query);
+		getRequest.addHeader(ACCEPT_ENCODING, GZIP);
+		getRequest.setHeader("User-Agent", "Android Java/" + osVersion);
+		getRequest.setHeader("Referer", "Magic Card Search - " + appVersion);
+		return getRequest;
 	}
 
 	private String getResponseSize(HttpResponse response) {
