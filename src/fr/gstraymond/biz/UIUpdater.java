@@ -86,8 +86,8 @@ public class UIUpdater extends AsyncTask<Void, Void, SearchResult> {
 			fragment.setArguments(bundle);
 			getFragmentManager().beginTransaction().replace(R.id.magiccard_list, fragment).commit();
 			
-			activity.setTotalCardCount(totalCardCount);
 		}
+		activity.setTotalCardCount(totalCardCount);
 	}
 
 	private void updateUIFacets(SearchResult result) {
