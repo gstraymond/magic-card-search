@@ -8,13 +8,15 @@ import java.util.Map.Entry;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.text.TextUtils;
 import android.util.Log;
 
 public class SearchOptions implements Parcelable {
 
-	private String query;
+	public static final String QUERY_ALL = "*";
+	
+	private String query = QUERY_ALL;
 	private boolean append = false;
-	private boolean random = false;
 	private int from = 0;
 	private int size = 30;
 	private Map<String, List<String>> facets = new HashMap<String, List<String>>();
@@ -35,7 +37,6 @@ public class SearchOptions implements Parcelable {
 	public SearchOptions(Parcel source) {
 		query = source.readString();
 		append = source.readInt() == 0 ? true : false;
-		random = source.readInt() == 0 ? true : false;
 		from = source.readInt();
 		size = source.readInt();
 		facets = readMap(source);
@@ -49,20 +50,15 @@ public class SearchOptions implements Parcelable {
 			return facets;
 		}
 		
-		Log.d(getClass().getName(), "readMap " + facetsAsString);
-		
 		String[] firstSplit = facetsAsString.split("\\|");
 		for (String facet : firstSplit) {
-			Log.d(getClass().getName(), "readMap facet " + facet);
 			String[] keyValues = facet.split("=");
 			String key = keyValues[0];
-			Log.d(getClass().getName(), "readMap key " + key);
 			
 			String valuesAsString = keyValues[1];
 			String[] secondSplit = valuesAsString.split(",");
 			List<String> values = new ArrayList<String>();
 			for (String value : secondSplit) {
-				Log.d(getClass().getName(), "readMap value " + value);
 				values.add(value);
 			}
 
@@ -83,7 +79,6 @@ public class SearchOptions implements Parcelable {
 	public void writeToParcel(Parcel dest, int flags) {
 		dest.writeString(query);
 		dest.writeInt(append ? 0 : 1);
-		dest.writeInt(random ? 0 : 1);
 		dest.writeInt(from);
 		dest.writeInt(size);
 		writeMap(dest, facets);
@@ -105,8 +100,6 @@ public class SearchOptions implements Parcelable {
 			firstSep = "|";
 		}
 		
-		Log.d(getClass().getName(), "writeMap " + facetsAsString);
-		
 		dest.writeString(facetsAsString.toString());
 	}
 
@@ -115,7 +108,11 @@ public class SearchOptions implements Parcelable {
 	}
 
 	public SearchOptions setQuery(String query) {
-		this.query = query;
+		if (TextUtils.isEmpty(query)) {
+			this.query = QUERY_ALL;
+		} else {
+			this.query = query;	
+		}
 		return this;
 	}
 
@@ -125,15 +122,6 @@ public class SearchOptions implements Parcelable {
 
 	public SearchOptions setAppend(boolean append) {
 		this.append = append;
-		return this;
-	}
-
-	public boolean isRandom() {
-		return random;
-	}
-
-	public SearchOptions setRandom(boolean random) {
-		this.random = random;
 		return this;
 	}
 
@@ -193,7 +181,6 @@ public class SearchOptions implements Parcelable {
 		return "searchOptions:[" +
 				"query:" + query + "," +
 				"append:" + append + "," +
-				"random:" + random + "," +
 				"from:" + from + "," +
 				"size:" + size + "," +
 				"facets:" + facets + "]";

@@ -1,106 +1,73 @@
 package fr.gstraymond.android;
 
+import static fr.gstraymond.constants.Consts.MAGIC_CARD;
+
+import java.util.ArrayList;
 import java.util.List;
 
+import android.app.Activity;
+import android.app.ListFragment;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.text.Html;
-import android.text.Spanned;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
-import fr.gstraymond.R;
-import fr.gstraymond.biz.AssetLoader;
+import android.widget.ListAdapter;
+import android.widget.ListView;
 import fr.gstraymond.magicsearch.model.response.MagicCard;
-import fr.gstraymond.magicsearch.model.response.Publication;
-import fr.gstraymond.tools.CastingCostFormatter;
-import fr.gstraymond.tools.DescriptionFormatter;
-import fr.gstraymond.tools.LanguageUtil;
-import fr.gstraymond.ui.CastingCostAssetLoader;
-import fr.gstraymond.ui.MagicCardPagerAdapter;
-import fr.gstraymond.ui.MagicCardViewPager;
+import fr.gstraymond.ui.SetArrayAdapter;
 
-public class MagicCardDetailFragment extends Fragment {
-
-	public static final String MAGIC_CARD = "magic_card";
+public class MagicCardDetailFragment extends ListFragment {
 
 	private MagicCard card;
-	private CastingCostFormatter castingCostFormatter;
-
-	public MagicCardDetailFragment() {
-		this.castingCostFormatter = new CastingCostFormatter();
+	private Callbacks callbacks = dummyCallbacks;
+	
+	public interface Callbacks {
+		public void onItemSelected(int id);
 	}
+
+	private static Callbacks dummyCallbacks = new Callbacks() {
+		@Override
+		public void onItemSelected(int id) {
+		}
+	};
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		if (getArguments().containsKey(MAGIC_CARD)) {
-			card = getArguments().getParcelable(MAGIC_CARD);
+		card = getArguments().getParcelable(MAGIC_CARD);
+		
+		List<Object> objects = new ArrayList<Object>();
+		objects.add(card);
+		objects.addAll(card.getPublications());
+
+		ListAdapter arrayAdapter = new SetArrayAdapter(getActivity(),
+				android.R.layout.simple_list_item_activated_1,
+				android.R.id.text2, objects);
+		setListAdapter(arrayAdapter);
+	}
+	
+	@Override
+	public void onAttach(Activity activity) {
+		super.onAttach(activity);
+
+		// Activities containing this fragment must implement its callbacks.
+		if (!(activity instanceof Callbacks)) {
+			throw new IllegalStateException(
+					"Activity must implement fragment's callbacks.");
 		}
+
+		callbacks = (Callbacks) activity;
 	}
 
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
-		boolean attachToRoot = false;
-		View rootView = inflater.inflate(R.layout.fragment_magiccard_detail,
-				container, attachToRoot);
+	public void onDetach() {
+		super.onDetach();
+		callbacks = dummyCallbacks;
+	}
 
-		if (card != null) {
-			TextView publicationTextView = (TextView) rootView.findViewById(R.id.publication);
-			TextView textView = (TextView) rootView.findViewById(R.id.magiccard_detail);
-			textView.setText(formatCard(card, textView));
-			
-			MagicCardViewPager viewPager = ((MagicCardViewPager) rootView.findViewById(R.id.pager))
-					.setPublications(card.getPublications())
-					.setPublicationTextView(publicationTextView);
-			MagicCardPagerAdapter pagerAdapter = new MagicCardPagerAdapter(getFragmentManager())
-				.setPublications(card.getPublications());
-			viewPager.setAdapter(pagerAdapter);
-		}
-
-		return rootView;
-	}
-	
-	private Spanned formatCard(MagicCard card, final TextView textView) {
-		DescriptionFormatter descriptionFormatter = new DescriptionFormatter();
-		
-		String castingCost = card.getCastingCost() != null ? "<p>" + castingCostFormatter.format(card.getCastingCost()) + "</p>" : "";
-		String PT = card.getPower() != null ? "<p>" + card.getPower() + " / " + card.getToughness() + "</p>" : "";
-		String type = "<p>" + formatType(card) + "</p>";
-		String description = descriptionFormatter.format(card.getDescription());
-		String publications = getCardPublications(card.getPublications());
-		String html = formatTitle(card) + castingCost + PT + type + description + publications;
-
-		CustomApplication applicationContext = (CustomApplication) getActivity().getApplicationContext();
-		CastingCostAssetLoader castingCostAssetLoader = applicationContext.getCastingCostAssetLoader();
-		return Html.fromHtml(html, new AssetLoader(castingCostAssetLoader), null);
-	}
-	
-	private String formatTitle(MagicCard card) {
-		if (LanguageUtil.showFrench(getActivity()) && card.getFrenchTitle() != null) {
-			return "<p>" + card.getFrenchTitle() + "<br/>(" + card.getTitle() + ")</p>";
-		}
-		
-		return "<p>" + card.getTitle() + "</p>";
-	}
-	
-	private String formatType(MagicCard card) {
-		return card.getType().replaceAll("--", "—");
-	}
-	
-	private String getCardPublications(List<Publication> publications) {
-		final StringBuilder html = new StringBuilder("<p>");
-		for (Publication publication : publications) {
-			html.append("\t\t●\t");
-			html.append(publication.getEdition());
-			html.append(" (");
-			html.append(publication.getRarity());
-			html.append(")");
-			html.append("<br />");
-		}
-		return html.append("</p>").toString();
+	@Override
+	public void onListItemClick(ListView listView, View view, int position,
+			long id) {
+		super.onListItemClick(listView, view, position, id);
+		callbacks.onItemSelected(position);
 	}
 }

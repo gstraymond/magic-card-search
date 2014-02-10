@@ -15,6 +15,7 @@ public class MagicCard implements Parcelable {
 	private String toughness;
 	private String description;
 	private List<Publication> publications;
+	private List<String> formats;
 
 	public static final Parcelable.Creator<MagicCard> CREATOR = new Parcelable.Creator<MagicCard>() {
 		@Override
@@ -41,6 +42,8 @@ public class MagicCard implements Parcelable {
 		description = source.readString();
 		publications = new ArrayList<Publication>();
 		source.readList(publications, Publication.class.getClassLoader());
+		formats = new ArrayList<String>();
+		source.readList(formats, String.class.getClassLoader());
 	}
 
 	@Override
@@ -58,6 +61,7 @@ public class MagicCard implements Parcelable {
 		dest.writeString(toughness);
 		dest.writeString(description);
 		dest.writeList(publications);
+		dest.writeList(formats);
 	}
 
 	@Override
@@ -128,5 +132,13 @@ public class MagicCard implements Parcelable {
 
 	public void setPublications(List<Publication> publications) {
 		this.publications = publications;
+	}
+
+	public List<String> getFormats() {
+		return formats;
+	}
+
+	public void setFormats(List<String> formats) {
+		this.formats = formats;
 	}
 }

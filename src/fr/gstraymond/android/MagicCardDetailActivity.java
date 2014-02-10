@@ -1,77 +1,46 @@
 package fr.gstraymond.android;
 
+import static fr.gstraymond.constants.Consts.MAGIC_CARD;
+import static fr.gstraymond.constants.Consts.POSITION;
+import android.app.Fragment;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
-import android.os.Parcelable;
-import android.support.v4.app.FragmentActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
+import android.widget.TextView;
 import fr.gstraymond.R;
 import fr.gstraymond.magicsearch.model.response.MagicCard;
+import fr.gstraymond.tools.ActivityUtil;
 import fr.gstraymond.tools.LanguageUtil;
 
-public class MagicCardDetailActivity extends FragmentActivity {
-
-	private static final String MAGIC_CARD = "magicCard";
-	private Menu menu;
-	private MagicCard magicCard;
+public class MagicCardDetailActivity extends MagicCardCommonActivy implements
+		MagicCardDetailFragment.Callbacks {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_magiccard_detail);
 
-		if (savedInstanceState != null) {
-			Parcelable savedCard = savedInstanceState.getParcelable(MAGIC_CARD);
-			if (savedCard != null) {
-				magicCard = savedInstanceState.getParcelable(MAGIC_CARD);
-			}
-		} else {
-			magicCard = getIntent().getParcelableExtra(MagicCardDetailFragment.MAGIC_CARD);
-		}
+		Bundle bundle = getBundle();
 
-		// Show the Up button in the action bar.
-		getActionBar().setDisplayHomeAsUpEnabled(true);
+		TextView titleTextView = (TextView) findViewById(R.id.magiccard_detail_title);
+		titleTextView.setText(formatTitle(this, getCard()));
 
-		Bundle arguments = new Bundle();
-		arguments.putParcelable(MagicCardDetailFragment.MAGIC_CARD, magicCard);
-
-		MagicCardDetailFragment fragment = new MagicCardDetailFragment();
-		fragment.setArguments(arguments);
-
-		getSupportFragmentManager().beginTransaction().replace(R.id.magiccard_detail_container, fragment).commit();
-
-		setTitle(getFullTitle(magicCard));
-	}
-
-	private String getFullTitle(MagicCard card) {
-		if (LanguageUtil.showFrench(this) && card.getFrenchTitle() != null) {
-			return card.getFrenchTitle();
-		}
-		
-		return card.getTitle();
+		Fragment detailFragment = new MagicCardDetailFragment();
+		detailFragment.setArguments(bundle);
+		replaceFragment(detailFragment, R.id.magiccard_detail_container);
 	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-		case android.R.id.home:
-			finish();
-			return true;
-
-		case R.id.oracle_tab:
-			findViewById(R.id.pictures_layout).setVisibility(View.GONE);
-			findViewById(R.id.magiccard_detail).setVisibility(View.VISIBLE);
-			item.setVisible(false);
-			menu.findItem(R.id.pictures_tab).setVisible(true);
-			return true;
 
 		case R.id.pictures_tab:
-			findViewById(R.id.magiccard_detail).setVisibility(View.GONE);
-			findViewById(R.id.pictures_layout).setVisibility(View.VISIBLE);
-			item.setVisible(false);
-			menu.findItem(R.id.oracle_tab).setVisible(true);
+			Intent intent = ActivityUtil.getIntent(this, MagicCardPagerActivity.class);
+			intent.putExtra(MAGIC_CARD, getCard());
+			startActivity(intent);
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
@@ -79,16 +48,25 @@ public class MagicCardDetailActivity extends FragmentActivity {
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		this.menu = menu;
-
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.magiccard_detail_menu, menu);
 		return true;
 	}
 
 	@Override
-	protected void onSaveInstanceState(Bundle outState) {
-		super.onSaveInstanceState(outState);
-		outState.putParcelable(MAGIC_CARD, magicCard);
+	public void onItemSelected(int id) {
+		Intent intent = ActivityUtil.getIntent(this, MagicCardPagerActivity.class);
+		intent.putExtra(MAGIC_CARD, getCard());
+		// first element is a card
+		intent.putExtra(POSITION, id - 1);
+		startActivity(intent);
+	}
+
+	public static String formatTitle(Context context, MagicCard card) {
+		if (LanguageUtil.showFrench(context) && card.getFrenchTitle() != null) {
+			return card.getFrenchTitle() + "\n(" + card.getTitle() + ")";
+		}
+		
+		return card.getTitle();
 	}
 }

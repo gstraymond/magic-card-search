@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
 
     <item
@@ -7,25 +8,19 @@
         android:title="@string/list_menu_search"/>
     <item
         android:id="@+id/list_tab"
-        android:showAsAction="ifRoom"
         android:icon="@drawable/list_num"
+        android:showAsAction="ifRoom"
         android:title="@string/list_menu_cards"
         android:visible="false"/>
     <item
         android:id="@+id/facet_tab"
-        android:showAsAction="ifRoom"
         android:icon="@drawable/list_bullets"
+        android:showAsAction="ifRoom"
         android:title="@string/list_menu_facets"/>
     <item
-        android:id="@+id/oracle_tab"
-        android:showAsAction="ifRoom"
-        android:icon="@drawable/text_letter"
-        android:title="@string/detail_menu_oracle"
-        android:visible="false"/>
-    <item
         android:id="@+id/pictures_tab"
-        android:showAsAction="ifRoom"
         android:icon="@drawable/picture"
+        android:showAsAction="always"
         android:title="@string/detail_menu_pictures"/>
     <item
         android:id="@+id/clear_tab"
@@ -34,8 +29,8 @@
         android:title="@string/list_menu_clear"/>
     <item
         android:id="@+id/help_tab"
-        android:showAsAction="ifRoom"
         android:icon="@drawable/info"
+        android:showAsAction="ifRoom"
         android:title="@string/list_menu_help"/>
 
 </menu>

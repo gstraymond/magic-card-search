@@ -1,8 +1,9 @@
 package fr.gstraymond.ui;
 
 
-import android.support.v4.app.FragmentActivity;
-import android.util.Log;
+import java.util.List;
+import java.util.Map;
+
 import android.widget.SearchView.OnQueryTextListener;
 import fr.gstraymond.R;
 import fr.gstraymond.android.MagicCardListActivity;
@@ -25,10 +26,9 @@ public class TextListener implements OnQueryTextListener {
 
 	@Override
 	public boolean onQueryTextSubmit(String text) {
-		Log.d(getClass().getName(), "text: " + text);
-		
-		if (text != null && text.length() > 0 && canSearch) {
-			SearchOptions options = new SearchOptions().setQuery(text);
+		if (canSearch) {
+			Map<String, List<String>> facets = activity.getCurrentSearch().getFacets();
+			SearchOptions options = new SearchOptions().setQuery(text).setFacets(facets);
 			new SearchProcessor(activity, options, R.string.loading_initial).execute();
 		}
 		return true;
@@ -36,10 +36,6 @@ public class TextListener implements OnQueryTextListener {
 
 	public void setCanSearch(boolean canSearch) {
 		this.canSearch = canSearch;
-	}
-
-	public FragmentActivity getActivity() {
-		return activity;
 	}
 
 }

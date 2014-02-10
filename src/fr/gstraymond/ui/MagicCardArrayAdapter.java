@@ -7,20 +7,25 @@ import java.util.List;
 import android.content.Context;
 import android.text.Html;
 import android.text.Spanned;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 import fr.gstraymond.R;
-import fr.gstraymond.biz.AssetLoader;
+import fr.gstraymond.biz.CastingCostImageGetter;
 import fr.gstraymond.magicsearch.model.response.MagicCard;
 import fr.gstraymond.tools.CastingCostFormatter;
 import fr.gstraymond.tools.LanguageUtil;
+import fr.gstraymond.tools.PowerToughnessFormatter;
+import fr.gstraymond.tools.TypeFormatter;
 
 public class MagicCardArrayAdapter extends ArrayAdapter<MagicCard> {
 
-	private AssetLoader assetLoader;
-	private CastingCostFormatter castingCostFormatter;
+	private CastingCostImageGetter imagetGetter;
+	private CastingCostFormatter ccFormatter;
+	private PowerToughnessFormatter ptFormatter;
+	private TypeFormatter typeFormatter;
 	private boolean showFrenchTitle;
 
 	public MagicCardArrayAdapter(Context context, int resource,
@@ -28,8 +33,10 @@ public class MagicCardArrayAdapter extends ArrayAdapter<MagicCard> {
 			CastingCostAssetLoader castingCostAssetLoader) {
 		
 		super(context, resource, textViewResourceId, objects);
-		this.assetLoader = new AssetLoader(castingCostAssetLoader);
-		this.castingCostFormatter = new CastingCostFormatter();
+		this.imagetGetter = new CastingCostImageGetter(castingCostAssetLoader);
+		this.ccFormatter = new CastingCostFormatter();
+		this.ptFormatter = new PowerToughnessFormatter();
+		this.typeFormatter = new TypeFormatter(context);
 		this.showFrenchTitle = LanguageUtil.showFrench(context);
 	}
 
@@ -39,8 +46,10 @@ public class MagicCardArrayAdapter extends ArrayAdapter<MagicCard> {
 
 		if (text == null) {
 			text = new TextView(getContext());
+			text.setEllipsize(TextUtils.TruncateAt.END);
+			text.setSingleLine(true);
 			text.setTextAppearance(getContext(), TextAppearance_DeviceDefault_Medium);
-			text.setPadding(getTextPaddingBottom() * 2, 0, 0, getTextPaddingBottom());
+			text.setPadding(getTextPadding() * 2, 0, getTextPadding() * 2, getTextPadding());
 		}
 
 		text.setText(formatCard(getItem(position), position));
@@ -48,7 +57,7 @@ public class MagicCardArrayAdapter extends ArrayAdapter<MagicCard> {
 
 	}
 
-	private int getTextPaddingBottom() {
+	private int getTextPadding() {
 		return (int) getContext().getResources().getDimension(R.dimen.listTextPaddingBottom);
 	}	
 
@@ -56,14 +65,23 @@ public class MagicCardArrayAdapter extends ArrayAdapter<MagicCard> {
 
 		String castingCost = "";
 		if (card.getCastingCost() != null) {
-			castingCost = castingCostFormatter.format(card.getCastingCost());
+			castingCost = ccFormatter.format(card.getCastingCost());
 		}
 
-		String line = (position + 1) + ". " + castingCost + " " + getTitle(card);
+		String line = (position + 1) + ". " + castingCost + " <b>" + getTitle(card) + "</b> — " + getPTorType(card);
 
-		return Html.fromHtml(line, assetLoader, null);
+		return Html.fromHtml(line, imagetGetter, null);
 	}
 	
+	private String getPTorType(MagicCard card) {
+		String pt = ptFormatter.format(card);
+		if (pt.length() > 0) {
+			return pt;
+		}
+		
+		return typeFormatter.formatFirst(card);
+	}
+
 	private String getTitle(MagicCard card) {
 		if (showFrenchTitle && card.getFrenchTitle() != null) {
 			return card.getFrenchTitle();

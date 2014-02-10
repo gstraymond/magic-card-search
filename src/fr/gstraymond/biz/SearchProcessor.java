@@ -11,15 +11,13 @@ import fr.gstraymond.android.MagicCardListActivity;
 import fr.gstraymond.android.MagicCardListFragment;
 import fr.gstraymond.magicsearch.model.response.SearchResult;
 
-public class SearchProcessor extends AsyncTask<Void, Void, Boolean> {
+public class SearchProcessor extends AsyncTask<Void, Void, SearchResult> {
 
 	private MagicCardListActivity activity;
 	private ProgressBar progressBar;
 	private TextView welcomeTextView;
 	
 	private SearchOptions options = new SearchOptions();
-	 
-	private SearchResult searchResult;
 
 	public SearchProcessor(MagicCardListActivity activity, SearchOptions options, int loadingText) {
 		super();
@@ -48,11 +46,11 @@ public class SearchProcessor extends AsyncTask<Void, Void, Boolean> {
 	}
 	
 	@Override
-	protected Boolean doInBackground(Void... params) {
+	protected SearchResult doInBackground(Void... params) {
 		long now = System.currentTimeMillis();
-		searchResult = launchSearch(options);
+		SearchResult searchResult = launchSearch(options);
 		Log.i(getClass().getName(), "search took " + (System.currentTimeMillis() - now) + "ms");
-		return true;
+		return searchResult;
 	}
 	
 	private void switchSearch(boolean _switch) {
@@ -74,7 +72,7 @@ public class SearchProcessor extends AsyncTask<Void, Void, Boolean> {
 	}
 
 	@Override
-	protected void onPostExecute(Boolean result) {
+	protected void onPostExecute(SearchResult searchResult) {
 		progressBar.setProgress(100);
 
 		new UIUpdater(activity).onPostExecute(searchResult);

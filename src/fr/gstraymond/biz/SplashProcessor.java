@@ -42,7 +42,6 @@ public class SplashProcessor extends AsyncTask<Void, Integer, SearchResult> {
 
 	@Override
 	protected void onPostExecute(SearchResult result) {
-		super.onPostExecute(result);
 		activity.startNextActivity(result);
 	}
 

@@ -6,6 +6,7 @@ import fr.gstraymond.R;
 import fr.gstraymond.android.HelpActivity;
 import fr.gstraymond.android.MagicCardDetailActivity;
 import fr.gstraymond.android.MagicCardListActivity;
+import fr.gstraymond.android.MagicCardPagerActivity;
 
 public class ActivityUtil {
 
@@ -30,6 +31,10 @@ public class ActivityUtil {
 
 		if (MagicCardDetailActivity.class.equals(nextActivityClass)) {
 			return fr.gstraymond.android.tablet.MagicCardDetailActivity.class;
+		}
+
+		if (MagicCardPagerActivity.class.equals(nextActivityClass)) {
+			return fr.gstraymond.android.tablet.MagicCardPagerActivity.class;
 		}
 
 		if (HelpActivity.class.equals(nextActivityClass)) {

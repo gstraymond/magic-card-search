@@ -48,10 +48,33 @@
         </ListView>
     </LinearLayout>
 
-    <FrameLayout
-        android:id="@+id/magiccard_detail_container"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="1" />
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical" >
+
+        <TextView
+            android:id="@+id/magiccard_detail_title"
+            style="?android:attr/textAppearanceLarge"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:textIsSelectable="true"
+            android:textStyle="bold" />
+
+        <ProgressBar
+            style="@android:style/Widget.Holo.ProgressBar.Horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:progress="100" />
+
+        <FrameLayout
+            android:id="@+id/magiccard_detail_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:context=".MagicCardDetailActivity"
+            tools:ignore="MergeRootFrame" />
+    </LinearLayout>
 
 </LinearLayout>

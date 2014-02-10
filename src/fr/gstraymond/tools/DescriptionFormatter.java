@@ -4,6 +4,10 @@ import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import android.text.TextUtils;
+
+import fr.gstraymond.magicsearch.model.response.MagicCard;
+
 public class DescriptionFormatter {
 	
 	private Pattern pattern;
@@ -12,30 +16,26 @@ public class DescriptionFormatter {
 		this.pattern = Pattern.compile("\\{(.*?)\\}");
 	}
 	
-	public String format(String description) {
-		String tmpDescription = description.replaceAll("--", "—");
-		if (description.contains("{")) {
+	public String format(MagicCard card) {
+		if (card.getDescription() == null) {
+			return "";
+		}
+		
+		String tmp = card.getDescription().replaceAll("--", "—");
+		if (tmp.contains("{")) {
 
-			Matcher matcher = pattern.matcher(description);
+			Matcher matcher = pattern.matcher(card.getDescription());
 			while (matcher.find()) {
 				String match = matcher.group();
 				String espacedMatch = match
 						.replace("{", "\\{").replace("}", "\\}")
 						.replace("(", "\\(").replace(")", "\\)");
 
-				tmpDescription = tmpDescription.replaceFirst(espacedMatch, replace(match));
+				tmp = tmp.replaceFirst(espacedMatch, replace(match));
 			}
 		}
 		
-		if (! tmpDescription.contains("\n")) {
-			return "<p>" + tmpDescription + "</p>";
-		}
-		
-		StringBuffer lines = new StringBuffer();
-		for (String line : tmpDescription.split("\n")) {
-			lines.append("<p>" + line + "</p>");
-		}
-		return lines.toString();
+		return TextUtils.join("<br /><br />", tmp.split("\n"));
 	}
 
 	private String replace(String cost) {		

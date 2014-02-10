@@ -1,11 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
 
-    <item
-        android:id="@+id/oracle_tab"
-        android:icon="@drawable/text_letter"
-        android:showAsAction="always"
-        android:title="@string/detail_menu_oracle"
-        android:visible="false"/>
     <item
         android:id="@+id/pictures_tab"
         android:icon="@drawable/picture"

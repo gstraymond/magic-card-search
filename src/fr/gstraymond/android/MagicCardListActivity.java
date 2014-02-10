@@ -1,29 +1,31 @@
 package fr.gstraymond.android;
 
-import android.app.Fragment;
+import static android.widget.Toast.LENGTH_SHORT;
+import static android.widget.Toast.makeText;
+import static fr.gstraymond.constants.Consts.MAGIC_CARD;
+import static fr.gstraymond.constants.Consts.POSITION;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
-import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.SearchView;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-
+import android.widget.TextView;
 import fr.gstraymond.R;
 import fr.gstraymond.biz.SearchOptions;
 import fr.gstraymond.biz.SearchProcessor;
 import fr.gstraymond.biz.UIUpdater;
+import fr.gstraymond.magicsearch.model.response.MagicCard;
 import fr.gstraymond.tools.ActivityUtil;
+import fr.gstraymond.tools.VersionUtils;
 import fr.gstraymond.ui.EndScrollListener;
 import fr.gstraymond.ui.TextListener;
 
-public class MagicCardListActivity extends FragmentActivity implements
-		MagicCardListFragment.Callbacks {
+public class MagicCardListActivity extends CustomActivity implements
+		MagicCardListFragment.Callbacks, MagicCardDetailFragment.Callbacks {
 	private static final String CURRENT_SEARCH = "currentSearch";
 
 	public static final String MAGIC_CARD_RESULT = "result";
@@ -35,6 +37,8 @@ public class MagicCardListActivity extends FragmentActivity implements
 	private SearchView searchView;
 	private Menu menu;
 
+	private MagicCard currentCard;
+	private int totalCardCount;
 	private SearchOptions currentSearch;
 	private boolean isRestored = false;
 
@@ -61,26 +65,27 @@ public class MagicCardListActivity extends FragmentActivity implements
 
 		if (findViewById(R.id.magiccard_detail_container) != null) {
 			twoPaneMode = true;
-			MagicCardListFragment listFragment = new MagicCardListFragment();
-			getFragmentManager().beginTransaction().replace(R.id.magiccard_list, listFragment).commit();
 		}
 
+		if (findViewById(R.id.search_input) != null) {
+			searchView = (SearchView) findViewById(R.id.search_input);
+			searchView.setOnQueryTextListener(textListener);
+		}
+		
+		getActionBar().setHomeButtonEnabled(true);
 	}
 
 	@Override
 	protected void onPostCreate(Bundle savedInstanceState) {
 		super.onPostCreate(savedInstanceState);
 
-		Fragment listFragment = getFragmentManager().findFragmentById(R.id.magiccard_list);
-		((MagicCardListFragment) listFragment).setActivateOnItemClick(true);
-
 		if (currentSearch == null) {
-			currentSearch = new SearchOptions().setQuery("*");
+			currentSearch = new SearchOptions();
 		}
 		
 		String resultAsString = getIntent().getStringExtra(MAGIC_CARD_RESULT);
 		if (resultAsString != null && !isRestored) {
-			new UIUpdater(this, resultAsString).execute();
+			new UIUpdater(this, resultAsString, getObjectMapper()).execute();
 		} else {
 			new SearchProcessor(this, currentSearch, R.string.loading_initial).execute();	
 		}
@@ -91,25 +96,35 @@ public class MagicCardListActivity extends FragmentActivity implements
 	 * that the item with the given ID was selected.
 	 */
 	@Override
-	public void onItemSelected(Parcelable item) {
+	public void onItemSelected(Parcelable card) {
+		currentCard = (MagicCard) card;
 		if (twoPaneMode) {
-			Bundle arguments = new Bundle();
-			arguments.putParcelable(MagicCardDetailFragment.MAGIC_CARD, item);
-			MagicCardDetailFragment fragment = new MagicCardDetailFragment();
-			fragment.setArguments(arguments);
-			getSupportFragmentManager().beginTransaction()
-					.replace(R.id.magiccard_detail_container, fragment)
-					.commit();
+			Bundle bundle = new Bundle();
+			bundle.putParcelable(MAGIC_CARD, card);
 			
-			// reset card menu items
-			menu.findItem(R.id.pictures_tab).setVisible(true);
-			menu.findItem(R.id.oracle_tab).setVisible(false);
+			TextView titleTextView = (TextView) findViewById(R.id.magiccard_detail_title);
+			titleTextView.setText(MagicCardDetailActivity.formatTitle(this, currentCard));
+			
+			MagicCardDetailFragment detailFragment = new MagicCardDetailFragment();
+			detailFragment.setArguments(bundle);
+			getFragmentManager().beginTransaction()
+				.replace(R.id.magiccard_detail_container, detailFragment)
+				.commit();
 
 		} else {
-			Intent detailIntent = ActivityUtil.getIntent(this, MagicCardDetailActivity.class);
-			detailIntent.putExtra(MagicCardDetailFragment.MAGIC_CARD, item);
-			startActivity(detailIntent);
+			Intent intent = ActivityUtil.getIntent(this, MagicCardDetailActivity.class);
+			intent.putExtra(MAGIC_CARD, card);
+			startActivity(intent);
 		}
+	}
+
+	@Override
+	public void onItemSelected(int id) {
+		Intent intent = ActivityUtil.getIntent(this, MagicCardPagerActivity.class);
+		intent.putExtra(MAGIC_CARD, currentCard);
+		// first element is a card
+		intent.putExtra(POSITION, id - 1);
+		startActivity(intent);
 	}
 
 	@Override
@@ -124,17 +139,26 @@ public class MagicCardListActivity extends FragmentActivity implements
 			inflater.inflate(R.menu.magiccard_list_menu, menu);
 		}
 
-		searchView = new SearchView(this);
-		searchView.setOnQueryTextListener(textListener);
-		searchView.setQueryHint("black lotus, draw, sacrifice...");
-		menu.findItem(R.id.search_tab).setActionView(searchView);
+		if (menu.findItem(R.id.search_tab) != null) {
+			searchView = new SearchView(this);
+			searchView.setIconifiedByDefault(false);
+			searchView.setOnQueryTextListener(textListener);
+			searchView.setQueryHint(getString(R.string.search_hint));
+			menu.findItem(R.id.search_tab).setActionView(searchView);
+		}
 
 		return true;
 	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
+		
 		switch (item.getItemId()) {
+		
+		case android.R.id.home:
+			String version = "Version " + VersionUtils.getAppVersion(this);
+			makeText(this, version, LENGTH_SHORT).show();
+			return true;
 
 		case R.id.list_tab:
 			hide(getFacetView());
@@ -150,46 +174,38 @@ public class MagicCardListActivity extends FragmentActivity implements
 			menu.findItem(R.id.list_tab).setVisible(true);
 			return true;
 
+		case R.id.pictures_tab:
+			Intent intent = ActivityUtil.getIntent(this, MagicCardPagerActivity.class);
+			intent.putExtra(MAGIC_CARD, currentCard);
+			startActivity(intent);
+			return true;
+			
 		case R.id.clear_tab:
 			resetSearchView();
-			SearchOptions options = new SearchOptions().setQuery("*");
+			SearchOptions options = new SearchOptions();
 			new SearchProcessor(this, options, R.string.loading_clear).execute();
 			return true;
 
-		case R.id.oracle_tab:
-			hide(getPicturesView());
-			show(getDetailView());
-			item.setVisible(false);
-			menu.findItem(R.id.pictures_tab).setVisible(true);
-			return true;
-
-		case R.id.pictures_tab:
-			hide(getDetailView());
-			show(getPicturesView());
-			item.setVisible(false);
-			menu.findItem(R.id.oracle_tab).setVisible(true);
-			return true;
-
 		case R.id.help_tab:
-			startHelpActivity();
+			Intent helpIntent = ActivityUtil.getIntent(this, HelpActivity.class);
+			startActivity(helpIntent);
 			return true;
 			
 		}
 		
 		return super.onOptionsItemSelected(item);
 	}
-
-	private void startHelpActivity() {
-		Intent intent = ActivityUtil.getIntent(this, HelpActivity.class);
-		startActivity(intent);
-	}
 	
 	private void resetSearchView() {
 		// buggy
         MenuItem menuItem = menu.findItem(R.id.search_tab);
-		menuItem.collapseActionView();
+        if (menuItem != null) {
+        	menuItem.collapseActionView();
+        }
 		searchView.setIconified(true); 
-        menuItem.collapseActionView();
+        if (menuItem != null) {
+        	menuItem.collapseActionView();
+        }
 		searchView.setIconified(true);
         searchView.setQuery("", false);
 	}
@@ -221,18 +237,6 @@ public class MagicCardListActivity extends FragmentActivity implements
 		return findViewById(R.id.pictures_layout);
 	}
 
-	public View getDetailView() {
-		return findViewById(R.id.magiccard_detail);
-	}
-
-	private CustomApplication getCustomApplication() {
-		return (CustomApplication) getApplicationContext();
-	}
-	
-	public ObjectMapper getObjectMapper() {
-		return getCustomApplication().getObjectMapper();
-	}
-
 	public TextListener getTextListener() {
 		return textListener;
 	}
@@ -259,5 +263,13 @@ public class MagicCardListActivity extends FragmentActivity implements
 
 	public SearchView getSearchView() {
 		return searchView;
+	}
+
+	public int getTotalCardCount() {
+		return totalCardCount;
+	}
+
+	public void setTotalCardCount(int totalCardCount) {
+		this.totalCardCount = totalCardCount;
 	}
 }

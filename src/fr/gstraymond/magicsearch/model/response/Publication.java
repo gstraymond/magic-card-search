@@ -5,10 +5,13 @@ import android.os.Parcelable;
 
 public class Publication implements Parcelable {
 
-	String rarity;
-	String edition;
-	String editionCode;
-	String image;
+	private String edition;
+	private String editionCode;
+	private String stdEditionCode;
+	private String rarity;
+	private String rarityCode;
+	private String image;
+	private String editionImage;
 
 	public static final Parcelable.Creator<Publication> CREATOR = new Parcelable.Creator<Publication>() {
 		@Override
@@ -26,10 +29,13 @@ public class Publication implements Parcelable {
 	}
 
 	public Publication(Parcel source) {
-		rarity = source.readString();
 		edition = source.readString();
 		editionCode = source.readString();
+		stdEditionCode = source.readString();
+		rarity = source.readString();
+		rarityCode = source.readString();
 		image = source.readString();
+		editionImage = source.readString();
 	}
 	
 	@Override
@@ -38,10 +44,13 @@ public class Publication implements Parcelable {
 	}
 	@Override
 	public void writeToParcel(Parcel dest, int flags) {
-		dest.writeString(rarity);
 		dest.writeString(edition);
 		dest.writeString(editionCode);
+		dest.writeString(stdEditionCode);
+		dest.writeString(rarity);
+		dest.writeString(rarityCode);
 		dest.writeString(image);
+		dest.writeString(editionImage);
 	}
 	
 	public String getRarity() {
@@ -67,5 +76,29 @@ public class Publication implements Parcelable {
 	}
 	public void setImage(String image) {
 		this.image = image;
+	}
+
+	public String getStdEditionCode() {
+		return stdEditionCode;
+	}
+
+	public void setStdEditionCode(String stdEditionCode) {
+		this.stdEditionCode = stdEditionCode;
+	}
+
+	public String getRarityCode() {
+		return rarityCode;
+	}
+
+	public void setRarityCode(String rarityCode) {
+		this.rarityCode = rarityCode;
+	}
+
+	public String getEditionImage() {
+		return editionImage;
+	}
+
+	public void setEditionImage(String editionImage) {
+		this.editionImage = editionImage;
 	}
 }

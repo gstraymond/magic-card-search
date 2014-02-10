@@ -1,21 +1,20 @@
 package fr.gstraymond.biz;
 
-import java.io.IOException;
+import static fr.gstraymond.constants.Consts.MAGIC_CARD_LIST;
+
 import java.util.ArrayList;
 
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import fr.gstraymond.R;
 import fr.gstraymond.android.MagicCardListActivity;
@@ -24,16 +23,19 @@ import fr.gstraymond.magicsearch.model.response.Hit;
 import fr.gstraymond.magicsearch.model.response.MagicCard;
 import fr.gstraymond.magicsearch.model.response.SearchResult;
 import fr.gstraymond.magicsearch.model.response.facet.Term;
+import fr.gstraymond.tools.MapperUtil;
 import fr.gstraymond.ui.FacetListAdapter;
 
 public class UIUpdater extends AsyncTask<Void, Void, SearchResult> {
 	
 	private MagicCardListActivity activity;
 	private String resultAsString;
+	private MapperUtil<SearchResult> mapperUtil;
 
-	public UIUpdater(MagicCardListActivity activity, String resultAsString) {
+	public UIUpdater(MagicCardListActivity activity, String resultAsString, ObjectMapper objectMapper) {
 		this(activity);
 		this.resultAsString = resultAsString;
+		this.mapperUtil = new MapperUtil<SearchResult>(objectMapper, SearchResult.class);
 	}
 
 	public UIUpdater(MagicCardListActivity activity) {
@@ -42,44 +44,33 @@ public class UIUpdater extends AsyncTask<Void, Void, SearchResult> {
 
 	@Override
 	protected SearchResult doInBackground(Void... params) {
-		return getResult();
+		return mapperUtil.read(resultAsString);
 	}
-
-	private SearchResult getResult() {
-		try {
-			return activity.getObjectMapper().readValue(resultAsString, SearchResult.class);
-		} catch (JsonParseException e) {
-			Log.e(getClass().getName(), "parse", e);
-		} catch (JsonMappingException e) {
-			Log.e(getClass().getName(), "parse", e);
-		} catch (IOException e) {
-			Log.e(getClass().getName(), "parse", e);
-		}
-		return null;
-	}
-
 
 	@Override
 	protected void onPostExecute(SearchResult result) {
+		if (result == null) {
+			getWelcomeTextView().setText(R.string.failed_search);
+			return;
+		}
+		
 		int totalCardCount = 0;
 		ArrayList<MagicCard> cards = new ArrayList<MagicCard>();
-
+		
 		if (result.getHits() != null) {
 			totalCardCount = result.getHits().getTotal();
 			for (Hit hit : result.getHits().getHits()) {
 				cards.add(hit.get_source());
 			}
 		}
-		
-		String text = totalCardCount + " ";
-		if (totalCardCount > 1) {
-			text += activity.getString(R.string.progress_cards_found);
-		} else {
-			text += activity.getString(R.string.progress_card_found);
+
+		int textId = R.string.progress_cards_found;
+		if (totalCardCount <= 1) {
+			textId = R.string.progress_card_found;
 		}
-		
-		getWelcomeTextView().setText(text);
-		
+
+		getWelcomeTextView().setText(totalCardCount + " " + activity.getString(textId));
+
 		updateUIList(totalCardCount, cards);
 		updateUIFacets(result);
 	}
@@ -90,12 +81,13 @@ public class UIUpdater extends AsyncTask<Void, Void, SearchResult> {
 			fragment.appendCards(cards);
 		} else {
 			Bundle bundle = new Bundle();
-			bundle.putParcelableArrayList(MagicCardListFragment.CARDS, cards);
-			bundle.putInt(MagicCardListFragment.TOTAL_CARD_COUNT, totalCardCount);
-			Fragment fragment = new MagicCardListFragment();
+			bundle.putParcelableArrayList(MAGIC_CARD_LIST, cards);
+			MagicCardListFragment fragment = new MagicCardListFragment();
 			fragment.setArguments(bundle);
 			getFragmentManager().beginTransaction().replace(R.id.magiccard_list, fragment).commit();
+			
 		}
+		activity.setTotalCardCount(totalCardCount);
 	}
 
 	private void updateUIFacets(SearchResult result) {

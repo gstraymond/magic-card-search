@@ -1,17 +1,15 @@
 package fr.gstraymond.ui;
 
-import java.util.List;
-
+import android.app.Activity;
 import android.content.Context;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
-import android.widget.TextView;
+import fr.gstraymond.magicsearch.model.response.MagicCard;
 import fr.gstraymond.magicsearch.model.response.Publication;
 
 public class MagicCardViewPager extends ViewPager {
 
-	private List<Publication> publications;
-	private TextView publicationTextView;
+	private MagicCard card;
 	
 	public MagicCardViewPager(Context context) {
 		super(context);
@@ -25,25 +23,26 @@ public class MagicCardViewPager extends ViewPager {
 	public void computeScroll() {
 		int itemId = getCurrentItem();
 		String itemIdDisplayed = (itemId + 1) + "";
-		if (! publicationTextView.getText().toString().startsWith(itemIdDisplayed)) {
+		if (! getActivity().getTitle().toString().startsWith(itemIdDisplayed)) {
+			Publication publication = card.getPublications().get(itemId);
+			String text = publication.getEdition() + " — " + publication.getRarity();
+
 			int count = getAdapter().getCount();
-			Publication publication = publications.get(itemId);
-			String text = publication.getEdition() + " (" + publication.getRarity() + ")";
 			if (count > 1) {
-				text += " — " + itemIdDisplayed + "/" + count;
+				text = itemIdDisplayed + "/" + count + " " + text;
 			}
-			publicationTextView.setText(text);
+			
+			getActivity().setTitle(text);
 		}
 		super.computeScroll();
 	}
-
-	public MagicCardViewPager setPublications(List<Publication> publications) {
-		this.publications = publications;
-		return this;
+	
+	private Activity getActivity() {
+		return (Activity) getContext();
 	}
 
-	public MagicCardViewPager setPublicationTextView(TextView publicationTextView) {
-		this.publicationTextView = publicationTextView;
+	public MagicCardViewPager setCard(MagicCard card) {
+		this.card = card;
 		return this;
 	}
 }

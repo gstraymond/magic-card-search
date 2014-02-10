@@ -1,6 +1,7 @@
 package fr.gstraymond.android;
 
-import java.util.ArrayList;
+import static fr.gstraymond.constants.Consts.MAGIC_CARD_LIST;
+
 import java.util.List;
 
 import android.app.Activity;
@@ -17,22 +18,19 @@ import fr.gstraymond.ui.MagicCardArrayAdapter;
 
 public class MagicCardListFragment extends ListFragment {
 
-	public static String CARDS = "cards";
-	public static String TOTAL_CARD_COUNT = "totalCardCount";
 	private List<MagicCard> cards; 
-	private int totalCardCount;
 	private boolean twoPaneMode;
 
 	private static final String STATE_ACTIVATED_POSITION = "activated_position";
-	private Callbacks mCallbacks = sDummyCallbacks;
-	private int mActivatedPosition = ListView.INVALID_POSITION;
+	private Callbacks callbacks = dummyCallbacks;
+	private int position = ListView.INVALID_POSITION;
 	private ArrayAdapter<MagicCard> arrayAdapter;
 
 	public interface Callbacks {
 		public void onItemSelected(Parcelable id);
 	}
 
-	private static Callbacks sDummyCallbacks = new Callbacks() {
+	private static Callbacks dummyCallbacks = new Callbacks() {
 		@Override
 		public void onItemSelected(Parcelable id) {
 		}
@@ -45,16 +43,7 @@ public class MagicCardListFragment extends ListFragment {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
-		if (getArguments() != null && getArguments().getParcelableArrayList(CARDS) != null) {
-			cards = getArguments().getParcelableArrayList(CARDS);
-			
-			if (getArguments().getInt(TOTAL_CARD_COUNT) != 0) {
-				totalCardCount = getArguments().getInt(TOTAL_CARD_COUNT);
-			}
-		} else {
-			cards = new ArrayList<MagicCard>();
-		}
-
+		cards = getArguments().getParcelableArrayList(MAGIC_CARD_LIST);
 
 		if (getActivity().findViewById(R.id.magiccard_detail_container) != null) {
 			twoPaneMode = true;
@@ -95,57 +84,40 @@ public class MagicCardListFragment extends ListFragment {
 					"Activity must implement fragment's callbacks.");
 		}
 
-		mCallbacks = (Callbacks) activity;
+		callbacks = (Callbacks) activity;
 	}
 
 	@Override
 	public void onDetach() {
 		super.onDetach();
-
-		// Reset the active callbacks interface to the dummy implementation.
-		mCallbacks = sDummyCallbacks;
+		callbacks = dummyCallbacks;
 	}
 
 	@Override
 	public void onListItemClick(ListView listView, View view, int position,
 			long id) {
 		super.onListItemClick(listView, view, position, id);
-
-		// Notify the active callbacks interface (the activity, if the
-		// fragment is attached to one) that an item has been selected.
-		
-		mCallbacks.onItemSelected(cards.get(position));
+		callbacks.onItemSelected(cards.get(position));
+//		getListView().setItemChecked(position, true);
 	}
 
 	@Override
 	public void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
-		if (mActivatedPosition != ListView.INVALID_POSITION) {
+		if (position != ListView.INVALID_POSITION) {
 			// Serialize and persist the activated item position.
-			outState.putInt(STATE_ACTIVATED_POSITION, mActivatedPosition);
+			outState.putInt(STATE_ACTIVATED_POSITION, position);
 		}
-	}
-
-	/**
-	 * Turns on activate-on-click mode. When this mode is on, list items will be
-	 * given the 'activated' state when touched.
-	 */
-	public void setActivateOnItemClick(boolean activateOnItemClick) {
-		// When setting CHOICE_MODE_SINGLE, ListView will automatically
-		// give items the 'activated' state when touched.
-		getListView().setChoiceMode(
-				activateOnItemClick ? ListView.CHOICE_MODE_SINGLE
-						: ListView.CHOICE_MODE_NONE);
 	}
 
 	private void setActivatedPosition(int position) {
 		if (position == ListView.INVALID_POSITION) {
-			getListView().setItemChecked(mActivatedPosition, false);
+			getListView().setItemChecked(position, false);
 		} else {
 			getListView().setItemChecked(position, true);
 		}
 
-		mActivatedPosition = position;
+		this.position = position;
 	}
 	
 	public void appendCards(List<MagicCard> cards) {
@@ -157,16 +129,14 @@ public class MagicCardListFragment extends ListFragment {
 		return arrayAdapter.getCount();
 	}
 
-	public int getTotalCardCount() {
-		return totalCardCount;
-	}
-
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 		
 		// select the first element
 		if (twoPaneMode && getListAdapter().getCount() > 0) {
+//			getListView().setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+			
 			long itemId = getListAdapter().getItemId(0);
 			View view = getListAdapter().getView(0, null, null);
 			getListView().performItemClick(view, 0, itemId);	

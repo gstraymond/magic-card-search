@@ -12,26 +12,27 @@ import fr.gstraymond.R;
 
 public class CastingCostAssetLoader {
 
+	private static final String PATH = "cc/hd";
+	
 	private Context context;
 	private Map<String, Drawable> assets;
 	private boolean init = false;
 
 	public void init(Context context) {
+		Log.d(getClass().getName(), "init : " + init);
 		if (! init) {
 			init = true;
 			this.context = context;
 			this.assets = new HashMap<String, Drawable>();
 	
-			String path = "cc/hd";
 			try {
-				for (String assetPath : context.getAssets().list(path)) {
-					Log.d(getClass().getName(), "assetPath : " + assetPath);
-					Drawable drawable = getDrawable(path + "/" + assetPath);
+				for (String assetPath : context.getAssets().list(PATH)) {
+					Drawable drawable = getDrawable(PATH + "/" + assetPath);
 					drawable.setBounds(0, 0, getAssetSize(), getAssetSize());
 					assets.put(assetPath, drawable);
 				}
 			} catch (IOException e) {
-				Log.e(getClass().getName(), "Error", e);
+				Log.e(getClass().getName(), "init", e);
 			}
 		}
 	}

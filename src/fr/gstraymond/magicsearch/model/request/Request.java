@@ -24,9 +24,12 @@ public class Request {
 		if (! options.isAppend()) {
 			this.facets = FacetConst.getFacets();
 		}
-		// default sort
+		
 		this.sort = new ArrayList<String>();
-		this.sort.add("_uid");
+		if (SearchOptions.QUERY_ALL.equals(options.getQuery())) {
+			// default sort
+			this.sort.add("_uid");
+		}
 	}
 
 	public Query getQuery() {
