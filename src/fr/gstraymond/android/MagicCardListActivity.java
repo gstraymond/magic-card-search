@@ -1,8 +1,6 @@
 package fr.gstraymond.android;
 
 import android.app.Fragment;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -20,15 +18,14 @@ import fr.gstraymond.R;
 import fr.gstraymond.biz.SearchOptions;
 import fr.gstraymond.biz.SearchProcessor;
 import fr.gstraymond.biz.UIUpdater;
-import fr.gstraymond.magicsearch.model.response.SearchResult;
 import fr.gstraymond.tools.ActivityUtil;
 import fr.gstraymond.ui.EndScrollListener;
 import fr.gstraymond.ui.TextListener;
 
 public class MagicCardListActivity extends FragmentActivity implements
 		MagicCardListFragment.Callbacks {
-	private static final String CURRENT_FRAGMENT = "currentFragment";
 	private static final String CURRENT_SEARCH = "currentSearch";
+
 	public static final String MAGIC_CARD_RESULT = "result";
 
 	private boolean twoPaneMode;
@@ -38,13 +35,8 @@ public class MagicCardListActivity extends FragmentActivity implements
 	private SearchView searchView;
 	private Menu menu;
 
-	private SearchOptions currentOptions;
-	private SearchResult currentResult;
+	private SearchOptions currentSearch;
 	private boolean isRestored = false;
-	
-	private FacetListFragment facetListFragment = new FacetListFragment();
-	private MagicCardListFragment listFragment;
-    private String currentFragment;
 
 	public MagicCardListActivity() {
 		super();
@@ -59,20 +51,12 @@ public class MagicCardListActivity extends FragmentActivity implements
 		setContentView(R.layout.activity_magiccard_list);
 		
 		if (savedInstanceState != null) {
-			currentFragment = savedInstanceState.getString(CURRENT_FRAGMENT);
-			
 			SearchOptions savedSearch = savedInstanceState.getParcelable(CURRENT_SEARCH);
 			if (savedSearch != null) {
-				currentOptions = savedSearch;
+				currentSearch = savedSearch;
 				isRestored = true;
-				Log.d(getClass().getName(), "Restored search : " + currentOptions);
+				Log.d(getClass().getName(), "Restored search : " + currentSearch);
 			}
-		}
-		
-		if (facetListFragment.getClass().getName().equals(currentFragment)) {
-			showFragment(facetListFragment);
-		} else {
-			showFragment(listFragment);
 		}
 
 		if (findViewById(R.id.magiccard_detail_container) != null) {
@@ -82,51 +66,23 @@ public class MagicCardListActivity extends FragmentActivity implements
 		}
 
 	}
-	
-    private void showFragment(final Fragment fragment) {
-		if (fragment == null) {
-			return;
-		}
-
-		facetListFragment.setOptions(currentOptions);
-		facetListFragment.setResult(currentResult);
-
-        // Update current fragment.
-        currentFragment = fragment.getClass().getName();
-        // Begin a fragment transaction.
-        final FragmentManager fm = getFragmentManager();
-        final FragmentTransaction ft = fm.beginTransaction();
-        // We can also animate the changing of fragment.
-//        ft.setCustomAnimations(android.R.anim.slide_in_left,
-//                        android.R.anim.slide_out_right);
-        // Replace current fragment by the new one.
-        ft.replace(R.id.magiccard_facet_list, fragment);
-        // Null on the back stack to return on the previous fragment when user
-        // press on back button.
-        ft.addToBackStack(null);
-
-        // Commit changes.
-        ft.commit();
-}
 
 	@Override
 	protected void onPostCreate(Bundle savedInstanceState) {
 		super.onPostCreate(savedInstanceState);
-		
-		Log.d(getClass().getName(), "onPostCreate savedInstanceState " + savedInstanceState);
 
-		if (twoPaneMode) {
-			Fragment listFragment = getFragmentManager().findFragmentById(R.id.magiccard_list);
-			((MagicCardListFragment) listFragment).setActivateOnItemClick(true);
-		}
+		Fragment listFragment = getFragmentManager().findFragmentById(R.id.magiccard_list);
+		((MagicCardListFragment) listFragment).setActivateOnItemClick(true);
 
-		if (currentOptions == null) {
-			currentOptions = new SearchOptions().setQuery("*");
+		if (currentSearch == null) {
+			currentSearch = new SearchOptions().setQuery("*");
 		}
 		
 		String resultAsString = getIntent().getStringExtra(MAGIC_CARD_RESULT);
 		if (resultAsString != null && !isRestored) {
-			new UIUpdater(this, resultAsString).execute();	
+			new UIUpdater(this, resultAsString).execute();
+		} else {
+			new SearchProcessor(this, currentSearch, R.string.loading_initial).execute();	
 		}
 	}
 
@@ -181,13 +137,15 @@ public class MagicCardListActivity extends FragmentActivity implements
 		switch (item.getItemId()) {
 
 		case R.id.list_tab:
-			showFragment(listFragment);
+			hide(getFacetView());
+			show(getCardView());
 			item.setVisible(false);
 			menu.findItem(R.id.facet_tab).setVisible(true);
 			return true;
 
 		case R.id.facet_tab:
-			showFragment(facetListFragment);
+			hide(getCardView());
+			show(getFacetView());
 			item.setVisible(false);
 			menu.findItem(R.id.list_tab).setVisible(true);
 			return true;
@@ -247,8 +205,16 @@ public class MagicCardListActivity extends FragmentActivity implements
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
-		outState.putParcelable(CURRENT_SEARCH, currentOptions);
+		outState.putParcelable(CURRENT_SEARCH, currentSearch);
 		Log.d(getClass().getName(), "onSaveInstanceState " + outState);
+	}
+
+	public View getCardView() {
+		return findViewById(R.id.magiccard_list);
+	}
+
+	public View getFacetView() {
+		return findViewById(R.id.facet_list);
 	}
 
 	public View getPicturesView() {
@@ -284,18 +250,14 @@ public class MagicCardListActivity extends FragmentActivity implements
 	}
 
 	public SearchOptions getCurrentSearch() {
-		return currentOptions;
+		return currentSearch;
 	}
 
 	public void setCurrentSearch(SearchOptions currentSearch) {
-		this.currentOptions = currentSearch;
+		this.currentSearch = currentSearch;
 	}
 
 	public SearchView getSearchView() {
 		return searchView;
-	}
-
-	public void setCurrentResult(SearchResult currentResult) {
-		this.currentResult = currentResult;
 	}
 }
