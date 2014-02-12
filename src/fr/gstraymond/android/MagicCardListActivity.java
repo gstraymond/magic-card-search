@@ -1,12 +1,13 @@
 package fr.gstraymond.android;
 
-import static android.widget.Toast.LENGTH_SHORT;
-import static android.widget.Toast.makeText;
 import static fr.gstraymond.constants.Consts.MAGIC_CARD;
 import static fr.gstraymond.constants.Consts.POSITION;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.support.v4.app.ActionBarDrawerToggle;
+import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -20,7 +21,6 @@ import fr.gstraymond.biz.SearchProcessor;
 import fr.gstraymond.biz.UIUpdater;
 import fr.gstraymond.magicsearch.model.response.MagicCard;
 import fr.gstraymond.tools.ActivityUtil;
-import fr.gstraymond.tools.VersionUtils;
 import fr.gstraymond.ui.EndScrollListener;
 import fr.gstraymond.ui.TextListener;
 
@@ -41,6 +41,8 @@ public class MagicCardListActivity extends CustomActivity implements
 	private int totalCardCount;
 	private SearchOptions currentSearch;
 	private boolean isRestored = false;
+	
+	private ActionBarDrawerToggle drawerToggle;
 
 	public MagicCardListActivity() {
 		super();
@@ -53,6 +55,11 @@ public class MagicCardListActivity extends CustomActivity implements
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_magiccard_list);
+
+		MagicCardParentListFragment fragment = new MagicCardParentListFragment();
+		getFragmentManager().beginTransaction()
+			.replace(R.id.parent_fragment, fragment)
+			.commit();
 		
 		if (savedInstanceState != null) {
 			SearchOptions savedSearch = savedInstanceState.getParcelable(CURRENT_SEARCH);
@@ -66,18 +73,50 @@ public class MagicCardListActivity extends CustomActivity implements
 		if (findViewById(R.id.magiccard_detail_container) != null) {
 			twoPaneMode = true;
 		}
-
-		if (findViewById(R.id.search_input) != null) {
-			searchView = (SearchView) findViewById(R.id.search_input);
-			searchView.setOnQueryTextListener(textListener);
-		}
 		
-		getActionBar().setHomeButtonEnabled(true);
+		DrawerLayout drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+		
+        drawerToggle = new ActionBarDrawerToggle(
+                this,                  /* host Activity */
+                drawerLayout,         /* DrawerLayout object */
+                R.drawable.ic_drawer,  /* nav drawer icon to replace 'Up' caret */
+                R.string.drawer_open,  /* "open drawer" description */
+                R.string.drawer_close  /* "close drawer" description */
+                ) {
+
+            /** Called when a drawer has settled in a completely closed state. */
+            public void onDrawerClosed(View view) {
+                super.onDrawerClosed(view);
+                getActionBar().setTitle(R.string.drawer_open);
+            }
+
+            /** Called when a drawer has settled in a completely open state. */
+            public void onDrawerOpened(View drawerView) {
+                super.onDrawerOpened(drawerView);
+                getActionBar().setTitle(R.string.drawer_close);
+            }
+        };
+
+		
+        // Set the drawer toggle as the DrawerListener
+        drawerLayout.setDrawerListener(drawerToggle);
+
+        getActionBar().setDisplayHomeAsUpEnabled(true);
+        getActionBar().setHomeButtonEnabled(true);
+        getActionBar().setTitle(R.string.drawer_open);
 	}
 
 	@Override
 	protected void onPostCreate(Bundle savedInstanceState) {
 		super.onPostCreate(savedInstanceState);
+		
+        // Sync the toggle state after onRestoreInstanceState has occurred.
+        drawerToggle.syncState();
+
+		if (findViewById(R.id.search_input) != null) {
+			searchView = (SearchView) findViewById(R.id.search_input);
+			searchView.setOnQueryTextListener(textListener);
+		}
 
 		if (currentSearch == null) {
 			currentSearch = new SearchOptions();
@@ -140,6 +179,7 @@ public class MagicCardListActivity extends CustomActivity implements
 		}
 
 		if (menu.findItem(R.id.search_tab) != null) {
+			Log.d(getClass().getName(), "onCreateOptionsMenu : init searchview");
 			searchView = new SearchView(this);
 			searchView.setIconifiedByDefault(false);
 			searchView.setOnQueryTextListener(textListener);
@@ -151,28 +191,27 @@ public class MagicCardListActivity extends CustomActivity implements
 	}
 
 	@Override
+	public void onConfigurationChanged(Configuration newConfig) {
+		super.onConfigurationChanged(newConfig);
+        drawerToggle.onConfigurationChanged(newConfig);
+
+	}
+
+	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
+		
+        if (drawerToggle.onOptionsItemSelected(item)) {
+            return true;
+          }
+
 		
 		switch (item.getItemId()) {
 		
-		case android.R.id.home:
+		// FIXME : afficher le numéro de version
+		/*case android.R.id.home:
 			String version = "Version " + VersionUtils.getAppVersion(this);
 			makeText(this, version, LENGTH_SHORT).show();
-			return true;
-
-		case R.id.list_tab:
-			hide(getFacetView());
-			show(getCardView());
-			item.setVisible(false);
-			menu.findItem(R.id.facet_tab).setVisible(true);
-			return true;
-
-		case R.id.facet_tab:
-			hide(getCardView());
-			show(getFacetView());
-			item.setVisible(false);
-			menu.findItem(R.id.list_tab).setVisible(true);
-			return true;
+			return true;*/
 
 		case R.id.pictures_tab:
 			Intent intent = ActivityUtil.getIntent(this, MagicCardPagerActivity.class);
@@ -209,14 +248,6 @@ public class MagicCardListActivity extends CustomActivity implements
 		searchView.setIconified(true);
         searchView.setQuery("", false);
 	}
-	
-	private void hide(View view) {
-		view.setVisibility(View.GONE);
-	}
-	
-	private void show(View view) {
-		view.setVisibility(View.VISIBLE);
-	}
 
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
@@ -227,10 +258,6 @@ public class MagicCardListActivity extends CustomActivity implements
 
 	public View getCardView() {
 		return findViewById(R.id.magiccard_list);
-	}
-
-	public View getFacetView() {
-		return findViewById(R.id.facet_list);
 	}
 
 	public View getPicturesView() {

@@ -1,17 +1,6 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
 
     <item
-        android:id="@+id/list_tab"
-        android:icon="@drawable/list_num"
-        android:showAsAction="ifRoom"
-        android:title="@string/list_menu_cards"
-        android:visible="false"/>
-    <item
-        android:id="@+id/facet_tab"
-        android:icon="@drawable/list_bullets"
-        android:showAsAction="ifRoom"
-        android:title="@string/list_menu_facets"/>
-    <item
         android:id="@+id/clear_tab"
         android:icon="@drawable/delete"
         android:showAsAction="ifRoom"

@@ -9,9 +9,8 @@ import android.app.FragmentManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ListView;
+import android.widget.ExpandableListView;
+import android.widget.ExpandableListView.OnChildClickListener;
 import android.widget.TextView;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -90,16 +89,18 @@ public class UIUpdater extends AsyncTask<Void, Void, SearchResult> {
 		activity.setTotalCardCount(totalCardCount);
 	}
 
+
 	private void updateUIFacets(SearchResult result) {
 		if (! getOptions().isAppend()) {
 			final FacetListAdapter facetListAdapter = new FacetListAdapter(result.getFacets(), getOptions());
 			getFacetListView().setAdapter(facetListAdapter);
-			getFacetListView().setOnItemClickListener(new OnItemClickListener() {
-	
+			// TODO : extract to separate class
+			getFacetListView().setOnChildClickListener(new OnChildClickListener() {
+
 				@Override
-				public void onItemClick(AdapterView<?> parent, View view, int position,
-						long id) {
-					Term term = facetListAdapter.getTerm(position);
+				public boolean onChildClick(ExpandableListView parent, View view,
+						int groupPosition, int childPosition, long id) {
+					Term term = (Term) facetListAdapter.getChild(groupPosition, childPosition);
 					if (term.getCount() > -1) {
 						String facet = facetListAdapter.getFacet(term);
 
@@ -112,6 +113,7 @@ public class UIUpdater extends AsyncTask<Void, Void, SearchResult> {
 						getOptions().setFrom(0);
 						new SearchProcessor(activity, getOptions(), R.string.loading_facet).execute();
 					}
+					return true;
 				}
 			});
 		}
@@ -134,7 +136,7 @@ public class UIUpdater extends AsyncTask<Void, Void, SearchResult> {
 		return (MagicCardListFragment) fragment; 
 	}
 
-	private ListView getFacetListView() {
-		return (ListView) activity.findViewById(R.id.facet_list);
+	private ExpandableListView getFacetListView() {
+		return (ExpandableListView) activity.findViewById(R.id.left_drawer);
 	}
 }
