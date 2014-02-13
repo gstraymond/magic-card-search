@@ -15,8 +15,8 @@ import fr.gstraymond.R;
 import fr.gstraymond.android.CustomApplication;
 import fr.gstraymond.biz.CastingCostImageGetter;
 import fr.gstraymond.biz.SetImageGetter;
-import fr.gstraymond.magicsearch.model.response.MagicCard;
-import fr.gstraymond.magicsearch.model.response.Publication;
+import fr.gstraymond.search.model.response.Card;
+import fr.gstraymond.search.model.response.Publication;
 import fr.gstraymond.tools.CastingCostFormatter;
 import fr.gstraymond.tools.DescriptionFormatter;
 import fr.gstraymond.tools.FormatFormatter;
@@ -55,8 +55,8 @@ public class SetArrayAdapter extends ArrayAdapter<Object> {
 		Object object = getItem(position);
 		TextView text = getTextView(view, object);
 		
-		if(object instanceof MagicCard) {
-			MagicCard card = (MagicCard) object;
+		if(object instanceof Card) {
+			Card card = (Card) object;
 			text.setText(formatCard(card));
 		} else if (object instanceof Publication) {
 			Publication publication = (Publication) object;
@@ -66,7 +66,7 @@ public class SetArrayAdapter extends ArrayAdapter<Object> {
 		return view;
 	}
 	
-	private Spanned formatCard(MagicCard card) {
+	private Spanned formatCard(Card card) {
 		String cc = formatCC(card);
 		String pt = ptFormatter.format(card);
 		String cc_pt = formatCC_PT(cc, pt);
@@ -108,7 +108,7 @@ public class SetArrayAdapter extends ArrayAdapter<Object> {
 		return builder.toString();
 	}
 
-	private String formatCC(MagicCard card) {
+	private String formatCC(Card card) {
 		if (card.getCastingCost() == null) {
 			return "";
 		}
@@ -135,7 +135,7 @@ public class SetArrayAdapter extends ArrayAdapter<Object> {
 		set.setVisibility(View.GONE);
 		
 		TextView textview = set;
-		if (object instanceof MagicCard) {
+		if (object instanceof Card) {
 			textview = detail;
 		}
 		textview.setVisibility(View.VISIBLE);

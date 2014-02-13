@@ -7,7 +7,7 @@ import java.util.Map;
 
 import android.content.Context;
 import fr.gstraymond.R;
-import fr.gstraymond.magicsearch.model.request.facet.Facet;
+import fr.gstraymond.search.model.request.facet.Facet;
 
 public class FacetConst {
 

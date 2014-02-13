@@ -18,8 +18,8 @@ import android.widget.ProgressBar;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import fr.gstraymond.magicsearch.model.request.Request;
-import fr.gstraymond.magicsearch.model.response.SearchResult;
+import fr.gstraymond.search.model.request.Request;
+import fr.gstraymond.search.model.response.SearchResult;
 import fr.gstraymond.tools.DisplaySizeUtil;
 import fr.gstraymond.tools.MapperUtil;
 import fr.gstraymond.tools.VersionUtils;

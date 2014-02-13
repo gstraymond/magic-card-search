@@ -6,16 +6,16 @@ import java.util.Map;
 
 import android.widget.SearchView.OnQueryTextListener;
 import fr.gstraymond.R;
-import fr.gstraymond.android.MagicCardListActivity;
+import fr.gstraymond.android.CardListActivity;
 import fr.gstraymond.biz.SearchOptions;
 import fr.gstraymond.biz.SearchProcessor;
 
 public class TextListener implements OnQueryTextListener {
 
-	private MagicCardListActivity activity;
+	private CardListActivity activity;
 	private boolean canSearch = true;
 	
-	public TextListener(MagicCardListActivity activity) {
+	public TextListener(CardListActivity activity) {
 		this.activity = activity;
 	}
 

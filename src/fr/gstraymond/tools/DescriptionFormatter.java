@@ -6,7 +6,7 @@ import java.util.regex.Pattern;
 
 import android.text.TextUtils;
 
-import fr.gstraymond.magicsearch.model.response.MagicCard;
+import fr.gstraymond.search.model.response.Card;
 
 public class DescriptionFormatter {
 	
@@ -16,7 +16,7 @@ public class DescriptionFormatter {
 		this.pattern = Pattern.compile("\\{(.*?)\\}");
 	}
 	
-	public String format(MagicCard card) {
+	public String format(Card card) {
 		if (card.getDescription() == null) {
 			return "";
 		}

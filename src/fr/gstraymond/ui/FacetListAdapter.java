@@ -15,8 +15,8 @@ import android.widget.TextView;
 import fr.gstraymond.R;
 import fr.gstraymond.biz.SearchOptions;
 import fr.gstraymond.constants.FacetConst;
-import fr.gstraymond.magicsearch.model.response.facet.Facet;
-import fr.gstraymond.magicsearch.model.response.facet.Term;
+import fr.gstraymond.search.model.response.facet.Facet;
+import fr.gstraymond.search.model.response.facet.Term;
 
 
 public class FacetListAdapter extends BaseExpandableListAdapter {

@@ -6,7 +6,7 @@ import android.widget.ProgressBar;
 import fr.gstraymond.R;
 import fr.gstraymond.android.CustomApplication;
 import fr.gstraymond.android.SplashScreen;
-import fr.gstraymond.magicsearch.model.response.SearchResult;
+import fr.gstraymond.search.model.response.SearchResult;
 
 public class SplashProcessor extends AsyncTask<Void, Integer, SearchResult> {
 

@@ -3,10 +3,10 @@ package fr.gstraymond.tools;
 import android.app.Activity;
 import android.content.Intent;
 import fr.gstraymond.R;
+import fr.gstraymond.android.CardDetailActivity;
+import fr.gstraymond.android.CardListActivity;
+import fr.gstraymond.android.CardPagerActivity;
 import fr.gstraymond.android.HelpActivity;
-import fr.gstraymond.android.MagicCardDetailActivity;
-import fr.gstraymond.android.MagicCardListActivity;
-import fr.gstraymond.android.MagicCardPagerActivity;
 
 public class ActivityUtil {
 
@@ -25,16 +25,16 @@ public class ActivityUtil {
 
 	private static Class<? extends Activity> getTabletActivity(
 			Class<? extends Activity> nextActivityClass) {
-		if (MagicCardListActivity.class.equals(nextActivityClass)) {
-			return fr.gstraymond.android.tablet.MagicCardListActivity.class;
+		if (CardListActivity.class.equals(nextActivityClass)) {
+			return fr.gstraymond.android.tablet.CardListActivity.class;
 		}
 
-		if (MagicCardDetailActivity.class.equals(nextActivityClass)) {
-			return fr.gstraymond.android.tablet.MagicCardDetailActivity.class;
+		if (CardDetailActivity.class.equals(nextActivityClass)) {
+			return fr.gstraymond.android.tablet.CardDetailActivity.class;
 		}
 
-		if (MagicCardPagerActivity.class.equals(nextActivityClass)) {
-			return fr.gstraymond.android.tablet.MagicCardPagerActivity.class;
+		if (CardPagerActivity.class.equals(nextActivityClass)) {
+			return fr.gstraymond.android.tablet.CardPagerActivity.class;
 		}
 
 		if (HelpActivity.class.equals(nextActivityClass)) {

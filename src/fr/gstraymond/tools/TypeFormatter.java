@@ -2,7 +2,7 @@ package fr.gstraymond.tools;
 
 import android.content.Context;
 import fr.gstraymond.R;
-import fr.gstraymond.magicsearch.model.response.MagicCard;
+import fr.gstraymond.search.model.response.Card;
 
 public class TypeFormatter {
 
@@ -15,12 +15,12 @@ public class TypeFormatter {
 		this.context = context;
 	}
 
-	public String format(MagicCard card) {
+	public String format(Card card) {
 		String type = card.getType().replaceAll(SEP, QUADRAT);
 		return context.getString(R.string.card_type) + " " + type;
 	}
 
-	public String formatFirst(MagicCard card) {
+	public String formatFirst(Card card) {
 		return card.getType().split(SEP)[0];
 	}
 }

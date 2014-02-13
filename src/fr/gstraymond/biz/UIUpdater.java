@@ -1,6 +1,6 @@
 package fr.gstraymond.biz;
 
-import static fr.gstraymond.constants.Consts.MAGIC_CARD_LIST;
+import static fr.gstraymond.constants.Consts.CARD_LIST;
 
 import java.util.ArrayList;
 
@@ -16,28 +16,28 @@ import android.widget.TextView;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import fr.gstraymond.R;
-import fr.gstraymond.android.MagicCardListActivity;
-import fr.gstraymond.android.MagicCardListFragment;
-import fr.gstraymond.magicsearch.model.response.Hit;
-import fr.gstraymond.magicsearch.model.response.MagicCard;
-import fr.gstraymond.magicsearch.model.response.SearchResult;
-import fr.gstraymond.magicsearch.model.response.facet.Term;
+import fr.gstraymond.android.CardListActivity;
+import fr.gstraymond.android.CardListFragment;
+import fr.gstraymond.search.model.response.Card;
+import fr.gstraymond.search.model.response.Hit;
+import fr.gstraymond.search.model.response.SearchResult;
+import fr.gstraymond.search.model.response.facet.Term;
 import fr.gstraymond.tools.MapperUtil;
 import fr.gstraymond.ui.FacetListAdapter;
 
 public class UIUpdater extends AsyncTask<Void, Void, SearchResult> {
 	
-	private MagicCardListActivity activity;
+	private CardListActivity activity;
 	private String resultAsString;
 	private MapperUtil<SearchResult> mapperUtil;
 
-	public UIUpdater(MagicCardListActivity activity, String resultAsString, ObjectMapper objectMapper) {
+	public UIUpdater(CardListActivity activity, String resultAsString, ObjectMapper objectMapper) {
 		this(activity);
 		this.resultAsString = resultAsString;
 		this.mapperUtil = new MapperUtil<SearchResult>(objectMapper, SearchResult.class);
 	}
 
-	public UIUpdater(MagicCardListActivity activity) {
+	public UIUpdater(CardListActivity activity) {
 		this.activity = activity;
 	}
 
@@ -54,7 +54,7 @@ public class UIUpdater extends AsyncTask<Void, Void, SearchResult> {
 		}
 		
 		int totalCardCount = 0;
-		ArrayList<MagicCard> cards = new ArrayList<MagicCard>();
+		ArrayList<Card> cards = new ArrayList<Card>();
 		
 		if (result.getHits() != null) {
 			totalCardCount = result.getHits().getTotal();
@@ -74,16 +74,16 @@ public class UIUpdater extends AsyncTask<Void, Void, SearchResult> {
 		updateUIFacets(result);
 	}
 
-	private void updateUIList(int totalCardCount, ArrayList<MagicCard> cards) {
+	private void updateUIList(int totalCardCount, ArrayList<Card> cards) {
 		if (getOptions().isAppend()) {
-			MagicCardListFragment fragment = getMagicCardListFragment();
+			CardListFragment fragment = getCardListFragment();
 			fragment.appendCards(cards);
 		} else {
 			Bundle bundle = new Bundle();
-			bundle.putParcelableArrayList(MAGIC_CARD_LIST, cards);
-			MagicCardListFragment fragment = new MagicCardListFragment();
+			bundle.putParcelableArrayList(CARD_LIST, cards);
+			CardListFragment fragment = new CardListFragment();
 			fragment.setArguments(bundle);
-			getFragmentManager().beginTransaction().replace(R.id.magiccard_list, fragment).commit();
+			getFragmentManager().beginTransaction().replace(R.id.card_list, fragment).commit();
 			
 		}
 		activity.setTotalCardCount(totalCardCount);
@@ -131,9 +131,9 @@ public class UIUpdater extends AsyncTask<Void, Void, SearchResult> {
 		return activity.getFragmentManager();
 	}
 
-	private MagicCardListFragment getMagicCardListFragment() {
-		Fragment fragment = getFragmentManager().findFragmentById(R.id.magiccard_list);
-		return (MagicCardListFragment) fragment; 
+	private CardListFragment getCardListFragment() {
+		Fragment fragment = getFragmentManager().findFragmentById(R.id.card_list);
+		return (CardListFragment) fragment; 
 	}
 
 	private ExpandableListView getFacetListView() {

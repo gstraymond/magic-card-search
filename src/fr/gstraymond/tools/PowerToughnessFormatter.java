@@ -1,10 +1,10 @@
 package fr.gstraymond.tools;
 
-import fr.gstraymond.magicsearch.model.response.MagicCard;
+import fr.gstraymond.search.model.response.Card;
 
 public class PowerToughnessFormatter {
 
-	public String format(MagicCard card) {
+	public String format(Card card) {
 		if (card.getPower() == null) {
 			return "";
 		}

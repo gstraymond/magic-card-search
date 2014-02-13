@@ -9,7 +9,7 @@ import android.view.MenuItem;
 import android.widget.TextView;
 import fr.gstraymond.R;
 import fr.gstraymond.biz.CastingCostImageGetter;
-import fr.gstraymond.magicsearch.help.HelpText;
+import fr.gstraymond.search.help.HelpText;
 import fr.gstraymond.tools.HelpFormatter;
 import fr.gstraymond.tools.MapperUtil;
 import fr.gstraymond.ui.CastingCostAssetLoader;

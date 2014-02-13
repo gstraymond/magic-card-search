@@ -6,7 +6,7 @@ import fr.gstraymond.R;
 import fr.gstraymond.biz.ApplicationLoader;
 import fr.gstraymond.biz.SearchOptions;
 import fr.gstraymond.biz.SplashProcessor;
-import fr.gstraymond.magicsearch.model.response.SearchResult;
+import fr.gstraymond.search.model.response.SearchResult;
 import fr.gstraymond.tools.ActivityUtil;
 import fr.gstraymond.tools.MapperUtil;
 
@@ -32,8 +32,8 @@ public class SplashScreen extends CustomActivity {
 	public void startNextActivity(SearchResult result) {
 		String resultAsString = mapperUtil.asJsonString(result);
 		
-		Intent intent = ActivityUtil.getIntent(this, MagicCardListActivity.class);
-		intent.putExtra(MagicCardListActivity.MAGIC_CARD_RESULT, resultAsString);
+		Intent intent = ActivityUtil.getIntent(this, CardListActivity.class);
+		intent.putExtra(CardListActivity.CARD_RESULT, resultAsString);
 		startActivity(intent);
 
 		finish();

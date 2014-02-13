@@ -7,16 +7,16 @@ import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.Toast;
 import fr.gstraymond.R;
-import fr.gstraymond.android.MagicCardListActivity;
+import fr.gstraymond.android.CardListActivity;
 import fr.gstraymond.biz.SearchOptions;
 import fr.gstraymond.biz.SearchProcessor;
 
 public class EndScrollListener implements OnScrollListener {
 
 	private boolean canLoadMoreItems = true;
-	private MagicCardListActivity activity;
+	private CardListActivity activity;
 
-	public EndScrollListener(MagicCardListActivity activity) {
+	public EndScrollListener(CardListActivity activity) {
 		this.activity = activity;
 	}
 

@@ -6,7 +6,7 @@ import android.text.Html;
 import android.text.Spanned;
 import android.text.TextUtils;
 import fr.gstraymond.biz.CastingCostImageGetter;
-import fr.gstraymond.magicsearch.help.HelpText;
+import fr.gstraymond.search.help.HelpText;
 
 public class HelpFormatter {
 

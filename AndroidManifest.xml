@@ -31,13 +31,13 @@
 
         <!-- Card list -->
         <activity
-            android:name="fr.gstraymond.android.MagicCardListActivity"
+            android:name="fr.gstraymond.android.CardListActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:label="@string/app_name"
             android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name="fr.gstraymond.android.tablet.MagicCardListActivity"
+            android:name="fr.gstraymond.android.tablet.CardListActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:label="@string/app_name"
             android:screenOrientation="landscape" >
@@ -45,42 +45,42 @@
 
         <!-- Card detail -->
         <activity
-            android:name="fr.gstraymond.android.MagicCardDetailActivity"
+            android:name="fr.gstraymond.android.CardDetailActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
-            android:parentActivityName="fr.gstraymond.android.MagicCardListActivity"
+            android:parentActivityName="fr.gstraymond.android.CardListActivity"
             android:screenOrientation="portrait" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MagicCardListActivity" />
+                android:value=".CardListActivity" />
         </activity>
         <activity
-            android:name="fr.gstraymond.android.tablet.MagicCardDetailActivity"
+            android:name="fr.gstraymond.android.tablet.CardDetailActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
-            android:parentActivityName="fr.gstraymond.android.MagicCardListActivity"
+            android:parentActivityName="fr.gstraymond.android.CardListActivity"
             android:screenOrientation="landscape" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MagicCardListActivity" />
+                android:value=".CardListActivity" />
         </activity>
 
         <!-- Card detail -->
         <activity
-            android:name="fr.gstraymond.android.MagicCardPagerActivity"
+            android:name="fr.gstraymond.android.CardPagerActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
-            android:parentActivityName="fr.gstraymond.android.MagicCardDetailActivity"
+            android:parentActivityName="fr.gstraymond.android.CardDetailActivity"
             android:screenOrientation="portrait" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MagicCardDetailActivity" />
+                android:value=".CardDetailActivity" />
         </activity>
         <activity
-            android:name="fr.gstraymond.android.tablet.MagicCardPagerActivity"
+            android:name="fr.gstraymond.android.tablet.CardPagerActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
-            android:parentActivityName="fr.gstraymond.android.MagicCardDetailActivity"
+            android:parentActivityName="fr.gstraymond.android.CardDetailActivity"
             android:screenOrientation="landscape" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MagicCardDetailActivity" />
+                android:value=".CardDetailActivity" />
         </activity>
 
         <!-- Help -->

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <item name="activity_magiccard_list" type="layout">@layout/activity_magiccard_twopane</item>
+    <item name="activity_card_list" type="layout">@layout/activity_card_twopane</item>
 
 </resources>

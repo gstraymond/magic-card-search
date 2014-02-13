@@ -8,20 +8,20 @@ import android.util.Log;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import fr.gstraymond.R;
+import fr.gstraymond.android.CardListActivity;
+import fr.gstraymond.android.CardListFragment;
 import fr.gstraymond.android.CustomApplication;
-import fr.gstraymond.android.MagicCardListActivity;
-import fr.gstraymond.android.MagicCardListFragment;
-import fr.gstraymond.magicsearch.model.response.SearchResult;
+import fr.gstraymond.search.model.response.SearchResult;
 
 public class SearchProcessor extends AsyncTask<Void, Void, SearchResult> {
 
-	private MagicCardListActivity activity;
+	private CardListActivity activity;
 	private ProgressBar progressBar;
 	private TextView welcomeTextView;
 	
 	private SearchOptions options = new SearchOptions();
 
-	public SearchProcessor(MagicCardListActivity activity, SearchOptions options, int loadingText) {
+	public SearchProcessor(CardListActivity activity, SearchOptions options, int loadingText) {
 		super();
 		this.activity = activity;
 		this.progressBar = getProgressBar();
@@ -94,13 +94,13 @@ public class SearchProcessor extends AsyncTask<Void, Void, SearchResult> {
 		return getActivity().getFragmentManager();
 	}
 
-	private MagicCardListFragment getMagicCardListFragment() {
-		return (MagicCardListFragment) getFragmentManager().findFragmentById(R.id.magiccard_list);
+	private CardListFragment getCardListFragment() {
+		return (CardListFragment) getFragmentManager().findFragmentById(R.id.card_list);
 	}
 
 	private SearchResult launchSearch(SearchOptions options) {
 		if (options.isAppend()) {
-			options.setFrom(getMagicCardListFragment().getCardListCount());
+			options.setFrom(getCardListFragment().getCardListCount());
 		}
 		
 		SearchResult searchResult = getApplicationContext().getElasticSearchClient().process(options, progressBar);
@@ -116,11 +116,11 @@ public class SearchProcessor extends AsyncTask<Void, Void, SearchResult> {
 		return (CustomApplication) getActivity().getApplicationContext();
 	}
 
-	public MagicCardListActivity getActivity() {
+	public CardListActivity getActivity() {
 		return activity;
 	}
 
-	public void setActivity(MagicCardListActivity activity) {
+	public void setActivity(CardListActivity activity) {
 		this.activity = activity;
 	}
 }

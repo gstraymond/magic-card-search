@@ -3,7 +3,7 @@ package fr.gstraymond.tools;
 import android.content.Context;
 import android.text.TextUtils;
 import fr.gstraymond.R;
-import fr.gstraymond.magicsearch.model.response.MagicCard;
+import fr.gstraymond.search.model.response.Card;
 
 public class FormatFormatter {
 	
@@ -13,7 +13,7 @@ public class FormatFormatter {
 		this.context = context;
 	}
 
-	public String format(MagicCard card) {
+	public String format(Card card) {
 		String formats = TextUtils.join(", ", card.getFormats());
 		if (TextUtils.isEmpty(formats)) {
 			formats = "Banned";
