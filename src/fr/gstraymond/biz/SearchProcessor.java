@@ -1,5 +1,7 @@
 package fr.gstraymond.biz;
 
+import static android.widget.Toast.LENGTH_SHORT;
+import static android.widget.Toast.makeText;
 import android.app.FragmentManager;
 import android.os.AsyncTask;
 import android.util.Log;
@@ -74,6 +76,13 @@ public class SearchProcessor extends AsyncTask<Void, Void, SearchResult> {
 	@Override
 	protected void onPostExecute(SearchResult searchResult) {
 		progressBar.setProgress(100);
+		
+		if (options.isAppend()) {
+			if (activity.getLoadingToast() != null) {
+				activity.getLoadingToast().cancel();
+			}
+			makeText(activity, R.string.toasting_loading_finished, LENGTH_SHORT).show();
+		}
 
 		new UIUpdater(activity).onPostExecute(searchResult);
 		enableSearch();

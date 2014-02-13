@@ -15,6 +15,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.SearchView;
 import android.widget.TextView;
+import android.widget.Toast;
 import fr.gstraymond.R;
 import fr.gstraymond.biz.SearchOptions;
 import fr.gstraymond.biz.SearchProcessor;
@@ -43,6 +44,7 @@ public class MagicCardListActivity extends CustomActivity implements
 	private boolean isRestored = false;
 	
 	private ActionBarDrawerToggle drawerToggle;
+	private Toast loadingToast;
 
 	public MagicCardListActivity() {
 		super();
@@ -72,34 +74,34 @@ public class MagicCardListActivity extends CustomActivity implements
 
 		if (findViewById(R.id.magiccard_detail_container) != null) {
 			twoPaneMode = true;
+		} else {
+
+			DrawerLayout drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+			
+	        drawerToggle = new ActionBarDrawerToggle(
+	                this,                  /* host Activity */
+	                drawerLayout,         /* DrawerLayout object */
+	                R.drawable.ic_drawer,  /* nav drawer icon to replace 'Up' caret */
+	                R.string.drawer_open,  /* "open drawer" description */
+	                R.string.drawer_close  /* "close drawer" description */
+	                ) {
+
+	            /** Called when a drawer has settled in a completely closed state. */
+	            public void onDrawerClosed(View view) {
+	                super.onDrawerClosed(view);
+	                getActionBar().setTitle(R.string.drawer_open);
+	            }
+
+	            /** Called when a drawer has settled in a completely open state. */
+	            public void onDrawerOpened(View drawerView) {
+	                super.onDrawerOpened(drawerView);
+	                getActionBar().setTitle(R.string.drawer_close);
+	            }
+	        };
+			
+	        // Set the drawer toggle as the DrawerListener
+	        drawerLayout.setDrawerListener(drawerToggle);
 		}
-		
-		DrawerLayout drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-		
-        drawerToggle = new ActionBarDrawerToggle(
-                this,                  /* host Activity */
-                drawerLayout,         /* DrawerLayout object */
-                R.drawable.ic_drawer,  /* nav drawer icon to replace 'Up' caret */
-                R.string.drawer_open,  /* "open drawer" description */
-                R.string.drawer_close  /* "close drawer" description */
-                ) {
-
-            /** Called when a drawer has settled in a completely closed state. */
-            public void onDrawerClosed(View view) {
-                super.onDrawerClosed(view);
-                getActionBar().setTitle(R.string.drawer_open);
-            }
-
-            /** Called when a drawer has settled in a completely open state. */
-            public void onDrawerOpened(View drawerView) {
-                super.onDrawerOpened(drawerView);
-                getActionBar().setTitle(R.string.drawer_close);
-            }
-        };
-
-		
-        // Set the drawer toggle as the DrawerListener
-        drawerLayout.setDrawerListener(drawerToggle);
 
         getActionBar().setDisplayHomeAsUpEnabled(true);
         getActionBar().setHomeButtonEnabled(true);
@@ -111,7 +113,9 @@ public class MagicCardListActivity extends CustomActivity implements
 		super.onPostCreate(savedInstanceState);
 		
         // Sync the toggle state after onRestoreInstanceState has occurred.
-        drawerToggle.syncState();
+		if (! twoPaneMode) {
+	        drawerToggle.syncState();	
+		}
 
 		if (findViewById(R.id.search_input) != null) {
 			searchView = (SearchView) findViewById(R.id.search_input);
@@ -120,6 +124,10 @@ public class MagicCardListActivity extends CustomActivity implements
 
 		if (currentSearch == null) {
 			currentSearch = new SearchOptions();
+		}
+		
+		if (isRestored) {
+			currentSearch.setAppend(false);
 		}
 		
 		String resultAsString = getIntent().getStringExtra(MAGIC_CARD_RESULT);
@@ -179,7 +187,6 @@ public class MagicCardListActivity extends CustomActivity implements
 		}
 
 		if (menu.findItem(R.id.search_tab) != null) {
-			Log.d(getClass().getName(), "onCreateOptionsMenu : init searchview");
 			searchView = new SearchView(this);
 			searchView.setIconifiedByDefault(false);
 			searchView.setOnQueryTextListener(textListener);
@@ -199,12 +206,11 @@ public class MagicCardListActivity extends CustomActivity implements
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		
-        if (drawerToggle.onOptionsItemSelected(item)) {
-            return true;
-          }
 
-		
+		if (!twoPaneMode && drawerToggle.onOptionsItemSelected(item)) {
+			return true;
+		}
+
 		switch (item.getItemId()) {
 		
 		// FIXME : afficher le numéro de version
@@ -298,5 +304,13 @@ public class MagicCardListActivity extends CustomActivity implements
 
 	public void setTotalCardCount(int totalCardCount) {
 		this.totalCardCount = totalCardCount;
+	}
+
+	public Toast getLoadingToast() {
+		return loadingToast;
+	}
+
+	public void setLoadingToast(Toast loadingToast) {
+		this.loadingToast = loadingToast;
 	}
 }

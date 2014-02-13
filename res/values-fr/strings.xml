@@ -19,6 +19,8 @@
     <string name="drawer_open">Rechercher</string>
     <string name="drawer_close">Revenir aux cartes</string>
     
+    <string name="toasting_loading_finished">Terminé !</string>
+    
     <string name="facet_ability">Capacité</string>
     <string name="facet_artist">Artiste</string>
     <string name="facet_color">Couleur</string>

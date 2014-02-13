@@ -98,18 +98,25 @@ public class FacetListAdapter extends BaseExpandableListAdapter {
             LayoutInflater inflater = getLayoutInflater(parent.getContext());
             view = inflater.inflate(R.layout.drawer_child, null);
         }
-
-		TextView textTextView = (TextView) view.findViewById(R.id.drawer_child_text);
-		TextView counterTextView = (TextView) view.findViewById(R.id.drawer_child_counter);
-		
+        
 		Term term = getChildren(groupPosition, childPosition);
 		String text = term.getTerm();
+
+		TextView textTextView = (TextView) view.findViewById(R.id.drawer_child_text);
+		TextView counterTextViewInactive = (TextView) view.findViewById(R.id.drawer_child_counter_inactive);
+		counterTextViewInactive.setVisibility(View.GONE);
+		TextView counterTextViewActive = (TextView) view.findViewById(R.id.drawer_child_counter_active);
+		counterTextViewActive.setVisibility(View.GONE);
+		
+		TextView counterTextView = counterTextViewInactive;
+		
 		if (selectedTerms.contains(term)) {
+			counterTextView = counterTextViewActive;
 			textTextView.setText(Html.fromHtml("<b>" + text + "</b>", null, null));
 		} else {
 			textTextView.setText(text);
 		}
-
+		counterTextView.setVisibility(View.VISIBLE);
 		counterTextView.setText(term.getCount() + "");
 		return view;
 	}

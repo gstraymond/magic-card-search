@@ -22,6 +22,8 @@
     <string name="drawer_open">Go to search</string>
     <string name="drawer_close">Back to list</string>
     
+    <string name="toasting_loading_finished">Done !</string>
+    
     <string name="facet_ability">Ability</string>
     <string name="facet_artist">Artist</string>
     <string name="facet_color">Color</string>

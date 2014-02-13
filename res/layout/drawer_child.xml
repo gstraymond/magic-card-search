@@ -6,14 +6,25 @@
     android:padding="4dp" >
 
     <TextView
-        android:id="@+id/drawer_child_counter"
+        android:id="@+id/drawer_child_counter_active"
         style="@android:style/TextAppearance.Holo.Small"
         android:layout_width="wrap_content"
-        android:minWidth="32dp"
         android:layout_height="wrap_content"
         android:layout_marginLeft="?android:attr/expandableListPreferredChildPaddingLeft"
-        android:background="@drawable/counter_border"
+        android:background="@drawable/counter_border_active"
         android:gravity="center_horizontal"
+        android:minWidth="32dp"
+        android:textColor="@android:color/background_dark" />
+
+    <TextView
+        android:id="@+id/drawer_child_counter_inactive"
+        style="@android:style/TextAppearance.Holo.Small"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="?android:attr/expandableListPreferredChildPaddingLeft"
+        android:background="@drawable/counter_border_inactive"
+        android:gravity="center_horizontal"
+        android:minWidth="32dp"
         android:textColor="@android:color/background_dark" />
 
     <TextView

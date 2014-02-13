@@ -16,6 +16,23 @@
         android:background="@android:color/background_dark"
         android:orientation="vertical" >
 
+        <TextView
+            android:id="@+id/welcome_text_view"
+            style="?android:attr/textAppearanceMedium"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="6dp"
+            android:layout_marginTop="8dp"
+            android:gravity="center"
+            android:text="@string/welcome_text" />
+
+        <ProgressBar
+            android:id="@+id/progress_bar"
+            style="@android:style/Widget.Holo.ProgressBar.Horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:progress="100" />
+
         <SearchView
             android:id="@+id/search_input"
             android:layout_width="match_parent"

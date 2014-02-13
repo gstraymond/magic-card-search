@@ -1,8 +1,11 @@
 package fr.gstraymond.ui;
 
+import static android.widget.Toast.LENGTH_SHORT;
+import static android.widget.Toast.makeText;
 import android.util.Log;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
+import android.widget.Toast;
 import fr.gstraymond.R;
 import fr.gstraymond.android.MagicCardListActivity;
 import fr.gstraymond.biz.SearchOptions;
@@ -29,10 +32,17 @@ public class EndScrollListener implements OnScrollListener {
 			if (!allCardsLoaded) {
 				Log.i(this.getClass().getName(), "onScroll - endReached");
 				SearchOptions options = activity.getCurrentSearch().setAppend(true);
+				showLoadingToast();
 				new SearchProcessor(activity, options, R.string.loading_more).execute();
 			}
 		}
 
+	}
+	
+	private void showLoadingToast() {
+		Toast loadingToast = makeText(activity, R.string.loading_more, LENGTH_SHORT);
+		activity.setLoadingToast(loadingToast);
+		loadingToast.show();
 	}
 
 	@Override

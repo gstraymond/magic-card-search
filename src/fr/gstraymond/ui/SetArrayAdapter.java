@@ -2,7 +2,6 @@ package fr.gstraymond.ui;
 
 import java.util.List;
 
-import android.app.Activity;
 import android.content.Context;
 import android.text.Html;
 import android.text.Html.ImageGetter;
@@ -47,9 +46,14 @@ public class SetArrayAdapter extends ArrayAdapter<Object> {
 	}
 
 	@Override
-	public View getView(int position, View view, ViewGroup parent) {
+	public View getView(int position, View convertView, ViewGroup parent) {
+		View view = convertView;
+        if (view == null) {
+            view = getLayoutInflater().inflate(R.layout.card_textview, null);
+        }
+		
 		Object object = getItem(position);
-		TextView text = getTextView(parent, object);
+		TextView text = getTextView(view, object);
 		
 		if(object instanceof MagicCard) {
 			MagicCard card = (MagicCard) object;
@@ -59,7 +63,7 @@ public class SetArrayAdapter extends ArrayAdapter<Object> {
 			text.setText(formatPublication(publication));
 		}
 		
-		return text;
+		return view;
 	}
 	
 	private Spanned formatCard(MagicCard card) {
@@ -124,22 +128,22 @@ public class SetArrayAdapter extends ArrayAdapter<Object> {
 		return "<img src='" + pub.getStdEditionCode() + "/" + pub.getRarityCode() + ".png' />";
 	}
 	
-	private TextView getTextView(ViewGroup parent, Object object) {
-		if (object instanceof MagicCard) {
-			return (TextView) getLayoutInflater().inflate(R.layout.card_textview, parent, false);
-		}
+	private TextView getTextView(View view, Object object) {
+		TextView detail = (TextView) view.findViewById(R.id.card_textview_detail);
+		TextView set = (TextView) view.findViewById(R.id.card_textview_set);
+		detail.setVisibility(View.GONE);
+		set.setVisibility(View.GONE);
 		
-		/* FIXME : Need optimisation
-		if (view != null) {
-			return (TextView) view;
+		TextView textview = set;
+		if (object instanceof MagicCard) {
+			textview = detail;
 		}
-		*/
+		textview.setVisibility(View.VISIBLE);
 
-		return (TextView) getLayoutInflater().inflate(R.layout.set_textview, parent, false);
+		return textview;
 	}
 	
 	private LayoutInflater getLayoutInflater() {
-		Activity activity = (Activity) getContext();
-		return activity.getLayoutInflater();
+		return LayoutInflater.from(getContext());
 	}
 }
