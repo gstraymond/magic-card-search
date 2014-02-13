@@ -11,7 +11,7 @@
     <string name="list_menu_help">A l\'aide !</string>
     <string name="detail_menu_pictures">Images</string>
     <string name="search_hint">anneau solaire, draw, sacrifice…</string>
-    <string name="failed_search">Ouch, la recherche est cassée !</string>
+    <string name="failed_search">Ouch, la recherche est cassée ! Connecté à internet ?</string>
     
     <string name="card_type">Type :</string>
     <string name="card_formats">Formats :</string>

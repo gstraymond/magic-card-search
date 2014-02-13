@@ -14,7 +14,7 @@
     <string name="list_menu_help">Help !</string>
     <string name="detail_menu_pictures">Pictures</string>
     <string name="search_hint">black lotus, draw, sacrifice…</string>
-    <string name="failed_search">Oops, search encountered an error !</string>
+    <string name="failed_search">Oops, search encountered an error ! Please, check your data connection.</string>
     
     <string name="card_type">Type:</string>
     <string name="card_formats">Formats:</string>
