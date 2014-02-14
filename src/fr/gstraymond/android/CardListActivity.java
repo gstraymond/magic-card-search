@@ -5,10 +5,12 @@ import static fr.gstraymond.constants.Consts.POSITION;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.Parcelable;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -27,8 +29,9 @@ import fr.gstraymond.ui.TextListener;
 
 public class CardListActivity extends CustomActivity implements
 		CardListFragment.Callbacks, CardDetailFragment.Callbacks {
+	
+	private static final int DRAWER_DELAY = 2000;
 	private static final String CURRENT_SEARCH = "currentSearch";
-
 	public static final String CARD_RESULT = "result";
 
 	private boolean twoPaneMode;
@@ -42,8 +45,9 @@ public class CardListActivity extends CustomActivity implements
 	private int totalCardCount;
 	private SearchOptions currentSearch;
 	private boolean isRestored = false;
-	
+
 	private ActionBarDrawerToggle drawerToggle;
+	private DrawerLayout drawerLayout;
 	private Toast loadingToast;
 
 	public CardListActivity() {
@@ -76,7 +80,7 @@ public class CardListActivity extends CustomActivity implements
 			twoPaneMode = true;
 		} else {
 
-			DrawerLayout drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+			drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 			
 	        drawerToggle = new ActionBarDrawerToggle(
 	                this,                  /* host Activity */
@@ -114,7 +118,9 @@ public class CardListActivity extends CustomActivity implements
 		
         // Sync the toggle state after onRestoreInstanceState has occurred.
 		if (! twoPaneMode) {
-	        drawerToggle.syncState();	
+	        drawerToggle.syncState();
+
+	        new Handler().postDelayed(openDrawerRunnable(), DRAWER_DELAY);	        
 		}
 
 		if (findViewById(R.id.search_input) != null) {
@@ -136,6 +142,16 @@ public class CardListActivity extends CustomActivity implements
 		} else {
 			new SearchProcessor(this, currentSearch, R.string.loading_initial).execute();	
 		}
+	}
+	
+	private Runnable openDrawerRunnable() {
+	    return new Runnable() {
+
+	        @Override
+	        public void run() {
+	            drawerLayout.openDrawer(Gravity.START);
+	        }
+	    };
 	}
 
 	/**
