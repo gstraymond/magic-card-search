@@ -14,18 +14,21 @@ import fr.gstraymond.ui.CardPagerAdapter;
 import fr.gstraymond.ui.CardViewPager;
 
 public class CardPagerFragment extends Fragment {
+	
+	private int position = 0;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		Card card = getArguments().getParcelable(CARD);
-		int position = 0;
-		if (getArguments().containsKey(POSITION)) {
+
+		if (savedInstanceState != null && savedInstanceState.containsKey(POSITION)) {
+			position = savedInstanceState.getInt(POSITION); 
+		} else if (getArguments().containsKey(POSITION)) {
 			position = getArguments().getInt(POSITION);
 		}
 
-		View rootView = inflater.inflate(R.layout.fragment_card_pager,
-				container, false);
+		View rootView = inflater.inflate(R.layout.fragment_card_pager, container, false);
 
 		CardViewPager viewPager = getViewPager(card, rootView);
 		viewPager.setAdapter(getPagerAdapter(card));
@@ -42,5 +45,16 @@ public class CardPagerFragment extends Fragment {
 
 	private PagerAdapter getPagerAdapter(Card card) {
 		return new CardPagerAdapter(getFragmentManager()).setCard(card);
+	}
+
+
+	public void setPosition(int position) {
+		this.position = position;
+	}
+
+	@Override
+	public void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+		outState.putInt(POSITION, position);
 	}
 }

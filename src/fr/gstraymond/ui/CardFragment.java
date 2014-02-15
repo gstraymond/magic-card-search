@@ -1,5 +1,7 @@
 package fr.gstraymond.ui;
 
+import java.util.Map;
+
 import android.app.Fragment;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -14,6 +16,7 @@ import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 import android.widget.LinearLayout;
 import fr.gstraymond.R;
+import fr.gstraymond.android.CustomApplication;
 import fr.gstraymond.biz.PictureDownloader;
 
 public class CardFragment extends Fragment {
@@ -25,6 +28,7 @@ public class CardFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
 
+    	// FIXME use xml instead
         ImageView imageView = new ImageView(getActivity());
         imageView.setImageBitmap(getDefaultBitmap());
         imageView.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
@@ -35,7 +39,7 @@ public class CardFragment extends Fragment {
     		Log.d(getClass().getName(), "onCreateView url restored " + url);
         }
         
-        new PictureDownloader(imageView, url).execute();
+        new PictureDownloader(imageView, url, getCache()).execute();
         
         LinearLayout layout = new LinearLayout(getActivity());
         layout.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
@@ -48,6 +52,11 @@ public class CardFragment extends Fragment {
 
 	private Bitmap getDefaultBitmap() {
 		return BitmapFactory.decodeResource(getActivity().getResources(), R.drawable.picture);
+	}
+	
+	private Map<String, Bitmap> getCache() {
+		CustomApplication application = (CustomApplication) getActivity().getApplication();
+		return application.getCardBitmapCache();
 	}
 
 	@Override

@@ -2,8 +2,11 @@ package fr.gstraymond.android;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 
 import android.app.Application;
+import android.graphics.Bitmap;
 import android.util.Log;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -26,6 +29,7 @@ public class CustomApplication extends Application {
 	private CastingCostAssetLoader castingCostAssetLoader;
 	private ObjectMapper objectMapper;
 	private Boolean isTablet;
+	private Map<String, Bitmap> cardBitmapCache = new HashMap<String, Bitmap>(); 
 	
 	public void init() {
 		initObjectMapper();
@@ -103,5 +107,13 @@ public class CustomApplication extends Application {
 
 	public void setTablet(boolean isTablet) {
 		this.isTablet = isTablet;
+	}
+
+	public Map<String, Bitmap> getCardBitmapCache() {
+		return cardBitmapCache;
+	}
+
+	public void setCardBitmapCache(Map<String, Bitmap> cardBitmapCache) {
+		this.cardBitmapCache = cardBitmapCache;
 	}
 }

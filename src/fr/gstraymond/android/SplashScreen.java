@@ -7,7 +7,6 @@ import fr.gstraymond.biz.ApplicationLoader;
 import fr.gstraymond.biz.SearchOptions;
 import fr.gstraymond.biz.SplashProcessor;
 import fr.gstraymond.search.model.response.SearchResult;
-import fr.gstraymond.tools.ActivityUtil;
 import fr.gstraymond.tools.MapperUtil;
 
 public class SplashScreen extends CustomActivity {
@@ -32,7 +31,7 @@ public class SplashScreen extends CustomActivity {
 	public void startNextActivity(SearchResult result) {
 		String resultAsString = mapperUtil.asJsonString(result);
 		
-		Intent intent = ActivityUtil.getIntent(this, CardListActivity.class);
+		Intent intent = new Intent(this, CardListActivity.class);
 		intent.putExtra(CardListActivity.CARD_RESULT, resultAsString);
 		startActivity(intent);
 

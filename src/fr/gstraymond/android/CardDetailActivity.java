@@ -12,7 +12,6 @@ import android.view.MenuItem;
 import android.widget.TextView;
 import fr.gstraymond.R;
 import fr.gstraymond.search.model.response.Card;
-import fr.gstraymond.tools.ActivityUtil;
 import fr.gstraymond.tools.LanguageUtil;
 
 public class CardDetailActivity extends CardCommonActivy implements
@@ -38,7 +37,7 @@ public class CardDetailActivity extends CardCommonActivy implements
 		switch (item.getItemId()) {
 
 		case R.id.pictures_tab:
-			Intent intent = ActivityUtil.getIntent(this, CardPagerActivity.class);
+			Intent intent = new Intent(this, CardPagerActivity.class);
 			intent.putExtra(CARD, getCard());
 			startActivity(intent);
 			return true;
@@ -68,7 +67,7 @@ public class CardDetailActivity extends CardCommonActivy implements
 				.replace(R.id.card_detail_container, fragment)
 				.commit();
 		} else {
-			Intent intent = ActivityUtil.getIntent(this, CardPagerActivity.class);
+			Intent intent = new Intent(this, CardPagerActivity.class);
 			intent.putExtra(CARD, getCard());
 			// first element is a card
 			intent.putExtra(POSITION, id - 1);

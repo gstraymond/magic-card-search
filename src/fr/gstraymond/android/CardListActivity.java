@@ -24,14 +24,13 @@ import fr.gstraymond.biz.SearchOptions;
 import fr.gstraymond.biz.SearchProcessor;
 import fr.gstraymond.biz.UIUpdater;
 import fr.gstraymond.search.model.response.Card;
-import fr.gstraymond.tools.ActivityUtil;
 import fr.gstraymond.ui.EndScrollListener;
 import fr.gstraymond.ui.TextListener;
 
 public class CardListActivity extends CustomActivity implements
 		CardListFragment.Callbacks, CardDetailFragment.Callbacks {
 	
-	private static final int DRAWER_DELAY = 2000;
+	private static final int DRAWER_DELAY = 1500;
 	private static final String CURRENT_SEARCH = "currentSearch";
 	public static final String CARD_RESULT = "result";
 
@@ -43,7 +42,9 @@ public class CardListActivity extends CustomActivity implements
 	private Card currentCard;
 	private int totalCardCount;
 	private SearchOptions currentSearch;
+	
 	private boolean isRestored = false;
+	private boolean hasDeviceRotated = false;
 
 	private ActionBarDrawerToggle drawerToggle;
 	private DrawerLayout drawerLayout;
@@ -127,12 +128,15 @@ public class CardListActivity extends CustomActivity implements
 		if (isRestored) {
 			currentSearch.setAppend(false);
 		}
-		
-		String resultAsString = getIntent().getStringExtra(CARD_RESULT);
-		if (resultAsString != null && !isRestored) {
-			new UIUpdater(this, resultAsString, getObjectMapper()).execute();
+		if (! hasDeviceRotated) {
+			String resultAsString = getIntent().getStringExtra(CARD_RESULT);
+			if (resultAsString != null && !isRestored) {
+				new UIUpdater(this, resultAsString, getObjectMapper()).execute();
+			} else {
+				new SearchProcessor(this, currentSearch, R.string.loading_initial).execute();	
+			}
 		} else {
-			new SearchProcessor(this, currentSearch, R.string.loading_initial).execute();	
+			hasDeviceRotated = false;
 		}
 	}
 	
@@ -157,8 +161,13 @@ public class CardListActivity extends CustomActivity implements
 			replaceFragment(new CardDetailFragment(), R.id.card_detail_container, getCurrentCardBundle());
 			
 			getTitleTextView().setText(CardDetailActivity.formatTitle(this, currentCard));
+			
+			if (menu != null) {
+				menu.findItem(R.id.pictures_tab).setVisible(true);
+				menu.findItem(R.id.oracle_tab).setVisible(false);
+			}
 		} else {
-			Intent intent = ActivityUtil.getIntent(this, CardDetailActivity.class);
+			Intent intent = new Intent(this, CardDetailActivity.class);
 			intent.putExtra(CARD, card);
 			startActivity(intent);
 		}
@@ -172,10 +181,13 @@ public class CardListActivity extends CustomActivity implements
 			bundle.putInt(POSITION, id - 1);
 			
 			replaceFragment(new CardPagerFragment(), R.id.card_detail_container, bundle);
-			menu.findItem(R.id.pictures_tab).setVisible(false);
-			menu.findItem(R.id.oracle_tab).setVisible(true);
+			
+			if (menu != null) {
+				menu.findItem(R.id.pictures_tab).setVisible(false);
+				menu.findItem(R.id.oracle_tab).setVisible(true);
+			}
 		} else {
-			Intent intent = ActivityUtil.getIntent(this, CardPagerActivity.class);
+			Intent intent = new Intent(this, CardPagerActivity.class);
 			intent.putExtra(CARD, currentCard);
 			// first element is a card
 			intent.putExtra(POSITION, id - 1);
@@ -211,6 +223,7 @@ public class CardListActivity extends CustomActivity implements
 	public void onConfigurationChanged(Configuration newConfig) {
 		super.onConfigurationChanged(newConfig);
         drawerToggle.onConfigurationChanged(newConfig);
+        hasDeviceRotated = true;
 	}
 
 	@Override
@@ -235,7 +248,7 @@ public class CardListActivity extends CustomActivity implements
 				item.setVisible(false);
 				menu.findItem(R.id.oracle_tab).setVisible(true);
 			} else {
-				Intent intent = ActivityUtil.getIntent(this, CardPagerActivity.class);
+				Intent intent = new Intent(this, CardPagerActivity.class);
 				intent.putExtra(CARD, currentCard);
 				startActivity(intent);
 			}
@@ -256,7 +269,7 @@ public class CardListActivity extends CustomActivity implements
 			return true;
 
 		case R.id.help_tab:
-			Intent helpIntent = ActivityUtil.getIntent(this, HelpActivity.class);
+			Intent helpIntent = new Intent(this, HelpActivity.class);
 			startActivity(helpIntent);
 			return true;
 		}

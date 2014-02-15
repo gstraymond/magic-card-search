@@ -1,11 +1,13 @@
 package fr.gstraymond.ui;
 
 import android.app.Activity;
+import android.app.Fragment;
 import android.content.Context;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
 import android.widget.TextView;
 import fr.gstraymond.R;
+import fr.gstraymond.android.CardPagerFragment;
 import fr.gstraymond.android.CustomApplication;
 import fr.gstraymond.search.model.response.Card;
 import fr.gstraymond.search.model.response.Publication;
@@ -39,6 +41,11 @@ public class CardViewPager extends ViewPager {
 				getTitleTextView().setText(text);
 			} else {
 				getActivity().setTitle(text);	
+			}
+			
+			Fragment fragment = getActivity().getFragmentManager().findFragmentById(R.id.card_pager_container);
+			if (fragment != null && fragment instanceof CardPagerFragment) {
+				((CardPagerFragment) fragment).setPosition(itemId);
 			}
 		}
 		super.computeScroll();
