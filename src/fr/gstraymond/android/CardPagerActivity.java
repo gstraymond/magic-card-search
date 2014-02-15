@@ -27,4 +27,11 @@ public class CardPagerActivity extends CardCommonActivy {
 	private int getPosition() {
 		return getIntent().getIntExtra(POSITION, 0);
 	}
+
+	@Override
+	protected void replaceFragment(Fragment fragment, int id) {
+		if (getFragmentManager().findFragmentById(id) == null) {
+			super.replaceFragment(fragment, id);
+		}
+	}
 }
