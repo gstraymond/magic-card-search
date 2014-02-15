@@ -2,6 +2,7 @@ package fr.gstraymond.android;
 
 import static fr.gstraymond.constants.Consts.CARD;
 import static fr.gstraymond.constants.Consts.POSITION;
+import android.app.Fragment;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -34,8 +35,6 @@ public class CardListActivity extends CustomActivity implements
 	private static final String CURRENT_SEARCH = "currentSearch";
 	public static final String CARD_RESULT = "result";
 
-	private boolean twoPaneMode;
-
 	private TextListener textListener;
 	private EndScrollListener endScrollListener;
 	private SearchView searchView;
@@ -62,10 +61,7 @@ public class CardListActivity extends CustomActivity implements
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_card_list);
 
-		CardParentListFragment fragment = new CardParentListFragment();
-		getFragmentManager().beginTransaction()
-			.replace(R.id.parent_fragment, fragment)
-			.commit();
+		replaceFragment(new CardParentListFragment(), R.id.parent_fragment);
 		
 		if (savedInstanceState != null) {
 			SearchOptions savedSearch = savedInstanceState.getParcelable(CURRENT_SEARCH);
@@ -76,12 +72,8 @@ public class CardListActivity extends CustomActivity implements
 			}
 		}
 
-		if (findViewById(R.id.card_detail_container) != null) {
-			twoPaneMode = true;
-		} else {
-
+		if (isSmartphone()) {
 			drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-			
 	        drawerToggle = new ActionBarDrawerToggle(
 	                this,                  /* host Activity */
 	                drawerLayout,         /* DrawerLayout object */
@@ -105,9 +97,9 @@ public class CardListActivity extends CustomActivity implements
 			
 	        // Set the drawer toggle as the DrawerListener
 	        drawerLayout.setDrawerListener(drawerToggle);
+	        getActionBar().setDisplayHomeAsUpEnabled(true);
 		}
 
-        getActionBar().setDisplayHomeAsUpEnabled(true);
         getActionBar().setHomeButtonEnabled(true);
         getActionBar().setTitle(R.string.drawer_open);
 	}
@@ -117,7 +109,7 @@ public class CardListActivity extends CustomActivity implements
 		super.onPostCreate(savedInstanceState);
 		
         // Sync the toggle state after onRestoreInstanceState has occurred.
-		if (! twoPaneMode) {
+		if (isSmartphone()) {
 	        drawerToggle.syncState();
 
 	        new Handler().postDelayed(openDrawerRunnable(), DRAWER_DELAY);	        
@@ -161,19 +153,10 @@ public class CardListActivity extends CustomActivity implements
 	@Override
 	public void onItemSelected(Parcelable card) {
 		currentCard = (Card) card;
-		if (twoPaneMode) {
-			Bundle bundle = new Bundle();
-			bundle.putParcelable(CARD, card);
+		if (isTablet()) {
+			replaceFragment(new CardDetailFragment(), R.id.card_detail_container, getCurrentCardBundle());
 			
-			TextView titleTextView = (TextView) findViewById(R.id.card_detail_title);
-			titleTextView.setText(CardDetailActivity.formatTitle(this, currentCard));
-			
-			CardDetailFragment detailFragment = new CardDetailFragment();
-			detailFragment.setArguments(bundle);
-			getFragmentManager().beginTransaction()
-				.replace(R.id.card_detail_container, detailFragment)
-				.commit();
-
+			getTitleTextView().setText(CardDetailActivity.formatTitle(this, currentCard));
 		} else {
 			Intent intent = ActivityUtil.getIntent(this, CardDetailActivity.class);
 			intent.putExtra(CARD, card);
@@ -183,11 +166,21 @@ public class CardListActivity extends CustomActivity implements
 
 	@Override
 	public void onItemSelected(int id) {
-		Intent intent = ActivityUtil.getIntent(this, CardPagerActivity.class);
-		intent.putExtra(CARD, currentCard);
-		// first element is a card
-		intent.putExtra(POSITION, id - 1);
-		startActivity(intent);
+		if (isTablet()) {
+			Bundle bundle = getCurrentCardBundle();
+			// first element is a card
+			bundle.putInt(POSITION, id - 1);
+			
+			replaceFragment(new CardPagerFragment(), R.id.card_detail_container, bundle);
+			menu.findItem(R.id.pictures_tab).setVisible(false);
+			menu.findItem(R.id.oracle_tab).setVisible(true);
+		} else {
+			Intent intent = ActivityUtil.getIntent(this, CardPagerActivity.class);
+			intent.putExtra(CARD, currentCard);
+			// first element is a card
+			intent.putExtra(POSITION, id - 1);
+			startActivity(intent);	
+		}
 	}
 
 	@Override
@@ -196,13 +189,14 @@ public class CardListActivity extends CustomActivity implements
 
 		MenuInflater inflater = getMenuInflater();
 		
-		if (twoPaneMode) {
+		// FIXME : faire comme le layout (refs.xml)
+		if (isTablet()) {
 			inflater.inflate(R.menu.card_twopane_menu, menu);
 		} else {
 			inflater.inflate(R.menu.card_list_menu, menu);
 		}
 
-		if (menu.findItem(R.id.search_tab) != null) {
+		if (isTablet()) {
 			searchView = new SearchView(this);
 			searchView.setIconifiedByDefault(false);
 			searchView.setOnQueryTextListener(textListener);
@@ -217,13 +211,12 @@ public class CardListActivity extends CustomActivity implements
 	public void onConfigurationChanged(Configuration newConfig) {
 		super.onConfigurationChanged(newConfig);
         drawerToggle.onConfigurationChanged(newConfig);
-
 	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 
-		if (!twoPaneMode && drawerToggle.onOptionsItemSelected(item)) {
+		if (isSmartphone() && drawerToggle.onOptionsItemSelected(item)) {
 			return true;
 		}
 
@@ -236,9 +229,24 @@ public class CardListActivity extends CustomActivity implements
 			return true;*/
 
 		case R.id.pictures_tab:
-			Intent intent = ActivityUtil.getIntent(this, CardPagerActivity.class);
-			intent.putExtra(CARD, currentCard);
-			startActivity(intent);
+			if (isTablet()) {
+				replaceFragment(new CardPagerFragment(), R.id.card_detail_container, getCurrentCardBundle());
+				
+				item.setVisible(false);
+				menu.findItem(R.id.oracle_tab).setVisible(true);
+			} else {
+				Intent intent = ActivityUtil.getIntent(this, CardPagerActivity.class);
+				intent.putExtra(CARD, currentCard);
+				startActivity(intent);
+			}
+			return true;
+			
+		case R.id.oracle_tab:
+			replaceFragment(new CardDetailFragment(), R.id.card_detail_container, getCurrentCardBundle());
+			
+			getTitleTextView().setText(CardDetailActivity.formatTitle(this, currentCard));
+			item.setVisible(false);
+			menu.findItem(R.id.pictures_tab).setVisible(true);
 			return true;
 			
 		case R.id.clear_tab:
@@ -251,10 +259,15 @@ public class CardListActivity extends CustomActivity implements
 			Intent helpIntent = ActivityUtil.getIntent(this, HelpActivity.class);
 			startActivity(helpIntent);
 			return true;
-			
 		}
 		
 		return super.onOptionsItemSelected(item);
+	}
+
+	private Bundle getCurrentCardBundle() {
+		Bundle bundle = new Bundle();
+		bundle.putParcelable(CARD, currentCard);
+		return bundle;
 	}
 	
 	private void resetSearchView() {
@@ -277,6 +290,26 @@ public class CardListActivity extends CustomActivity implements
 		outState.putParcelable(CURRENT_SEARCH, currentSearch);
 		Log.d(getClass().getName(), "onSaveInstanceState " + outState);
 	}
+	
+	private void replaceFragment(Fragment fragment, int id) {
+		replaceFragment(fragment, id, null);
+	}
+	
+	private void replaceFragment(Fragment fragment, int id, Bundle bundle) {
+		if (bundle != null) {
+			fragment.setArguments(bundle);
+		}
+		getFragmentManager().beginTransaction().replace(id, fragment).commit();
+	}
+	
+	public boolean isTablet() {
+		CustomApplication application = (CustomApplication) getApplication();
+		return application.isTablet();
+	}
+
+	public boolean isSmartphone() {
+		return !isTablet();
+	}
 
 	public View getCardView() {
 		return findViewById(R.id.card_list);
@@ -284,6 +317,10 @@ public class CardListActivity extends CustomActivity implements
 
 	public View getPicturesView() {
 		return findViewById(R.id.pictures_layout);
+	}
+
+	private TextView getTitleTextView() {
+		return (TextView) findViewById(R.id.card_detail_title);
 	}
 
 	public TextListener getTextListener() {

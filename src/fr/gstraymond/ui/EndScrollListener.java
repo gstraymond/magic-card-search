@@ -36,10 +36,12 @@ public class EndScrollListener implements OnScrollListener {
 				new SearchProcessor(activity, options, R.string.loading_more).execute();
 			}
 		}
-
 	}
 	
 	private void showLoadingToast() {
+		if (activity.isTablet()) {
+			return;
+		}
 		Toast loadingToast = makeText(activity, R.string.loading_more, LENGTH_SHORT);
 		activity.setLoadingToast(loadingToast);
 		loadingToast.show();

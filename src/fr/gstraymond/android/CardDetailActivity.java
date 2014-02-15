@@ -28,9 +28,9 @@ public class CardDetailActivity extends CardCommonActivy implements
 		TextView titleTextView = (TextView) findViewById(R.id.card_detail_title);
 		titleTextView.setText(formatTitle(this, getCard()));
 
-		Fragment detailFragment = new CardDetailFragment();
-		detailFragment.setArguments(bundle);
-		replaceFragment(detailFragment, R.id.card_detail_container);
+		Fragment fragment = new CardDetailFragment();
+		fragment.setArguments(bundle);
+		replaceFragment(fragment, R.id.card_detail_container);
 	}
 
 	@Override
@@ -55,11 +55,25 @@ public class CardDetailActivity extends CardCommonActivy implements
 
 	@Override
 	public void onItemSelected(int id) {
-		Intent intent = ActivityUtil.getIntent(this, CardPagerActivity.class);
-		intent.putExtra(CARD, getCard());
-		// first element is a card
-		intent.putExtra(POSITION, id - 1);
-		startActivity(intent);
+		// FIXME a refactorer avec CardListActivity
+		if (isTablet()) {
+			Bundle bundle = new Bundle();
+			bundle.putParcelable(CARD, getCard());
+			// first element is a card
+			bundle.putInt(POSITION, id - 1);
+			
+			CardPagerFragment fragment = new CardPagerFragment();
+			fragment.setArguments(bundle);
+			getFragmentManager().beginTransaction()
+				.replace(R.id.card_detail_container, fragment)
+				.commit();
+		} else {
+			Intent intent = ActivityUtil.getIntent(this, CardPagerActivity.class);
+			intent.putExtra(CARD, getCard());
+			// first element is a card
+			intent.putExtra(POSITION, id - 1);
+			startActivity(intent);	
+		}
 	}
 
 	public static String formatTitle(Context context, Card card) {
@@ -68,5 +82,10 @@ public class CardDetailActivity extends CardCommonActivy implements
 		}
 		
 		return card.getTitle();
+	}
+	
+	private boolean isTablet() {
+		CustomApplication application = (CustomApplication) getApplication();
+		return application.isTablet();
 	}
 }

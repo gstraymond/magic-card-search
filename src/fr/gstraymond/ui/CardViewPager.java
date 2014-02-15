@@ -4,6 +4,9 @@ import android.app.Activity;
 import android.content.Context;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
+import android.widget.TextView;
+import fr.gstraymond.R;
+import fr.gstraymond.android.CustomApplication;
 import fr.gstraymond.search.model.response.Card;
 import fr.gstraymond.search.model.response.Publication;
 
@@ -23,7 +26,7 @@ public class CardViewPager extends ViewPager {
 	public void computeScroll() {
 		int itemId = getCurrentItem();
 		String itemIdDisplayed = (itemId + 1) + "";
-		if (! getActivity().getTitle().toString().startsWith(itemIdDisplayed)) {
+		if (! getTitle().startsWith(itemIdDisplayed)) {
 			Publication publication = card.getPublications().get(itemId);
 			String text = publication.getEdition() + " — " + publication.getRarity();
 
@@ -32,9 +35,24 @@ public class CardViewPager extends ViewPager {
 				text = itemIdDisplayed + "/" + count + " " + text;
 			}
 			
-			getActivity().setTitle(text);
+			if (isTablet()) {
+				getTitleTextView().setText(text);
+			} else {
+				getActivity().setTitle(text);	
+			}
 		}
 		super.computeScroll();
+	}
+
+	private TextView getTitleTextView() {
+		return (TextView) getActivity().findViewById(R.id.card_detail_title);
+	}
+
+	private String getTitle() {
+		if (isTablet()) {
+			return getTitleTextView().getText().toString();
+		}
+		return getActivity().getTitle().toString();
 	}
 	
 	private Activity getActivity() {
@@ -44,5 +62,10 @@ public class CardViewPager extends ViewPager {
 	public CardViewPager setCard(Card card) {
 		this.card = card;
 		return this;
+	}
+	
+	private boolean isTablet() {
+		CustomApplication application = (CustomApplication) getActivity().getApplication();
+		return application.isTablet();
 	}
 }

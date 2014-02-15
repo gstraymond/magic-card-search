@@ -11,22 +11,27 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
+import fr.gstraymond.R;
 import fr.gstraymond.biz.ElasticSearchClient;
 import fr.gstraymond.ui.CastingCostAssetLoader;
 
 public class CustomApplication extends Application {
 
+	private static final String TABLET = "tablet";
+	
 	private static final String SEARCH_SERVER_HOST = "engine.magic-card-search.com:8080";
 //	private static final String SEARCH_SERVER_HOST = "local-gsr:9200";
 	
 	private ElasticSearchClient elasticSearchClient;
 	private CastingCostAssetLoader castingCostAssetLoader;
 	private ObjectMapper objectMapper;
+	private Boolean isTablet;
 	
 	public void init() {
 		initObjectMapper();
 		initElasticSearchClient();
 		initCastingCostAssetLoader();
+		initIsTablet();
 	}
 
 	private void initElasticSearchClient() {
@@ -49,6 +54,11 @@ public class CustomApplication extends Application {
 			.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
 			.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false)
 			.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+	}
+
+	private void initIsTablet() {
+		String mode =  getApplicationContext().getString(R.string.mode);
+		setTablet(TABLET.equals(mode));
 	}
 
 	public ElasticSearchClient getElasticSearchClient() {
@@ -82,5 +92,16 @@ public class CustomApplication extends Application {
 
 	public void setObjectMapper(ObjectMapper objectMapper) {
 		this.objectMapper = objectMapper;
+	}
+
+	public boolean isTablet() {
+		if (isTablet == null) {
+			initIsTablet();
+		}
+		return isTablet;
+	}
+
+	public void setTablet(boolean isTablet) {
+		this.isTablet = isTablet;
 	}
 }

@@ -9,7 +9,10 @@
     <string name="list_menu_clear">Effacer la recherche</string>
     <string name="list_menu_search">Recherche</string>
     <string name="list_menu_help">A l\'aide !</string>
+    
+    <string name="detail_menu_oracle">Texte</string>
     <string name="detail_menu_pictures">Images</string>
+    
     <string name="search_hint">anneau solaire, draw, sacrifice…</string>
     <string name="failed_search">Ouch, la recherche est cassée ! Connecté à internet ?</string>
     

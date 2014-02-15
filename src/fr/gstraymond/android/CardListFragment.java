@@ -11,7 +11,6 @@ import android.os.Parcelable;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import fr.gstraymond.R;
 import fr.gstraymond.search.model.response.Card;
 import fr.gstraymond.ui.CardArrayAdapter;
 import fr.gstraymond.ui.CastingCostAssetLoader;
@@ -19,7 +18,6 @@ import fr.gstraymond.ui.CastingCostAssetLoader;
 public class CardListFragment extends ListFragment {
 
 	private List<Card> cards; 
-	private boolean twoPaneMode;
 
 	private static final String STATE_ACTIVATED_POSITION = "activated_position";
 	private Callbacks callbacks = dummyCallbacks;
@@ -44,10 +42,6 @@ public class CardListFragment extends ListFragment {
 		super.onCreate(savedInstanceState);
 		
 		cards = getArguments().getParcelableArrayList(CARD_LIST);
-
-		if (getActivity().findViewById(R.id.card_detail_container) != null) {
-			twoPaneMode = true;
-		}
 
 		CustomApplication applicationContext = (CustomApplication) getActivity().getApplicationContext();
 		CastingCostAssetLoader castingCostAssetLoader = applicationContext.getCastingCostAssetLoader();
@@ -134,12 +128,15 @@ public class CardListFragment extends ListFragment {
 		super.onActivityCreated(savedInstanceState);
 		
 		// select the first element
-		if (twoPaneMode && getListAdapter().getCount() > 0) {
-//			getListView().setChoiceMode(ListView.CHOICE_MODE_SINGLE);
-			
+		if (isTablet() && getListAdapter().getCount() > 0) {
 			long itemId = getListAdapter().getItemId(0);
 			View view = getListAdapter().getView(0, null, null);
 			getListView().performItemClick(view, 0, itemId);	
 		}
+	}
+	
+	private boolean isTablet() {
+		CustomApplication application = (CustomApplication) getActivity().getApplication();
+		return application.isTablet();
 	}
 }

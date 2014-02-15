@@ -77,7 +77,7 @@ public class SearchProcessor extends AsyncTask<Void, Void, SearchResult> {
 	protected void onPostExecute(SearchResult searchResult) {
 		progressBar.setProgress(100);
 		
-		if (options.isAppend()) {
+		if (options.isAppend() && activity.isSmartphone()) {
 			if (activity.getLoadingToast() != null) {
 				activity.getLoadingToast().cancel();
 			}

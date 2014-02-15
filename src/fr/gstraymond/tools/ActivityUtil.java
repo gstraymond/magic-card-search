@@ -2,22 +2,19 @@ package fr.gstraymond.tools;
 
 import android.app.Activity;
 import android.content.Intent;
-import fr.gstraymond.R;
 import fr.gstraymond.android.CardDetailActivity;
 import fr.gstraymond.android.CardListActivity;
 import fr.gstraymond.android.CardPagerActivity;
+import fr.gstraymond.android.CustomApplication;
 import fr.gstraymond.android.HelpActivity;
 
 public class ActivityUtil {
-
-	private static final String TABLET = "tablet";
 
 	public static Intent getIntent(Activity currentActivity,
 			Class<? extends Activity> nextActivityClass) {
 		Class<? extends Activity> activityClass = nextActivityClass;
 
-		String mode = currentActivity.getString(R.string.mode);
-		if (TABLET.equals(mode)) {
+		if (isTablet(currentActivity)) {
 			activityClass = getTabletActivity(nextActivityClass);
 		}
 		return new Intent(currentActivity, activityClass);
@@ -42,5 +39,10 @@ public class ActivityUtil {
 		}
 
 		return null;
+	}
+	
+	private static boolean isTablet(Activity activity) {
+		CustomApplication application = (CustomApplication) activity.getApplication();
+		return application.isTablet();
 	}
 }
