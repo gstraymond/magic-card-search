@@ -40,4 +40,5 @@
     <string name="loading_more">chargement des 30 cartes suivantes…</string>
     <string name="loading_clear">suppression de la recherche …</string>
     <string name="loading_facet">filtrage de la recherche…</string>
+    <string name="loading_more_facet">ajout de filtres…</string>
 </resources>

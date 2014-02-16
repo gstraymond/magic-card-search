@@ -23,24 +23,10 @@ public class FacetConst {
 	private static final String TOUGHNESS = "toughness";
 	private static final String TYPE = "type";
 
-	private static Map<String, Facet> facets;
 	private static Map<String, Integer> facetNames;
 	private static List<String> facetOrder;
 
 	static {
-		facets = new HashMap<String, Facet>();
-		putInFacets(ABILITY);
-		putInFacets(ARTIST);
-		putInFacets(COLOR);
-		putInFacets(CMC);
-		putInFacets(DEVOTION);
-		putInFacets(SET);
-		putInFacets(FORMAT);
-		putInFacets(POWER);
-		putInFacets(RARITY);
-		putInFacets(TOUGHNESS);
-		putInFacets(TYPE);
-
 		facetNames = new HashMap<String, Integer>();
 		facetNames.put(ABILITY, R.string.facet_ability);
 		facetNames.put(ARTIST, R.string.facet_artist);
@@ -68,11 +54,23 @@ public class FacetConst {
 		facetOrder.add(ARTIST);
 	}
 
-	private static void putInFacets(String facet) {
+	private static void putInFacets(Map<String, Facet> facets, String facet) {
 		facets.put(facet, new Facet(facet));
 	}
 
 	public static Map<String, Facet> getFacets() {
+		Map<String, Facet> facets = new HashMap<String, Facet>();
+		putInFacets(facets, ABILITY);
+		putInFacets(facets, ARTIST);
+		putInFacets(facets, COLOR);
+		putInFacets(facets, CMC);
+		putInFacets(facets, DEVOTION);
+		putInFacets(facets, SET);
+		putInFacets(facets, FORMAT);
+		putInFacets(facets, POWER);
+		putInFacets(facets, RARITY);
+		putInFacets(facets, TOUGHNESS);
+		putInFacets(facets, TYPE);
 		return facets;
 	}
 

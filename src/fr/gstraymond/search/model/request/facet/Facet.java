@@ -16,4 +16,9 @@ public class Facet {
 		this.terms = terms;
 	}
 
+	@Override
+	public String toString() {
+		return "Facet[" + terms + "]";
+	}
+
 }

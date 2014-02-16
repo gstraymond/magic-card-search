@@ -9,7 +9,6 @@ import java.util.Map.Entry;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.text.TextUtils;
-import android.util.Log;
 
 public class SearchOptions implements Parcelable {
 
@@ -20,6 +19,7 @@ public class SearchOptions implements Parcelable {
 	private int from = 0;
 	private int size = 30;
 	private Map<String, List<String>> facets = new HashMap<String, List<String>>();
+	private Map<String, Integer> facetSize = new HashMap<String, Integer>();
 
 
 	public static final Parcelable.Creator<SearchOptions> CREATOR = new Parcelable.Creator<SearchOptions>() {
@@ -40,6 +40,7 @@ public class SearchOptions implements Parcelable {
 		from = source.readInt();
 		size = source.readInt();
 		facets = readMap(source);
+		// facetSize : pas de persistence de la taille des facettes
 	}
 
 	private Map<String, List<String>> readMap(Parcel source) {
@@ -82,6 +83,7 @@ public class SearchOptions implements Parcelable {
 		dest.writeInt(from);
 		dest.writeInt(size);
 		writeMap(dest, facets);
+		// facetSize : pas de persistence de la taille des facettes
 	}
 
 	private void writeMap(Parcel dest, Map<String, List<String>> facets) {
@@ -156,13 +158,21 @@ public class SearchOptions implements Parcelable {
 
 	public SearchOptions removeFacet(String facet, String term) {
 		if (facets.containsKey(facet)) {
-			Log.d(getClass().getName(), "removed term " + term);
 			facets.get(facet).remove(term);
 			
 			if (facets.get(facet).size() == 0) {
-				Log.d(getClass().getName(), "removed facet " + facet);
 				facets.remove(facet);
 			}
+		}
+		return this;
+	}
+
+	public SearchOptions addFacetSize(String facet) {
+		if (facetSize.containsKey(facet)) {
+			Integer size = facetSize.get(facet);
+			facetSize.put(facet, size + 10);
+		} else {
+			facetSize.put(facet, 20);
 		}
 		return this;
 	}
@@ -176,6 +186,14 @@ public class SearchOptions implements Parcelable {
 		return this;
 	}
 
+	public Map<String, Integer> getFacetSize() {
+		return facetSize;
+	}
+
+	public void setFacetSize(Map<String, Integer> facetSize) {
+		this.facetSize = facetSize;
+	}
+
 	@Override
 	public String toString() {
 		return "searchOptions:[" +
@@ -183,6 +201,7 @@ public class SearchOptions implements Parcelable {
 				"append:" + append + "," +
 				"from:" + from + "," +
 				"size:" + size + "," +
-				"facets:" + facets + "]";
+				"facets:" + facets + "]" + "," +
+				"facetSize:" + facetSize + "]";
 	}
 }

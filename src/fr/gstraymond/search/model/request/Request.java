@@ -3,6 +3,7 @@ package fr.gstraymond.search.model.request;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import fr.gstraymond.biz.SearchOptions;
 import fr.gstraymond.constants.FacetConst;
@@ -23,6 +24,10 @@ public class Request {
 		// if appending results, facets don't need to be recalculated
 		if (! options.isAppend()) {
 			this.facets = FacetConst.getFacets();
+			for (Entry<String, Integer> facetSize : options.getFacetSize().entrySet()) {
+				Facet facet = this.facets.get(facetSize.getKey());
+				facet.getTerms().setSize(facetSize.getValue());
+			}
 		}
 		
 		this.sort = new ArrayList<String>();

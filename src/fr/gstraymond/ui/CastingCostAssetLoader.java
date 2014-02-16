@@ -19,7 +19,6 @@ public class CastingCostAssetLoader {
 	private boolean init = false;
 
 	public void init(Context context) {
-		Log.d(getClass().getName(), "init : " + init);
 		if (! init) {
 			init = true;
 			this.context = context;

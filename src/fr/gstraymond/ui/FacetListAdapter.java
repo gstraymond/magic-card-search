@@ -3,6 +3,7 @@ package fr.gstraymond.ui;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import android.content.Context;
 import android.text.Html;
@@ -25,12 +26,14 @@ public class FacetListAdapter extends BaseExpandableListAdapter {
 	private List<String> selectedFacets;
 	private Map<String, Facet> facetMap;
 	private List<Term> selectedTerms;
+	private SearchOptions options;
 
 	public FacetListAdapter(Map<String, Facet> facets, SearchOptions options) {
 		this.facetMap = facets;
 		this.selectedFacets = new ArrayList<String>();
 		this.facetList = new ArrayList<String>();
 		this.selectedTerms = new ArrayList<Term>();
+		this.options = options;
 
 		if (facets == null) {
 			return;
@@ -38,9 +41,12 @@ public class FacetListAdapter extends BaseExpandableListAdapter {
 		
 		for (String facetAsString : FacetConst.getFacetOrder()) {
 			Facet facet = facets.get(facetAsString);
-			if (facet == null) {
+			
+			if (facet == null || facet.getTerms().isEmpty()) {
+				facetMap.remove(facetAsString);
 				continue;
 			}
+
 			facetList.add(facetAsString); 
 			List<Term> facetTerms = facet.getTerms();
 			
@@ -52,6 +58,27 @@ public class FacetListAdapter extends BaseExpandableListAdapter {
 				}
 			}
 		}
+		
+		for (Entry<String, Facet> facetEntry : facetMap.entrySet()) {
+			String facetAsString = facetEntry.getKey();
+			Facet facet = facetEntry.getValue();
+			if (showLoadMore(facet, facetAsString)) {
+				Term loadMoreTerm = new Term();
+				loadMoreTerm.setTerm("load more...");
+				loadMoreTerm.setCount(-1);
+				facet.getTerms().add(loadMoreTerm);
+			}
+		}
+	}
+
+	private boolean showLoadMore(Facet facet, String facetAsString) {
+		Integer facetSizeRequested = options.getFacetSize().get(facetAsString);
+		if (facetSizeRequested == null) {
+			facetSizeRequested = 10;
+		}
+
+		Integer facetSize = facet.getTerms().size();
+		return facetSize.equals(facetSizeRequested);
 	}
 	
 	private List<Term> findTerms(List<String> termsAsString, List<Term> terms) {
@@ -82,7 +109,7 @@ public class FacetListAdapter extends BaseExpandableListAdapter {
 
 	@Override
 	public Object getChild(int groupPosition, int childPosition) {
-		return getChildren(groupPosition, childPosition);
+		return getTerm(groupPosition, childPosition);
 	}
 
 	@Override
@@ -99,7 +126,7 @@ public class FacetListAdapter extends BaseExpandableListAdapter {
             view = inflater.inflate(R.layout.drawer_child, null);
         }
         
-		Term term = getChildren(groupPosition, childPosition);
+		Term term = getTerm(groupPosition, childPosition);
 		String text = term.getTerm();
 
 		TextView textTextView = (TextView) view.findViewById(R.id.drawer_child_text);
@@ -116,12 +143,19 @@ public class FacetListAdapter extends BaseExpandableListAdapter {
 		} else {
 			textTextView.setText(text);
 		}
+		
 		counterTextView.setVisibility(View.VISIBLE);
-		counterTextView.setText(term.getCount() + "");
+		
+		if (term.getCount() > 0) {
+			counterTextView.setText(term.getCount() + "");
+		} else {
+			counterTextView.setText("?");
+		}
+		
 		return view;
 	}
 
-	private Term getChildren(int groupPosition, int childPosition) {
+	public Term getTerm(int groupPosition, int childPosition) {
 		return getChildren(groupPosition).get(childPosition);
 	}
 
@@ -132,6 +166,10 @@ public class FacetListAdapter extends BaseExpandableListAdapter {
 
 	@Override
 	public Object getGroup(int groupPosition) {
+		return getFacet(groupPosition);
+	}
+
+	public String getFacet(int groupPosition) {
 		return facetList.get(groupPosition);
 	}
 
@@ -156,7 +194,7 @@ public class FacetListAdapter extends BaseExpandableListAdapter {
         TextView textView = (TextView) view.findViewById(R.id.drawer_group_textview);
 		String facet = facetList.get(groupPosition);
 		
-		if (selectedFacets.contains(facet)) {
+		if (selectedFacets.contains(facet) || options.getFacetSize().containsKey(facet)) {
 			ExpandableListView expandableListView = (ExpandableListView) parent;
 		    expandableListView.expandGroup(groupPosition);
 		}
@@ -173,15 +211,6 @@ public class FacetListAdapter extends BaseExpandableListAdapter {
 	@Override
 	public boolean isChildSelectable(int groupPosition, int childPosition) {
 		return true;
-	}
-
-	public String getFacet(Term term) {
-		for (Map.Entry<String, Facet> facet : facetMap.entrySet()) {
-			if (facet.getValue().getTerms().contains(term)) {
-				return facet.getKey();
-			}
-		}
-		return null;
 	}
 	
 	public boolean isTermSelected(Term term) {

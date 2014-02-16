@@ -30,7 +30,7 @@ import fr.gstraymond.ui.TextListener;
 public class CardListActivity extends CustomActivity implements
 		CardListFragment.Callbacks, CardDetailFragment.Callbacks {
 	
-	private static final int DRAWER_DELAY = 1500;
+	private static final int DRAWER_DELAY = 1200;
 	private static final String CURRENT_SEARCH = "currentSearch";
 	public static final String CARD_RESULT = "result";
 

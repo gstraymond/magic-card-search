@@ -8,9 +8,7 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.ExpandableListView;
-import android.widget.ExpandableListView.OnChildClickListener;
 import android.widget.TextView;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -21,9 +19,9 @@ import fr.gstraymond.android.CardListFragment;
 import fr.gstraymond.search.model.response.Card;
 import fr.gstraymond.search.model.response.Hit;
 import fr.gstraymond.search.model.response.SearchResult;
-import fr.gstraymond.search.model.response.facet.Term;
 import fr.gstraymond.tools.MapperUtil;
 import fr.gstraymond.ui.FacetListAdapter;
+import fr.gstraymond.ui.FacetOnChildClickListener;
 
 public class UIUpdater extends AsyncTask<Void, Void, SearchResult> {
 	
@@ -92,30 +90,11 @@ public class UIUpdater extends AsyncTask<Void, Void, SearchResult> {
 
 	private void updateUIFacets(SearchResult result) {
 		if (! getOptions().isAppend()) {
-			final FacetListAdapter facetListAdapter = new FacetListAdapter(result.getFacets(), getOptions());
-			getFacetListView().setAdapter(facetListAdapter);
-			// TODO : extract to separate class
-			getFacetListView().setOnChildClickListener(new OnChildClickListener() {
+			FacetListAdapter adapter = new FacetListAdapter(result.getFacets(), getOptions());
+			getFacetListView().setAdapter(adapter);
 
-				@Override
-				public boolean onChildClick(ExpandableListView parent, View view,
-						int groupPosition, int childPosition, long id) {
-					Term term = (Term) facetListAdapter.getChild(groupPosition, childPosition);
-					if (term.getCount() > -1) {
-						String facet = facetListAdapter.getFacet(term);
-
-						if (facetListAdapter.isTermSelected(term)) {
-							getOptions().removeFacet(facet, term.getTerm());
-						} else {
-							getOptions().addFacet(facet, term.getTerm());
-						}
-						getOptions().setAppend(false);
-						getOptions().setFrom(0);
-						new SearchProcessor(activity, getOptions(), R.string.loading_facet).execute();
-					}
-					return true;
-				}
-			});
+			FacetOnChildClickListener listener = new FacetOnChildClickListener(adapter, getOptions(), activity);
+			getFacetListView().setOnChildClickListener(listener);
 		}
 	}
 
