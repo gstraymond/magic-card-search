@@ -2,11 +2,8 @@ package fr.gstraymond.android;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.HashMap;
-import java.util.Map;
 
 import android.app.Application;
-import android.graphics.Bitmap;
 import android.util.Log;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -16,10 +13,11 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 
 import fr.gstraymond.R;
 import fr.gstraymond.biz.ElasticSearchClient;
+import fr.gstraymond.cache.BitmapCache;
 import fr.gstraymond.ui.CastingCostAssetLoader;
 
-public class CustomApplication extends Application {
-
+public class CustomApplication extends Application {	
+	
 	private static final String TABLET = "tablet";
 	
 	private static final String SEARCH_SERVER_HOST = "engine.magic-card-search.com:8080";
@@ -29,13 +27,14 @@ public class CustomApplication extends Application {
 	private CastingCostAssetLoader castingCostAssetLoader;
 	private ObjectMapper objectMapper;
 	private Boolean isTablet;
-	private Map<String, Bitmap> cardBitmapCache = new HashMap<String, Bitmap>(); 
+	private BitmapCache bitmapCache; 
 	
 	public void init() {
 		initObjectMapper();
 		initElasticSearchClient();
 		initCastingCostAssetLoader();
 		initIsTablet();
+		initBitmapCache();
 	}
 
 	private void initElasticSearchClient() {
@@ -63,6 +62,10 @@ public class CustomApplication extends Application {
 	private void initIsTablet() {
 		String mode =  getApplicationContext().getString(R.string.mode);
 		setTablet(TABLET.equals(mode));
+	}
+
+	private void initBitmapCache() {
+		setBitmapCache(new BitmapCache());
 	}
 
 	public ElasticSearchClient getElasticSearchClient() {
@@ -109,11 +112,15 @@ public class CustomApplication extends Application {
 		this.isTablet = isTablet;
 	}
 
-	public Map<String, Bitmap> getCardBitmapCache() {
-		return cardBitmapCache;
+	public BitmapCache getBitmapCache() {
+		if (bitmapCache == null) {
+			initBitmapCache();
+		}
+		return bitmapCache;
 	}
 
-	public void setCardBitmapCache(Map<String, Bitmap> cardBitmapCache) {
-		this.cardBitmapCache = cardBitmapCache;
+	public void setBitmapCache(BitmapCache bitmapCache) {
+		this.bitmapCache = bitmapCache;
 	}
+
 }

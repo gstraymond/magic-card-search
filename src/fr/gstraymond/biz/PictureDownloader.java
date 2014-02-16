@@ -2,7 +2,6 @@ package fr.gstraymond.biz;
 
 import java.io.InputStream;
 import java.net.URL;
-import java.util.Map;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -10,17 +9,18 @@ import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
+import fr.gstraymond.cache.BitmapCache;
 
 public class PictureDownloader extends AsyncTask<Void, Void, Bitmap> {
 
 	private ImageView imageView;
 	private String url;
-	private Map<String, Bitmap> cardBitmapCache; 
+	private BitmapCache bitmapCache; 
 	
-	public PictureDownloader(ImageView imageView, String url, Map<String, Bitmap> cache) {
+	public PictureDownloader(ImageView imageView, String url, BitmapCache bitmapCache) {
 		this.imageView = imageView;
 		this.url = url;
-		this.cardBitmapCache = cache;
+		this.bitmapCache = bitmapCache;
 	}
 	
 	@Override
@@ -37,14 +37,15 @@ public class PictureDownloader extends AsyncTask<Void, Void, Bitmap> {
     }
 
 	private Bitmap getBitmap() {
-		if (cardBitmapCache.containsKey(url)) {
-			return cardBitmapCache.get(url);
+		Bitmap bitmap = bitmapCache.get(url);
+		if (bitmap != null) {
+			return bitmap;
 		}
 		
         try {
             InputStream is = new URL(url).openStream();
-            Bitmap bitmap = BitmapFactory.decodeStream(is);
-            cardBitmapCache.put(url, bitmap);
+            bitmap = BitmapFactory.decodeStream(is);
+            bitmapCache.put(url, bitmap);
 			return bitmap;
         } catch (Exception e) {
         	Log.e(getClass().getName(), "error", e);
