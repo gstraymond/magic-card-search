@@ -28,7 +28,7 @@ public class FacetListAdapter extends BaseExpandableListAdapter {
 	private List<Term> selectedTerms;
 	private SearchOptions options;
 
-	public FacetListAdapter(Map<String, Facet> facets, SearchOptions options) {
+	public FacetListAdapter(Map<String, Facet> facets, SearchOptions options, Context context) {
 		this.facetMap = facets;
 		this.selectedFacets = new ArrayList<String>();
 		this.facetList = new ArrayList<String>();
@@ -64,7 +64,7 @@ public class FacetListAdapter extends BaseExpandableListAdapter {
 			Facet facet = facetEntry.getValue();
 			if (showLoadMore(facet, facetAsString)) {
 				Term loadMoreTerm = new Term();
-				loadMoreTerm.setTerm("load more...");
+				loadMoreTerm.setTerm(context.getString(R.string.facet_more));
 				loadMoreTerm.setCount(-1);
 				facet.getTerms().add(loadMoreTerm);
 			}

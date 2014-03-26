@@ -17,7 +17,7 @@
                 {
                     "title": "Text search",
                     "descriptions": [
-                        "All cards has been indexed in English. For French people, card title is also available in French.",
+                        "All cards have been indexed in English. For French people, card title is also available in French.",
                         "Text search can search words contained in all card text content (title, description, type...).",
                         "Text search works with full words. For example, searching elf enchantment returns all cards where text content contains elf AND enchantment."
                     ],
@@ -106,7 +106,7 @@
                         {
                             "title": "Ability",
                             "descriptions": [
-                                "Filters sear results based on ability :"
+                                "Filters search results based on ability :"
                             ],
                             "items": [
                                 "Flying",

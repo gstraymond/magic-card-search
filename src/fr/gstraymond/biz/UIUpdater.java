@@ -90,7 +90,7 @@ public class UIUpdater extends AsyncTask<Void, Void, SearchResult> {
 
 	private void updateUIFacets(SearchResult result) {
 		if (! getOptions().isAppend()) {
-			FacetListAdapter adapter = new FacetListAdapter(result.getFacets(), getOptions());
+			FacetListAdapter adapter = new FacetListAdapter(result.getFacets(), getOptions(), activity);
 			getFacetListView().setAdapter(adapter);
 
 			FacetOnChildClickListener listener = new FacetOnChildClickListener(adapter, getOptions(), activity);
