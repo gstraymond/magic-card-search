@@ -2,6 +2,7 @@ package fr.gstraymond.ui;
 
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.os.Bundle;
 import android.support.v13.app.FragmentStatePagerAdapter;
 import fr.gstraymond.search.model.response.Card;
 import fr.gstraymond.search.model.response.Publication;
@@ -17,7 +18,13 @@ public class CardPagerAdapter extends FragmentStatePagerAdapter {
 	@Override
 	public Fragment getItem(int position) {
 		Publication publication = card.getPublications().get(position);
-		return new CardFragment().setCardUrl(publication.getImage());
+		
+		Bundle bundle = new Bundle();
+		bundle.putString(CardFragment.URL, publication.getImage());
+		
+		CardFragment cardFragment = new CardFragment();
+		cardFragment.setArguments(bundle);
+		return cardFragment;
 	}
 
 	@Override
