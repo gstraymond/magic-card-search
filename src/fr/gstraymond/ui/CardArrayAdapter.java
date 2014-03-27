@@ -1,91 +1,55 @@
 package fr.gstraymond.ui;
 
-import static android.R.style.TextAppearance_DeviceDefault_Medium;
-
+import java.util.ArrayList;
 import java.util.List;
 
 import android.content.Context;
-import android.text.Html;
-import android.text.Spanned;
-import android.text.TextUtils;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.TextView;
 import fr.gstraymond.R;
-import fr.gstraymond.biz.CastingCostImageGetter;
+import fr.gstraymond.api.ui.view.DisplayableView;
 import fr.gstraymond.search.model.response.Card;
-import fr.gstraymond.tools.CastingCostFormatter;
-import fr.gstraymond.tools.LanguageUtil;
-import fr.gstraymond.tools.PowerToughnessFormatter;
-import fr.gstraymond.tools.TypeFormatter;
+import fr.gstraymond.ui.view.impl.CastingCostView;
+import fr.gstraymond.ui.view.impl.DescriptionView;
+import fr.gstraymond.ui.view.impl.PositionView;
+import fr.gstraymond.ui.view.impl.TitleView;
+import fr.gstraymond.ui.view.impl.TypePTView;
 
 public class CardArrayAdapter extends ArrayAdapter<Card> {
-
-	private CastingCostImageGetter imagetGetter;
-	private CastingCostFormatter ccFormatter;
-	private PowerToughnessFormatter ptFormatter;
-	private TypeFormatter typeFormatter;
-	private boolean showFrenchTitle;
+	private List<DisplayableView> displayableViews;
 
 	public CardArrayAdapter(Context context, int resource,
 			int textViewResourceId, List<Card> objects,
 			CastingCostAssetLoader castingCostAssetLoader) {
-		
 		super(context, resource, textViewResourceId, objects);
-		this.imagetGetter = new CastingCostImageGetter(castingCostAssetLoader);
-		this.ccFormatter = new CastingCostFormatter();
-		this.ptFormatter = new PowerToughnessFormatter();
-		this.typeFormatter = new TypeFormatter(context);
-		this.showFrenchTitle = LanguageUtil.showFrench(context);
+
+		displayableViews = new ArrayList<DisplayableView>();
+		displayableViews.add(new TitleView(context));
+		displayableViews.add(new DescriptionView(castingCostAssetLoader));
+		displayableViews.add(new CastingCostView(castingCostAssetLoader));
+		displayableViews.add(new TypePTView(context));
+		displayableViews.add(new PositionView());
 	}
 
 	@Override
-	public View getView(int position, View view, ViewGroup parent) {
-		TextView text = (TextView) view;
+	public View getView(int position, View convertView, ViewGroup parent) {
+		View view = convertView;
 
-		if (text == null) {
-			text = new TextView(getContext());
-			text.setEllipsize(TextUtils.TruncateAt.END);
-			text.setSingleLine(true);
-			text.setTextAppearance(getContext(), TextAppearance_DeviceDefault_Medium);
-			text.setPadding(getTextPadding() * 2, 0, getTextPadding() * 2, getTextPadding());
+		if (view == null) {
+			LayoutInflater inflater = LayoutInflater.from(parent.getContext());
+			view = inflater.inflate(R.layout.array_adapter_card, null);
 		}
 
-		text.setText(formatCard(getItem(position), position));
-		return text;
+		Card card = getItem(position);
 
-	}
-
-	private int getTextPadding() {
-		return (int) getContext().getResources().getDimension(R.dimen.listTextPaddingBottom);
-	}	
-
-	private Spanned formatCard(Card card, int position) {
-
-		String castingCost = "";
-		if (card.getCastingCost() != null) {
-			castingCost = ccFormatter.format(card.getCastingCost());
+		for (DisplayableView displayableView : displayableViews) {
+			displayableView.setParentView(view);
+			if (displayableView.display(card)) {
+				displayableView.setValue(card, position);
+			}
 		}
-
-		String line = (position + 1) + ". " + castingCost + " <b>" + getTitle(card) + "</b> — " + getPTorType(card);
-
-		return Html.fromHtml(line, imagetGetter, null);
-	}
-	
-	private String getPTorType(Card card) {
-		String pt = ptFormatter.format(card);
-		if (pt.length() > 0) {
-			return pt;
-		}
-		
-		return typeFormatter.formatFirst(card);
-	}
-
-	private String getTitle(Card card) {
-		if (showFrenchTitle && card.getFrenchTitle() != null) {
-			return card.getFrenchTitle();
-		}
-		return card.getTitle();
+		return view;
 	}
 }

@@ -130,7 +130,7 @@ public class CardListFragment extends ListFragment {
 		// select the first element
 		if (isTablet() && getListAdapter().getCount() > 0) {
 			long itemId = getListAdapter().getItemId(0);
-			View view = getListAdapter().getView(0, null, null);
+			View view = getListAdapter().getView(0, null, getListView());
 			getListView().performItemClick(view, 0, itemId);	
 		}
 	}
