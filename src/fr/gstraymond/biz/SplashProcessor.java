@@ -12,7 +12,7 @@ public class SplashProcessor extends AsyncTask<Void, Integer, SearchResult> {
 
 	private SplashScreen activity;
 	private ProgressBar progressBar;
-	private SearchOptions options = new SearchOptions();
+	private SearchOptions options;
 
 	public SplashProcessor(SplashScreen activity, SearchOptions options) {
 		super();

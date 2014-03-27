@@ -16,6 +16,7 @@ public class SearchOptions implements Parcelable {
 	
 	private String query = QUERY_ALL;
 	private boolean append = false;
+	private boolean random = false;
 	private int from = 0;
 	private int size = 30;
 	private Map<String, List<String>> facets = new HashMap<String, List<String>>();
@@ -37,6 +38,7 @@ public class SearchOptions implements Parcelable {
 	public SearchOptions(Parcel source) {
 		query = source.readString();
 		append = source.readInt() == 0 ? true : false;
+		random = source.readInt() == 0 ? true : false;
 		from = source.readInt();
 		size = source.readInt();
 		facets = readMap(source);
@@ -80,6 +82,7 @@ public class SearchOptions implements Parcelable {
 	public void writeToParcel(Parcel dest, int flags) {
 		dest.writeString(query);
 		dest.writeInt(append ? 0 : 1);
+		dest.writeInt(random ? 0 : 1);
 		dest.writeInt(from);
 		dest.writeInt(size);
 		writeMap(dest, facets);
@@ -124,6 +127,15 @@ public class SearchOptions implements Parcelable {
 
 	public SearchOptions setAppend(boolean append) {
 		this.append = append;
+		return this;
+	}
+
+	public boolean isRandom() {
+		return random;
+	}
+
+	public SearchOptions setRandom(boolean random) {
+		this.random = random;
 		return this;
 	}
 
@@ -199,6 +211,7 @@ public class SearchOptions implements Parcelable {
 		return "searchOptions:[" +
 				"query:" + query + "," +
 				"append:" + append + "," +
+				"random:" + random + "," +
 				"from:" + from + "," +
 				"size:" + size + "," +
 				"facets:" + facets + "]" + "," +

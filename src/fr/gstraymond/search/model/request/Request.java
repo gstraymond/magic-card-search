@@ -31,7 +31,7 @@ public class Request {
 		}
 		
 		this.sort = new ArrayList<String>();
-		if (SearchOptions.QUERY_ALL.equals(options.getQuery())) {
+		if (SearchOptions.QUERY_ALL.equals(options.getQuery()) && ! options.isRandom()) {
 			// default sort
 			this.sort.add("_uid");
 		}
