@@ -1,7 +1,11 @@
 package fr.gstraymond.biz;
 
 import java.io.InputStream;
-import java.net.URL;
+
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -51,8 +55,11 @@ public class PictureDownloader extends AsyncTask<Void, Void, Bitmap> {
 		}
 		
         try {
-            InputStream is = new URL(url).openStream();
-            bitmap = BitmapFactory.decodeStream(is);
+        	HttpClient httpClient = new DefaultHttpClient();
+    		HttpGet getRequest = new HttpGet(url);
+			HttpResponse response = httpClient.execute(getRequest);
+    		InputStream content = response.getEntity().getContent();
+    		bitmap = BitmapFactory.decodeStream(content);
             bitmapCache.put(url, bitmap);
 			return bitmap;
         } catch (Exception e) {
