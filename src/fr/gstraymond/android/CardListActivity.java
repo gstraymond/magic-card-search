@@ -16,9 +16,16 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.amazon.device.associates.AssociatesAPI;
+import com.amazon.device.associates.LinkService;
+import com.amazon.device.associates.NotInitializedException;
+import com.amazon.device.associates.OpenSearchPageRequest;
+
 import fr.gstraymond.R;
 import fr.gstraymond.biz.SearchOptions;
 import fr.gstraymond.biz.SearchProcessor;
@@ -29,7 +36,7 @@ import fr.gstraymond.ui.TextListener;
 
 public class CardListActivity extends CustomActivity implements
 		CardListFragment.Callbacks, CardDetailFragment.Callbacks {
-	
+
 	private static final int DRAWER_DELAY = 1200;
 	private static final String CURRENT_SEARCH = "currentSearch";
 	public static final String CARD_RESULT = "result";
@@ -42,7 +49,7 @@ public class CardListActivity extends CustomActivity implements
 	private Card currentCard;
 	private int totalCardCount;
 	private SearchOptions currentSearch;
-	
+
 	private boolean isRestored = false;
 	private boolean hasDeviceRotated = false;
 
@@ -61,54 +68,60 @@ public class CardListActivity extends CustomActivity implements
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_card_list);
+		AssociatesAPI.initialize(new AssociatesAPI.Config(
+				"77efbb6760054935b8969a20c12be781", this));
 
 		replaceFragment(new CardParentListFragment(), R.id.parent_fragment);
-		
+
 		if (savedInstanceState != null) {
-			SearchOptions savedSearch = savedInstanceState.getParcelable(CURRENT_SEARCH);
+			SearchOptions savedSearch = savedInstanceState
+					.getParcelable(CURRENT_SEARCH);
 			if (savedSearch != null) {
 				currentSearch = savedSearch;
 				isRestored = true;
-				Log.d(getClass().getName(), "Restored search : " + currentSearch);
+				Log.d(getClass().getName(), "Restored search : "
+						+ currentSearch);
 			}
 		}
 
 		if (isSmartphone()) {
 			drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-	        drawerToggle = new ActionBarDrawerToggle(
-	                this,                  /* host Activity */
-	                drawerLayout,         /* DrawerLayout object */
-	                R.drawable.ic_drawer,  /* nav drawer icon to replace 'Up' caret */
-	                R.string.drawer_open,  /* "open drawer" description */
-	                R.string.drawer_close  /* "close drawer" description */
-	                ) {
+			drawerToggle = new ActionBarDrawerToggle(this, /* host Activity */
+			drawerLayout, /* DrawerLayout object */
+			R.drawable.ic_drawer, /* nav drawer icon to replace 'Up' caret */
+			R.string.drawer_open, /* "open drawer" description */
+			R.string.drawer_close /* "close drawer" description */
+			) {
 
-	            /** Called when a drawer has settled in a completely closed state. */
-	            public void onDrawerClosed(View view) {
-	                super.onDrawerClosed(view);
-	                getActionBar().setTitle(R.string.drawer_open);
-	            }
+				/**
+				 * Called when a drawer has settled in a completely closed
+				 * state.
+				 */
+				public void onDrawerClosed(View view) {
+					super.onDrawerClosed(view);
+					getActionBar().setTitle(R.string.drawer_open);
+				}
 
-	            /** Called when a drawer has settled in a completely open state. */
-	            public void onDrawerOpened(View drawerView) {
-	                super.onDrawerOpened(drawerView);
-	                getActionBar().setTitle(R.string.drawer_close);
-	            }
-	        };
-			
-	        // Set the drawer toggle as the DrawerListener
-	        drawerLayout.setDrawerListener(drawerToggle);
-	        getActionBar().setDisplayHomeAsUpEnabled(true);
+				/** Called when a drawer has settled in a completely open state. */
+				public void onDrawerOpened(View drawerView) {
+					super.onDrawerOpened(drawerView);
+					getActionBar().setTitle(R.string.drawer_close);
+				}
+			};
+
+			// Set the drawer toggle as the DrawerListener
+			drawerLayout.setDrawerListener(drawerToggle);
+			getActionBar().setDisplayHomeAsUpEnabled(true);
 		}
 
-        getActionBar().setHomeButtonEnabled(true);
-        getActionBar().setTitle(R.string.drawer_open);
+		getActionBar().setHomeButtonEnabled(true);
+		getActionBar().setTitle(R.string.drawer_open);
 	}
 
 	@Override
 	protected void onPostCreate(Bundle savedInstanceState) {
 		super.onPostCreate(savedInstanceState);
-		
+
 		// Sync the toggle state after onRestoreInstanceState has occurred.
 		if (isSmartphone()) {
 			drawerToggle.syncState();
@@ -124,16 +137,18 @@ public class CardListActivity extends CustomActivity implements
 		if (currentSearch == null) {
 			currentSearch = new SearchOptions();
 		}
-		
+
 		if (isRestored) {
 			currentSearch.setAppend(false);
 		}
-		if (! hasDeviceRotated) {
+		if (!hasDeviceRotated) {
 			String resultAsString = getIntent().getStringExtra(CARD_RESULT);
 			if (resultAsString != null && !isRestored) {
-				new UIUpdater(this, resultAsString, getObjectMapper()).execute();
+				new UIUpdater(this, resultAsString, getObjectMapper())
+						.execute();
 			} else {
-				new SearchProcessor(this, currentSearch, R.string.loading_initial).execute();	
+				new SearchProcessor(this, currentSearch,
+						R.string.loading_initial).execute();
 			}
 		} else {
 			hasDeviceRotated = false;
@@ -145,32 +160,53 @@ public class CardListActivity extends CustomActivity implements
 			new Handler().postDelayed(openDrawerRunnable(), DRAWER_DELAY);
 		}
 	}
-	
+
 	private Runnable openDrawerRunnable() {
-	    return new Runnable() {
-	        @Override
-	        public void run() {
-	            drawerLayout.openDrawer(Gravity.START);
-	        }
-	    };
+		return new Runnable() {
+			@Override
+			public void run() {
+				drawerLayout.openDrawer(Gravity.START);
+			}
+		};
 	}
 
 	/**
-	 * Callback method from {@link CardListFragment.Callbacks} indicating
-	 * that the item with the given ID was selected.
+	 * Callback method from {@link CardListFragment.Callbacks} indicating that
+	 * the item with the given ID was selected.
 	 */
 	@Override
 	public void onItemSelected(Parcelable card) {
 		currentCard = (Card) card;
 		if (isTablet()) {
-			replaceFragment(new CardDetailFragment(), R.id.card_detail_container, getCurrentCardBundle());
-			
-			getTitleTextView().setText(CardDetailActivity.formatTitle(this, currentCard));
-			
+			replaceFragment(new CardDetailFragment(),
+					R.id.card_detail_container, getCurrentCardBundle());
+
+			getTitleTextView().setText(
+					CardDetailActivity.formatTitle(this, currentCard));
+
 			if (menu != null) {
 				menu.findItem(R.id.pictures_tab).setVisible(true);
 				menu.findItem(R.id.oracle_tab).setVisible(false);
 			}
+
+			
+			ImageButton button = (ImageButton) findViewById(R.id.array_adapter_buy_button);
+			button.setEnabled(true);
+			final String searchTerm = "mtg " + currentCard.getTitle();
+			button.setOnClickListener(new View.OnClickListener() {
+
+				public void onClick(View view) {
+					OpenSearchPageRequest request = new OpenSearchPageRequest(
+							searchTerm);
+					try {
+						LinkService linkService = AssociatesAPI.getLinkService();
+						linkService.openRetailPage(request);
+					} catch (NotInitializedException e) {
+						e.printStackTrace();
+					}
+				}
+			});
+			
 		} else {
 			Intent intent = new Intent(this, CardDetailActivity.class);
 			intent.putExtra(CARD, card);
@@ -184,9 +220,10 @@ public class CardListActivity extends CustomActivity implements
 			Bundle bundle = getCurrentCardBundle();
 			// first element is a card
 			bundle.putInt(POSITION, id - 1);
-			
-			replaceFragment(new CardPagerFragment(), R.id.card_detail_container, bundle);
-			
+
+			replaceFragment(new CardPagerFragment(),
+					R.id.card_detail_container, bundle);
+
 			if (menu != null) {
 				menu.findItem(R.id.pictures_tab).setVisible(false);
 				menu.findItem(R.id.oracle_tab).setVisible(true);
@@ -196,7 +233,7 @@ public class CardListActivity extends CustomActivity implements
 			intent.putExtra(CARD, currentCard);
 			// first element is a card
 			intent.putExtra(POSITION, id - 1);
-			startActivity(intent);	
+			startActivity(intent);
 		}
 	}
 
@@ -205,7 +242,7 @@ public class CardListActivity extends CustomActivity implements
 		this.menu = menu;
 
 		MenuInflater inflater = getMenuInflater();
-		
+
 		// FIXME : faire comme le layout (refs.xml)
 		if (isTablet()) {
 			inflater.inflate(R.menu.card_twopane_menu, menu);
@@ -241,17 +278,19 @@ public class CardListActivity extends CustomActivity implements
 		}
 
 		switch (item.getItemId()) {
-		
+
 		// FIXME : afficher le numéro de version
-		/*case android.R.id.home:
-			String version = "Version " + VersionUtils.getAppVersion(this);
-			makeText(this, version, LENGTH_SHORT).show();
-			return true;*/
+		/*
+		 * case android.R.id.home: String version = "Version " +
+		 * VersionUtils.getAppVersion(this); makeText(this, version,
+		 * LENGTH_SHORT).show(); return true;
+		 */
 
 		case R.id.pictures_tab:
 			if (isTablet()) {
-				replaceFragment(new CardPagerFragment(), R.id.card_detail_container, getCurrentCardBundle());
-				
+				replaceFragment(new CardPagerFragment(),
+						R.id.card_detail_container, getCurrentCardBundle());
+
 				item.setVisible(false);
 				menu.findItem(R.id.oracle_tab).setVisible(true);
 			} else {
@@ -260,19 +299,22 @@ public class CardListActivity extends CustomActivity implements
 				startActivity(intent);
 			}
 			return true;
-			
+
 		case R.id.oracle_tab:
-			replaceFragment(new CardDetailFragment(), R.id.card_detail_container, getCurrentCardBundle());
-			
-			getTitleTextView().setText(CardDetailActivity.formatTitle(this, currentCard));
+			replaceFragment(new CardDetailFragment(),
+					R.id.card_detail_container, getCurrentCardBundle());
+
+			getTitleTextView().setText(
+					CardDetailActivity.formatTitle(this, currentCard));
 			item.setVisible(false);
 			menu.findItem(R.id.pictures_tab).setVisible(true);
 			return true;
-			
+
 		case R.id.clear_tab:
 			resetSearchView();
 			SearchOptions options = new SearchOptions();
-			new SearchProcessor(this, options, R.string.loading_clear).execute();
+			new SearchProcessor(this, options, R.string.loading_clear)
+					.execute();
 			openDrawer();
 			return true;
 
@@ -281,7 +323,7 @@ public class CardListActivity extends CustomActivity implements
 			startActivity(helpIntent);
 			return true;
 		}
-		
+
 		return super.onOptionsItemSelected(item);
 	}
 
@@ -290,19 +332,19 @@ public class CardListActivity extends CustomActivity implements
 		bundle.putParcelable(CARD, currentCard);
 		return bundle;
 	}
-	
+
 	private void resetSearchView() {
 		// buggy
-        MenuItem menuItem = menu.findItem(R.id.search_tab);
-        if (menuItem != null) {
-        	menuItem.collapseActionView();
-        }
-		searchView.setIconified(true); 
-        if (menuItem != null) {
-        	menuItem.collapseActionView();
-        }
+		MenuItem menuItem = menu.findItem(R.id.search_tab);
+		if (menuItem != null) {
+			menuItem.collapseActionView();
+		}
 		searchView.setIconified(true);
-        searchView.setQuery("", false);
+		if (menuItem != null) {
+			menuItem.collapseActionView();
+		}
+		searchView.setIconified(true);
+		searchView.setQuery("", false);
 	}
 
 	@Override
@@ -311,18 +353,18 @@ public class CardListActivity extends CustomActivity implements
 		outState.putParcelable(CURRENT_SEARCH, currentSearch);
 		Log.d(getClass().getName(), "onSaveInstanceState " + outState);
 	}
-	
+
 	private void replaceFragment(Fragment fragment, int id) {
 		replaceFragment(fragment, id, null);
 	}
-	
+
 	private void replaceFragment(Fragment fragment, int id, Bundle bundle) {
 		if (bundle != null) {
 			fragment.setArguments(bundle);
 		}
 		getFragmentManager().beginTransaction().replace(id, fragment).commit();
 	}
-	
+
 	public boolean isTablet() {
 		CustomApplication application = (CustomApplication) getApplication();
 		return application.isTablet();

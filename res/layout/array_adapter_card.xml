@@ -49,6 +49,12 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal" >
 
+<!--         <Button
+            android:id="@+id/array_adapter_buy_button"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:drawableTop="@drawable/buy" /> -->
+
         <TextView
             android:id="@+id/array_adapter_description"
             style="@android:style/TextAppearance.Holo.Medium"

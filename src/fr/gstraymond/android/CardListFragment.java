@@ -17,7 +17,7 @@ import fr.gstraymond.ui.CastingCostAssetLoader;
 
 public class CardListFragment extends ListFragment {
 
-	private List<Card> cards; 
+	private List<Card> cards;
 
 	private static final String STATE_ACTIVATED_POSITION = "activated_position";
 	private Callbacks callbacks = dummyCallbacks;
@@ -40,16 +40,18 @@ public class CardListFragment extends ListFragment {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
+
 		cards = getArguments().getParcelableArrayList(CARD_LIST);
 
-		CustomApplication applicationContext = (CustomApplication) getActivity().getApplicationContext();
-		CastingCostAssetLoader castingCostAssetLoader = applicationContext.getCastingCostAssetLoader();
-		
+		CustomApplication applicationContext = (CustomApplication) getActivity()
+				.getApplicationContext();
+		CastingCostAssetLoader castingCostAssetLoader = applicationContext
+				.getCastingCostAssetLoader();
+
 		arrayAdapter = new CardArrayAdapter(getActivity(),
 				android.R.layout.simple_list_item_activated_1,
 				android.R.id.text2, cards, castingCostAssetLoader);
-		
+
 		setListAdapter(arrayAdapter);
 	}
 
@@ -92,7 +94,7 @@ public class CardListFragment extends ListFragment {
 			long id) {
 		super.onListItemClick(listView, view, position, id);
 		callbacks.onItemSelected(cards.get(position));
-//		getListView().setItemChecked(position, true);
+		// getListView().setItemChecked(position, true);
 	}
 
 	@Override
@@ -113,12 +115,12 @@ public class CardListFragment extends ListFragment {
 
 		this.position = position;
 	}
-	
+
 	public void appendCards(List<Card> cards) {
 		arrayAdapter.addAll(cards);
 		arrayAdapter.notifyDataSetChanged();
 	}
-	
+
 	public int getCardListCount() {
 		return arrayAdapter.getCount();
 	}
@@ -126,17 +128,18 @@ public class CardListFragment extends ListFragment {
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		
+
 		// select the first element
 		if (isTablet() && getListAdapter().getCount() > 0) {
 			long itemId = getListAdapter().getItemId(0);
 			View view = getListAdapter().getView(0, null, getListView());
-			getListView().performItemClick(view, 0, itemId);	
+			getListView().performItemClick(view, 0, itemId);
 		}
 	}
-	
+
 	private boolean isTablet() {
-		CustomApplication application = (CustomApplication) getActivity().getApplication();
+		CustomApplication application = (CustomApplication) getActivity()
+				.getApplication();
 		return application.isTablet();
 	}
 }

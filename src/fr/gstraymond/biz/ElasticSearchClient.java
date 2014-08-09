@@ -8,16 +8,14 @@ import java.util.zip.GZIPInputStream;
 
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
 
-import android.content.Context;
 import android.util.Log;
 import android.widget.ProgressBar;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import fr.gstraymond.android.CustomApplication;
 import fr.gstraymond.search.model.request.Request;
 import fr.gstraymond.search.model.response.SearchResult;
 import fr.gstraymond.tools.DisplaySizeUtil;
@@ -31,17 +29,17 @@ public class ElasticSearchClient {
 	private static final String GZIP = "gzip";
 	private static final String ENCODING = "UTF-8";
 	private URL url;
-	private HttpClient httpClient;
+	private CustomApplication application;
 	private MapperUtil<SearchResult> mapperUtil;
 	private String appVersion;
 	private String osVersion;
 	
-	public ElasticSearchClient(URL url, ObjectMapper objectMapper, Context context) {
+	public ElasticSearchClient(URL url, ObjectMapper objectMapper, CustomApplication application) {
 		super();
 		this.url = url;
-		this.httpClient = new DefaultHttpClient();
+		this.application = application;
 		this.mapperUtil = new MapperUtil<SearchResult>(objectMapper, SearchResult.class);
-		this.appVersion = VersionUtils.getAppVersion(context);
+		this.appVersion = VersionUtils.getAppVersion(application);
 		this.osVersion = VersionUtils.getOsVersion();
 	}
 
@@ -55,7 +53,7 @@ public class ElasticSearchClient {
 			HttpGet getRequest = buildRequest(query);
 			
 			long now = System.currentTimeMillis();
-			HttpResponse response = httpClient.execute(getRequest);
+			HttpResponse response = application.getHttpClient().execute(getRequest);
 			String fileSize = getResponseSize(response);
 			Log.i(getClass().getName(), "downloaded " + fileSize + " in " + (System.currentTimeMillis() - now) + "ms");
 			
