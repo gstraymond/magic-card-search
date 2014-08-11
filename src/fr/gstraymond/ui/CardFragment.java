@@ -24,12 +24,12 @@ public class CardFragment extends Fragment {
 		ProgressBar progressBar = (ProgressBar) rootView.findViewById(R.id.fragment_card_progress_bar);
 
 		String url = getArguments().getString(URL);
-		new PictureDownloader(imageView, progressBar, url, getCustomApp()).execute();
+		new PictureDownloader(imageView, progressBar, url, getCustomApplication()).execute();
 
 		return rootView;
     }
 
-	private CustomApplication getCustomApp() {
+	private CustomApplication getCustomApplication() {
 		return (CustomApplication) getActivity().getApplication();
 	}
 }

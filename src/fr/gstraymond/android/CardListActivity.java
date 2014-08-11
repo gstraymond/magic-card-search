@@ -27,6 +27,7 @@ import com.amazon.device.associates.NotInitializedException;
 import com.amazon.device.associates.OpenSearchPageRequest;
 
 import fr.gstraymond.R;
+import fr.gstraymond.android.tools.amazon.AmazonUtils;
 import fr.gstraymond.biz.SearchOptions;
 import fr.gstraymond.biz.SearchProcessor;
 import fr.gstraymond.biz.UIUpdater;
@@ -68,8 +69,7 @@ public class CardListActivity extends CustomActivity implements
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_card_list);
-		AssociatesAPI.initialize(new AssociatesAPI.Config(
-				"77efbb6760054935b8969a20c12be781", this));
+		AmazonUtils.initAmazonApi(this);
 
 		replaceFragment(new CardParentListFragment(), R.id.parent_fragment);
 
@@ -300,6 +300,10 @@ public class CardListActivity extends CustomActivity implements
 			}
 			return true;
 
+		case R.id.buy_tab:
+			AmazonUtils.openSearch(this, currentCard);
+			return true;
+
 		case R.id.oracle_tab:
 			replaceFragment(new CardDetailFragment(),
 					R.id.card_detail_container, getCurrentCardBundle());
@@ -363,15 +367,6 @@ public class CardListActivity extends CustomActivity implements
 			fragment.setArguments(bundle);
 		}
 		getFragmentManager().beginTransaction().replace(id, fragment).commit();
-	}
-
-	public boolean isTablet() {
-		CustomApplication application = (CustomApplication) getApplication();
-		return application.isTablet();
-	}
-
-	public boolean isSmartphone() {
-		return !isTablet();
 	}
 
 	public View getCardView() {

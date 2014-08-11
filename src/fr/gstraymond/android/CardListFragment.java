@@ -43,9 +43,7 @@ public class CardListFragment extends ListFragment {
 
 		cards = getArguments().getParcelableArrayList(CARD_LIST);
 
-		CustomApplication applicationContext = (CustomApplication) getActivity()
-				.getApplicationContext();
-		CastingCostAssetLoader castingCostAssetLoader = applicationContext
+		CastingCostAssetLoader castingCostAssetLoader = getCustomApplication()
 				.getCastingCostAssetLoader();
 
 		arrayAdapter = new CardArrayAdapter(getActivity(),
@@ -137,9 +135,11 @@ public class CardListFragment extends ListFragment {
 		}
 	}
 
+	private CustomApplication getCustomApplication() {
+		return (CustomApplication) getActivity().getApplication();
+	}
+
 	private boolean isTablet() {
-		CustomApplication application = (CustomApplication) getActivity()
-				.getApplication();
-		return application.isTablet();
+		return getCustomApplication().isTablet();
 	}
 }

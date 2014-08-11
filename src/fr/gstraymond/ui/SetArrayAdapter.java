@@ -93,8 +93,8 @@ public class SetArrayAdapter extends ArrayAdapter<Object> {
 	}
 	
 	private CastingCostAssetLoader getAssetLoader() {
-		CustomApplication applicationContext = (CustomApplication) getContext().getApplicationContext();
-		return applicationContext.getCastingCostAssetLoader();
+		CustomApplication application = (CustomApplication) getContext().getApplicationContext();
+		return application.getCastingCostAssetLoader();
 	}
 
 	private String getHtml(String... strings) {

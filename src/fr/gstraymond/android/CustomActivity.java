@@ -7,10 +7,18 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public abstract class CustomActivity extends Activity {
 
 	public CustomApplication getCustomApplication() {
-		return (CustomApplication) getApplicationContext();
+		return (CustomApplication) getApplication();
+	}
+
+	public boolean isTablet() {
+		return getCustomApplication().isTablet();
+	}
+
+	public boolean isSmartphone() {
+		return !isTablet();
 	}
 	
-	public ObjectMapper getObjectMapper() {
+	protected ObjectMapper getObjectMapper() {
 		return getCustomApplication().getObjectMapper();
 	}
 }

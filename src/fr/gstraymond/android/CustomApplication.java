@@ -20,7 +20,7 @@ import fr.gstraymond.cache.BitmapCache;
 import fr.gstraymond.ui.CastingCostAssetLoader;
 
 public class CustomApplication extends Application {	
-	
+
 	private static final String TABLET = "tablet";
 	
 	private static final String SEARCH_SERVER_HOST = "engine.magic-card-search.com:8080";
@@ -138,5 +138,4 @@ public class CustomApplication extends Application {
 	public void setBitmapCache(BitmapCache bitmapCache) {
 		this.bitmapCache = bitmapCache;
 	}
-
 }

@@ -9,16 +9,9 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.ImageButton;
 import android.widget.TextView;
-
-import com.amazon.device.associates.AssociatesAPI;
-import com.amazon.device.associates.LinkService;
-import com.amazon.device.associates.NotInitializedException;
-import com.amazon.device.associates.OpenSearchPageRequest;
-
 import fr.gstraymond.R;
+import fr.gstraymond.android.tools.amazon.AmazonUtils;
 import fr.gstraymond.search.model.response.Card;
 import fr.gstraymond.tools.LanguageUtil;
 
@@ -29,30 +22,12 @@ public class CardDetailActivity extends CardCommonActivy implements
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_card_detail);
-		AssociatesAPI.initialize(new AssociatesAPI.Config(
-				"77efbb6760054935b8969a20c12be781", this));
+		AmazonUtils.initAmazonApi(this);
 
 		Bundle bundle = getBundle();
 
 		TextView titleTextView = (TextView) findViewById(R.id.card_detail_title);
 		titleTextView.setText(formatTitle(this, getCard()));
-
-		ImageButton button = (ImageButton) findViewById(R.id.array_adapter_buy_button);
-		button.setEnabled(true);
-		final String searchTerm = "mtg " + getCard().getTitle();
-		button.setOnClickListener(new View.OnClickListener() {
-
-			public void onClick(View view) {
-				OpenSearchPageRequest request = new OpenSearchPageRequest(
-						searchTerm);
-				try {
-					LinkService linkService = AssociatesAPI.getLinkService();
-					linkService.openRetailPage(request);
-				} catch (NotInitializedException e) {
-					e.printStackTrace();
-				}
-			}
-		});
 
 		Fragment fragment = new CardDetailFragment();
 		fragment.setArguments(bundle);
@@ -68,7 +43,12 @@ public class CardDetailActivity extends CardCommonActivy implements
 			intent.putExtra(CARD, getCard());
 			startActivity(intent);
 			return true;
+
+		case R.id.buy_tab:
+			AmazonUtils.openSearch(this, getCard());
+			return true;
 		}
+		
 		return super.onOptionsItemSelected(item);
 	}
 
@@ -107,10 +87,5 @@ public class CardDetailActivity extends CardCommonActivy implements
 		}
 
 		return card.getTitle();
-	}
-
-	private boolean isTablet() {
-		CustomApplication application = (CustomApplication) getApplication();
-		return application.isTablet();
 	}
 }

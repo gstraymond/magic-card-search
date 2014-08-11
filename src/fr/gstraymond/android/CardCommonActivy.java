@@ -1,14 +1,13 @@
 package fr.gstraymond.android;
 
 import static fr.gstraymond.constants.Consts.CARD;
-import android.app.Activity;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.view.MenuItem;
 import fr.gstraymond.search.model.response.Card;
 import fr.gstraymond.tools.LanguageUtil;
 
-public abstract class CardCommonActivy extends Activity {
+public abstract class CardCommonActivy extends CustomActivity {
 
 	private Card card;
 

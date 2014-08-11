@@ -113,7 +113,7 @@ public class SearchProcessor extends AsyncTask<Void, Void, SearchResult> {
 	}
 
 	private CustomApplication getApplicationContext() {
-		return (CustomApplication) getActivity().getApplicationContext();
+		return (CustomApplication) getActivity().getApplication();
 	}
 
 	public CardListActivity getActivity() {
