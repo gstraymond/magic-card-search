@@ -57,14 +57,30 @@
         android:layout_weight="0.33"
         android:orientation="vertical" >
 
-        <TextView
-            android:id="@+id/card_detail_title"
-            style="?android:attr/textAppearanceLarge"
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
-            android:textIsSelectable="true"
-            android:textStyle="bold" />
+            android:orientation="horizontal" >
+
+            <TextView
+                android:id="@+id/card_detail_title"
+                style="?android:attr/textAppearanceLarge"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:textIsSelectable="true"
+                android:textStyle="bold" />
+
+            <ImageButton
+                android:id="@+id/array_adapter_buy_button"
+                android:layout_width="40dp"
+                android:layout_height="32dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:contentDescription="buy"
+                android:scaleType="fitXY"
+                android:src="@drawable/buy" />
+        </RelativeLayout>
 
         <ProgressBar
             style="@android:style/Widget.Holo.ProgressBar.Horizontal"

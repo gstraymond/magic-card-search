@@ -7,6 +7,11 @@
         android:showAsAction="ifRoom"
         android:title="@string/list_menu_search"/>
     <item
+        android:id="@+id/buy_tab"
+        android:icon="@drawable/buy"
+        android:showAsAction="always"
+        android:title="@string/detail_buy_amazon"/>
+    <item
         android:id="@+id/pictures_tab"
         android:icon="@drawable/picture"
         android:showAsAction="always"

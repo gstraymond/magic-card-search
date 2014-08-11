@@ -3,9 +3,7 @@ package fr.gstraymond.biz;
 import java.io.InputStream;
 
 import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -15,21 +13,21 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 import android.widget.ProgressBar;
-import fr.gstraymond.cache.BitmapCache;
+import fr.gstraymond.android.CustomApplication;
 
 public class PictureDownloader extends AsyncTask<Void, Void, Bitmap> {
 
 	private ImageView imageView;
 	private ProgressBar progressBar;
 	private String url;
-	private BitmapCache bitmapCache; 
+	private CustomApplication application;
 	
-	public PictureDownloader(ImageView imageView, ProgressBar progressBar, String url, BitmapCache bitmapCache) {
+	public PictureDownloader(ImageView imageView, ProgressBar progressBar, String url, CustomApplication application) {
 		super();
 		this.imageView = imageView;
 		this.progressBar = progressBar;
 		this.url = url;
-		this.bitmapCache = bitmapCache;
+		this.application = application;
 	}
 
 	@Override
@@ -49,18 +47,17 @@ public class PictureDownloader extends AsyncTask<Void, Void, Bitmap> {
 	}
 
 	private Bitmap getBitmap() {
-		Bitmap bitmap = bitmapCache.get(url);
+		Bitmap bitmap = application.getBitmapCache().get(url);
 		if (bitmap != null) {
 			return bitmap;
 		}
 		
         try {
-        	HttpClient httpClient = new DefaultHttpClient();
     		HttpGet getRequest = new HttpGet(url);
-			HttpResponse response = httpClient.execute(getRequest);
+			HttpResponse response = application.getHttpClient().execute(getRequest);
     		InputStream content = response.getEntity().getContent();
     		bitmap = BitmapFactory.decodeStream(content);
-            bitmapCache.put(url, bitmap);
+    		application.getBitmapCache().put(url, bitmap);
 			return bitmap;
         } catch (Exception e) {
         	Log.e(getClass().getName(), "error", e);

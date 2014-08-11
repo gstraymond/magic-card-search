@@ -11,6 +11,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.TextView;
 import fr.gstraymond.R;
+import fr.gstraymond.android.tools.amazon.AmazonUtils;
 import fr.gstraymond.search.model.response.Card;
 import fr.gstraymond.tools.LanguageUtil;
 
@@ -21,6 +22,7 @@ public class CardDetailActivity extends CardCommonActivy implements
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_card_detail);
+		AmazonUtils.initAmazonApi(this);
 
 		Bundle bundle = getBundle();
 
@@ -41,7 +43,12 @@ public class CardDetailActivity extends CardCommonActivy implements
 			intent.putExtra(CARD, getCard());
 			startActivity(intent);
 			return true;
+
+		case R.id.buy_tab:
+			AmazonUtils.openSearch(this, getCard());
+			return true;
 		}
+		
 		return super.onOptionsItemSelected(item);
 	}
 
@@ -60,18 +67,17 @@ public class CardDetailActivity extends CardCommonActivy implements
 			bundle.putParcelable(CARD, getCard());
 			// first element is a card
 			bundle.putInt(POSITION, id - 1);
-			
+
 			CardPagerFragment fragment = new CardPagerFragment();
 			fragment.setArguments(bundle);
 			getFragmentManager().beginTransaction()
-				.replace(R.id.card_detail_container, fragment)
-				.commit();
+					.replace(R.id.card_detail_container, fragment).commit();
 		} else {
 			Intent intent = new Intent(this, CardPagerActivity.class);
 			intent.putExtra(CARD, getCard());
 			// first element is a card
 			intent.putExtra(POSITION, id - 1);
-			startActivity(intent);	
+			startActivity(intent);
 		}
 	}
 
@@ -79,12 +85,7 @@ public class CardDetailActivity extends CardCommonActivy implements
 		if (LanguageUtil.showFrench(context) && card.getFrenchTitle() != null) {
 			return card.getFrenchTitle() + "\n(" + card.getTitle() + ")";
 		}
-		
+
 		return card.getTitle();
-	}
-	
-	private boolean isTablet() {
-		CustomApplication application = (CustomApplication) getApplication();
-		return application.isTablet();
 	}
 }

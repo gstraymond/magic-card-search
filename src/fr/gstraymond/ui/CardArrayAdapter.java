@@ -27,6 +27,7 @@ public class CardArrayAdapter extends ArrayAdapter<Card> {
 
 		displayableViews = new ArrayList<DisplayableView>();
 		displayableViews.add(new TitleView(context));
+//		displayableViews.add(new BuyButtonView());
 		displayableViews.add(new DescriptionView(castingCostAssetLoader));
 		displayableViews.add(new CastingCostView(castingCostAssetLoader));
 		displayableViews.add(new TypePTView(context));

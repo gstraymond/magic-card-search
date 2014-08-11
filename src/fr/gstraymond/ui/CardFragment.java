@@ -10,7 +10,6 @@ import android.widget.ProgressBar;
 import fr.gstraymond.R;
 import fr.gstraymond.android.CustomApplication;
 import fr.gstraymond.biz.PictureDownloader;
-import fr.gstraymond.cache.BitmapCache;
 
 public class CardFragment extends Fragment {
 
@@ -25,13 +24,12 @@ public class CardFragment extends Fragment {
 		ProgressBar progressBar = (ProgressBar) rootView.findViewById(R.id.fragment_card_progress_bar);
 
 		String url = getArguments().getString(URL);
-		new PictureDownloader(imageView, progressBar, url, getCache()).execute();
+		new PictureDownloader(imageView, progressBar, url, getCustomApplication()).execute();
 
 		return rootView;
     }
-	
-	private BitmapCache getCache() {
-		CustomApplication application = (CustomApplication) getActivity().getApplication();
-		return application.getBitmapCache();
+
+	private CustomApplication getCustomApplication() {
+		return (CustomApplication) getActivity().getApplication();
 	}
 }
