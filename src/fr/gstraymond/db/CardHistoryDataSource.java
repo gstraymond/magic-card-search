@@ -1,81 +1,90 @@
 package fr.gstraymond.db;
 
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
-import android.content.ContentValues;
 import android.content.Context;
-import android.database.Cursor;
-import android.database.SQLException;
-import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 public class CardHistoryDataSource {
-
-	private String[] allColumns = { CardHistoryDB.COLUMN_ID,
-			CardHistoryDB.COLUMN_QUERY };
-
-	private SQLiteDatabase database;
-	private CardHistoryDB dbHelper;
+	
+	private final String filename = "history";
+	
+	private Context context;
 
 	public CardHistoryDataSource(Context context) {
-		dbHelper = new CardHistoryDB(context);
+		this.context = context;
 	}
 
-	public void open() throws SQLException {
-		database = dbHelper.getWritableDatabase();
-	}
-
-	public void close() {
-		dbHelper.close();
-	}
-
-	public CardHistory createCardHistory(String query) {
-		ContentValues values = new ContentValues();
-		values.put(CardHistoryDB.COLUMN_QUERY, query);
-		values.put(CardHistoryDB.COLUMN_DATE, new Date().getTime());
-		values.put(CardHistoryDB.COLUMN_FAVORITE, 0);
-		long insertId = database.insert(CardHistoryDB.TABLE, null, values);
-		Cursor cursor = database.query(CardHistoryDB.TABLE, allColumns,
-				CardHistoryDB.COLUMN_ID + " = " + insertId, null, null, null,
-				null);
-		cursor.moveToFirst();
-		CardHistory cardHistory = toCardHistory(cursor);
-		cursor.close();
-		return cardHistory;
-	}
-
-	private CardHistory toCardHistory(Cursor cursor) {
-		int i = 0;
-		CardHistory cardHistory = new CardHistory();
-		cardHistory.setId(cursor.getInt(i++));
-		cardHistory.setQuery(cursor.getString(i++));
-		cardHistory.setDate(new Date(cursor.getLong(i++)));
-		cardHistory.setFavorite(cursor.getInt(i++) == 0 ? false : true);
-		return cardHistory;
+	public void appendHistory(String query) {
+		CardHistory cardHistory = new CardHistory(getLastId() + 1, query, false);
+		FileOutputStream fos = null;
+		try {
+			fos = context.openFileOutput(filename, Context.MODE_APPEND);
+			fos.write(cardHistory.toString().getBytes());
+		} catch (FileNotFoundException e) {
+			Log.e(getClass().getName(), "appendHistory", e);
+		} catch (IOException e) {
+			Log.e(getClass().getName(), "appendHistory", e);
+		} finally {
+			if (fos != null) {
+				try {
+					fos.close();
+				} catch (IOException e) {
+					Log.e(getClass().getName(), "appendHistory", e);
+				}
+			}
+		}
 	}
 
 	public void deleteCardHistory(CardHistory cardHistory) {
-		int id = cardHistory.getId();
-		System.out.println("Comment deleted with id: " + id);
-		database.delete(CardHistoryDB.TABLE, CardHistoryDB.COLUMN_ID + " = "
-				+ id, null);
+	}
+	
+	public void clearHistory() {
+		context.deleteFile(filename);
 	}
 
 	public List<CardHistory> getAllCardHistory() {
-		List<CardHistory> cardHistories = new ArrayList<CardHistory>();
-
-		Cursor cursor = database.query(CardHistoryDB.TABLE, allColumns, null,
-				null, null, null, null);
-
-		cursor.moveToFirst();
-		while (!cursor.isAfterLast()) {
-			CardHistory cardHistory = toCardHistory(cursor);
-			cardHistories.add(cardHistory);
-			cursor.moveToNext();
+		BufferedReader br = null;
+		try {
+			br = new BufferedReader(new InputStreamReader(context.openFileInput(filename)));
+		    List<CardHistory> cardHistories = new ArrayList<CardHistory>();
+		    String line = "";
+		    while ((line = br.readLine()) != null) {
+		    	CardHistory cardHistory = new CardHistory(line);
+				cardHistories.add(cardHistory);
+				Log.d(getClass().getName(), "get all history : " + cardHistory);
+		    }
+			return cardHistories;
+		} catch (FileNotFoundException e) {
+			Log.e(getClass().getName(), "getAllCardHistory", e);
+		} catch (IOException e) {
+			Log.e(getClass().getName(), "getAllCardHistory", e);
+		} catch (ParseException e) {
+			Log.e(getClass().getName(), "getAllCardHistory", e);
+		} finally {
+			if (br != null) {
+				try {
+					br.close();
+				} catch (IOException e) {
+					Log.e(getClass().getName(), "getAllCardHistory", e);
+				}
+			}
 		}
-		// make sure to close the cursor
-		cursor.close();
-		return cardHistories;
+		return new ArrayList<CardHistory>();
+	}
+	
+	public int getLastId() {
+		List<CardHistory> histories = getAllCardHistory();
+		if (histories.isEmpty()) {
+			return 0;
+		}
+		return histories.get(histories.size() - 1).getId();
 	}
 }
