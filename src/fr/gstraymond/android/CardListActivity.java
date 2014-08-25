@@ -316,7 +316,7 @@ public class CardListActivity extends CustomActivity implements
 
 		case R.id.clear_tab:
 			resetSearchView();
-			SearchOptions options = new SearchOptions();
+			SearchOptions options = new SearchOptions().setRandom(true);
 			new SearchProcessor(this, options, R.string.loading_clear)
 					.execute();
 			openDrawer();
