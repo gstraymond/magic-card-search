@@ -4,3 +4,10 @@
 bin
 gen
 /proguard
+local.properties
+magic-card-search.iml
+build/
+gradle/
+gradlew
+import-summary.txt
+app/app.iml
