@@ -4,10 +4,10 @@ import java.text.DecimalFormat;
 
 public class DisplaySizeUtil {
 
-	private static final DecimalFormat DECIMAL_FORMAT = new DecimalFormat("#,##0.#");
-    private static final String[] units = new String[] { "B", "KB", "MB", "GB", "TB" };
+    private static final DecimalFormat DECIMAL_FORMAT = new DecimalFormat("#,##0.#");
+    private static final String[] units = new String[]{"B", "KB", "MB", "GB", "TB"};
 
-	public static String getFileSize(long size) {
+    public static String getFileSize(long size) {
         if (size <= 0) {
             return "0";
         }

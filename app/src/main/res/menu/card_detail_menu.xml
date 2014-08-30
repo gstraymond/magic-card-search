@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
         android:id="@+id/buy_tab"
         android:icon="@drawable/buy"
         android:showAsAction="always"
-        android:title="@string/detail_buy_amazon"/>
+        android:title="@string/detail_buy_amazon" />
     <item
         android:id="@+id/pictures_tab"
         android:icon="@drawable/picture"
         android:showAsAction="always"
-        android:title="@string/detail_menu_pictures"/>
+        android:title="@string/detail_menu_pictures" />
 
 </menu>

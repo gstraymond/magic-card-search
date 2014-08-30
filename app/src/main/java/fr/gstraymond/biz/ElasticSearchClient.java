@@ -1,19 +1,19 @@
 package fr.gstraymond.biz;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
-import java.net.URLEncoder;
-import java.util.zip.GZIPInputStream;
+import android.util.Log;
+import android.widget.ProgressBar;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
 
-import android.util.Log;
-import android.widget.ProgressBar;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.net.URLEncoder;
+import java.util.zip.GZIPInputStream;
 
 import fr.gstraymond.android.CustomApplication;
 import fr.gstraymond.db.HistoryDataSource;
@@ -23,85 +23,85 @@ import fr.gstraymond.tools.DisplaySizeUtil;
 import fr.gstraymond.tools.MapperUtil;
 import fr.gstraymond.tools.VersionUtils;
 
-public class ElasticSearchClient { 
-    
-	private static final String CONTENT_ENCODING = "Content-Encoding";
-	private static final String ACCEPT_ENCODING = "Accept-Encoding";
-	private static final String GZIP = "gzip";
-	private static final String ENCODING = "UTF-8";
-	
-	private URL url;
-	private CustomApplication application;
-	private MapperUtil<SearchResult> mapperUtil;
-	private String appVersion;
-	private String osVersion;
-	
-	public ElasticSearchClient(URL url, ObjectMapper objectMapper, CustomApplication application) {
-		super();
-		
-		this.url = url;
-		this.application = application;
-		this.mapperUtil = new MapperUtil<SearchResult>(objectMapper, SearchResult.class);
-		this.appVersion = VersionUtils.getAppVersion(application);
-		this.osVersion = VersionUtils.getOsVersion();
-	}
+public class ElasticSearchClient {
 
-	public SearchResult process(SearchOptions options, ProgressBar progressBar) {
-		Request request = new Request(options);
-		String queryAsJson = mapperUtil.asJsonString(request);
-		Log.d(getClass().getName(), "query as json : " + queryAsJson);
-		
-		try {
-			String query = URLEncoder.encode(queryAsJson, ENCODING);
-			HttpGet getRequest = buildRequest(query);
-			
-			long now = System.currentTimeMillis();
-			HttpResponse response = application.getHttpClient().execute(getRequest);
-			String fileSize = getResponseSize(response);
-			Log.i(getClass().getName(), "downloaded " + fileSize + " in " + (System.currentTimeMillis() - now) + "ms");
-			
-			progressBar.setProgress(33);
-			InputStream content = getInputStream(response);
-			
-			// historique
-			if (options.isRandom() == false) {
-				HistoryDataSource historyDataSource = new HistoryDataSource(application);
-				historyDataSource.appendHistory(options.getQuery());	
-			}
-			
-			return parse(content, progressBar);
-		} catch (IOException e) {
-			Log.e(getClass().getName(), "process", e);
-		}
-		return null;
-	}
+    private static final String CONTENT_ENCODING = "Content-Encoding";
+    private static final String ACCEPT_ENCODING = "Accept-Encoding";
+    private static final String GZIP = "gzip";
+    private static final String ENCODING = "UTF-8";
 
-	private HttpGet buildRequest(String query) {
-		HttpGet getRequest = new HttpGet(url.toString() + "?source=" + query);
-		getRequest.addHeader(ACCEPT_ENCODING, GZIP);
-		getRequest.setHeader("User-Agent", "Android Java/" + osVersion);
-		getRequest.setHeader("Referer", "Magic Card Search - " + appVersion);
-		return getRequest;
-	}
+    private URL url;
+    private CustomApplication application;
+    private MapperUtil<SearchResult> mapperUtil;
+    private String appVersion;
+    private String osVersion;
 
-	private String getResponseSize(HttpResponse response) {
-		return DisplaySizeUtil.getFileSize(response.getEntity().getContentLength());
-	}
+    public ElasticSearchClient(URL url, ObjectMapper objectMapper, CustomApplication application) {
+        super();
 
-	private InputStream getInputStream(HttpResponse response) throws IOException {
-		InputStream content = response.getEntity().getContent();
-		Header contentEncoding = response.getFirstHeader(CONTENT_ENCODING);
-		if (contentEncoding != null && GZIP.equalsIgnoreCase(contentEncoding.getValue())) {
-			return new GZIPInputStream(content);
-		}
-		return content;
-	}
+        this.url = url;
+        this.application = application;
+        this.mapperUtil = new MapperUtil<SearchResult>(objectMapper, SearchResult.class);
+        this.appVersion = VersionUtils.getAppVersion(application);
+        this.osVersion = VersionUtils.getOsVersion();
+    }
 
-	private SearchResult parse(InputStream stream, ProgressBar progressBar) {
-		long now = System.currentTimeMillis();
-		SearchResult searchResult = mapperUtil.read(stream);
-		Log.i(getClass().getName(), "parse took " + (System.currentTimeMillis() - now) + "ms");
-		progressBar.setProgress(66);
-		return searchResult;
-	}
+    public SearchResult process(SearchOptions options, ProgressBar progressBar) {
+        Request request = new Request(options);
+        String queryAsJson = mapperUtil.asJsonString(request);
+        Log.d(getClass().getName(), "query as json : " + queryAsJson);
+
+        try {
+            String query = URLEncoder.encode(queryAsJson, ENCODING);
+            HttpGet getRequest = buildRequest(query);
+
+            long now = System.currentTimeMillis();
+            HttpResponse response = application.getHttpClient().execute(getRequest);
+            String fileSize = getResponseSize(response);
+            Log.i(getClass().getName(), "downloaded " + fileSize + " in " + (System.currentTimeMillis() - now) + "ms");
+
+            progressBar.setProgress(33);
+            InputStream content = getInputStream(response);
+
+            // historique
+            if (options.isRandom() == false) {
+                HistoryDataSource historyDataSource = new HistoryDataSource(application);
+                historyDataSource.appendHistory(options.getQuery());
+            }
+
+            return parse(content, progressBar);
+        } catch (IOException e) {
+            Log.e(getClass().getName(), "process", e);
+        }
+        return null;
+    }
+
+    private HttpGet buildRequest(String query) {
+        HttpGet getRequest = new HttpGet(url.toString() + "?source=" + query);
+        getRequest.addHeader(ACCEPT_ENCODING, GZIP);
+        getRequest.setHeader("User-Agent", "Android Java/" + osVersion);
+        getRequest.setHeader("Referer", "Magic Card Search - " + appVersion);
+        return getRequest;
+    }
+
+    private String getResponseSize(HttpResponse response) {
+        return DisplaySizeUtil.getFileSize(response.getEntity().getContentLength());
+    }
+
+    private InputStream getInputStream(HttpResponse response) throws IOException {
+        InputStream content = response.getEntity().getContent();
+        Header contentEncoding = response.getFirstHeader(CONTENT_ENCODING);
+        if (contentEncoding != null && GZIP.equalsIgnoreCase(contentEncoding.getValue())) {
+            return new GZIPInputStream(content);
+        }
+        return content;
+    }
+
+    private SearchResult parse(InputStream stream, ProgressBar progressBar) {
+        long now = System.currentTimeMillis();
+        SearchResult searchResult = mapperUtil.read(stream);
+        Log.i(getClass().getName(), "parse took " + (System.currentTimeMillis() - now) + "ms");
+        progressBar.setProgress(66);
+        return searchResult;
+    }
 }

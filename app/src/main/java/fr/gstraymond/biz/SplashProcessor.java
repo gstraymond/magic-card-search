@@ -3,6 +3,7 @@ package fr.gstraymond.biz;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.ProgressBar;
+
 import fr.gstraymond.R;
 import fr.gstraymond.android.CustomApplication;
 import fr.gstraymond.android.SplashScreen;
@@ -10,42 +11,42 @@ import fr.gstraymond.search.model.response.SearchResult;
 
 public class SplashProcessor extends AsyncTask<Void, Integer, SearchResult> {
 
-	private SplashScreen activity;
-	private ProgressBar progressBar;
-	private SearchOptions options;
+    private SplashScreen activity;
+    private ProgressBar progressBar;
+    private SearchOptions options;
 
-	public SplashProcessor(SplashScreen activity, SearchOptions options) {
-		super();
-		this.activity = activity;
-		this.progressBar = getProgressBar();
+    public SplashProcessor(SplashScreen activity, SearchOptions options) {
+        super();
+        this.activity = activity;
+        this.progressBar = getProgressBar();
 
-		progressBar.setProgress(0);
-		this.options = options;
-	}
+        progressBar.setProgress(0);
+        this.options = options;
+    }
 
-	@Override
-	protected SearchResult doInBackground(Void... params) {
-		long now = System.currentTimeMillis();
-		SearchResult searchResult = getCustomApplication().getElasticSearchClient().process(options, progressBar);
-		
-		if (searchResult != null && searchResult.getHits() != null) {
-			Log.i(getClass().getName(), searchResult.getHits().getTotal() + " cards found in " + searchResult.getTook() + " ms");
-		}
-		Log.i(getClass().getName(), "search took " + (System.currentTimeMillis() - now) + "ms");
-		
-		return searchResult;
-	}
+    @Override
+    protected SearchResult doInBackground(Void... params) {
+        long now = System.currentTimeMillis();
+        SearchResult searchResult = getCustomApplication().getElasticSearchClient().process(options, progressBar);
 
-	private CustomApplication getCustomApplication() {
-		return (CustomApplication) activity.getApplication();
-	}
+        if (searchResult != null && searchResult.getHits() != null) {
+            Log.i(getClass().getName(), searchResult.getHits().getTotal() + " cards found in " + searchResult.getTook() + " ms");
+        }
+        Log.i(getClass().getName(), "search took " + (System.currentTimeMillis() - now) + "ms");
 
-	@Override
-	protected void onPostExecute(SearchResult result) {
-		activity.startNextActivity(result);
-	}
+        return searchResult;
+    }
 
-	private ProgressBar getProgressBar() {
-		return (ProgressBar) activity.findViewById(R.id.progress_bar);
-	}
+    private CustomApplication getCustomApplication() {
+        return (CustomApplication) activity.getApplication();
+    }
+
+    @Override
+    protected void onPostExecute(SearchResult result) {
+        activity.startNextActivity(result);
+    }
+
+    private ProgressBar getProgressBar() {
+        return (ProgressBar) activity.findViewById(R.id.progress_bar);
+    }
 }

@@ -1,58 +1,60 @@
 package fr.gstraymond.android;
 
-import static fr.gstraymond.constants.Consts.CARD;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.view.MenuItem;
+
 import fr.gstraymond.search.model.response.Card;
 import fr.gstraymond.tools.LanguageUtil;
 
+import static fr.gstraymond.constants.Consts.CARD;
+
 public abstract class CardCommonActivy extends CustomActivity {
 
-	private Card card;
+    private Card card;
 
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
 
-		card = getIntent().getParcelableExtra(CARD);
+        card = getIntent().getParcelableExtra(CARD);
 
-		// Show the Up button in the action bar.
-		getActionBar().setDisplayHomeAsUpEnabled(true);
-	
-		setTitle(getFullTitle(card));
-	}
+        // Show the Up button in the action bar.
+        getActionBar().setDisplayHomeAsUpEnabled(true);
 
-	protected Bundle getBundle() {
-		Bundle bundle = new Bundle();
-		bundle.putParcelable(CARD, card);
-		return bundle;
-	}
+        setTitle(getFullTitle(card));
+    }
 
-	private String getFullTitle(Card card) {
-		if (LanguageUtil.showFrench(this) && card.getFrenchTitle() != null) {
-			return card.getFrenchTitle();
-		}
-		
-		return card.getTitle();
-	}
-	
-	protected void replaceFragment(Fragment fragment, int id) {
-		getFragmentManager().beginTransaction().replace(id, fragment).commit();
-	}
+    protected Bundle getBundle() {
+        Bundle bundle = new Bundle();
+        bundle.putParcelable(CARD, card);
+        return bundle;
+    }
 
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-		case android.R.id.home:
-			finish();
-			return true;
+    private String getFullTitle(Card card) {
+        if (LanguageUtil.showFrench(this) && card.getFrenchTitle() != null) {
+            return card.getFrenchTitle();
+        }
 
-		}
-		return super.onOptionsItemSelected(item);
-	}
+        return card.getTitle();
+    }
 
-	protected Card getCard() {
-		return card;
-	}
+    protected void replaceFragment(Fragment fragment, int id) {
+        getFragmentManager().beginTransaction().replace(id, fragment).commit();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
+
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    protected Card getCard() {
+        return card;
+    }
 }

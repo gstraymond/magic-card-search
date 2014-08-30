@@ -13,7 +13,7 @@ public class URLImageParser implements ImageGetter {
         this.textView = view;
     }
 
-	@Override
+    @Override
     public Drawable getDrawable(String source) {
         LevelListDrawable drawable = new LevelListDrawable();
         Drawable empty = textView.getResources().getDrawable(android.R.drawable.ic_dialog_info);
@@ -25,13 +25,13 @@ public class URLImageParser implements ImageGetter {
         return drawable;
     }
 
-	public View getTextView() {
-		return textView;
-	}
+    public View getTextView() {
+        return textView;
+    }
 
-	public void setTextView(TextView view) {
-		this.textView = view;
-	}
+    public void setTextView(TextView view) {
+        this.textView = view;
+    }
 
 }
 

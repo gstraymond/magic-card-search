@@ -8,13 +8,13 @@
     android:focusableInTouchMode="true"
     android:orientation="horizontal"
     android:showDividers="middle"
-    tools:context=".CardListActivity" >
+    tools:context=".CardListActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="0.38"
-        android:orientation="vertical" >
+        android:orientation="vertical">
 
         <TextView
             android:id="@+id/welcome_text_view"
@@ -43,7 +43,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="0.29"
-        android:orientation="vertical" >
+        android:orientation="vertical">
 
         <FrameLayout
             android:id="@+id/parent_fragment"
@@ -55,12 +55,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="0.33"
-        android:orientation="vertical" >
+        android:orientation="vertical">
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal" >
+            android:orientation="horizontal">
 
             <TextView
                 android:id="@+id/card_detail_title"

@@ -1,26 +1,27 @@
 package fr.gstraymond.tools;
 
 import android.content.Context;
+
 import fr.gstraymond.R;
 import fr.gstraymond.search.model.response.Card;
 
 public class TypeFormatter {
 
-	private static final String QUADRAT = "—";
-	private static final String SEP = "--";
-	
-	private Context context;
+    private static final String QUADRAT = "—";
+    private static final String SEP = "--";
 
-	public TypeFormatter(Context context) {
-		this.context = context;
-	}
+    private Context context;
 
-	public String format(Card card) {
-		String type = card.getType().replaceAll(SEP, QUADRAT);
-		return context.getString(R.string.card_type) + " " + type;
-	}
+    public TypeFormatter(Context context) {
+        this.context = context;
+    }
 
-	public String formatFirst(Card card) {
-		return card.getType().split(SEP)[0];
-	}
+    public String format(Card card) {
+        String type = card.getType().replaceAll(SEP, QUADRAT);
+        return context.getString(R.string.card_type) + " " + type;
+    }
+
+    public String formatFirst(Card card) {
+        return card.getType().split(SEP)[0];
+    }
 }

@@ -13,22 +13,22 @@
     <string name="list_menu_search">Search</string>
     <string name="list_menu_help">Help !</string>
     <string name="list_menu_history">Recent search</string>
-    
+
     <string name="detail_menu_oracle">Text</string>
     <string name="detail_menu_pictures">Pictures</string>
     <string name="detail_buy_amazon">Buy on Amazon</string>
-    
+
     <string name="search_hint">black lotus, draw, sacrifice…</string>
     <string name="failed_search">Oops, search encountered an error ! Please, check your data connection.</string>
-    
+
     <string name="card_type">Type:</string>
     <string name="card_formats">Formats:</string>
-    
+
     <string name="drawer_open">Go to search</string>
     <string name="drawer_close">Back to list</string>
-    
+
     <string name="toasting_loading_finished">Done !</string>
-    
+
     <string name="facet_ability">Ability</string>
     <string name="facet_artist">Artist</string>
     <string name="facet_color">Color</string>
@@ -41,12 +41,12 @@
     <string name="facet_toughness">Toughness</string>
     <string name="facet_type">Type</string>
     <string name="facet_more">More filters…</string>
-    
+
     <string name="loading_initial">searching…</string>
     <string name="loading_more">loading 30 next cards…</string>
     <string name="loading_clear">clearing…</string>
     <string name="loading_facet">filtering search…</string>
     <string name="loading_more_facet">adding filters…</string>
 
-	<string name="mode">smartphone</string>
+    <string name="mode">smartphone</string>
 </resources>

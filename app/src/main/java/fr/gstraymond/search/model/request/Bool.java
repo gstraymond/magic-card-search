@@ -10,32 +10,32 @@ import fr.gstraymond.biz.SearchOptions;
 
 public class Bool {
 
-	private List<Object> must;
+    private List<Object> must;
 
-	public Bool(SearchOptions options) {
-		must = new ArrayList<Object>();
-		
-		if (options.isRandom()) {
-			must.add(new FunctionScore());
-		} else {
-			must.add(new QueryString(options));
-		}
+    public Bool(SearchOptions options) {
+        must = new ArrayList<Object>();
 
-		Map<String, List<String>> facets = options.getFacets();
-		for (Entry<String, List<String>> entry : facets.entrySet()) {
-			for (String term : entry.getValue()) {
-				Map<String, String> termMap = new HashMap<String, String>();
-				termMap.put(entry.getKey(), term);
-				must.add(new Term(termMap));
-			}
-		}
-	}
+        if (options.isRandom()) {
+            must.add(new FunctionScore());
+        } else {
+            must.add(new QueryString(options));
+        }
 
-	public List<Object> getMust() {
-		return must;
-	}
+        Map<String, List<String>> facets = options.getFacets();
+        for (Entry<String, List<String>> entry : facets.entrySet()) {
+            for (String term : entry.getValue()) {
+                Map<String, String> termMap = new HashMap<String, String>();
+                termMap.put(entry.getKey(), term);
+                must.add(new Term(termMap));
+            }
+        }
+    }
 
-	public void setMust(List<Object> must) {
-		this.must = must;
-	}
+    public List<Object> getMust() {
+        return must;
+    }
+
+    public void setMust(List<Object> must) {
+        this.must = must;
+    }
 }

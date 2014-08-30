@@ -1,33 +1,34 @@
 package fr.gstraymond.ui.view;
 
-import fr.gstraymond.api.ui.view.DisplayableView;
 import android.view.View;
 
+import fr.gstraymond.api.ui.view.DisplayableView;
+
 public abstract class CommonDisplayableView implements DisplayableView {
-	
-	protected View parentView;
 
-	@Override
-	public void setParentView(View parentView) {
-		this.parentView = parentView;
-	}
+    protected View parentView;
 
-	@Override
-	public View getView() {
-		return parentView.findViewById(getId());
-	}
+    @Override
+    public void setParentView(View parentView) {
+        this.parentView = parentView;
+    }
 
-	private boolean show() {
-		getView().setVisibility(View.VISIBLE);
-		return true;
-	}
+    @Override
+    public View getView() {
+        return parentView.findViewById(getId());
+    }
 
-	private boolean hide() {
-		getView().setVisibility(View.GONE);
-		return false;
-	}
+    private boolean show() {
+        getView().setVisibility(View.VISIBLE);
+        return true;
+    }
 
-	public boolean display(boolean display) {
-		return display ? show() : hide();
-	}
+    private boolean hide() {
+        getView().setVisibility(View.GONE);
+        return false;
+    }
+
+    public boolean display(boolean display) {
+        return display ? show() : hide();
+    }
 }

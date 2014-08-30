@@ -1,7 +1,5 @@
 package fr.gstraymond.android;
 
-import static fr.gstraymond.constants.Consts.CARD;
-import static fr.gstraymond.constants.Consts.POSITION;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -38,387 +36,390 @@ import fr.gstraymond.search.model.response.Card;
 import fr.gstraymond.ui.EndScrollListener;
 import fr.gstraymond.ui.TextListener;
 
+import static fr.gstraymond.constants.Consts.CARD;
+import static fr.gstraymond.constants.Consts.POSITION;
+
 public class CardListActivity extends CustomActivity implements
-		CardListFragment.Callbacks, CardDetailFragment.Callbacks {
+        CardListFragment.Callbacks, CardDetailFragment.Callbacks {
 
-	private static final int DRAWER_DELAY = 1200;
-	private static final String CURRENT_SEARCH = "currentSearch";
-	public static final String CARD_RESULT = "result";
+    private static final int DRAWER_DELAY = 1200;
+    private static final String CURRENT_SEARCH = "currentSearch";
+    public static final String CARD_RESULT = "result";
 
-	private TextListener textListener;
-	private EndScrollListener endScrollListener;
-	private SearchView searchView;
-	private Menu menu;
+    private TextListener textListener;
+    private EndScrollListener endScrollListener;
+    private SearchView searchView;
+    private Menu menu;
 
-	private Card currentCard;
-	private int totalCardCount;
-	private SearchOptions currentSearch;
+    private Card currentCard;
+    private int totalCardCount;
+    private SearchOptions currentSearch;
 
-	private boolean isRestored = false;
-	private boolean hasDeviceRotated = false;
+    private boolean isRestored = false;
+    private boolean hasDeviceRotated = false;
 
-	private ActionBarDrawerToggle drawerToggle;
-	private DrawerLayout drawerLayout;
-	private Toast loadingToast;
+    private ActionBarDrawerToggle drawerToggle;
+    private DrawerLayout drawerLayout;
+    private Toast loadingToast;
 
-	public CardListActivity() {
-		super();
+    public CardListActivity() {
+        super();
 
-		this.textListener = new TextListener(this);
-		this.endScrollListener = new EndScrollListener(this);
-	}
+        this.textListener = new TextListener(this);
+        this.endScrollListener = new EndScrollListener(this);
+    }
 
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_card_list);
-		AmazonUtils.initAmazonApi(this);
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_card_list);
+        AmazonUtils.initAmazonApi(this);
 
-		replaceFragment(new CardParentListFragment(), R.id.parent_fragment);
+        replaceFragment(new CardParentListFragment(), R.id.parent_fragment);
 
-		if (savedInstanceState != null) {
-			SearchOptions savedSearch = savedInstanceState
-					.getParcelable(CURRENT_SEARCH);
-			if (savedSearch != null) {
-				currentSearch = savedSearch;
-				isRestored = true;
-				Log.d(getClass().getName(), "Restored search : "
-						+ currentSearch);
-			}
-		}
+        if (savedInstanceState != null) {
+            SearchOptions savedSearch = savedInstanceState
+                    .getParcelable(CURRENT_SEARCH);
+            if (savedSearch != null) {
+                currentSearch = savedSearch;
+                isRestored = true;
+                Log.d(getClass().getName(), "Restored search : "
+                        + currentSearch);
+            }
+        }
 
-		if (isSmartphone()) {
-			drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-			drawerToggle = new ActionBarDrawerToggle(this, /* host Activity */
-			drawerLayout, /* DrawerLayout object */
-			R.drawable.ic_drawer, /* nav drawer icon to replace 'Up' caret */
-			R.string.drawer_open, /* "open drawer" description */
-			R.string.drawer_close /* "close drawer" description */
-			) {
+        if (isSmartphone()) {
+            drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+            drawerToggle = new ActionBarDrawerToggle(this, /* host Activity */
+                    drawerLayout, /* DrawerLayout object */
+                    R.drawable.ic_drawer, /* nav drawer icon to replace 'Up' caret */
+                    R.string.drawer_open, /* "open drawer" description */
+                    R.string.drawer_close /* "close drawer" description */
+            ) {
 
-				/**
-				 * Called when a drawer has settled in a completely closed
-				 * state.
-				 */
-				public void onDrawerClosed(View view) {
-					super.onDrawerClosed(view);
-					getActionBar().setTitle(R.string.drawer_open);
-				}
+                /**
+                 * Called when a drawer has settled in a completely closed
+                 * state.
+                 */
+                public void onDrawerClosed(View view) {
+                    super.onDrawerClosed(view);
+                    getActionBar().setTitle(R.string.drawer_open);
+                }
 
-				/** Called when a drawer has settled in a completely open state. */
-				public void onDrawerOpened(View drawerView) {
-					super.onDrawerOpened(drawerView);
-					getActionBar().setTitle(R.string.drawer_close);
-				}
-			};
+                /** Called when a drawer has settled in a completely open state. */
+                public void onDrawerOpened(View drawerView) {
+                    super.onDrawerOpened(drawerView);
+                    getActionBar().setTitle(R.string.drawer_close);
+                }
+            };
 
-			// Set the drawer toggle as the DrawerListener
-			drawerLayout.setDrawerListener(drawerToggle);
-			getActionBar().setDisplayHomeAsUpEnabled(true);
-		}
+            // Set the drawer toggle as the DrawerListener
+            drawerLayout.setDrawerListener(drawerToggle);
+            getActionBar().setDisplayHomeAsUpEnabled(true);
+        }
 
-		getActionBar().setHomeButtonEnabled(true);
-		getActionBar().setTitle(R.string.drawer_open);
-	}
+        getActionBar().setHomeButtonEnabled(true);
+        getActionBar().setTitle(R.string.drawer_open);
+    }
 
-	@Override
-	protected void onPostCreate(Bundle savedInstanceState) {
-		super.onPostCreate(savedInstanceState);
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
 
-		// Sync the toggle state after onRestoreInstanceState has occurred.
-		if (isSmartphone()) {
-			drawerToggle.syncState();
+        // Sync the toggle state after onRestoreInstanceState has occurred.
+        if (isSmartphone()) {
+            drawerToggle.syncState();
 
-			openDrawer();
-		}
+            openDrawer();
+        }
 
-		if (findViewById(R.id.search_input) != null) {
-			searchView = (SearchView) findViewById(R.id.search_input);
-			searchView.setOnQueryTextListener(textListener);
-		}
+        if (findViewById(R.id.search_input) != null) {
+            searchView = (SearchView) findViewById(R.id.search_input);
+            searchView.setOnQueryTextListener(textListener);
+        }
 
-		if (currentSearch == null) {
-			currentSearch = new SearchOptions();
-		}
+        if (currentSearch == null) {
+            currentSearch = new SearchOptions();
+        }
 
-		if (isRestored) {
-			currentSearch.setAppend(false);
-		}
-		if (!hasDeviceRotated) {
-			String resultAsString = getIntent().getStringExtra(CARD_RESULT);
-			if (resultAsString != null && !isRestored) {
-				new UIUpdater(this, resultAsString, getObjectMapper())
-						.execute();
-			} else {
-				new SearchProcessor(this, currentSearch,
-						R.string.loading_initial).execute();
-			}
-		} else {
-			hasDeviceRotated = false;
-		}
-	}
+        if (isRestored) {
+            currentSearch.setAppend(false);
+        }
+        if (!hasDeviceRotated) {
+            String resultAsString = getIntent().getStringExtra(CARD_RESULT);
+            if (resultAsString != null && !isRestored) {
+                new UIUpdater(this, resultAsString, getObjectMapper())
+                        .execute();
+            } else {
+                new SearchProcessor(this, currentSearch,
+                        R.string.loading_initial).execute();
+            }
+        } else {
+            hasDeviceRotated = false;
+        }
+    }
 
-	private void openDrawer() {
-		if (isSmartphone()) {
-			new Handler().postDelayed(openDrawerRunnable(), DRAWER_DELAY);
-		}
-	}
+    private void openDrawer() {
+        if (isSmartphone()) {
+            new Handler().postDelayed(openDrawerRunnable(), DRAWER_DELAY);
+        }
+    }
 
-	private Runnable openDrawerRunnable() {
-		return new Runnable() {
-			@Override
-			public void run() {
-				drawerLayout.openDrawer(Gravity.START);
-			}
-		};
-	}
+    private Runnable openDrawerRunnable() {
+        return new Runnable() {
+            @Override
+            public void run() {
+                drawerLayout.openDrawer(Gravity.START);
+            }
+        };
+    }
 
-	/**
-	 * Callback method from {@link CardListFragment.Callbacks} indicating that
-	 * the item with the given ID was selected.
-	 */
-	@Override
-	public void onItemSelected(Parcelable card) {
-		currentCard = (Card) card;
-		if (isTablet()) {
-			replaceFragment(new CardDetailFragment(),
-					R.id.card_detail_container, getCurrentCardBundle());
+    /**
+     * Callback method from {@link CardListFragment.Callbacks} indicating that
+     * the item with the given ID was selected.
+     */
+    @Override
+    public void onItemSelected(Parcelable card) {
+        currentCard = (Card) card;
+        if (isTablet()) {
+            replaceFragment(new CardDetailFragment(),
+                    R.id.card_detail_container, getCurrentCardBundle());
 
-			getTitleTextView().setText(
-					CardDetailActivity.formatTitle(this, currentCard));
+            getTitleTextView().setText(
+                    CardDetailActivity.formatTitle(this, currentCard));
 
-			if (menu != null) {
-				menu.findItem(R.id.pictures_tab).setVisible(true);
-				menu.findItem(R.id.oracle_tab).setVisible(false);
-			}
+            if (menu != null) {
+                menu.findItem(R.id.pictures_tab).setVisible(true);
+                menu.findItem(R.id.oracle_tab).setVisible(false);
+            }
 
-			
-			ImageButton button = (ImageButton) findViewById(R.id.array_adapter_buy_button);
-			button.setEnabled(true);
-			final String searchTerm = "mtg " + currentCard.getTitle();
-			button.setOnClickListener(new View.OnClickListener() {
 
-				public void onClick(View view) {
-					OpenSearchPageRequest request = new OpenSearchPageRequest(
-							searchTerm);
-					try {
-						LinkService linkService = AssociatesAPI.getLinkService();
-						linkService.openRetailPage(request);
-					} catch (NotInitializedException e) {
-						e.printStackTrace();
-					}
-				}
-			});
-			
-		} else {
-			Intent intent = new Intent(this, CardDetailActivity.class);
-			intent.putExtra(CARD, card);
-			startActivity(intent);
-		}
-	}
+            ImageButton button = (ImageButton) findViewById(R.id.array_adapter_buy_button);
+            button.setEnabled(true);
+            final String searchTerm = "mtg " + currentCard.getTitle();
+            button.setOnClickListener(new View.OnClickListener() {
 
-	@Override
-	public void onItemSelected(int id) {
-		if (isTablet()) {
-			Bundle bundle = getCurrentCardBundle();
-			// first element is a card
-			bundle.putInt(POSITION, id - 1);
+                public void onClick(View view) {
+                    OpenSearchPageRequest request = new OpenSearchPageRequest(
+                            searchTerm);
+                    try {
+                        LinkService linkService = AssociatesAPI.getLinkService();
+                        linkService.openRetailPage(request);
+                    } catch (NotInitializedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
 
-			replaceFragment(new CardPagerFragment(),
-					R.id.card_detail_container, bundle);
+        } else {
+            Intent intent = new Intent(this, CardDetailActivity.class);
+            intent.putExtra(CARD, card);
+            startActivity(intent);
+        }
+    }
 
-			if (menu != null) {
-				menu.findItem(R.id.pictures_tab).setVisible(false);
-				menu.findItem(R.id.oracle_tab).setVisible(true);
-			}
-		} else {
-			Intent intent = new Intent(this, CardPagerActivity.class);
-			intent.putExtra(CARD, currentCard);
-			// first element is a card
-			intent.putExtra(POSITION, id - 1);
-			startActivity(intent);
-		}
-	}
+    @Override
+    public void onItemSelected(int id) {
+        if (isTablet()) {
+            Bundle bundle = getCurrentCardBundle();
+            // first element is a card
+            bundle.putInt(POSITION, id - 1);
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		this.menu = menu;
+            replaceFragment(new CardPagerFragment(),
+                    R.id.card_detail_container, bundle);
 
-		MenuInflater inflater = getMenuInflater();
+            if (menu != null) {
+                menu.findItem(R.id.pictures_tab).setVisible(false);
+                menu.findItem(R.id.oracle_tab).setVisible(true);
+            }
+        } else {
+            Intent intent = new Intent(this, CardPagerActivity.class);
+            intent.putExtra(CARD, currentCard);
+            // first element is a card
+            intent.putExtra(POSITION, id - 1);
+            startActivity(intent);
+        }
+    }
 
-		// FIXME : faire comme le layout (refs.xml)
-		if (isTablet()) {
-			inflater.inflate(R.menu.card_twopane_menu, menu);
-		} else {
-			inflater.inflate(R.menu.card_list_menu, menu);
-		}
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        this.menu = menu;
 
-		if (isTablet()) {
-			searchView = new SearchView(this);
-			searchView.setIconifiedByDefault(false);
-			searchView.setOnQueryTextListener(textListener);
-			searchView.setQueryHint(getString(R.string.search_hint));
-			menu.findItem(R.id.search_tab).setActionView(searchView);
-		}
+        MenuInflater inflater = getMenuInflater();
 
-		return true;
-	}
+        // FIXME : faire comme le layout (refs.xml)
+        if (isTablet()) {
+            inflater.inflate(R.menu.card_twopane_menu, menu);
+        } else {
+            inflater.inflate(R.menu.card_list_menu, menu);
+        }
 
-	@Override
-	public void onConfigurationChanged(Configuration newConfig) {
-		super.onConfigurationChanged(newConfig);
-		if (isSmartphone()) {
-			drawerToggle.onConfigurationChanged(newConfig);
-		}
-		hasDeviceRotated = true;
-	}
+        if (isTablet()) {
+            searchView = new SearchView(this);
+            searchView.setIconifiedByDefault(false);
+            searchView.setOnQueryTextListener(textListener);
+            searchView.setQueryHint(getString(R.string.search_hint));
+            menu.findItem(R.id.search_tab).setActionView(searchView);
+        }
 
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
+        return true;
+    }
 
-		if (isSmartphone() && drawerToggle.onOptionsItemSelected(item)) {
-			return true;
-		}
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        if (isSmartphone()) {
+            drawerToggle.onConfigurationChanged(newConfig);
+        }
+        hasDeviceRotated = true;
+    }
 
-		switch (item.getItemId()) {
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
 
-		// FIXME : afficher le numéro de version
-		/*
+        if (isSmartphone() && drawerToggle.onOptionsItemSelected(item)) {
+            return true;
+        }
+
+        switch (item.getItemId()) {
+
+            // FIXME : afficher le numéro de version
+        /*
 		 * case android.R.id.home: String version = "Version " +
 		 * VersionUtils.getAppVersion(this); makeText(this, version,
 		 * LENGTH_SHORT).show(); return true;
 		 */
 
-		case R.id.pictures_tab:
-			if (isTablet()) {
-				replaceFragment(new CardPagerFragment(),
-						R.id.card_detail_container, getCurrentCardBundle());
+            case R.id.pictures_tab:
+                if (isTablet()) {
+                    replaceFragment(new CardPagerFragment(),
+                            R.id.card_detail_container, getCurrentCardBundle());
 
-				item.setVisible(false);
-				menu.findItem(R.id.oracle_tab).setVisible(true);
-			} else {
-				Intent intent = new Intent(this, CardPagerActivity.class);
-				intent.putExtra(CARD, currentCard);
-				startActivity(intent);
-			}
-			return true;
+                    item.setVisible(false);
+                    menu.findItem(R.id.oracle_tab).setVisible(true);
+                } else {
+                    Intent intent = new Intent(this, CardPagerActivity.class);
+                    intent.putExtra(CARD, currentCard);
+                    startActivity(intent);
+                }
+                return true;
 
-		case R.id.buy_tab:
-			AmazonUtils.openSearch(this, currentCard);
-			return true;
+            case R.id.buy_tab:
+                AmazonUtils.openSearch(this, currentCard);
+                return true;
 
-		case R.id.oracle_tab:
-			replaceFragment(new CardDetailFragment(),
-					R.id.card_detail_container, getCurrentCardBundle());
+            case R.id.oracle_tab:
+                replaceFragment(new CardDetailFragment(),
+                        R.id.card_detail_container, getCurrentCardBundle());
 
-			getTitleTextView().setText(
-					CardDetailActivity.formatTitle(this, currentCard));
-			item.setVisible(false);
-			menu.findItem(R.id.pictures_tab).setVisible(true);
-			return true;
+                getTitleTextView().setText(
+                        CardDetailActivity.formatTitle(this, currentCard));
+                item.setVisible(false);
+                menu.findItem(R.id.pictures_tab).setVisible(true);
+                return true;
 
-		case R.id.clear_tab:
-			resetSearchView();
-			SearchOptions options = new SearchOptions().setRandom(true);
-			new SearchProcessor(this, options, R.string.loading_clear)
-					.execute();
-			openDrawer();
-			return true;
+            case R.id.clear_tab:
+                resetSearchView();
+                SearchOptions options = new SearchOptions().setRandom(true);
+                new SearchProcessor(this, options, R.string.loading_clear)
+                        .execute();
+                openDrawer();
+                return true;
 
-		case R.id.history_tab:
-			Intent historyIntent = new Intent(this, HistoryActivity.class);
-			startActivity(historyIntent);
-			return true;
+            case R.id.history_tab:
+                Intent historyIntent = new Intent(this, HistoryActivity.class);
+                startActivity(historyIntent);
+                return true;
 
-		case R.id.help_tab:
-			Intent helpIntent = new Intent(this, HelpActivity.class);
-			startActivity(helpIntent);
-			return true;
-		}
+            case R.id.help_tab:
+                Intent helpIntent = new Intent(this, HelpActivity.class);
+                startActivity(helpIntent);
+                return true;
+        }
 
-		return super.onOptionsItemSelected(item);
-	}
+        return super.onOptionsItemSelected(item);
+    }
 
-	private Bundle getCurrentCardBundle() {
-		Bundle bundle = new Bundle();
-		bundle.putParcelable(CARD, currentCard);
-		return bundle;
-	}
+    private Bundle getCurrentCardBundle() {
+        Bundle bundle = new Bundle();
+        bundle.putParcelable(CARD, currentCard);
+        return bundle;
+    }
 
-	private void resetSearchView() {
-		// buggy
-		MenuItem menuItem = menu.findItem(R.id.search_tab);
-		if (menuItem != null) {
-			menuItem.collapseActionView();
-		}
-		searchView.setIconified(true);
-		if (menuItem != null) {
-			menuItem.collapseActionView();
-		}
-		searchView.setIconified(true);
-		searchView.setQuery("", false);
-	}
+    private void resetSearchView() {
+        // buggy
+        MenuItem menuItem = menu.findItem(R.id.search_tab);
+        if (menuItem != null) {
+            menuItem.collapseActionView();
+        }
+        searchView.setIconified(true);
+        if (menuItem != null) {
+            menuItem.collapseActionView();
+        }
+        searchView.setIconified(true);
+        searchView.setQuery("", false);
+    }
 
-	@Override
-	protected void onSaveInstanceState(Bundle outState) {
-		super.onSaveInstanceState(outState);
-		outState.putParcelable(CURRENT_SEARCH, currentSearch);
-		Log.d(getClass().getName(), "onSaveInstanceState " + outState);
-	}
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelable(CURRENT_SEARCH, currentSearch);
+        Log.d(getClass().getName(), "onSaveInstanceState " + outState);
+    }
 
-	public View getCardView() {
-		return findViewById(R.id.card_list);
-	}
+    public View getCardView() {
+        return findViewById(R.id.card_list);
+    }
 
-	public View getPicturesView() {
-		return findViewById(R.id.pictures_layout);
-	}
+    public View getPicturesView() {
+        return findViewById(R.id.pictures_layout);
+    }
 
-	private TextView getTitleTextView() {
-		return (TextView) findViewById(R.id.card_detail_title);
-	}
+    private TextView getTitleTextView() {
+        return (TextView) findViewById(R.id.card_detail_title);
+    }
 
-	public TextListener getTextListener() {
-		return textListener;
-	}
+    public TextListener getTextListener() {
+        return textListener;
+    }
 
-	public void setTextListener(TextListener textListener) {
-		this.textListener = textListener;
-	}
+    public void setTextListener(TextListener textListener) {
+        this.textListener = textListener;
+    }
 
-	public EndScrollListener getEndScrollListener() {
-		return endScrollListener;
-	}
+    public EndScrollListener getEndScrollListener() {
+        return endScrollListener;
+    }
 
-	public void setEndScrollListener(EndScrollListener endScrollListener) {
-		this.endScrollListener = endScrollListener;
-	}
+    public void setEndScrollListener(EndScrollListener endScrollListener) {
+        this.endScrollListener = endScrollListener;
+    }
 
-	public SearchOptions getCurrentSearch() {
-		return currentSearch;
-	}
+    public SearchOptions getCurrentSearch() {
+        return currentSearch;
+    }
 
-	public void setCurrentSearch(SearchOptions currentSearch) {
-		this.currentSearch = currentSearch;
-	}
+    public void setCurrentSearch(SearchOptions currentSearch) {
+        this.currentSearch = currentSearch;
+    }
 
-	public SearchView getSearchView() {
-		return searchView;
-	}
+    public SearchView getSearchView() {
+        return searchView;
+    }
 
-	public int getTotalCardCount() {
-		return totalCardCount;
-	}
+    public int getTotalCardCount() {
+        return totalCardCount;
+    }
 
-	public void setTotalCardCount(int totalCardCount) {
-		this.totalCardCount = totalCardCount;
-	}
+    public void setTotalCardCount(int totalCardCount) {
+        this.totalCardCount = totalCardCount;
+    }
 
-	public Toast getLoadingToast() {
-		return loadingToast;
-	}
+    public Toast getLoadingToast() {
+        return loadingToast;
+    }
 
-	public void setLoadingToast(Toast loadingToast) {
-		this.loadingToast = loadingToast;
-	}
+    public void setLoadingToast(Toast loadingToast) {
+        this.loadingToast = loadingToast;
+    }
 }
