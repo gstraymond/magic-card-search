@@ -6,6 +6,7 @@ import fr.gstraymond.R;
 import fr.gstraymond.biz.ApplicationLoader;
 import fr.gstraymond.biz.SearchOptions;
 import fr.gstraymond.biz.SplashProcessor;
+import fr.gstraymond.db.HistoryDataSource;
 import fr.gstraymond.search.model.response.SearchResult;
 import fr.gstraymond.tools.MapperUtil;
 
@@ -17,6 +18,10 @@ public class SplashScreen extends CustomActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_splash);
+		
+		// TODO : remove me !!
+		//HistoryDataSource historyDataSource = new HistoryDataSource(this);
+		//historyDataSource.clearHistory();
 
 		mapperUtil = new MapperUtil<Object>(getObjectMapper(), Object.class);
 		

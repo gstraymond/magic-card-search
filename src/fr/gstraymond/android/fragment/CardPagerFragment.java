@@ -1,4 +1,4 @@
-package fr.gstraymond.android;
+package fr.gstraymond.android.fragment;
 
 import static fr.gstraymond.constants.Consts.CARD;
 import static fr.gstraymond.constants.Consts.POSITION;
@@ -10,8 +10,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import fr.gstraymond.R;
 import fr.gstraymond.search.model.response.Card;
-import fr.gstraymond.ui.CardPagerAdapter;
 import fr.gstraymond.ui.CardViewPager;
+import fr.gstraymond.ui.adapter.CardPagerAdapter;
 
 public class CardPagerFragment extends Fragment {
 	

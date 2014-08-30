@@ -2,7 +2,6 @@ package fr.gstraymond.android;
 
 import static fr.gstraymond.constants.Consts.CARD;
 import static fr.gstraymond.constants.Consts.POSITION;
-import android.app.Fragment;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -27,6 +26,10 @@ import com.amazon.device.associates.NotInitializedException;
 import com.amazon.device.associates.OpenSearchPageRequest;
 
 import fr.gstraymond.R;
+import fr.gstraymond.android.fragment.CardDetailFragment;
+import fr.gstraymond.android.fragment.CardListFragment;
+import fr.gstraymond.android.fragment.CardPagerFragment;
+import fr.gstraymond.android.fragment.CardParentListFragment;
 import fr.gstraymond.android.tools.amazon.AmazonUtils;
 import fr.gstraymond.biz.SearchOptions;
 import fr.gstraymond.biz.SearchProcessor;
@@ -322,6 +325,11 @@ public class CardListActivity extends CustomActivity implements
 			openDrawer();
 			return true;
 
+		case R.id.history_tab:
+			Intent historyIntent = new Intent(this, HistoryActivity.class);
+			startActivity(historyIntent);
+			return true;
+
 		case R.id.help_tab:
 			Intent helpIntent = new Intent(this, HelpActivity.class);
 			startActivity(helpIntent);
@@ -356,17 +364,6 @@ public class CardListActivity extends CustomActivity implements
 		super.onSaveInstanceState(outState);
 		outState.putParcelable(CURRENT_SEARCH, currentSearch);
 		Log.d(getClass().getName(), "onSaveInstanceState " + outState);
-	}
-
-	private void replaceFragment(Fragment fragment, int id) {
-		replaceFragment(fragment, id, null);
-	}
-
-	private void replaceFragment(Fragment fragment, int id, Bundle bundle) {
-		if (bundle != null) {
-			fragment.setArguments(bundle);
-		}
-		getFragmentManager().beginTransaction().replace(id, fragment).commit();
 	}
 
 	public View getCardView() {

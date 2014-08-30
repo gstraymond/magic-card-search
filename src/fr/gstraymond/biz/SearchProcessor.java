@@ -9,8 +9,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import fr.gstraymond.R;
 import fr.gstraymond.android.CardListActivity;
-import fr.gstraymond.android.CardListFragment;
 import fr.gstraymond.android.CustomApplication;
+import fr.gstraymond.android.fragment.CardListFragment;
 import fr.gstraymond.search.model.response.SearchResult;
 
 public class SearchProcessor extends AsyncTask<Void, Void, SearchResult> {

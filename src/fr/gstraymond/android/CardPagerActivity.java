@@ -4,6 +4,7 @@ import static fr.gstraymond.constants.Consts.POSITION;
 import android.app.Fragment;
 import android.os.Bundle;
 import fr.gstraymond.R;
+import fr.gstraymond.android.fragment.CardPagerFragment;
 
 public class CardPagerActivity extends CardCommonActivy {
 

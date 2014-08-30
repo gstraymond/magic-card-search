@@ -1,4 +1,4 @@
-package fr.gstraymond.ui;
+package fr.gstraymond.ui.adapter;
 
 import java.util.List;
 
@@ -22,6 +22,7 @@ import fr.gstraymond.tools.DescriptionFormatter;
 import fr.gstraymond.tools.FormatFormatter;
 import fr.gstraymond.tools.PowerToughnessFormatter;
 import fr.gstraymond.tools.TypeFormatter;
+import fr.gstraymond.ui.CastingCostAssetLoader;
 
 
 public class SetArrayAdapter extends ArrayAdapter<Object> {

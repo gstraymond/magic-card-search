@@ -9,6 +9,7 @@
     <string name="list_menu_clear">Effacer la recherche</string>
     <string name="list_menu_search">Recherche</string>
     <string name="list_menu_help">A l\'aide !</string>
+    <string name="list_menu_history">Recherches récentes</string>
     
     <string name="detail_menu_oracle">Texte</string>
     <string name="detail_menu_pictures">Images</string>

@@ -8,6 +8,7 @@ import fr.gstraymond.android.CardListActivity;
 import fr.gstraymond.biz.SearchOptions;
 import fr.gstraymond.biz.SearchProcessor;
 import fr.gstraymond.search.model.response.facet.Term;
+import fr.gstraymond.ui.adapter.FacetListAdapter;
 
 public class FacetOnChildClickListener implements OnChildClickListener {
 

@@ -1,4 +1,4 @@
-package fr.gstraymond.android;
+package fr.gstraymond.android.fragment;
 
 import android.app.Fragment;
 import android.os.Bundle;

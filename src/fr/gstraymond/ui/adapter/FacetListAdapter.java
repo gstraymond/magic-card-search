@@ -1,4 +1,4 @@
-package fr.gstraymond.ui;
+package fr.gstraymond.ui.adapter;
 
 import java.util.ArrayList;
 import java.util.List;

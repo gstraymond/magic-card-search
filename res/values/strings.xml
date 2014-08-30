@@ -12,6 +12,7 @@
     <string name="list_menu_clear">Clear search</string>
     <string name="list_menu_search">Search</string>
     <string name="list_menu_help">Help !</string>
+    <string name="list_menu_history">Recent search</string>
     
     <string name="detail_menu_oracle">Text</string>
     <string name="detail_menu_pictures">Pictures</string>

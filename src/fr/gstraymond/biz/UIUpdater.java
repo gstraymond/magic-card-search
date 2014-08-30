@@ -15,13 +15,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import fr.gstraymond.R;
 import fr.gstraymond.android.CardListActivity;
-import fr.gstraymond.android.CardListFragment;
+import fr.gstraymond.android.fragment.CardListFragment;
 import fr.gstraymond.search.model.response.Card;
 import fr.gstraymond.search.model.response.Hit;
 import fr.gstraymond.search.model.response.SearchResult;
 import fr.gstraymond.tools.MapperUtil;
-import fr.gstraymond.ui.FacetListAdapter;
 import fr.gstraymond.ui.FacetOnChildClickListener;
+import fr.gstraymond.ui.adapter.FacetListAdapter;
 
 public class UIUpdater extends AsyncTask<Void, Void, SearchResult> {
 	
@@ -79,7 +79,7 @@ public class UIUpdater extends AsyncTask<Void, Void, SearchResult> {
 		} else {
 			Bundle bundle = new Bundle();
 			bundle.putParcelableArrayList(CARD_LIST, cards);
-			CardListFragment fragment = new CardListFragment();
+			Fragment fragment = new CardListFragment();
 			fragment.setArguments(bundle);
 			getFragmentManager().beginTransaction().replace(R.id.card_list, fragment).commit();
 			

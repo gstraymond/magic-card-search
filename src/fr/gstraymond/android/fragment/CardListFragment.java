@@ -1,4 +1,4 @@
-package fr.gstraymond.android;
+package fr.gstraymond.android.fragment;
 
 import static fr.gstraymond.constants.Consts.CARD_LIST;
 
@@ -11,9 +11,11 @@ import android.os.Parcelable;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import fr.gstraymond.android.CardListActivity;
+import fr.gstraymond.android.CustomApplication;
 import fr.gstraymond.search.model.response.Card;
-import fr.gstraymond.ui.CardArrayAdapter;
 import fr.gstraymond.ui.CastingCostAssetLoader;
+import fr.gstraymond.ui.adapter.CardArrayAdapter;
 
 public class CardListFragment extends ListFragment {
 

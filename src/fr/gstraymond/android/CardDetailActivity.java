@@ -11,6 +11,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.TextView;
 import fr.gstraymond.R;
+import fr.gstraymond.android.fragment.CardDetailFragment;
+import fr.gstraymond.android.fragment.CardPagerFragment;
 import fr.gstraymond.android.tools.amazon.AmazonUtils;
 import fr.gstraymond.search.model.response.Card;
 import fr.gstraymond.tools.LanguageUtil;

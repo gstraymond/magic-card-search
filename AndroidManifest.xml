@@ -58,6 +58,12 @@
             android:name="fr.gstraymond.android.HelpActivity"
             android:label="@string/list_menu_help" >
         </activity>
+
+        <!-- History -->
+        <activity
+            android:name="fr.gstraymond.android.HistoryActivity"
+            android:label="@string/list_menu_history" >
+        </activity>
     </application>
 
 </manifest>

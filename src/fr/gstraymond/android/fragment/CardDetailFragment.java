@@ -1,4 +1,4 @@
-package fr.gstraymond.android;
+package fr.gstraymond.android.fragment;
 
 import static fr.gstraymond.constants.Consts.CARD;
 
@@ -12,7 +12,7 @@ import android.view.View;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import fr.gstraymond.search.model.response.Card;
-import fr.gstraymond.ui.SetArrayAdapter;
+import fr.gstraymond.ui.adapter.SetArrayAdapter;
 
 public class CardDetailFragment extends ListFragment {
 

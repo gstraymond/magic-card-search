@@ -6,6 +6,10 @@
         android:showAsAction="ifRoom"
         android:title="@string/list_menu_clear"/>
     <item
+        android:id="@+id/history_tab"
+        android:showAsAction="ifRoom"
+        android:title="@string/list_menu_history"/>
+    <item
         android:id="@+id/help_tab"
         android:icon="@drawable/info"
         android:showAsAction="ifRoom"

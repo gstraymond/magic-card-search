@@ -16,7 +16,7 @@ import android.widget.ProgressBar;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import fr.gstraymond.android.CustomApplication;
-import fr.gstraymond.db.CardHistoryDataSource;
+import fr.gstraymond.db.HistoryDataSource;
 import fr.gstraymond.search.model.request.Request;
 import fr.gstraymond.search.model.response.SearchResult;
 import fr.gstraymond.tools.DisplaySizeUtil;
@@ -65,8 +65,8 @@ public class ElasticSearchClient {
 			
 			// historique
 			if (options.isRandom() == false) {
-				CardHistoryDataSource cardHistoryDataSource = new CardHistoryDataSource(application);
-				cardHistoryDataSource.appendHistory(options.getQuery());	
+				HistoryDataSource historyDataSource = new HistoryDataSource(application);
+				historyDataSource.appendHistory(options.getQuery());	
 			}
 			
 			return parse(content, progressBar);

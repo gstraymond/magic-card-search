@@ -1,4 +1,4 @@
-package fr.gstraymond.ui;
+package fr.gstraymond.ui.adapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,6 +11,7 @@ import android.widget.ArrayAdapter;
 import fr.gstraymond.R;
 import fr.gstraymond.api.ui.view.DisplayableView;
 import fr.gstraymond.search.model.response.Card;
+import fr.gstraymond.ui.CastingCostAssetLoader;
 import fr.gstraymond.ui.view.impl.CastingCostView;
 import fr.gstraymond.ui.view.impl.DescriptionView;
 import fr.gstraymond.ui.view.impl.PositionView;

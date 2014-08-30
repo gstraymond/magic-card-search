@@ -7,8 +7,8 @@ import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
 import android.widget.TextView;
 import fr.gstraymond.R;
-import fr.gstraymond.android.CardPagerFragment;
 import fr.gstraymond.android.CustomApplication;
+import fr.gstraymond.android.fragment.CardPagerFragment;
 import fr.gstraymond.search.model.response.Card;
 import fr.gstraymond.search.model.response.Publication;
 
