@@ -11,3 +11,5 @@ gradle/
 gradlew
 import-summary.txt
 app/app.iml
+.gradle
+.idea
