@@ -8,18 +8,20 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
-public class SearchOptions implements Parcelable {
+import fr.gstraymond.android.CustomParcelable;
+
+public class SearchOptions extends CustomParcelable {
 
     public static final String QUERY_ALL = "*";
 
     private String query = QUERY_ALL;
     private boolean append = false;
     private boolean random = false;
+    private boolean addToHistory = true;
     private int from = 0;
     private int size = 30;
-    private Map<String, List<String>> facets = new HashMap<String, List<String>>();
+    private Facets facets = new Facets();
     private Map<String, Integer> facetSize = new HashMap<String, Integer>();
 
 
@@ -37,37 +39,13 @@ public class SearchOptions implements Parcelable {
 
     public SearchOptions(Parcel source) {
         query = source.readString();
-        append = source.readInt() == 0 ? true : false;
-        random = source.readInt() == 0 ? true : false;
+        append = source.readInt() == 0;
+        random = source.readInt() == 0;
         from = source.readInt();
         size = source.readInt();
-        facets = readMap(source);
+        facets = readFacets(source);
         // facetSize : pas de persistence de la taille des facettes
-    }
-
-    private Map<String, List<String>> readMap(Parcel source) {
-        Map<String, List<String>> facets = new HashMap<String, List<String>>();
-        String facetsAsString = source.readString();
-
-        if (facetsAsString == null || facetsAsString.isEmpty()) {
-            return facets;
-        }
-
-        String[] firstSplit = facetsAsString.split("\\|");
-        for (String facet : firstSplit) {
-            String[] keyValues = facet.split("=");
-            String key = keyValues[0];
-
-            String valuesAsString = keyValues[1];
-            String[] secondSplit = valuesAsString.split(",");
-            List<String> values = new ArrayList<String>();
-            for (String value : secondSplit) {
-                values.add(value);
-            }
-
-            facets.put(key, values);
-        }
-        return facets;
+        // addToHistory : pas de persistence de l'ajout à l'historique
     }
 
     public SearchOptions() {
@@ -85,27 +63,9 @@ public class SearchOptions implements Parcelable {
         dest.writeInt(random ? 0 : 1);
         dest.writeInt(from);
         dest.writeInt(size);
-        writeMap(dest, facets);
+        writeFacets(dest, facets);
         // facetSize : pas de persistence de la taille des facettes
-    }
-
-    private void writeMap(Parcel dest, Map<String, List<String>> facets) {
-        StringBuilder facetsAsString = new StringBuilder();
-        String firstSep = "";
-        for (Entry<String, List<String>> entry : facets.entrySet()) {
-            facetsAsString.append(firstSep);
-            facetsAsString.append(entry.getKey());
-            facetsAsString.append("=");
-            String secondSep = "";
-            for (String value : entry.getValue()) {
-                facetsAsString.append(secondSep);
-                facetsAsString.append(value);
-                secondSep = ",";
-            }
-            firstSep = "|";
-        }
-
-        dest.writeString(facetsAsString.toString());
+        // addToHistory : pas de persistence de l'ajout à l'historique
     }
 
     public String getQuery() {
@@ -189,12 +149,21 @@ public class SearchOptions implements Parcelable {
         return this;
     }
 
-    public Map<String, List<String>> getFacets() {
+    public Facets getFacets() {
         return facets;
     }
 
-    public SearchOptions setFacets(Map<String, List<String>> facets) {
+    public SearchOptions setFacets(Facets facets) {
         this.facets = facets;
+        return this;
+    }
+
+    public boolean isAddToHistory() {
+        return addToHistory;
+    }
+
+    public SearchOptions setAddToHistory(boolean addToHistory) {
+        this.addToHistory = addToHistory;
         return this;
     }
 
@@ -212,6 +181,7 @@ public class SearchOptions implements Parcelable {
                 "query:" + query + "," +
                 "append:" + append + "," +
                 "random:" + random + "," +
+                "addToHistory:" + addToHistory + "," +
                 "from:" + from + "," +
                 "size:" + size + "," +
                 "facets:" + facets + "]" + "," +

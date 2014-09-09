@@ -93,7 +93,6 @@ public class Card implements Parcelable {
         this.castingCost = castingCost;
     }
 
-
     public String getFrenchTitle() {
         return frenchTitle;
     }

@@ -12,6 +12,8 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
+import fr.gstraymond.biz.SearchOptions;
+
 public class HistoryDataSource {
 
     private static final String FILENAME = "history";
@@ -22,8 +24,8 @@ public class HistoryDataSource {
         this.context = context;
     }
 
-    public void appendHistory(String query) {
-        History history = new History(getLastId() + 1, query, false);
+    public void appendHistory(SearchOptions options) {
+        History history = new History(getLastId() + 1, options.getQuery(), false, options.getFacets());
         try {
             FileOutputStream fos = context.openFileOutput(FILENAME, Context.MODE_APPEND);
             fos.write((history.toString() + "\n").getBytes());

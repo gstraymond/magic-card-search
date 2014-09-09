@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import fr.gstraymond.biz.Facets;
 import fr.gstraymond.biz.SearchOptions;
 
 public class Bool {
@@ -21,7 +22,7 @@ public class Bool {
             must.add(new QueryString(options));
         }
 
-        Map<String, List<String>> facets = options.getFacets();
+        Facets facets = options.getFacets();
         for (Entry<String, List<String>> entry : facets.entrySet()) {
             for (String term : entry.getValue()) {
                 Map<String, String> termMap = new HashMap<String, String>();

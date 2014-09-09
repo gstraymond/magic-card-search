@@ -33,7 +33,7 @@ public class EndScrollListener implements OnScrollListener {
             boolean allCardsLoaded = totalCount == cardListCount;
             if (!allCardsLoaded) {
                 Log.i(this.getClass().getName(), "onScroll - endReached");
-                SearchOptions options = activity.getCurrentSearch().setAppend(true);
+                SearchOptions options = activity.getCurrentSearch().setAppend(true).setAddToHistory(false);
                 showLoadingToast();
                 new SearchProcessor(activity, options, R.string.loading_more).execute();
             }

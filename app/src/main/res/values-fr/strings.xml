@@ -15,6 +15,9 @@
     <string name="detail_menu_pictures">Images</string>
     <string name="detail_buy_amazon">Acheter sur Amazon</string>
 
+    <string name="history_menu_clear">Effacer les recherches</string>
+    <string name="history_empty">Pas de recherche récente</string>
+
     <string name="search_hint">anneau solaire, draw, sacrifice…</string>
     <string name="failed_search">Ouch, la recherche est cassée ! Connecté à internet ?</string>
 

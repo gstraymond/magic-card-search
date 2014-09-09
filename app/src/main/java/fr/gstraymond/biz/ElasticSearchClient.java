@@ -64,9 +64,9 @@ public class ElasticSearchClient {
             InputStream content = getInputStream(response);
 
             // historique
-            if (options.isRandom() == false) {
-                HistoryDataSource historyDataSource = new HistoryDataSource(application);
-                historyDataSource.appendHistory(options.getQuery());
+            if (options.isAddToHistory()) {
+                Log.w(getClass().getName(), "add to history : " + options);
+                new HistoryDataSource(application).appendHistory(options);
             }
 
             return parse(content, progressBar);

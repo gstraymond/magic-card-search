@@ -19,20 +19,19 @@ public class SearchProcessor extends AsyncTask<Void, Void, SearchResult> {
 
     private CardListActivity activity;
     private ProgressBar progressBar;
-    private TextView welcomeTextView;
 
-    private SearchOptions options = new SearchOptions();
+    private SearchOptions options;
 
     public SearchProcessor(CardListActivity activity, SearchOptions options, int loadingText) {
         super();
         this.activity = activity;
         this.progressBar = getProgressBar();
-        this.welcomeTextView = getWelcomeTextView();
         this.options = options;
 
         disableSearch();
         storeCurrentSearch(options);
 
+        TextView welcomeTextView = getWelcomeTextView();
         welcomeTextView.setText(activity.getString(loadingText));
         progressBar.setProgress(0);
     }

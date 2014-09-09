@@ -151,8 +151,7 @@ public class CardListActivity extends CustomActivity implements
                 new UIUpdater(this, resultAsString, getObjectMapper())
                         .execute();
             } else {
-                new SearchProcessor(this, currentSearch,
-                        R.string.loading_initial).execute();
+                new SearchProcessor(this, currentSearch, R.string.loading_initial).execute();
             }
         } else {
             hasDeviceRotated = false;
@@ -200,8 +199,7 @@ public class CardListActivity extends CustomActivity implements
             button.setOnClickListener(new View.OnClickListener() {
 
                 public void onClick(View view) {
-                    OpenSearchPageRequest request = new OpenSearchPageRequest(
-                            searchTerm);
+                    OpenSearchPageRequest request = new OpenSearchPageRequest(searchTerm);
                     try {
                         LinkService linkService = AssociatesAPI.getLinkService();
                         linkService.openRetailPage(request);
@@ -285,7 +283,7 @@ public class CardListActivity extends CustomActivity implements
 
             // FIXME : afficher le numéro de version
         /*
-		 * case android.R.id.home: String version = "Version " +
+         * case android.R.id.home: String version = "Version " +
 		 * VersionUtils.getAppVersion(this); makeText(this, version,
 		 * LENGTH_SHORT).show(); return true;
 		 */
@@ -320,7 +318,7 @@ public class CardListActivity extends CustomActivity implements
 
             case R.id.clear_tab:
                 resetSearchView();
-                SearchOptions options = new SearchOptions().setRandom(true);
+                SearchOptions options = new SearchOptions().setRandom(true).setAddToHistory(false);
                 new SearchProcessor(this, options, R.string.loading_clear)
                         .execute();
                 openDrawer();
@@ -367,14 +365,6 @@ public class CardListActivity extends CustomActivity implements
         Log.d(getClass().getName(), "onSaveInstanceState " + outState);
     }
 
-    public View getCardView() {
-        return findViewById(R.id.card_list);
-    }
-
-    public View getPicturesView() {
-        return findViewById(R.id.pictures_layout);
-    }
-
     private TextView getTitleTextView() {
         return (TextView) findViewById(R.id.card_detail_title);
     }
@@ -383,16 +373,8 @@ public class CardListActivity extends CustomActivity implements
         return textListener;
     }
 
-    public void setTextListener(TextListener textListener) {
-        this.textListener = textListener;
-    }
-
     public EndScrollListener getEndScrollListener() {
         return endScrollListener;
-    }
-
-    public void setEndScrollListener(EndScrollListener endScrollListener) {
-        this.endScrollListener = endScrollListener;
     }
 
     public SearchOptions getCurrentSearch() {

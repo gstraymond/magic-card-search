@@ -3,11 +3,9 @@ package fr.gstraymond.ui;
 
 import android.widget.SearchView.OnQueryTextListener;
 
-import java.util.List;
-import java.util.Map;
-
 import fr.gstraymond.R;
 import fr.gstraymond.android.CardListActivity;
+import fr.gstraymond.biz.Facets;
 import fr.gstraymond.biz.SearchOptions;
 import fr.gstraymond.biz.SearchProcessor;
 
@@ -28,7 +26,7 @@ public class TextListener implements OnQueryTextListener {
     @Override
     public boolean onQueryTextSubmit(String text) {
         if (canSearch) {
-            Map<String, List<String>> facets = activity.getCurrentSearch().getFacets();
+            Facets facets = activity.getCurrentSearch().getFacets();
             SearchOptions options = new SearchOptions().setQuery(text).setFacets(facets);
             new SearchProcessor(activity, options, R.string.loading_initial).execute();
         }

@@ -18,6 +18,9 @@
     <string name="detail_menu_pictures">Pictures</string>
     <string name="detail_buy_amazon">Buy on Amazon</string>
 
+    <string name="history_menu_clear">Clear searches</string>
+    <string name="history_empty">No recent search</string>
+
     <string name="search_hint">black lotus, draw, sacrifice…</string>
     <string name="failed_search">Oops, search encountered an error ! Please, check your data connection.</string>
 
