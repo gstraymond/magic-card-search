@@ -32,6 +32,7 @@ import fr.gstraymond.android.tools.amazon.AmazonUtils;
 import fr.gstraymond.biz.SearchOptions;
 import fr.gstraymond.biz.SearchProcessor;
 import fr.gstraymond.biz.UIUpdater;
+import fr.gstraymond.db.History;
 import fr.gstraymond.search.model.response.Card;
 import fr.gstraymond.ui.EndScrollListener;
 import fr.gstraymond.ui.TextListener;
@@ -45,6 +46,7 @@ public class CardListActivity extends CustomActivity implements
     private static final int DRAWER_DELAY = 1200;
     private static final String CURRENT_SEARCH = "currentSearch";
     public static final String CARD_RESULT = "result";
+    public static final int HISTORY_REQUEST_CODE = 1000;
 
     private TextListener textListener;
     private EndScrollListener endScrollListener;
@@ -326,7 +328,7 @@ public class CardListActivity extends CustomActivity implements
 
             case R.id.history_tab:
                 Intent historyIntent = new Intent(this, HistoryActivity.class);
-                startActivity(historyIntent);
+                startActivityForResult(historyIntent, HISTORY_REQUEST_CODE);
                 return true;
 
             case R.id.help_tab:
@@ -336,6 +338,22 @@ public class CardListActivity extends CustomActivity implements
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case HISTORY_REQUEST_CODE:
+                if (resultCode == RESULT_OK) {
+                    History history = data.getExtras().getParcelable("history");
+
+                    currentSearch = new SearchOptions()
+                            .setQuery(history.getQuery())
+                            .setFacets(history.getFacets())
+                            .setAddToHistory(false);
+                    new SearchProcessor(this, currentSearch, R.string.loading_initial).execute();
+                }
+                break;
+        }
     }
 
     private Bundle getCurrentCardBundle() {

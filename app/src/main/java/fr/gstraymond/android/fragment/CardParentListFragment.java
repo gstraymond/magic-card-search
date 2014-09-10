@@ -14,11 +14,7 @@ public class CardParentListFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
-        View rootView = inflater.inflate(R.layout.fragment_card_list,
-                container, false);
-
-        return rootView;
+        return inflater.inflate(R.layout.fragment_card_list, container, false);
     }
 
 }

@@ -1,8 +1,13 @@
 package fr.gstraymond.android.fragment;
 
+import android.app.Activity;
 import android.app.ListFragment;
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
 import android.widget.ListAdapter;
+import android.widget.ListView;
 import android.widget.SimpleAdapter;
 
 import java.util.ArrayList;
@@ -11,6 +16,9 @@ import java.util.List;
 import java.util.Map;
 
 import fr.gstraymond.R;
+import fr.gstraymond.android.CardListActivity;
+import fr.gstraymond.biz.SearchOptions;
+import fr.gstraymond.biz.SearchProcessor;
 import fr.gstraymond.db.History;
 import fr.gstraymond.ui.adapter.HistoryArrayAdapter;
 
@@ -21,6 +29,7 @@ public class HistoryListFragment extends ListFragment {
     public static final String EMPTY = "empty";
 
     private List<Map<String, String>> messages;
+    private ArrayList<History> allHistory;
 
     private void initEmptyMsg() {
         messages = new ArrayList<Map<String, String>>();
@@ -34,8 +43,7 @@ public class HistoryListFragment extends ListFragment {
         super.onCreate(savedInstanceState);
         initEmptyMsg();
 
-        ArrayList<History> allHistory = getArguments()
-                .getParcelableArrayList(HISTORY_LIST);
+        allHistory = getArguments().getParcelableArrayList(HISTORY_LIST);
 
         ListAdapter arrayAdapter;
         if (allHistory.isEmpty()) {
@@ -49,5 +57,18 @@ public class HistoryListFragment extends ListFragment {
         }
 
         setListAdapter(arrayAdapter);
+    }
+
+
+    @Override
+    public void onListItemClick(ListView listView, View view, int position, long id) {
+        super.onListItemClick(listView, view, position, id);
+
+        Bundle bundle = new Bundle();
+        bundle.putParcelable("history", allHistory.get(position));
+        Intent intent = new Intent();
+        intent.putExtras(bundle);
+        getActivity().setResult(Activity.RESULT_OK, intent);
+        getActivity().finish();
     }
 }

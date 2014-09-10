@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import fr.gstraymond.biz.SearchOptions;
@@ -52,6 +53,7 @@ public class HistoryDataSource {
                 Log.d(getClass().getName(), "get all history : " + history);
             }
             br.close();
+            Collections.reverse(cardHistories);
             return cardHistories;
         } catch (FileNotFoundException e) {
             Log.e(getClass().getName(), "getAllHistory", e);
@@ -68,6 +70,6 @@ public class HistoryDataSource {
         if (histories.isEmpty()) {
             return 0;
         }
-        return histories.get(histories.size() - 1).getId();
+        return histories.get(0).getId();
     }
 }

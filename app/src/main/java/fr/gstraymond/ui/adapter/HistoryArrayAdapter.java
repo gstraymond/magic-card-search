@@ -11,22 +11,26 @@ import android.widget.CheckBox;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
 import fr.gstraymond.R;
 import fr.gstraymond.biz.Facets;
+import fr.gstraymond.constants.FacetConst;
 import fr.gstraymond.db.History;
 
 
 public class HistoryArrayAdapter extends ArrayAdapter<History> {
 
     private java.text.DateFormat dateFormat;
+    private java.text.DateFormat timeFormat;
 
     public HistoryArrayAdapter(Context context, int resource,
                                int textViewResourceId, List<History> objects) {
         super(context, resource, textViewResourceId, objects);
         dateFormat = DateFormat.getLongDateFormat(context);
+        timeFormat = DateFormat.getTimeFormat(context);
     }
 
     @Override
@@ -39,14 +43,15 @@ public class HistoryArrayAdapter extends ArrayAdapter<History> {
         }
         History history = getItem(position);
 
-        CheckBox favoriteView = (CheckBox) view.findViewById(R.id.array_adapter_history_favorite);
+        //CheckBox favoriteView = (CheckBox) view.findViewById(R.id.array_adapter_history_favorite);
         TextView dateView = (TextView) view.findViewById(R.id.array_adapter_history_date);
         TextView queryView = (TextView) view.findViewById(R.id.array_adapter_history_query);
         TextView facetsView = (TextView) view.findViewById(R.id.array_adapter_history_facets);
 
-        dateView.setText(dateFormat.format(history.getDate()));
+        Date historyDate = history.getDate();
+        dateView.setText(history.getId() + ". " + /*dateFormat.format(historyDate) + " " + */timeFormat.format(historyDate));
         queryView.setText(history.getQuery());
-        favoriteView.setChecked(history.isFavorite());
+        //favoriteView.setChecked(history.isFavorite());
         facetsView.setText(formatFacets(history));
 
         return view;
@@ -58,9 +63,10 @@ public class HistoryArrayAdapter extends ArrayAdapter<History> {
             return "";
         }
 
-        List l = new ArrayList();
+        List<String> l = new ArrayList<String>();
         for (Map.Entry<String, List<String>> e : facets.entrySet()) {
-            l.add(e.getKey() + ": " + TextUtils.join(", ", e.getValue()));
+            String facetName = FacetConst.getFacetName(e.getKey(), getContext());
+            l.add(facetName + ": " + TextUtils.join(", ", e.getValue()));
         }
         return TextUtils.join("\n", l);
     }
