@@ -64,7 +64,6 @@ public class History extends CustomParcelable {
     }
 
     public History(String line) throws ParseException {
-        Log.w(getClass().getName(), "history init : " + line);
         String[] split = line.split(SEP);
         this.id = Integer.parseInt(split[0]);
         this.query = split[1];
@@ -107,5 +106,14 @@ public class History extends CustomParcelable {
 
     public Facets getFacets() {
         return facets;
+    }
+
+    public History setId(int id) {
+        this.id = id;
+        return this;
+    }
+
+    public void setFavorite(boolean favorite) {
+        this.favorite = favorite;
     }
 }

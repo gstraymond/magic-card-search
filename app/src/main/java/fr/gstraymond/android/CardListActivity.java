@@ -13,15 +13,9 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ImageButton;
 import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.amazon.device.associates.AssociatesAPI;
-import com.amazon.device.associates.LinkService;
-import com.amazon.device.associates.NotInitializedException;
-import com.amazon.device.associates.OpenSearchPageRequest;
 
 import fr.gstraymond.R;
 import fr.gstraymond.android.fragment.CardDetailFragment;
@@ -193,24 +187,6 @@ public class CardListActivity extends CustomActivity implements
                 menu.findItem(R.id.pictures_tab).setVisible(true);
                 menu.findItem(R.id.oracle_tab).setVisible(false);
             }
-
-
-            ImageButton button = (ImageButton) findViewById(R.id.array_adapter_buy_button);
-            button.setEnabled(true);
-            final String searchTerm = "mtg " + currentCard.getTitle();
-            button.setOnClickListener(new View.OnClickListener() {
-
-                public void onClick(View view) {
-                    OpenSearchPageRequest request = new OpenSearchPageRequest(searchTerm);
-                    try {
-                        LinkService linkService = AssociatesAPI.getLinkService();
-                        linkService.openRetailPage(request);
-                    } catch (NotInitializedException e) {
-                        e.printStackTrace();
-                    }
-                }
-            });
-
         } else {
             Intent intent = new Intent(this, CardDetailActivity.class);
             intent.putExtra(CARD, card);
@@ -345,6 +321,12 @@ public class CardListActivity extends CustomActivity implements
             case HISTORY_REQUEST_CODE:
                 if (resultCode == RESULT_OK) {
                     History history = data.getExtras().getParcelable("history");
+
+                    if (! history.getQuery().equals("*")) {
+                        searchView.setQuery(history.getQuery(), false);
+                    } else {
+                        searchView.setQuery("", false);
+                    }
 
                     currentSearch = new SearchOptions()
                             .setQuery(history.getQuery())

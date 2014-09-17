@@ -20,6 +20,16 @@
 
     <string name="history_menu_clear">Clear searches</string>
     <string name="history_empty">No recent search</string>
+    <string name="history_search_text">Keywords</string>
+    <string name="history_alert_title">Clear recent search ?</string>
+    <string name="history_alert_description">
+        All unchecked searches will be deleted.
+    </string>
+    <string name="history_check_text">
+        Checked searches kill be kept when clearing search.
+    </string>
+    <string name="history_alert_ok">Delete</string>
+    <string name="history_alert_cancel">Cancel</string>
 
     <string name="search_hint">black lotus, draw, sacrifice…</string>
     <string name="failed_search">Oops, search encountered an error ! Please, check your data connection.</string>

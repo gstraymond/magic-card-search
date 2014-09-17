@@ -71,15 +71,6 @@
                 android:textIsSelectable="true"
                 android:textStyle="bold" />
 
-            <ImageButton
-                android:id="@+id/array_adapter_buy_button"
-                android:layout_width="40dp"
-                android:layout_height="32dp"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:contentDescription="buy"
-                android:scaleType="fitXY"
-                android:src="@drawable/buy" />
         </RelativeLayout>
 
         <ProgressBar

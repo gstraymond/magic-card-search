@@ -1,11 +1,14 @@
 package fr.gstraymond.android;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 import fr.gstraymond.R;
 import fr.gstraymond.android.fragment.HistoryListFragment;
@@ -35,9 +38,23 @@ public class HistoryActivity extends CustomActivity {
                 return true;
 
             case R.id.history_clear_tab:
-                HistoryDataSource historyDataSource = new HistoryDataSource(this);
-                historyDataSource.clearHistory();
-                showHistory(historyDataSource);
+                AlertDialog.Builder alert = new AlertDialog.Builder(this);
+                alert.setTitle(getString(R.string.history_alert_title));
+                alert.setMessage(getString(R.string.history_alert_description));
+
+                alert.setPositiveButton(getString(R.string.history_alert_ok), new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        HistoryDataSource historyDataSource = new HistoryDataSource(getApplicationContext());
+                        historyDataSource.clearNonFavoriteHistory();
+                        showHistory(historyDataSource);
+                    }
+                });
+                alert.setNegativeButton(getString(R.string.history_alert_cancel), new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        //So sth here when "cancel" clicked.
+                    }
+                });
+                alert.show();
                 return true;
         }
 
@@ -53,6 +70,7 @@ public class HistoryActivity extends CustomActivity {
 
     private void showHistory(HistoryDataSource historyDataSource) {
         ArrayList<History> allHistory = historyDataSource.getAllHistory();
+        Collections.reverse(allHistory);
 
         Bundle bundle = new Bundle();
         bundle.putParcelableArrayList(HISTORY_LIST, allHistory);

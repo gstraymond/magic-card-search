@@ -4,13 +4,13 @@ import android.content.Context;
 import android.util.Log;
 
 import java.io.BufferedReader;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import fr.gstraymond.biz.SearchOptions;
@@ -42,27 +42,41 @@ public class HistoryDataSource {
         context.deleteFile(FILENAME);
     }
 
+    public void clearNonFavoriteHistory() {
+        List<History> allHistory = getAllHistory();
+        List<History> cleanedHistory = new ArrayList<History>();
+        int id = 1;
+        for (History h : allHistory) {
+            if (h.isFavorite()) {
+                cleanedHistory.add(h.setId(id++));
+            }
+        }
+        writeHistory(cleanedHistory);
+    }
+
     public ArrayList<History> getAllHistory() {
+        ArrayList<History> cardHistories = new ArrayList<History>();
         try {
-            BufferedReader br = new BufferedReader(new InputStreamReader(context.openFileInput(FILENAME)));
-            ArrayList<History> cardHistories = new ArrayList<History>();
+            FileInputStream inputStream = context.openFileInput(FILENAME);
+            BufferedReader br = new BufferedReader(new InputStreamReader(inputStream));
             String line;
             while ((line = br.readLine()) != null) {
-                History history = new History(line);
-                cardHistories.add(history);
-                Log.d(getClass().getName(), "get all history : " + history);
+                try {
+                    History history = new History(line);
+                    cardHistories.add(history);
+                    Log.d(getClass().getName(), "get all history : " + history);
+                } catch (Throwable t) {
+                    Log.e(getClass().getName(), "init history", t);
+                }
             }
             br.close();
-            Collections.reverse(cardHistories);
             return cardHistories;
         } catch (FileNotFoundException e) {
-            Log.e(getClass().getName(), "getAllHistory", e);
+            Log.e(getClass().getName(), "getAllHistory not found");
         } catch (IOException e) {
             Log.e(getClass().getName(), "getAllHistory", e);
-        } catch (ParseException e) {
-            Log.e(getClass().getName(), "getAllHistory", e);
         }
-        return new ArrayList<History>();
+        return cardHistories;
     }
 
     public int getLastId() {
@@ -70,6 +84,31 @@ public class HistoryDataSource {
         if (histories.isEmpty()) {
             return 0;
         }
-        return histories.get(0).getId();
+        return histories.get(histories.size() - 1).getId();
+    }
+
+    public void manageFavorite(History history, boolean add) {
+        List<History> allHistory = getAllHistory();
+        for (History h : allHistory) {
+            if (h.getId() == history.getId()) {
+                h.setFavorite(add);
+                break;
+            }
+        }
+        writeHistory(allHistory);
+    }
+
+    public void writeHistory(List<History> allHistory) {
+        try {
+            FileOutputStream fos = context.openFileOutput(FILENAME, Context.MODE_PRIVATE);
+            for (History history : allHistory) {
+                fos.write((history.toString() + "\n").getBytes());
+            }
+            fos.close();
+        } catch (FileNotFoundException e) {
+            Log.e(getClass().getName(), "appendHistory", e);
+        } catch (IOException e) {
+            Log.e(getClass().getName(), "appendHistory", e);
+        }
     }
 }

@@ -33,7 +33,7 @@ public class HistoryListFragment extends ListFragment {
 
     private void initEmptyMsg() {
         messages = new ArrayList<Map<String, String>>();
-        Map map = new HashMap<String, String>();
+        Map<String, String> map = new HashMap<String, String>();
         map.put(EMPTY, getResources().getString(R.string.history_empty));
         messages.add(map);
     }
