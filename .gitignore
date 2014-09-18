@@ -13,3 +13,5 @@ import-summary.txt
 app/app.iml
 .gradle
 .idea
+app/.keyPassword
+app/.storePassword

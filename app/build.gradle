@@ -10,9 +10,19 @@ android {
         targetSdkVersion 19
     }
 
+    signingConfigs {
+        release {
+            storeFile file("/home/guillaume/androidKeystore/key")
+            keyAlias "magic-card-search"
+            storePassword file(".storePassword").text
+            keyPassword file(".keyPassword").text
+        }
+    }
+
     buildTypes {
         release {
             runProguard false
+            signingConfig signingConfigs.release
             //proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
         }
     }

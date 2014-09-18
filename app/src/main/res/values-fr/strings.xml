@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <string name="app_name">Magic Card Search</string>
     <string name="welcome_text"></string>
     <string name="progress_card_found">carte trouvée</string>
     <string name="progress_cards_found">cartes trouvées</string>
+    <string name="website_url">magic-card-search.com</string>
+    <string name="logo">logo</string>
     <string name="list_menu_cards">Liste des cartes</string>
     <string name="list_menu_facets">Liste des filtres</string>
     <string name="list_menu_clear">Effacer la recherche</string>
@@ -57,4 +60,6 @@
     <string name="loading_clear">suppression de la recherche …</string>
     <string name="loading_facet">filtrage de la recherche…</string>
     <string name="loading_more_facet">ajout de filtres…</string>
+
+    <string name="mode">smartphone</string>
 </resources>
