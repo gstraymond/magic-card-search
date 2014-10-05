@@ -13,9 +13,9 @@ import fr.gstraymond.ui.adapter.FacetListAdapter;
 
 public class FacetOnChildClickListener implements OnChildClickListener {
 
-    FacetListAdapter adapter;
-    SearchOptions options;
-    CardListActivity activity;
+    private FacetListAdapter adapter;
+    private SearchOptions options;
+    private CardListActivity activity;
 
     public FacetOnChildClickListener(FacetListAdapter adapter, SearchOptions options,
                                      CardListActivity activity) {
