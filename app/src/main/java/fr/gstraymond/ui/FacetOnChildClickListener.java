@@ -44,6 +44,10 @@ public class FacetOnChildClickListener implements OnChildClickListener {
             textId = R.string.loading_more_facet;
         }
 
+        if ("*".equals(options.getQuery()) && options.getFacets().isEmpty()) {
+            options.setAddToHistory(false);
+        }
+
         new SearchProcessor(activity, options, textId).execute();
         return true;
     }
