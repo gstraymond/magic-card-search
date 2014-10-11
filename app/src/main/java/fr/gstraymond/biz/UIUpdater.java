@@ -74,14 +74,11 @@ public class UIUpdater extends AsyncTask<Void, Void, SearchResult> {
 
     private void updateUIList(int totalCardCount, ArrayList<Card> cards) {
         if (getOptions().isAppend()) {
-            CardListFragment fragment = getCardListFragment();
-            fragment.appendCards(cards);
+            getCardListFragment().appendCards(cards);
         } else {
             Bundle bundle = new Bundle();
             bundle.putParcelableArrayList(CARD_LIST, cards);
-            Fragment fragment = new CardListFragment();
-            fragment.setArguments(bundle);
-            getFragmentManager().beginTransaction().replace(R.id.card_list, fragment).commit();
+            activity.replaceFragment(new CardListFragment(), R.id.card_list, bundle);
 
         }
         activity.setTotalCardCount(totalCardCount);

@@ -1,6 +1,5 @@
 package fr.gstraymond.android;
 
-import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -28,14 +27,10 @@ public class CardDetailActivity extends CardCommonActivy implements
         setContentView(R.layout.activity_card_detail);
         AmazonUtils.initAmazonApi(this);
 
-        Bundle bundle = getBundle();
-
         TextView titleTextView = (TextView) findViewById(R.id.card_detail_title);
         titleTextView.setText(formatTitle(this, getCard()));
 
-        Fragment fragment = new CardDetailFragment();
-        fragment.setArguments(bundle);
-        replaceFragment(fragment, R.id.card_detail_container);
+        replaceFragment(new CardDetailFragment(), R.id.card_detail_container, getBundle());
     }
 
     @Override
@@ -72,10 +67,7 @@ public class CardDetailActivity extends CardCommonActivy implements
             // first element is a card
             bundle.putInt(POSITION, id - 1);
 
-            CardPagerFragment fragment = new CardPagerFragment();
-            fragment.setArguments(bundle);
-            getFragmentManager().beginTransaction()
-                    .replace(R.id.card_detail_container, fragment).commit();
+            replaceFragment(new CardPagerFragment(), R.id.card_detail_container, bundle);
         } else {
             Intent intent = new Intent(this, CardPagerActivity.class);
             intent.putExtra(CARD, getCard());

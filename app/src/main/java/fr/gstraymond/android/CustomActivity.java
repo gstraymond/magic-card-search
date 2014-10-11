@@ -24,14 +24,32 @@ public abstract class CustomActivity extends Activity {
         return getCustomApplication().getObjectMapper();
     }
 
-    protected void replaceFragment(Fragment fragment, int id) {
+    public void replaceFragment(Fragment fragment, int id) {
         replaceFragment(fragment, id, null);
     }
 
-    protected void replaceFragment(Fragment fragment, int id, Bundle bundle) {
+    public void replaceFragment(Fragment fragment, int id, Bundle bundle) {
         if (bundle != null) {
             fragment.setArguments(bundle);
         }
-        getFragmentManager().beginTransaction().replace(id, fragment).commit();
+        getFragmentManager().beginTransaction().replace(id, fragment).commitAllowingStateLoss();
+    }
+
+    protected void actionBarSetDisplayHomeAsUpEnabled(boolean bool) {
+        if (getActionBar() != null) {
+            getActionBar().setDisplayHomeAsUpEnabled(bool);
+        }
+    }
+
+    protected void actionBarSetHomeButtonEnabled(boolean bool) {
+        if (getActionBar() != null) {
+            getActionBar().setHomeButtonEnabled(bool);
+        }
+    }
+
+    protected void actionBarSetTitle(int titleId) {
+        if (getActionBar() != null) {
+            getActionBar().setTitle(titleId);
+        }
     }
 }

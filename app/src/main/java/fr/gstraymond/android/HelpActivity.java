@@ -32,7 +32,7 @@ public class HelpActivity extends CustomActivity {
         // rends les liens cliquables + scroll
         view.setMovementMethod(LinkMovementMethod.getInstance());
 
-        getActionBar().setDisplayHomeAsUpEnabled(true);
+        actionBarSetDisplayHomeAsUpEnabled(true);
     }
 
     private CastingCostAssetLoader getCCAssetLoader() {

@@ -27,7 +27,7 @@ public class HistoryActivity extends CustomActivity {
         HistoryDataSource historyDataSource = new HistoryDataSource(this);
         showHistory(historyDataSource);
 
-        getActionBar().setDisplayHomeAsUpEnabled(true);
+        actionBarSetDisplayHomeAsUpEnabled(true);
     }
 
     @Override

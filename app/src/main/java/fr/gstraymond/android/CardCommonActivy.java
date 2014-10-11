@@ -1,6 +1,5 @@
 package fr.gstraymond.android;
 
-import android.app.Fragment;
 import android.os.Bundle;
 import android.view.MenuItem;
 
@@ -19,8 +18,7 @@ public abstract class CardCommonActivy extends CustomActivity {
 
         card = getIntent().getParcelableExtra(CARD);
 
-        // Show the Up button in the action bar.
-        getActionBar().setDisplayHomeAsUpEnabled(true);
+        actionBarSetDisplayHomeAsUpEnabled(true);
 
         setTitle(getFullTitle(card));
     }
@@ -37,10 +35,6 @@ public abstract class CardCommonActivy extends CustomActivity {
         }
 
         return card.getTitle();
-    }
-
-    protected void replaceFragment(Fragment fragment, int id) {
-        getFragmentManager().beginTransaction().replace(id, fragment).commit();
     }
 
     @Override

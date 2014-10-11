@@ -17,7 +17,6 @@ import static fr.gstraymond.constants.Consts.CARD;
 
 public class CardDetailFragment extends ListFragment {
 
-    private Card card;
     private Callbacks callbacks = dummyCallbacks;
 
     public interface Callbacks {
@@ -34,7 +33,7 @@ public class CardDetailFragment extends ListFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        card = getArguments().getParcelable(CARD);
+        Card card = getArguments().getParcelable(CARD);
 
         List<Object> objects = new ArrayList<Object>();
         objects.add(card);

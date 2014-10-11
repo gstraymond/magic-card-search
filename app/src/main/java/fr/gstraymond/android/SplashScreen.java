@@ -7,7 +7,6 @@ import fr.gstraymond.R;
 import fr.gstraymond.biz.ApplicationLoader;
 import fr.gstraymond.biz.SearchOptions;
 import fr.gstraymond.biz.SplashProcessor;
-import fr.gstraymond.db.HistoryDataSource;
 import fr.gstraymond.search.model.response.SearchResult;
 import fr.gstraymond.tools.MapperUtil;
 

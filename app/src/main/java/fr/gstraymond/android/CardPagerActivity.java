@@ -15,9 +15,7 @@ public class CardPagerActivity extends CardCommonActivy {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_card_pager);
 
-        Fragment fragment = new CardPagerFragment();
-        fragment.setArguments(getBundle());
-        replaceFragment(fragment, R.id.card_pager_container);
+        replaceFragment(new CardPagerFragment(), R.id.card_pager_container, getBundle());
     }
 
     @Override
@@ -32,7 +30,7 @@ public class CardPagerActivity extends CardCommonActivy {
     }
 
     @Override
-    protected void replaceFragment(Fragment fragment, int id) {
+    public void replaceFragment(Fragment fragment, int id) {
         if (getFragmentManager().findFragmentById(id) == null) {
             super.replaceFragment(fragment, id);
         }

@@ -99,23 +99,23 @@ public class CardListActivity extends CustomActivity implements
                  */
                 public void onDrawerClosed(View view) {
                     super.onDrawerClosed(view);
-                    getActionBar().setTitle(R.string.drawer_open);
+                    actionBarSetTitle(R.string.drawer_open);
                 }
 
                 /** Called when a drawer has settled in a completely open state. */
                 public void onDrawerOpened(View drawerView) {
                     super.onDrawerOpened(drawerView);
-                    getActionBar().setTitle(R.string.drawer_close);
+                    actionBarSetTitle(R.string.drawer_close);
                 }
             };
 
             // Set the drawer toggle as the DrawerListener
             drawerLayout.setDrawerListener(drawerToggle);
-            getActionBar().setDisplayHomeAsUpEnabled(true);
+            actionBarSetDisplayHomeAsUpEnabled(true);
         }
 
-        getActionBar().setHomeButtonEnabled(true);
-        getActionBar().setTitle(R.string.drawer_open);
+        actionBarSetHomeButtonEnabled(true);
+        actionBarSetTitle(R.string.drawer_open);
     }
 
     @Override

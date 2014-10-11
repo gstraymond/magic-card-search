@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.app.ListFragment;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.ListAdapter;
 import android.widget.ListView;
@@ -16,9 +15,6 @@ import java.util.List;
 import java.util.Map;
 
 import fr.gstraymond.R;
-import fr.gstraymond.android.CardListActivity;
-import fr.gstraymond.biz.SearchOptions;
-import fr.gstraymond.biz.SearchProcessor;
 import fr.gstraymond.db.History;
 import fr.gstraymond.ui.adapter.HistoryArrayAdapter;
 
