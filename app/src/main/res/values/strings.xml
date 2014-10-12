@@ -60,4 +60,7 @@
     <string name="loading_clear">clearing…</string>
     <string name="loading_facet">filtering search…</string>
     <string name="loading_more_facet">adding filters…</string>
+
+    <!--suppress MissingTranslation -->
+	<string name="mode">smartphone</string>
 </resources>
