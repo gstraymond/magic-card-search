@@ -24,7 +24,7 @@ public class CardFragment extends Fragment {
         ImageView imageView = (ImageView) rootView.findViewById(R.id.fragment_card_picture);
         ProgressBar progressBar = (ProgressBar) rootView.findViewById(R.id.fragment_card_progress_bar);
 
-        String url = getArguments().getString(URL);
+        String url = getArguments().getString(URL).replace("http://", "https://");
         new PictureDownloader(imageView, progressBar, url, getCustomApplication()).execute();
 
         return rootView;

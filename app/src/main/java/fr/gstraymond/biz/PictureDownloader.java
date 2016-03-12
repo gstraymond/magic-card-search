@@ -3,18 +3,18 @@ package fr.gstraymond.biz;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 import android.widget.ProgressBar;
 
-import org.apache.http.HttpResponse;
-import org.apache.http.client.methods.HttpGet;
-
+import java.io.BufferedInputStream;
 import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 
 import fr.gstraymond.android.CustomApplication;
+import fr.gstraymond.tools.Log;
 
 public class PictureDownloader extends AsyncTask<Void, Void, Bitmap> {
 
@@ -22,6 +22,7 @@ public class PictureDownloader extends AsyncTask<Void, Void, Bitmap> {
     private ProgressBar progressBar;
     private String url;
     private CustomApplication application;
+    private Log log = new Log(this);
 
     public PictureDownloader(ImageView imageView, ProgressBar progressBar, String url, CustomApplication application) {
         super();
@@ -33,8 +34,26 @@ public class PictureDownloader extends AsyncTask<Void, Void, Bitmap> {
 
     @Override
     protected Bitmap doInBackground(Void... params) {
-        Log.d(getClass().getName(), "doInBackground : url " + url);
-        return getBitmap();
+        log.d("doInBackground : url " + url);
+        Bitmap bitmap = application.getBitmapCache().get(url);
+        if (bitmap != null) {
+            log.d("doInBackground : cache " + bitmap.getByteCount());
+            return bitmap;
+        }
+
+        HttpURLConnection urlConnection = null;
+        try {
+            urlConnection = (HttpURLConnection) new URL(url).openConnection();
+            InputStream inputStream = new BufferedInputStream(urlConnection.getInputStream());
+            bitmap = BitmapFactory.decodeStream(inputStream);
+            log.d("doInBackground : download " + bitmap.getByteCount());
+            application.getBitmapCache().put(url, bitmap);
+        } catch (Exception e) {
+            log.e("error", e);
+        } finally {
+            if (urlConnection != null) urlConnection.disconnect();
+        }
+        return bitmap;
     }
 
     @Override
@@ -45,24 +64,5 @@ public class PictureDownloader extends AsyncTask<Void, Void, Bitmap> {
         imageView.setScaleType(ScaleType.FIT_XY);
         imageView.setAdjustViewBounds(true);
         imageView.setVisibility(View.VISIBLE);
-    }
-
-    private Bitmap getBitmap() {
-        Bitmap bitmap = application.getBitmapCache().get(url);
-        if (bitmap != null) {
-            return bitmap;
-        }
-
-        try {
-            HttpGet getRequest = new HttpGet(url);
-            HttpResponse response = application.getHttpClient().execute(getRequest);
-            InputStream content = response.getEntity().getContent();
-            bitmap = BitmapFactory.decodeStream(content);
-            application.getBitmapCache().put(url, bitmap);
-            return bitmap;
-        } catch (Exception e) {
-            Log.e(getClass().getName(), "error", e);
-        }
-        return null;
     }
 }

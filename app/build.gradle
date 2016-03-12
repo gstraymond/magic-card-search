@@ -1,13 +1,15 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 21
-    buildToolsVersion "21.0.1"
+    compileSdkVersion 23
+    buildToolsVersion "23.0.2"
 
     defaultConfig {
         applicationId "fr.gstraymond"
         minSdkVersion 14
-        targetSdkVersion 21
+        targetSdkVersion 23
+        versionCode 27
+        versionName "1.6.0"
     }
 
     signingConfigs {
@@ -20,10 +22,16 @@ android {
     }
 
     buildTypes {
+        debug {
+            //minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            applicationIdSuffix ".debug"
+            versionNameSuffix " debug"
+        }
         release {
-            runProguard false
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.release
-            //proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
         }
     }
 
@@ -34,9 +42,9 @@ android {
 }
 
 dependencies {
-    compile files('libs/jackson-core-2.2.3.jar')
-    compile files('libs/jackson-databind-2.2.3.jar')
+    compile 'com.fasterxml.jackson.core:jackson-core:2.7.0'
+    compile 'com.fasterxml.jackson.core:jackson-annotations:2.7.0'
+    compile 'com.fasterxml.jackson.core:jackson-databind:2.7.0'
     compile files('libs/amazon-mobile-associates-1.0.54.0.jar')
-    compile files('libs/jackson-annotations-2.2.3.jar')
     compile files('libs/android-support-v13.jar')
 }

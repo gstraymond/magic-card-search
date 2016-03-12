@@ -8,9 +8,6 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
-import org.apache.http.client.HttpClient;
-import org.apache.http.impl.client.DefaultHttpClient;
-
 import java.net.MalformedURLException;
 import java.net.URL;
 
@@ -26,7 +23,6 @@ public class CustomApplication extends Application {
     private static final String SEARCH_SERVER_HOST = "engine.magic-card-search.com:8080";
 //	private static final String SEARCH_SERVER_HOST = "local-gsr:9200";
 
-    private HttpClient httpClient;
     private ElasticSearchClient elasticSearchClient;
     private CastingCostAssetLoader castingCostAssetLoader;
     private ObjectMapper objectMapper;
@@ -34,16 +30,11 @@ public class CustomApplication extends Application {
     private BitmapCache bitmapCache;
 
     public void init() {
-        initHttpClient();
         initObjectMapper();
         initElasticSearchClient();
         initCastingCostAssetLoader();
         initIsTablet();
         initBitmapCache();
-    }
-
-    private void initHttpClient() {
-        this.httpClient = new DefaultHttpClient();
     }
 
     private void initElasticSearchClient() {
@@ -75,13 +66,6 @@ public class CustomApplication extends Application {
 
     private void initBitmapCache() {
         setBitmapCache(new BitmapCache());
-    }
-
-    public HttpClient getHttpClient() {
-        if (httpClient == null) {
-            initHttpClient();
-        }
-        return httpClient;
     }
 
     public ElasticSearchClient getElasticSearchClient() {
