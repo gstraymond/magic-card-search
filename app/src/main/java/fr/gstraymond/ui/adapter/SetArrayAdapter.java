@@ -1,5 +1,6 @@
 package fr.gstraymond.ui.adapter;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.text.Html;
 import android.text.Html.ImageGetter;
@@ -10,6 +11,9 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import java.math.BigDecimal;
+import java.math.MathContext;
+import java.math.RoundingMode;
 import java.util.List;
 
 import fr.gstraymond.R;
@@ -24,7 +28,6 @@ import fr.gstraymond.tools.FormatFormatter;
 import fr.gstraymond.tools.PowerToughnessFormatter;
 import fr.gstraymond.tools.TypeFormatter;
 import fr.gstraymond.ui.CastingCostAssetLoader;
-
 
 public class SetArrayAdapter extends ArrayAdapter<Object> {
 
@@ -47,6 +50,7 @@ public class SetArrayAdapter extends ArrayAdapter<Object> {
         this.typeFormatter = new TypeFormatter(context);
     }
 
+    @SuppressLint("InflateParams")
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         View view = convertView;
@@ -118,7 +122,8 @@ public class SetArrayAdapter extends ArrayAdapter<Object> {
     }
 
     private Spanned formatPublication(Publication publication) {
-        String line = getEditionImage(publication) + " " + publication.getEdition();
+        String price = formatPrice(publication);
+        String line = getEditionImage(publication) + " " + publication.getEdition() + price;
         return Html.fromHtml(line, setImagetGetter, null);
     }
 
@@ -128,6 +133,14 @@ public class SetArrayAdapter extends ArrayAdapter<Object> {
         }
 
         return "<img src='" + pub.getStdEditionCode() + "/" + pub.getRarityCode() + ".png' />";
+    }
+
+    private String formatPrice(Publication publication) {
+        double price = publication.getPrice();
+        if (price == 0d) return "";
+
+        BigDecimal bd = new BigDecimal(price).round(new MathContext(2, RoundingMode.HALF_EVEN));
+        return " $" + bd.toPlainString();
     }
 
     private TextView getTextView(View view, Object object) {

@@ -34,7 +34,7 @@ public abstract class CustomParcelable implements Parcelable {
 
             String valuesAsString = keyValues[1];
             String[] secondSplit = valuesAsString.split(",");
-            List<String> values = new ArrayList<String>();
+            List<String> values = new ArrayList<>();
             Collections.addAll(values, secondSplit);
 
             facets.put(key, values);

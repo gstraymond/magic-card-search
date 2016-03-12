@@ -12,6 +12,7 @@ public class Publication implements Parcelable {
     private String rarityCode;
     private String image;
     private String editionImage;
+    private double price;
 
     public static final Parcelable.Creator<Publication> CREATOR = new Parcelable.Creator<Publication>() {
         @Override
@@ -36,6 +37,7 @@ public class Publication implements Parcelable {
         rarityCode = source.readString();
         image = source.readString();
         editionImage = source.readString();
+        price = source.readDouble();
     }
 
     @Override
@@ -52,6 +54,7 @@ public class Publication implements Parcelable {
         dest.writeString(rarityCode);
         dest.writeString(image);
         dest.writeString(editionImage);
+        dest.writeDouble(price);
     }
 
     public String getRarity() {
@@ -108,5 +111,13 @@ public class Publication implements Parcelable {
 
     public void setEditionImage(String editionImage) {
         this.editionImage = editionImage;
+    }
+
+    public double getPrice() {
+        return price;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
     }
 }
