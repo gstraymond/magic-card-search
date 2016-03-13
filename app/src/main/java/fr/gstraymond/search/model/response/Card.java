@@ -40,9 +40,9 @@ public class Card implements Parcelable {
         power = source.readString();
         toughness = source.readString();
         description = source.readString();
-        publications = new ArrayList<Publication>();
+        publications = new ArrayList<>();
         source.readList(publications, Publication.class.getClassLoader());
-        formats = new ArrayList<String>();
+        formats = new ArrayList<>();
         source.readList(formats, String.class.getClassLoader());
     }
 

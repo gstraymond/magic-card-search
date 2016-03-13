@@ -4,16 +4,17 @@ import android.content.Context;
 import android.content.res.AssetManager;
 import android.graphics.drawable.Drawable;
 import android.text.Html.ImageGetter;
-import android.util.Log;
 
 import java.io.IOException;
 
 import fr.gstraymond.R;
+import fr.gstraymond.tools.Log;
 
 public class SetImageGetter implements ImageGetter {
 
     private static final String PATH = "sets";
     private Context context;
+    private Log log = new Log(this);
 
     public SetImageGetter(Context context) {
         this.context = context;
@@ -22,12 +23,13 @@ public class SetImageGetter implements ImageGetter {
     @Override
     public Drawable getDrawable(String assetPath) {
         try {
-            Drawable drawable = Drawable.createFromStream(getAssetManager().open(PATH + "/" + assetPath),
+            Drawable drawable = Drawable.createFromStream(
+                    getAssetManager().open(PATH + "/" + assetPath),
                     null);
             drawable.setBounds(0, 0, getWidth(drawable), getAssetSize());
             return drawable;
         } catch (IOException e) {
-            Log.e(getClass().getName(), "getDrawable", e);
+            log.e("getDrawable", e);
         }
         return null;
     }

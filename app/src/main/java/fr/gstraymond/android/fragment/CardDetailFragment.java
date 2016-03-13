@@ -20,7 +20,7 @@ public class CardDetailFragment extends ListFragment {
     private Callbacks callbacks = dummyCallbacks;
 
     public interface Callbacks {
-        public void onItemSelected(int id);
+        void onItemSelected(int id);
     }
 
     private static Callbacks dummyCallbacks = new Callbacks() {
@@ -35,7 +35,7 @@ public class CardDetailFragment extends ListFragment {
 
         Card card = getArguments().getParcelable(CARD);
 
-        List<Object> objects = new ArrayList<Object>();
+        List<Object> objects = new ArrayList<>();
         objects.add(card);
         objects.addAll(card.getPublications());
 

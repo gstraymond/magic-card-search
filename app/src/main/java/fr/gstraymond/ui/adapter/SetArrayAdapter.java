@@ -3,7 +3,6 @@ package fr.gstraymond.ui.adapter;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.text.Html;
-import android.text.Html.ImageGetter;
 import android.text.Spanned;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -37,17 +36,19 @@ public class SetArrayAdapter extends ArrayAdapter<Object> {
     private PowerToughnessFormatter ptFormatter;
     private TypeFormatter typeFormatter;
 
-    private SetImageGetter setImagetGetter;
+    private Html.ImageGetter setImageGetter;
+    private Html.ImageGetter castingCostImageGetter;
 
     public SetArrayAdapter(Context context, int resource,
                            int textViewResourceId, List<Object> objects) {
         super(context, resource, textViewResourceId, objects);
-        this.setImagetGetter = new SetImageGetter(getContext());
         this.castingCostFormatter = new CastingCostFormatter();
         this.descFormatter = new DescriptionFormatter();
         this.formatFormatter = new FormatFormatter(context);
         this.ptFormatter = new PowerToughnessFormatter();
         this.typeFormatter = new TypeFormatter(context);
+        this.setImageGetter = new SetImageGetter(context);
+        this.castingCostImageGetter = new CastingCostImageGetter(getAssetLoader());
     }
 
     @SuppressLint("InflateParams")
@@ -81,7 +82,7 @@ public class SetArrayAdapter extends ArrayAdapter<Object> {
         String formats = formatFormatter.format(card);
         String html = getHtml(cc_pt, type, description, formats);
 
-        return Html.fromHtml(html, getCCImageGetter(), null);
+        return Html.fromHtml(html, castingCostImageGetter, null);
     }
 
     private String formatCC_PT(String cc, String pt) {
@@ -92,10 +93,6 @@ public class SetArrayAdapter extends ArrayAdapter<Object> {
             return cc;
         }
         return cc + " — " + pt;
-    }
-
-    private ImageGetter getCCImageGetter() {
-        return new CastingCostImageGetter(getAssetLoader());
     }
 
     private CastingCostAssetLoader getAssetLoader() {
@@ -124,7 +121,7 @@ public class SetArrayAdapter extends ArrayAdapter<Object> {
     private Spanned formatPublication(Publication publication) {
         String price = formatPrice(publication);
         String line = getEditionImage(publication) + " " + publication.getEdition() + price;
-        return Html.fromHtml(line, setImagetGetter, null);
+        return Html.fromHtml(line, setImageGetter, null);
     }
 
     private String getEditionImage(Publication pub) {
