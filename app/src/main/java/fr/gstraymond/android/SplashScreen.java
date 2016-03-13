@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import com.crashlytics.android.Crashlytics;
+import com.crashlytics.android.answers.Answers;
 import fr.gstraymond.R;
 import fr.gstraymond.biz.ApplicationLoader;
 import fr.gstraymond.biz.SearchOptions;
@@ -19,11 +20,7 @@ public class SplashScreen extends CustomActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        final Fabric fabric = new Fabric.Builder(this)
-                .kits(new Crashlytics())
-                .debuggable(true)
-                .build();
-        Fabric.with(fabric);
+        Fabric.with(this, new Crashlytics(), new Answers());
         setContentView(R.layout.activity_splash);
 
         mapperUtil = new MapperUtil<>(getObjectMapper(), Object.class);
