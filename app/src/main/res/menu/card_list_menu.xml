@@ -5,15 +5,22 @@
         android:icon="@drawable/delete"
         android:showAsAction="always"
         android:title="@string/list_menu_clear" />
+
     <item
         android:id="@+id/history_tab"
         android:icon="@drawable/clock"
         android:showAsAction="always"
         android:title="@string/list_menu_history" />
+
     <item
         android:id="@+id/help_tab"
         android:icon="@drawable/info"
-        android:showAsAction="always"
+        android:showAsAction="ifRoom"
         android:title="@string/list_menu_help" />
+
+    <item
+        android:id="@+id/changelog_tab"
+        android:showAsAction="never"
+        android:title="@string/changelog_title" />
 
 </menu>

@@ -31,16 +31,14 @@ public class ElasticSearchClient {
     private URL baseUrl;
     private CustomApplication application;
     private MapperUtil<SearchResult> mapperUtil;
-    private String appVersion;
-    private String osVersion;
+    private String appName;
     private Log log = new Log(this);
 
     public ElasticSearchClient(URL baseUrl, ObjectMapper objectMapper, CustomApplication application) {
         this.baseUrl = baseUrl;
         this.application = application;
         this.mapperUtil = new MapperUtil<>(objectMapper, SearchResult.class);
-        this.appVersion = VersionUtils.getAppVersion(application);
-        this.osVersion = VersionUtils.getOsVersion();
+        this.appName = VersionUtils.getAppName(application);
     }
 
     public SearchResult process(SearchOptions options, ProgressBar progressBar) {
@@ -81,8 +79,8 @@ public class ElasticSearchClient {
             URL url = new URL(baseUrl.toString() + "?source=" + query);
             HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
             urlConnection.setRequestProperty(ACCEPT_ENCODING, GZIP);
-            urlConnection.setRequestProperty("User-Agent", "Android Java/" + osVersion);
-            urlConnection.setRequestProperty("Referer", "Magic Card Search - " + appVersion);
+            urlConnection.setRequestProperty("User-Agent", "Android Java/" + VersionUtils.getOsVersion());
+            urlConnection.setRequestProperty("Referer", appName + " - " + VersionUtils.getAppVersion());
             return urlConnection;
         } catch (IOException e) {
             log.e("buildRequest", e);

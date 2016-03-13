@@ -1,10 +1,10 @@
 package fr.gstraymond.tools;
 
 import android.content.Context;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Build;
-import android.util.Log;
+
+import fr.gstraymond.BuildConfig;
+import fr.gstraymond.R;
 
 public class VersionUtils {
 
@@ -12,15 +12,11 @@ public class VersionUtils {
         return Build.VERSION.RELEASE;
     }
 
-    public static String getAppVersion(Context context) {
-        try {
-            String packageName = context.getPackageName();
-            PackageInfo packageInfo = context.getPackageManager().getPackageInfo(packageName, 0);
-            return packageInfo.versionName;
-        } catch (NameNotFoundException e) {
-            Log.e("VersionUtils", "getVersionName", e);
-        }
+    public static String getAppVersion() {
+        return BuildConfig.VERSION_NAME;
+    }
 
-        return null;
+    public static String getAppName(Context context) {
+        return context.getString(R.string.app_name);
     }
 }

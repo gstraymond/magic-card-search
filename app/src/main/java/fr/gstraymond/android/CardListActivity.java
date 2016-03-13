@@ -30,6 +30,7 @@ import fr.gstraymond.search.model.response.Card;
 import fr.gstraymond.tools.Log;
 import fr.gstraymond.ui.EndScrollListener;
 import fr.gstraymond.ui.TextListener;
+import sheetrock.panda.changelog.ChangeLog;
 
 import static fr.gstraymond.constants.Consts.CARD;
 import static fr.gstraymond.constants.Consts.POSITION;
@@ -58,6 +59,8 @@ public class CardListActivity extends CustomActivity implements
     private ActionBarDrawerToggle drawerToggle;
     private DrawerLayout drawerLayout;
     private Toast loadingToast;
+
+    ChangeLog changeLog;
 
     public CardListActivity() {
         super();
@@ -116,6 +119,10 @@ public class CardListActivity extends CustomActivity implements
 
         actionBarSetHomeButtonEnabled(true);
         actionBarSetTitle(R.string.drawer_open);
+
+        changeLog = new ChangeLog(this);
+        if (changeLog.firstRun())
+            changeLog.getLogDialog().show();
     }
 
     @Override
@@ -311,6 +318,10 @@ public class CardListActivity extends CustomActivity implements
                 Intent helpIntent = new Intent(this, HelpActivity.class);
                 startActivity(helpIntent);
                 return true;
+
+            case R.id.changelog_tab:
+                changeLog.getFullLogDialog().show();
+                return true;
         }
 
         return super.onOptionsItemSelected(item);
@@ -322,7 +333,7 @@ public class CardListActivity extends CustomActivity implements
                 if (resultCode == RESULT_OK) {
                     History history = data.getExtras().getParcelable("history");
 
-                    if (! history.getQuery().equals("*")) {
+                    if (!history.getQuery().equals("*")) {
                         searchView.setQuery(history.getQuery(), false);
                     } else {
                         searchView.setQuery("", false);

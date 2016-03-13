@@ -64,4 +64,10 @@
 
     <!--suppress MissingTranslation -->
 	<string name="mode">smartphone</string>
+
+    <string name="background_color">black</string>
+    <string name="changelog_full_title">What\'s new ?</string>
+    <string name="changelog_title">Changelog</string>
+    <string name="changelog_ok_button">OK</string>
+    <string name="changelog_show_full">more…</string>
 </resources>

@@ -61,4 +61,9 @@
     <string name="loading_clear">suppression de la recherche …</string>
     <string name="loading_facet">filtrage de la recherche…</string>
     <string name="loading_more_facet">ajout de filtres…</string>
+
+    <string name="changelog_full_title">Quoi de neuf ?</string>
+    <string name="changelog_title">Historique des versions</string>
+    <string name="changelog_ok_button">OK</string>
+    <string name="changelog_show_full">plus…</string>
 </resources>
