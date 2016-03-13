@@ -3,13 +3,13 @@ package fr.gstraymond.ui;
 import android.content.Context;
 import android.content.res.AssetManager;
 import android.graphics.drawable.Drawable;
-import android.util.Log;
 
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
 import fr.gstraymond.R;
+import fr.gstraymond.tools.Log;
 
 public class CastingCostAssetLoader {
 
@@ -18,6 +18,7 @@ public class CastingCostAssetLoader {
     private Context context;
     private Map<String, Drawable> assets;
     private boolean init = false;
+    private Log log = new Log(this);
 
     public void init(Context context) {
         if (!init) {
@@ -32,7 +33,7 @@ public class CastingCostAssetLoader {
                     assets.put(assetPath, drawable);
                 }
             } catch (IOException e) {
-                Log.e(getClass().getName(), "init", e);
+                log.e("init", e);
             }
         }
     }

@@ -1,7 +1,6 @@
 package fr.gstraymond.db;
 
 import android.content.Context;
-import android.util.Log;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
@@ -9,17 +8,18 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
 import fr.gstraymond.biz.SearchOptions;
+import fr.gstraymond.tools.Log;
 
 public class HistoryDataSource {
 
     private static final String FILENAME = "history";
 
     private Context context;
+    private Log log = new Log(this);
 
     public HistoryDataSource(Context context) {
         this.context = context;
@@ -31,10 +31,8 @@ public class HistoryDataSource {
             FileOutputStream fos = context.openFileOutput(FILENAME, Context.MODE_APPEND);
             fos.write((history.toString() + "\n").getBytes());
             fos.close();
-        } catch (FileNotFoundException e) {
-            Log.e(getClass().getName(), "appendHistory", e);
         } catch (IOException e) {
-            Log.e(getClass().getName(), "appendHistory", e);
+            log.e("appendHistory", e);
         }
     }
 
@@ -44,7 +42,7 @@ public class HistoryDataSource {
 
     public void clearNonFavoriteHistory() {
         List<History> allHistory = getAllHistory();
-        List<History> cleanedHistory = new ArrayList<History>();
+        List<History> cleanedHistory = new ArrayList<>();
         int id = 1;
         for (History h : allHistory) {
             if (h.isFavorite()) {
@@ -55,7 +53,7 @@ public class HistoryDataSource {
     }
 
     public ArrayList<History> getAllHistory() {
-        ArrayList<History> cardHistories = new ArrayList<History>();
+        ArrayList<History> cardHistories = new ArrayList<>();
         try {
             FileInputStream inputStream = context.openFileInput(FILENAME);
             BufferedReader br = new BufferedReader(new InputStreamReader(inputStream));
@@ -64,17 +62,17 @@ public class HistoryDataSource {
                 try {
                     History history = new History(line);
                     cardHistories.add(history);
-                    Log.d(getClass().getName(), "get all history : " + history);
+                    log.d("get all history : " + history);
                 } catch (Throwable t) {
-                    Log.e(getClass().getName(), "init history", t);
+                    log.e("init history", t);
                 }
             }
             br.close();
             return cardHistories;
         } catch (FileNotFoundException e) {
-            Log.e(getClass().getName(), "getAllHistory not found");
+            log.w("getAllHistory not found");
         } catch (IOException e) {
-            Log.e(getClass().getName(), "getAllHistory", e);
+            log.e("getAllHistory", e);
         }
         return cardHistories;
     }
@@ -105,10 +103,8 @@ public class HistoryDataSource {
                 fos.write((history.toString() + "\n").getBytes());
             }
             fos.close();
-        } catch (FileNotFoundException e) {
-            Log.e(getClass().getName(), "appendHistory", e);
         } catch (IOException e) {
-            Log.e(getClass().getName(), "appendHistory", e);
+            log.e("appendHistory", e);
         }
     }
 }

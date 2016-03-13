@@ -1,5 +1,7 @@
 package fr.gstraymond.tools;
 
+import com.crashlytics.android.Crashlytics;
+
 public class Log {
 
     private Class caller;
@@ -20,7 +22,13 @@ public class Log {
         android.util.Log.w(caller.getCanonicalName(), msg);
     }
 
-    public void e(String msg, Exception e) {
-        android.util.Log.e(caller.getCanonicalName(), msg, e);
+    public void e(String msg, Throwable t) {
+        Crashlytics.logException(t);
+        android.util.Log.e(caller.getCanonicalName(), msg, t);
+    }
+
+    public static void error(String msg, Throwable t, Class<?> callerClass) {
+        Crashlytics.logException(t);
+        android.util.Log.e(callerClass.getCanonicalName(), msg, t);
     }
 }

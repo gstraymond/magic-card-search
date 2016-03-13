@@ -1,11 +1,11 @@
 package fr.gstraymond.ui.adapter;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.text.Html;
 import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.format.DateFormat;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,8 +28,7 @@ import fr.gstraymond.db.HistoryDataSource;
 
 public class HistoryArrayAdapter extends ArrayAdapter<History> {
 
-    private java.text.DateFormat dayFormat = new SimpleDateFormat("MMddyyyy");
-
+    private java.text.DateFormat dayFormat;
     private java.text.DateFormat dateFormat;
     private java.text.DateFormat timeFormat;
     private View.OnClickListener clickListener;
@@ -39,6 +38,7 @@ public class HistoryArrayAdapter extends ArrayAdapter<History> {
         super(context, resource, textViewResourceId, objects);
         dateFormat = DateFormat.getDateFormat(context);
         timeFormat = DateFormat.getTimeFormat(context);
+        dayFormat = new SimpleDateFormat("MMddyyyy", context.getResources().getConfiguration().locale);
 
         clickListener = new View.OnClickListener() {
             @Override
@@ -52,6 +52,7 @@ public class HistoryArrayAdapter extends ArrayAdapter<History> {
         };
     }
 
+    @SuppressLint({"InflateParams", "SetTextI18n"})
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         View view = convertView;
@@ -103,7 +104,7 @@ public class HistoryArrayAdapter extends ArrayAdapter<History> {
             return "";
         }
 
-        List<String> l = new ArrayList<String>();
+        List<String> l = new ArrayList<>();
         for (Map.Entry<String, List<String>> e : facets.entrySet()) {
             String facetName = FacetConst.getFacetName(e.getKey(), getContext());
             l.add(facetName + ": <b>" + TextUtils.join("</b>, <b>", e.getValue()) + "</b>");

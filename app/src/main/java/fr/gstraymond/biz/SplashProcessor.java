@@ -1,19 +1,20 @@
 package fr.gstraymond.biz;
 
 import android.os.AsyncTask;
-import android.util.Log;
 import android.widget.ProgressBar;
 
 import fr.gstraymond.R;
 import fr.gstraymond.android.CustomApplication;
 import fr.gstraymond.android.SplashScreen;
 import fr.gstraymond.search.model.response.SearchResult;
+import fr.gstraymond.tools.Log;
 
 public class SplashProcessor extends AsyncTask<Void, Integer, SearchResult> {
 
     private SplashScreen activity;
     private ProgressBar progressBar;
     private SearchOptions options;
+    private Log log = new Log(this);
 
     public SplashProcessor(SplashScreen activity, SearchOptions options) {
         super();
@@ -30,9 +31,9 @@ public class SplashProcessor extends AsyncTask<Void, Integer, SearchResult> {
         SearchResult searchResult = getCustomApplication().getElasticSearchClient().process(options, progressBar);
 
         if (searchResult != null && searchResult.getHits() != null) {
-            Log.i(getClass().getName(), searchResult.getHits().getTotal() + " cards found in " + searchResult.getTook() + " ms");
+            log.i(searchResult.getHits().getTotal() + " cards found in " + searchResult.getTook() + " ms");
         }
-        Log.i(getClass().getName(), "search took " + (System.currentTimeMillis() - now) + "ms");
+        log.i("search took " + (System.currentTimeMillis() - now) + "ms");
 
         return searchResult;
     }

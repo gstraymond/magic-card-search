@@ -3,7 +3,6 @@ package fr.gstraymond.db;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.text.TextUtils;
-import android.util.Log;
 
 import java.text.ParseException;
 import java.util.Date;

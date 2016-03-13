@@ -2,7 +2,6 @@ package fr.gstraymond.biz;
 
 import android.app.FragmentManager;
 import android.os.AsyncTask;
-import android.util.Log;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -11,6 +10,7 @@ import fr.gstraymond.android.CardListActivity;
 import fr.gstraymond.android.CustomApplication;
 import fr.gstraymond.android.fragment.CardListFragment;
 import fr.gstraymond.search.model.response.SearchResult;
+import fr.gstraymond.tools.Log;
 
 import static android.widget.Toast.LENGTH_SHORT;
 import static android.widget.Toast.makeText;
@@ -21,6 +21,7 @@ public class SearchProcessor extends AsyncTask<Void, Void, SearchResult> {
     private ProgressBar progressBar;
 
     private SearchOptions options;
+    private Log log = new Log(this);
 
     public SearchProcessor(CardListActivity activity, SearchOptions options, int loadingText) {
         super();
@@ -52,7 +53,7 @@ public class SearchProcessor extends AsyncTask<Void, Void, SearchResult> {
     protected SearchResult doInBackground(Void... params) {
         long now = System.currentTimeMillis();
         SearchResult searchResult = launchSearch(options);
-        Log.i(getClass().getName(), "search took " + (System.currentTimeMillis() - now) + "ms");
+        log.i("search took " + (System.currentTimeMillis() - now) + "ms");
         return searchResult;
     }
 
@@ -107,7 +108,7 @@ public class SearchProcessor extends AsyncTask<Void, Void, SearchResult> {
         SearchResult searchResult = getApplicationContext().getElasticSearchClient().process(options, progressBar);
 
         if (searchResult != null && searchResult.getHits() != null) {
-            Log.i(getClass().getName(), searchResult.getHits().getTotal() + " cards found in " + searchResult.getTook() + " ms");
+            log.i(searchResult.getHits().getTotal() + " cards found in " + searchResult.getTook() + " ms");
         }
 
         return searchResult;

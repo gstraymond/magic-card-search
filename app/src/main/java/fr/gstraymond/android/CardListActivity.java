@@ -6,9 +6,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Parcelable;
 import android.support.v4.app.ActionBarDrawerToggle;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.util.Log;
-import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -28,6 +27,7 @@ import fr.gstraymond.biz.SearchProcessor;
 import fr.gstraymond.biz.UIUpdater;
 import fr.gstraymond.db.History;
 import fr.gstraymond.search.model.response.Card;
+import fr.gstraymond.tools.Log;
 import fr.gstraymond.ui.EndScrollListener;
 import fr.gstraymond.ui.TextListener;
 
@@ -50,6 +50,7 @@ public class CardListActivity extends CustomActivity implements
     private Card currentCard;
     private int totalCardCount;
     private SearchOptions currentSearch;
+    private Log log = new Log(this);
 
     private boolean isRestored = false;
     private boolean hasDeviceRotated = false;
@@ -79,8 +80,7 @@ public class CardListActivity extends CustomActivity implements
             if (savedSearch != null) {
                 currentSearch = savedSearch;
                 isRestored = true;
-                Log.d(getClass().getName(), "Restored search : "
-                        + currentSearch);
+                log.d("Restored search : " + currentSearch);
             }
         }
 
@@ -164,7 +164,7 @@ public class CardListActivity extends CustomActivity implements
         return new Runnable() {
             @Override
             public void run() {
-                drawerLayout.openDrawer(Gravity.START);
+                drawerLayout.openDrawer(GravityCompat.START);
             }
         };
     }
@@ -362,7 +362,7 @@ public class CardListActivity extends CustomActivity implements
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putParcelable(CURRENT_SEARCH, currentSearch);
-        Log.d(getClass().getName(), "onSaveInstanceState " + outState);
+        log.d("onSaveInstanceState " + outState);
     }
 
     private TextView getTitleTextView() {

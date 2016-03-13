@@ -1,4 +1,4 @@
--keepattributes *Annotation*,EnclosingMethod,Signature
+-keepattributes SourceFile,LineNumberTable,*Annotation*,EnclosingMethod,Signature
 
 -keepnames class com.fasterxml.jackson.** { *; }
 
@@ -19,4 +19,11 @@
   public *** get*();
 }
 
-#-assumenosideeffects class android.util.Log { *; }
+-assumenosideeffects class android.util.Log {
+    public static boolean isLoggable(java.lang.String, int);
+    public static int v(...);
+    public static int i(...);
+    public static int w(...);
+    public static int d(...);
+    public static int e(...);
+}

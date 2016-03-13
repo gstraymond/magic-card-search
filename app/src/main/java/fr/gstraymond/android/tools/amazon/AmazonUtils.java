@@ -1,7 +1,6 @@
 package fr.gstraymond.android.tools.amazon;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.amazon.device.associates.AssociatesAPI;
 import com.amazon.device.associates.LinkService;
@@ -9,6 +8,7 @@ import com.amazon.device.associates.NotInitializedException;
 import com.amazon.device.associates.OpenSearchPageRequest;
 
 import fr.gstraymond.search.model.response.Card;
+import fr.gstraymond.tools.Log;
 
 public class AmazonUtils {
 
@@ -25,7 +25,7 @@ public class AmazonUtils {
             LinkService linkService = AssociatesAPI.getLinkService();
             linkService.openRetailPage(request);
         } catch (NotInitializedException e) {
-            Log.e(AmazonUtils.class.getName(), "Amazon error", e);
+            Log.error("Amazon error", e, AmazonUtils.class);
         }
     }
 

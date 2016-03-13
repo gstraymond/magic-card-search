@@ -1,7 +1,6 @@
 package fr.gstraymond.android;
 
 import android.app.Application;
-import android.util.Log;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -14,6 +13,7 @@ import java.net.URL;
 import fr.gstraymond.R;
 import fr.gstraymond.biz.ElasticSearchClient;
 import fr.gstraymond.cache.BitmapCache;
+import fr.gstraymond.tools.Log;
 import fr.gstraymond.ui.CastingCostAssetLoader;
 
 public class CustomApplication extends Application {
@@ -28,6 +28,7 @@ public class CustomApplication extends Application {
     private ObjectMapper objectMapper;
     private Boolean isTablet;
     private BitmapCache bitmapCache;
+    private Log log = new Log(this);
 
     public void init() {
         initObjectMapper();
@@ -42,7 +43,7 @@ public class CustomApplication extends Application {
             URL url = new URL("http://" + SEARCH_SERVER_HOST + "/magic/card/_search");
             this.elasticSearchClient = new ElasticSearchClient(url, getObjectMapper(), this);
         } catch (MalformedURLException e) {
-            Log.e(getClass().getName(), "Error in constructor", e);
+            log.e("Error in constructor", e);
         }
     }
 

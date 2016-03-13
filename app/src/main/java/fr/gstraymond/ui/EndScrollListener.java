@@ -1,6 +1,5 @@
 package fr.gstraymond.ui;
 
-import android.util.Log;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.Toast;
@@ -9,6 +8,7 @@ import fr.gstraymond.R;
 import fr.gstraymond.android.CardListActivity;
 import fr.gstraymond.biz.SearchOptions;
 import fr.gstraymond.biz.SearchProcessor;
+import fr.gstraymond.tools.Log;
 
 import static android.widget.Toast.LENGTH_SHORT;
 import static android.widget.Toast.makeText;
@@ -17,6 +17,7 @@ public class EndScrollListener implements OnScrollListener {
 
     private boolean canLoadMoreItems = true;
     private CardListActivity activity;
+    private Log log = new Log(this);
 
     public EndScrollListener(CardListActivity activity) {
         this.activity = activity;
@@ -32,7 +33,7 @@ public class EndScrollListener implements OnScrollListener {
 
             boolean allCardsLoaded = totalCount == cardListCount;
             if (!allCardsLoaded) {
-                Log.i(this.getClass().getName(), "onScroll - endReached");
+                log.i("onScroll - endReached");
                 SearchOptions options = activity.getCurrentSearch().setAppend(true).setAddToHistory(false);
                 showLoadingToast();
                 new SearchProcessor(activity, options, R.string.loading_more).execute();
