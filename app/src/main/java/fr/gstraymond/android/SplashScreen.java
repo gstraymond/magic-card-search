@@ -12,14 +12,14 @@ import fr.gstraymond.tools.MapperUtil;
 
 public class SplashScreen extends CustomActivity {
 
-    private MapperUtil<?> mapperUtil;
+    private MapperUtil<Object> mapperUtil;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
 
-        mapperUtil = new MapperUtil<Object>(getObjectMapper(), Object.class);
+        mapperUtil = new MapperUtil<>(getObjectMapper(), Object.class);
 
 		/* chargement du client HTTP / object mapper / assets */
         new ApplicationLoader(this).execute();

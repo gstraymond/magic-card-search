@@ -23,7 +23,7 @@ public class CastingCostAssetLoader {
         if (!init) {
             init = true;
             this.context = context;
-            this.assets = new HashMap<String, Drawable>();
+            this.assets = new HashMap<>();
 
             try {
                 for (String assetPath : context.getAssets().list(PATH)) {
