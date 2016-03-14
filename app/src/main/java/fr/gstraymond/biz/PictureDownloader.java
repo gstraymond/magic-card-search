@@ -9,10 +9,12 @@ import android.widget.ImageView.ScaleType;
 import android.widget.ProgressBar;
 
 import java.io.BufferedInputStream;
+import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import fr.gstraymond.R;
 import fr.gstraymond.android.CustomApplication;
 import fr.gstraymond.tools.Log;
 
@@ -48,6 +50,9 @@ public class PictureDownloader extends AsyncTask<Void, Void, Bitmap> {
             bitmap = BitmapFactory.decodeStream(inputStream);
             log.d("doInBackground : download " + bitmap.getByteCount());
             application.getBitmapCache().put(url, bitmap);
+        } catch (FileNotFoundException e) {
+            log.w("file not found: " + url);
+            bitmap = BitmapFactory.decodeResource(application.getResources(), R.drawable.mtg_card_back);
         } catch (Exception e) {
             log.e("error", e);
         } finally {
