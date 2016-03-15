@@ -3,15 +3,12 @@ package fr.gstraymond.android;
 import android.content.Intent;
 import android.os.Bundle;
 
-import com.crashlytics.android.Crashlytics;
-import com.crashlytics.android.answers.Answers;
 import fr.gstraymond.R;
 import fr.gstraymond.biz.ApplicationLoader;
 import fr.gstraymond.biz.SearchOptions;
 import fr.gstraymond.biz.SplashProcessor;
 import fr.gstraymond.search.model.response.SearchResult;
 import fr.gstraymond.tools.MapperUtil;
-import io.fabric.sdk.android.Fabric;
 
 public class SplashScreen extends CustomActivity {
 
@@ -20,7 +17,6 @@ public class SplashScreen extends CustomActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Fabric.with(this, new Crashlytics(), new Answers());
         setContentView(R.layout.activity_splash);
 
         mapperUtil = new MapperUtil<>(getObjectMapper(), Object.class);

@@ -21,6 +21,7 @@ public class CastingCostAssetLoader {
     private Log log = new Log(this);
 
     public void init(Context context) {
+        log.d("init");
         if (!init) {
             init = true;
             this.context = context;
@@ -45,14 +46,6 @@ public class CastingCostAssetLoader {
 
     public Drawable get(String file) {
         return assets.get(file);
-    }
-
-    public Map<String, Drawable> getAssets() {
-        return assets;
-    }
-
-    public void setAssets(Map<String, Drawable> assets) {
-        this.assets = assets;
     }
 
     private AssetManager getAssetManager() {

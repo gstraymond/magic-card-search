@@ -5,14 +5,14 @@
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
-        android:name="fr.gstraymond.android.CustomApplication"
+        android:name=".android.CustomApplication"
         android:allowBackup="false"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name">
 
         <!-- MAIN : Splash screen -->
         <activity
-            android:name="fr.gstraymond.android.SplashScreen"
+            android:name=".android.SplashScreen"
             android:label="@string/app_name"
             android:theme="@android:style/Theme.Black.NoTitleBar">
             <intent-filter>
@@ -20,45 +20,55 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="magic-card-search.com"
+                    android:scheme="http" />
+            </intent-filter>
         </activity>
 
         <!-- Card list -->
         <activity
-            android:name="fr.gstraymond.android.CardListActivity"
+            android:name=".android.CardListActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/app_name" />
 
         <!-- Card detail -->
         <activity
-            android:name="fr.gstraymond.android.CardDetailActivity"
-            android:parentActivityName="fr.gstraymond.android.CardListActivity">
+            android:name=".android.CardDetailActivity"
+            android:parentActivityName=".android.CardListActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".CardListActivity" />
+                android:value=".android.CardListActivity" />
         </activity>
 
         <!-- Card detail -->
         <activity
-            android:name="fr.gstraymond.android.CardPagerActivity"
-            android:parentActivityName="fr.gstraymond.android.CardDetailActivity">
+            android:name=".android.CardPagerActivity"
+            android:parentActivityName=".android.CardDetailActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".CardDetailActivity" />
+                android:value=".android.CardDetailActivity" />
         </activity>
 
         <!-- Help -->
         <activity
-            android:name="fr.gstraymond.android.HelpActivity"
+            android:name=".android.HelpActivity"
             android:label="@string/list_menu_help" />
 
         <!-- History -->
         <activity
-            android:name="fr.gstraymond.android.HistoryActivity"
+            android:name=".android.HistoryActivity"
             android:label="@string/list_menu_history"
-            android:parentActivityName="fr.gstraymond.android.CardListActivity">
+            android:parentActivityName=".android.CardListActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".CardListActivity" />
+                android:value=".android.CardListActivity" />
         </activity>
         <meta-data
             android:name="io.fabric.ApiKey"
