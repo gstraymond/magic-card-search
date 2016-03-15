@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">Magic Card Search</string>
     <string name="welcome_text"></string>
     <string name="progress_card_found">card found</string>
     <string name="progress_cards_found">cards found</string>
