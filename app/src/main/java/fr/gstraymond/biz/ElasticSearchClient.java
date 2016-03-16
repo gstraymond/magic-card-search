@@ -1,6 +1,6 @@
 package fr.gstraymond.biz;
 
-import android.widget.ProgressBar;
+import android.content.Context;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -12,11 +12,9 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.util.zip.GZIPInputStream;
 
-import fr.gstraymond.android.CustomApplication;
 import fr.gstraymond.db.HistoryDataSource;
 import fr.gstraymond.search.model.request.Request;
 import fr.gstraymond.search.model.response.SearchResult;
-import fr.gstraymond.tools.DisplaySizeUtil;
 import fr.gstraymond.tools.Log;
 import fr.gstraymond.tools.MapperUtil;
 import fr.gstraymond.tools.VersionUtils;
@@ -29,43 +27,48 @@ public class ElasticSearchClient {
     private static final String ENCODING = "UTF-8";
 
     private URL baseUrl;
-    private CustomApplication application;
     private MapperUtil<SearchResult> mapperUtil;
     private String appName;
+    private HistoryDataSource historyDataSource;
+
     private Log log = new Log(this);
 
-    public ElasticSearchClient(URL baseUrl, ObjectMapper objectMapper, CustomApplication application) {
+    public ElasticSearchClient(URL baseUrl, ObjectMapper objectMapper, Context context) {
         this.baseUrl = baseUrl;
-        this.application = application;
         this.mapperUtil = new MapperUtil<>(objectMapper, SearchResult.class);
-        this.appName = VersionUtils.getAppName(application);
+        this.appName = VersionUtils.getAppName(context);
+        this.historyDataSource = new HistoryDataSource(context);
     }
 
-    public SearchResult process(SearchOptions options, ProgressBar progressBar) {
+    public interface CallBacks {
+        void start();
+        void buildRequest();
+        void getResponse();
+        void end();
+    }
+
+    public SearchResult process(SearchOptions options, CallBacks callbacks) {
+        callbacks.start();
         Request request = new Request(options);
         String queryAsJson = mapperUtil.asJsonString(request);
         log.d("query as json : " + queryAsJson);
+        callbacks.buildRequest();
 
         HttpURLConnection urlConnection = null;
         SearchResult searchResult = null;
         try {
             String query = URLEncoder.encode(queryAsJson, ENCODING);
             urlConnection = buildRequest(query);
-            if (urlConnection == null) return null;
 
-            long now = System.currentTimeMillis();
-            String fileSize = getResponseSize(urlConnection);
-            log.i("downloaded " + fileSize + " in " + (System.currentTimeMillis() - now) + "ms");
-
-            progressBar.setProgress(33);
-
-            // historique
             if (options.isAddToHistory()) {
-                log.w("add to history : " + options);
-                new HistoryDataSource(application).appendHistory(options);
+                log.i("add to history : " + options);
+                historyDataSource.appendHistory(options);
             }
 
-            searchResult = parse(getInputStream(urlConnection), progressBar);
+            InputStream inputStream = getInputStream(urlConnection);
+            callbacks.getResponse();
+            searchResult = parse(inputStream);
+            callbacks.end();
         } catch (IOException e) {
             log.e("process", e);
         } finally {
@@ -74,40 +77,28 @@ public class ElasticSearchClient {
         return searchResult;
     }
 
-    private HttpURLConnection buildRequest(String query) {
-        try {
-            URL url = new URL(baseUrl.toString() + "?source=" + query);
-            HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
-            urlConnection.setRequestProperty(ACCEPT_ENCODING, GZIP);
-            urlConnection.setRequestProperty("User-Agent", "Android Java/" + VersionUtils.getOsVersion());
-            urlConnection.setRequestProperty("Referer", appName + " - " + VersionUtils.getAppVersion());
-            return urlConnection;
-        } catch (IOException e) {
-            log.e("buildRequest", e);
-        }
-        return null;
+    private HttpURLConnection buildRequest(String query) throws IOException {
+        URL url = new URL(baseUrl.toString() + "?source=" + query);
+        HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+        urlConnection.setRequestProperty(ACCEPT_ENCODING, GZIP);
+        urlConnection.setRequestProperty("User-Agent", "Android Java/" + VersionUtils.getOsVersion());
+        urlConnection.setRequestProperty("Referer", appName + " - " + VersionUtils.getAppVersion());
+        return urlConnection;
     }
 
     private InputStream getInputStream(HttpURLConnection connection) throws IOException {
         BufferedInputStream bis = new BufferedInputStream(connection.getInputStream());
         String contentEncoding = connection.getHeaderField(CONTENT_ENCODING);
-        if (contentEncoding != null && GZIP.equalsIgnoreCase(contentEncoding)) {
+        if (GZIP.equalsIgnoreCase(contentEncoding)) {
             return new GZIPInputStream(bis);
         }
         return bis;
     }
 
-    private String getResponseSize(HttpURLConnection urlConnection) {
-        String contentLength = urlConnection.getHeaderField("Content-Length");
-        long length = 0; // Long.parseLong(contentLength); //FIXME
-        return DisplaySizeUtil.getFileSize(length);
-    }
-
-    private SearchResult parse(InputStream stream, ProgressBar progressBar) {
+    private SearchResult parse(InputStream stream) {
         long now = System.currentTimeMillis();
         SearchResult searchResult = mapperUtil.read(stream);
         log.i("parse took " + (System.currentTimeMillis() - now) + "ms");
-        progressBar.setProgress(66);
         return searchResult;
     }
 }

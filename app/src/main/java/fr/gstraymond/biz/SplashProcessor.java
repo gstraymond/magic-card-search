@@ -12,23 +12,23 @@ import fr.gstraymond.tools.Log;
 public class SplashProcessor extends AsyncTask<Void, Integer, SearchResult> {
 
     private SplashScreen activity;
-    private ProgressBar progressBar;
     private SearchOptions options;
+    private ProgressBarUpdater progressBarUpdater;
+    private ElasticSearchClient elasticSearchClient;
     private Log log = new Log(this);
 
     public SplashProcessor(SplashScreen activity, SearchOptions options) {
         super();
         this.activity = activity;
-        this.progressBar = getProgressBar();
-
-        progressBar.setProgress(0);
+        this.progressBarUpdater = new ProgressBarUpdater(getProgressBar());
+        this.elasticSearchClient = getCustomApplication().getElasticSearchClient();
         this.options = options;
     }
 
     @Override
     protected SearchResult doInBackground(Void... params) {
         long now = System.currentTimeMillis();
-        SearchResult searchResult = getCustomApplication().getElasticSearchClient().process(options, progressBar);
+        SearchResult searchResult = elasticSearchClient.process(options, progressBarUpdater);
 
         if (searchResult != null && searchResult.getHits() != null) {
             log.i(searchResult.getHits().getTotal() + " cards found in " + searchResult.getTook() + " ms");

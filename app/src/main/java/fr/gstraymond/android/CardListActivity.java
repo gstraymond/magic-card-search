@@ -12,6 +12,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -22,6 +23,7 @@ import fr.gstraymond.android.fragment.CardListFragment;
 import fr.gstraymond.android.fragment.CardPagerFragment;
 import fr.gstraymond.android.fragment.CardParentListFragment;
 import fr.gstraymond.android.tools.amazon.AmazonUtils;
+import fr.gstraymond.biz.ProgressBarUpdater;
 import fr.gstraymond.biz.SearchOptions;
 import fr.gstraymond.biz.SearchProcessor;
 import fr.gstraymond.biz.UIUpdater;
@@ -59,6 +61,7 @@ public class CardListActivity extends CustomActivity implements
     private ActionBarDrawerToggle drawerToggle;
     private DrawerLayout drawerLayout;
     private Toast loadingToast;
+    private ProgressBarUpdater progressBarUpdater;
 
     ChangeLog changeLog;
 
@@ -117,6 +120,7 @@ public class CardListActivity extends CustomActivity implements
             actionBarSetDisplayHomeAsUpEnabled(true);
         }
 
+        progressBarUpdater = new ProgressBarUpdater((ProgressBar) findViewById(R.id.progress_bar));
         actionBarSetHomeButtonEnabled(true);
         actionBarSetTitle(R.string.drawer_open);
 
@@ -414,5 +418,9 @@ public class CardListActivity extends CustomActivity implements
 
     public void setLoadingToast(Toast loadingToast) {
         this.loadingToast = loadingToast;
+    }
+
+    public ProgressBarUpdater getProgressBarUpdater() {
+        return progressBarUpdater;
     }
 }

@@ -31,9 +31,9 @@ public class FacetListAdapter extends BaseExpandableListAdapter {
 
     public FacetListAdapter(Map<String, Facet> facets, SearchOptions options, Context context) {
         this.facetMap = facets;
-        this.selectedFacets = new ArrayList<String>();
-        this.facetList = new ArrayList<String>();
-        this.selectedTerms = new ArrayList<Term>();
+        this.selectedFacets = new ArrayList<>();
+        this.facetList = new ArrayList<>();
+        this.selectedTerms = new ArrayList<>();
         this.options = options;
 
         if (facets == null) {

@@ -48,7 +48,7 @@ public class PictureDownloader extends AsyncTask<Void, Void, Bitmap> {
             urlConnection = (HttpURLConnection) new URL(url).openConnection();
             InputStream inputStream = new BufferedInputStream(urlConnection.getInputStream());
             bitmap = BitmapFactory.decodeStream(inputStream);
-            log.d("doInBackground : download " + bitmap.getByteCount());
+            log.d("doInBackground : download " + url);
             application.getBitmapCache().put(url, bitmap);
         } catch (FileNotFoundException e) {
             log.w("file not found: " + url);
