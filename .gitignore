@@ -11,7 +11,10 @@ gradle/
 gradlew
 import-summary.txt
 app/app.iml
+browser-app/browser-app.iml
+commons/commons.iml
 .gradle
 .idea
 app/.keyPassword
 app/.storePassword
+browser-app/src/main/res/raw/

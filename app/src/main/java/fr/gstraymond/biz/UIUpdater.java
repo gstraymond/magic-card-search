@@ -52,7 +52,7 @@ public class UIUpdater extends AsyncTask<Void, Void, SearchResult> {
         }
 
         int totalCardCount = 0;
-        ArrayList<Card> cards = new ArrayList<Card>();
+        ArrayList<Card> cards = new ArrayList<>();
 
         if (result.getHits() != null) {
             totalCardCount = result.getHits().getTotal();
