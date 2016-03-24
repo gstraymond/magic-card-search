@@ -1,7 +1,7 @@
 package fr.gstraymond.android.fragment;
 
-import android.app.Activity;
 import android.app.ListFragment;
+import android.content.Context;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.view.View;
@@ -28,7 +28,7 @@ public class CardListFragment extends ListFragment {
     private ArrayAdapter<Card> arrayAdapter;
 
     public interface Callbacks {
-        public void onItemSelected(Parcelable id);
+        void onItemSelected(Parcelable id);
     }
 
     private static Callbacks dummyCallbacks = new Callbacks() {
@@ -72,16 +72,16 @@ public class CardListFragment extends ListFragment {
     }
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
+    public void onAttach(Context context) {
+        super.onAttach(context);
 
         // Activities containing this fragment must implement its callbacks.
-        if (!(activity instanceof Callbacks)) {
+        if (!(context instanceof Callbacks)) {
             throw new IllegalStateException(
                     "Activity must implement fragment's callbacks.");
         }
 
-        callbacks = (Callbacks) activity;
+        callbacks = (Callbacks) context;
     }
 
     @Override
@@ -118,6 +118,8 @@ public class CardListFragment extends ListFragment {
     }
 
     public void appendCards(List<Card> cards) {
+        if (arrayAdapter == null) return;
+        
         arrayAdapter.addAll(cards);
         arrayAdapter.notifyDataSetChanged();
     }
