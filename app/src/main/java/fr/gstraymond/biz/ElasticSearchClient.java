@@ -80,6 +80,7 @@ public class ElasticSearchClient {
     private HttpURLConnection buildRequest(String query) throws IOException {
         URL url = new URL(baseUrl.toString() + "?source=" + query);
         HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+        urlConnection.setRequestProperty("connection", "close");
         urlConnection.setRequestProperty(ACCEPT_ENCODING, GZIP);
         urlConnection.setRequestProperty("User-Agent", "Android Java/" + VersionUtils.getOsVersion());
         urlConnection.setRequestProperty("Referer", appName + " - " + VersionUtils.getAppVersion());
