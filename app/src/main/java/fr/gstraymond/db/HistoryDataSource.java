@@ -2,6 +2,8 @@ package fr.gstraymond.db;
 
 import android.content.Context;
 
+import com.magic.card.search.commons.log.Log;
+
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -12,7 +14,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import fr.gstraymond.biz.SearchOptions;
-import fr.gstraymond.tools.Log;
 
 public class HistoryDataSource {
 

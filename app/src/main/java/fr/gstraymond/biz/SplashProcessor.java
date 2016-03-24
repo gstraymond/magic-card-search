@@ -3,11 +3,12 @@ package fr.gstraymond.biz;
 import android.os.AsyncTask;
 import android.widget.ProgressBar;
 
+import com.magic.card.search.commons.log.Log;
+
 import fr.gstraymond.R;
 import fr.gstraymond.android.CustomApplication;
 import fr.gstraymond.android.SplashScreen;
 import fr.gstraymond.search.model.response.SearchResult;
-import fr.gstraymond.tools.Log;
 
 public class SplashProcessor extends AsyncTask<Void, Integer, SearchResult> {
 

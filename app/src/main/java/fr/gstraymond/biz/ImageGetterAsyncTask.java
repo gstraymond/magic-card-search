@@ -7,10 +7,10 @@ import android.graphics.drawable.LevelListDrawable;
 import android.os.AsyncTask;
 import android.widget.TextView;
 
+import com.magic.card.search.commons.log.Log;
+
 import java.io.InputStream;
 import java.net.URL;
-
-import fr.gstraymond.tools.Log;
 
 public class ImageGetterAsyncTask extends AsyncTask<Void, Void, BitmapDrawable> {
 

@@ -23,7 +23,7 @@ public class SplashScreen extends CustomActivity {
 
 		/* chargement du client HTTP / object mapper / assets */
         new ApplicationLoader(this).execute();
-		
+
 		/* lancement de la recherche */
         SearchOptions options = new SearchOptions().setRandom(true).setAddToHistory(false);
         new SplashProcessor(this, options).execute();

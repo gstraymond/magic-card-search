@@ -2,6 +2,7 @@ package fr.gstraymond.tools;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.magic.card.search.commons.log.Log;
 
 import java.io.InputStream;
 
@@ -11,6 +12,10 @@ public class MapperUtil<T> {
     private Class<T> clazz;
     private Log log = new Log(this);
 
+    @Deprecated
+    /**
+     * com.magic.card.search.commons.json.MapperUtil
+     */
     public MapperUtil(ObjectMapper objectMapper, Class<T> clazz) {
         this.objectMapper = objectMapper;
         this.clazz = clazz;

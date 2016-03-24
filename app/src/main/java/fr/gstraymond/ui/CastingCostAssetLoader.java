@@ -4,12 +4,13 @@ import android.content.Context;
 import android.content.res.AssetManager;
 import android.graphics.drawable.Drawable;
 
+import com.magic.card.search.commons.log.Log;
+
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
 import fr.gstraymond.R;
-import fr.gstraymond.tools.Log;
 
 public class CastingCostAssetLoader {
 

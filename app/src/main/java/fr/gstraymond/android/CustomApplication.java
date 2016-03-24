@@ -1,13 +1,7 @@
 package fr.gstraymond.android;
 
-import android.app.Application;
-
-import com.crashlytics.android.Crashlytics;
-import com.crashlytics.android.answers.Answers;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
+import com.magic.card.search.commons.application.BaseApplication;
+import com.magic.card.search.commons.log.Log;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -15,11 +9,9 @@ import java.net.URL;
 import fr.gstraymond.R;
 import fr.gstraymond.biz.ElasticSearchClient;
 import fr.gstraymond.cache.BitmapCache;
-import fr.gstraymond.tools.Log;
 import fr.gstraymond.ui.CastingCostAssetLoader;
-import io.fabric.sdk.android.Fabric;
 
-public class CustomApplication extends Application {
+public class CustomApplication extends BaseApplication {
 
     private static final String TABLET = "tablet";
 
@@ -28,7 +20,6 @@ public class CustomApplication extends Application {
 
     private ElasticSearchClient elasticSearchClient;
     private CastingCostAssetLoader castingCostAssetLoader;
-    private ObjectMapper objectMapper;
     private Boolean isTablet;
     private BitmapCache bitmapCache;
     private Log log = new Log(this);
@@ -36,8 +27,6 @@ public class CustomApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        initFabric();
-        initObjectMapper();
         initElasticSearchClient();
         initIsTablet();
         initBitmapCache();
@@ -45,11 +34,6 @@ public class CustomApplication extends Application {
 
     public void init() {
         initCastingCostAssetLoader();
-    }
-
-    private void initFabric() {
-        log.d("initFabric");
-        Fabric.with(this, new Crashlytics(), new Answers());
     }
 
     private void initElasticSearchClient() {
@@ -66,14 +50,6 @@ public class CustomApplication extends Application {
         CastingCostAssetLoader loader = new CastingCostAssetLoader();
         loader.init(this);
         this.castingCostAssetLoader = loader;
-    }
-
-    private void initObjectMapper() {
-        log.d("initObjectMapper");
-        this.objectMapper = new ObjectMapper()
-                .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
-                .configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false)
-                .setSerializationInclusion(JsonInclude.Include.NON_NULL);
     }
 
     // FIXME find another way
@@ -97,10 +73,6 @@ public class CustomApplication extends Application {
             initCastingCostAssetLoader();
         }
         return castingCostAssetLoader;
-    }
-
-    public ObjectMapper getObjectMapper() {
-        return objectMapper;
     }
 
     public boolean isTablet() {

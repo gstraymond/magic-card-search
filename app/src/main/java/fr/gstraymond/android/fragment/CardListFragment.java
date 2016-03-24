@@ -1,7 +1,7 @@
 package fr.gstraymond.android.fragment;
 
+import android.app.Activity;
 import android.app.ListFragment;
-import android.content.Context;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.view.View;
@@ -72,16 +72,14 @@ public class CardListFragment extends ListFragment {
     }
 
     @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
 
-        // Activities containing this fragment must implement its callbacks.
-        if (!(context instanceof Callbacks)) {
-            throw new IllegalStateException(
-                    "Activity must implement fragment's callbacks.");
+        if (!(activity instanceof Callbacks)) {
+            throw new IllegalStateException("Activity must implement fragment's callbacks.");
         }
 
-        callbacks = (Callbacks) context;
+        callbacks = (Callbacks) activity;
     }
 
     @Override
@@ -91,11 +89,9 @@ public class CardListFragment extends ListFragment {
     }
 
     @Override
-    public void onListItemClick(ListView listView, View view, int position,
-                                long id) {
+    public void onListItemClick(ListView listView, View view, int position, long id) {
         super.onListItemClick(listView, view, position, id);
         callbacks.onItemSelected(cards.get(position));
-        // getListView().setItemChecked(position, true);
     }
 
     @Override

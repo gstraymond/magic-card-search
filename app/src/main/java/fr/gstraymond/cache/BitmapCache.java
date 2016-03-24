@@ -3,7 +3,7 @@ package fr.gstraymond.cache;
 import android.graphics.Bitmap;
 import android.util.LruCache;
 
-import fr.gstraymond.tools.Log;
+import com.magic.card.search.commons.log.Log;
 
 public class BitmapCache {
     private LruCache<String, Bitmap> memLruCache;

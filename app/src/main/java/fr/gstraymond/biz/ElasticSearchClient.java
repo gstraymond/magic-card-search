@@ -3,6 +3,7 @@ package fr.gstraymond.biz;
 import android.content.Context;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.magic.card.search.commons.log.Log;
 
 import java.io.BufferedInputStream;
 import java.io.IOException;
@@ -15,7 +16,6 @@ import java.util.zip.GZIPInputStream;
 import fr.gstraymond.db.HistoryDataSource;
 import fr.gstraymond.search.model.request.Request;
 import fr.gstraymond.search.model.response.SearchResult;
-import fr.gstraymond.tools.Log;
 import fr.gstraymond.tools.MapperUtil;
 import fr.gstraymond.tools.VersionUtils;
 
@@ -42,8 +42,11 @@ public class ElasticSearchClient {
 
     public interface CallBacks {
         void start();
+
         void buildRequest();
+
         void getResponse();
+
         void end();
     }
 

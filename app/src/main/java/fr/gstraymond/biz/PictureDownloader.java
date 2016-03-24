@@ -8,6 +8,8 @@ import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 import android.widget.ProgressBar;
 
+import com.magic.card.search.commons.log.Log;
+
 import java.io.BufferedInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
@@ -16,7 +18,6 @@ import java.net.URL;
 
 import fr.gstraymond.R;
 import fr.gstraymond.android.CustomApplication;
-import fr.gstraymond.tools.Log;
 
 public class PictureDownloader extends AsyncTask<Void, Void, Bitmap> {
 

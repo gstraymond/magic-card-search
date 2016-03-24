@@ -5,10 +5,11 @@ import android.content.res.AssetManager;
 import android.graphics.drawable.Drawable;
 import android.text.Html.ImageGetter;
 
+import com.magic.card.search.commons.log.Log;
+
 import java.io.IOException;
 
 import fr.gstraymond.R;
-import fr.gstraymond.tools.Log;
 
 public class SetImageGetter implements ImageGetter {
 

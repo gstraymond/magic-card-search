@@ -7,6 +7,7 @@ buildscript {
         classpath 'io.fabric.tools:gradle:1.+'
     }
 }
+
 apply plugin: 'com.android.application'
 apply plugin: 'io.fabric'
 
@@ -59,12 +60,7 @@ android {
 }
 
 dependencies {
-    compile 'com.fasterxml.jackson.core:jackson-core:2.7.0'
-    compile 'com.fasterxml.jackson.core:jackson-annotations:2.7.0'
-    compile 'com.fasterxml.jackson.core:jackson-databind:2.7.0'
+    compile project(':commons')
     compile 'com.android.support:support-v13:23.2.1'
     compile files('libs/amazon-mobile-associates-1.0.54.0.jar')
-    compile('com.crashlytics.sdk.android:crashlytics:2.5.5@aar') {
-        transitive = true;
-    }
 }

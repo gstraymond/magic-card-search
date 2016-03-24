@@ -6,9 +6,9 @@ import com.amazon.device.associates.AssociatesAPI;
 import com.amazon.device.associates.LinkService;
 import com.amazon.device.associates.NotInitializedException;
 import com.amazon.device.associates.OpenSearchPageRequest;
+import com.magic.card.search.commons.log.Log;
 
 import fr.gstraymond.search.model.response.Card;
-import fr.gstraymond.tools.Log;
 
 public class AmazonUtils {
 

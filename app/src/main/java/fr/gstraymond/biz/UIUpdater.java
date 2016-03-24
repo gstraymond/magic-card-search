@@ -74,7 +74,7 @@ public class UIUpdater extends AsyncTask<Void, Void, SearchResult> {
     }
 
     private void updateUIList(int totalCardCount, ArrayList<Card> cards) {
-        if (! activity.isFinishing()) {
+        if (!activity.isFinishing()) {
             if (getOptions().isAppend()) {
                 getCardListFragment().appendCards(cards);
             } else {

@@ -17,6 +17,8 @@ import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.magic.card.search.commons.log.Log;
+
 import fr.gstraymond.R;
 import fr.gstraymond.android.fragment.CardDetailFragment;
 import fr.gstraymond.android.fragment.CardListFragment;
@@ -29,7 +31,6 @@ import fr.gstraymond.biz.SearchProcessor;
 import fr.gstraymond.biz.UIUpdater;
 import fr.gstraymond.db.History;
 import fr.gstraymond.search.model.response.Card;
-import fr.gstraymond.tools.Log;
 import fr.gstraymond.ui.EndScrollListener;
 import fr.gstraymond.ui.TextListener;
 import sheetrock.panda.changelog.ChangeLog;
@@ -186,6 +187,7 @@ public class CardListActivity extends CustomActivity implements
      */
     @Override
     public void onItemSelected(Parcelable card) {
+        log.d(String.format("onItemSelected parcelable %s", card));
         currentCard = (Card) card;
         if (isTablet()) {
             replaceFragment(new CardDetailFragment(),
@@ -207,6 +209,7 @@ public class CardListActivity extends CustomActivity implements
 
     @Override
     public void onItemSelected(int id) {
+        log.d(String.format("onItemSelected id %s", id));
         if (isTablet()) {
             Bundle bundle = getCurrentCardBundle();
             // first element is a card

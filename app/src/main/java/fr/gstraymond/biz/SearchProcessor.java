@@ -4,12 +4,13 @@ import android.app.FragmentManager;
 import android.os.AsyncTask;
 import android.widget.TextView;
 
+import com.magic.card.search.commons.log.Log;
+
 import fr.gstraymond.R;
 import fr.gstraymond.android.CardListActivity;
 import fr.gstraymond.android.CustomApplication;
 import fr.gstraymond.android.fragment.CardListFragment;
 import fr.gstraymond.search.model.response.SearchResult;
-import fr.gstraymond.tools.Log;
 
 import static android.widget.Toast.LENGTH_SHORT;
 import static android.widget.Toast.makeText;
