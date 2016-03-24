@@ -32,7 +32,7 @@ public class UIUpdater extends AsyncTask<Void, Void, SearchResult> {
     public UIUpdater(CardListActivity activity, String resultAsString, ObjectMapper objectMapper) {
         this(activity);
         this.resultAsString = resultAsString;
-        this.mapperUtil = new MapperUtil<SearchResult>(objectMapper, SearchResult.class);
+        this.mapperUtil = new MapperUtil<>(objectMapper, SearchResult.class);
     }
 
     public UIUpdater(CardListActivity activity) {
@@ -66,22 +66,25 @@ public class UIUpdater extends AsyncTask<Void, Void, SearchResult> {
             textId = R.string.progress_card_found;
         }
 
-        getWelcomeTextView().setText(totalCardCount + " " + activity.getString(textId));
+        String text = String.format("%s %s", totalCardCount, activity.getString(textId));
+        getWelcomeTextView().setText(text);
 
         updateUIList(totalCardCount, cards);
         updateUIFacets(result);
     }
 
     private void updateUIList(int totalCardCount, ArrayList<Card> cards) {
-        if (getOptions().isAppend()) {
-            getCardListFragment().appendCards(cards);
-        } else {
-            Bundle bundle = new Bundle();
-            bundle.putParcelableArrayList(CARD_LIST, cards);
-            activity.replaceFragment(new CardListFragment(), R.id.card_list, bundle);
+        if (! activity.isFinishing()) {
+            if (getOptions().isAppend()) {
+                getCardListFragment().appendCards(cards);
+            } else {
+                Bundle bundle = new Bundle();
+                bundle.putParcelableArrayList(CARD_LIST, cards);
+                activity.replaceFragment(new CardListFragment(), R.id.card_list, bundle);
 
+            }
+            activity.setTotalCardCount(totalCardCount);
         }
-        activity.setTotalCardCount(totalCardCount);
     }
 
 
