@@ -31,7 +31,7 @@ public class HistoryDataSource {
             FileOutputStream fos = context.openFileOutput(FILENAME, Context.MODE_APPEND);
             fos.write((history.toString() + "\n").getBytes());
             fos.close();
-        } catch (IOException e) {
+        } catch (Exception e) {
             log.e("appendHistory", e);
         }
     }
@@ -71,7 +71,7 @@ public class HistoryDataSource {
             return cardHistories;
         } catch (FileNotFoundException e) {
             log.w("getAllHistory not found");
-        } catch (IOException e) {
+        } catch (Exception e) {
             log.e("getAllHistory", e);
         }
         return cardHistories;
@@ -80,6 +80,7 @@ public class HistoryDataSource {
     public int getLastId() {
         List<History> histories = getAllHistory();
         if (histories.isEmpty()) {
+            clearHistory();
             return 0;
         }
         return histories.get(histories.size() - 1).getId();
@@ -104,7 +105,7 @@ public class HistoryDataSource {
             }
             fos.close();
         } catch (IOException e) {
-            log.e("appendHistory", e);
+            log.e("writeHistory", e);
         }
     }
 }

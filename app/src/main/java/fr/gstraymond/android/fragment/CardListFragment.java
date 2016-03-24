@@ -119,7 +119,7 @@ public class CardListFragment extends ListFragment {
 
     public void appendCards(List<Card> cards) {
         if (arrayAdapter == null) return;
-        
+
         arrayAdapter.addAll(cards);
         arrayAdapter.notifyDataSetChanged();
     }
