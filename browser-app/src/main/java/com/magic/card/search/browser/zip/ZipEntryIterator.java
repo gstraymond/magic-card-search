@@ -33,7 +33,7 @@ public abstract class ZipEntryIterator<A> {
         } catch (IOException e) {
             log.e("getAllEntries", e);
         }
-        log.d(String.format("iterate took %sms", System.currentTimeMillis() - now));
+        log.df("iterate took %sms", System.currentTimeMillis() - now);
         return zipEntryProcessor.getResults();
     }
 }

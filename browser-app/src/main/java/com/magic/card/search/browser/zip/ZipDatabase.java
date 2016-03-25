@@ -18,7 +18,7 @@ public class ZipDatabase {
 
     public ZipDatabase(CustomApplication application) {
         this.application = application;
-        this.mapperUtil = new MapperUtil<>(application.getObjectMapper(), MTGCard.class);
+        this.mapperUtil = MapperUtil.fromCollectionType(application.getObjectMapper(), MTGCard.class);
         this.nameZipEntryIterator = new NameZipEntryIterator();
     }
 

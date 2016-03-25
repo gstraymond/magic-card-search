@@ -8,6 +8,7 @@ import android.widget.ExpandableListView;
 import android.widget.TextView;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.magic.card.search.commons.json.MapperUtil;
 
 import java.util.ArrayList;
 
@@ -17,7 +18,6 @@ import fr.gstraymond.android.fragment.CardListFragment;
 import fr.gstraymond.search.model.response.Card;
 import fr.gstraymond.search.model.response.Hit;
 import fr.gstraymond.search.model.response.SearchResult;
-import fr.gstraymond.tools.MapperUtil;
 import fr.gstraymond.ui.FacetOnChildClickListener;
 import fr.gstraymond.ui.adapter.FacetListAdapter;
 
@@ -32,7 +32,7 @@ public class UIUpdater extends AsyncTask<Void, Void, SearchResult> {
     public UIUpdater(CardListActivity activity, String resultAsString, ObjectMapper objectMapper) {
         this(activity);
         this.resultAsString = resultAsString;
-        this.mapperUtil = new MapperUtil<>(objectMapper, SearchResult.class);
+        this.mapperUtil = MapperUtil.fromType(objectMapper, SearchResult.class);
     }
 
     public UIUpdater(CardListActivity activity) {

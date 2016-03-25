@@ -6,13 +6,14 @@ import android.text.method.LinkMovementMethod;
 import android.view.MenuItem;
 import android.widget.TextView;
 
+import com.magic.card.search.commons.json.MapperUtil;
+
 import java.io.InputStream;
 
 import fr.gstraymond.R;
 import fr.gstraymond.biz.CastingCostImageGetter;
 import fr.gstraymond.search.help.HelpText;
 import fr.gstraymond.tools.HelpFormatter;
-import fr.gstraymond.tools.MapperUtil;
 import fr.gstraymond.ui.CastingCostAssetLoader;
 
 public class HelpActivity extends CustomActivity {
@@ -41,7 +42,7 @@ public class HelpActivity extends CustomActivity {
 
     private HelpText getHelpText() {
         InputStream stream = getResources().openRawResource(R.raw.help);
-        return new MapperUtil<HelpText>(getObjectMapper(), HelpText.class).read(stream);
+        return MapperUtil.fromType(getObjectMapper(), HelpText.class).read(stream);
     }
 
     @Override

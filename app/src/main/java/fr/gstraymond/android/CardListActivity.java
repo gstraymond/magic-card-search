@@ -187,7 +187,7 @@ public class CardListActivity extends CustomActivity implements
      */
     @Override
     public void onItemSelected(Parcelable card) {
-        log.d(String.format("onItemSelected parcelable %s", card));
+        log.df("onItemSelected parcelable %s", card);
         currentCard = (Card) card;
         if (isTablet()) {
             replaceFragment(new CardDetailFragment(),
@@ -209,7 +209,7 @@ public class CardListActivity extends CustomActivity implements
 
     @Override
     public void onItemSelected(int id) {
-        log.d(String.format("onItemSelected id %s", id));
+        log.df("onItemSelected id %s", id);
         if (isTablet()) {
             Bundle bundle = getCurrentCardBundle();
             // first element is a card

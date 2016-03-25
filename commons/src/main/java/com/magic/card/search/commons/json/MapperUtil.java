@@ -3,6 +3,7 @@ package com.magic.card.search.commons.json;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.type.TypeFactory;
 import com.magic.card.search.commons.log.Log;
 
 import java.io.InputStream;
@@ -14,21 +15,32 @@ public class MapperUtil<T> {
     private JavaType javaType;
     private Log log = new Log(this);
 
-    public MapperUtil(ObjectMapper objectMapper, JavaType javaType) {
-        this.objectMapper = objectMapper;
-        this.javaType = javaType;
+    public static <T> MapperUtil<T> fromType(ObjectMapper objectMapper, Class<T> clazz) {
+        return new MapperUtil<>(
+                objectMapper,
+                getTypeFactory(objectMapper).constructType(clazz));
     }
 
-    public MapperUtil(ObjectMapper objectMapper, Class clazz) {
+    public static <T> MapperUtil<List<T>> fromCollectionType(ObjectMapper objectMapper, Class<T> clazz) {
+        return new MapperUtil<>(
+                objectMapper,
+                getTypeFactory(objectMapper).constructCollectionType(List.class, clazz));
+    }
+
+    private static TypeFactory getTypeFactory(ObjectMapper objectMapper) {
+        return objectMapper.getTypeFactory();
+    }
+
+    private MapperUtil(ObjectMapper objectMapper, JavaType javaType) {
         this.objectMapper = objectMapper;
-        this.javaType = objectMapper.getTypeFactory().constructCollectionType(List.class, clazz);
+        this.javaType = javaType;
     }
 
     public T read(InputStream stream) {
         long now = System.currentTimeMillis();
         try {
             T t = objectMapper.readValue(stream, javaType);
-            log.d(String.format("read [%s] took %sms", javaType, System.currentTimeMillis() - now));
+            log.df("read %s took %sms", javaType, System.currentTimeMillis() - now);
             return t;
         } catch (Exception e) {
             log.e("read", e);
@@ -41,7 +53,7 @@ public class MapperUtil<T> {
         long now = System.currentTimeMillis();
         try {
             T t = objectMapper.readValue(string, javaType);
-            log.d(String.format("read [%s] took %sms", javaType, System.currentTimeMillis() - now));
+            log.df("read %s took %sms", javaType, System.currentTimeMillis() - now);
             return t;
         } catch (Exception e) {
             log.e("read", e);
@@ -54,7 +66,7 @@ public class MapperUtil<T> {
         long now = System.currentTimeMillis();
         try {
             String s = objectMapper.writeValueAsString(object);
-            log.d(String.format("to json took %sms", System.currentTimeMillis() - now));
+            log.df("to json took %sms", System.currentTimeMillis() - now);
             return s;
         } catch (JsonProcessingException e) {
             log.e("asJsonString", e);

@@ -12,20 +12,20 @@ public class BitmapCache {
     public BitmapCache() {
         final int maxMemory = (int) (Runtime.getRuntime().maxMemory() / 1024);
         final int cacheSize = maxMemory / 30;
-        log.d(String.format("BitmapCache --> cachesize %s", cacheSize));
+        log.df("BitmapCache --> cachesize %s", cacheSize);
 
         memLruCache = new LruCache<String, Bitmap>(cacheSize) {
             @Override
             protected void entryRemoved(boolean evicted, String key, Bitmap oldValue, Bitmap newValue) {
                 super.entryRemoved(evicted, key, oldValue, newValue);
-                log.d(String.format("entryRemoved --> recycling %s", key));
+                log.df("entryRemoved --> recycling %s", key);
                 oldValue.recycle();
             }
 
             @Override
             protected int sizeOf(String key, Bitmap bitmap) {
                 int size = bitmap.getByteCount() / 1024;
-                log.d(String.format("sizeof --> %s %s", size, key));
+                log.df("sizeof --> %s %s", size, key);
                 return size;
             }
         };

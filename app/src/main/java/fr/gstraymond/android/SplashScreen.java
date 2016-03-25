@@ -3,12 +3,13 @@ package fr.gstraymond.android;
 import android.content.Intent;
 import android.os.Bundle;
 
+import com.magic.card.search.commons.json.MapperUtil;
+
 import fr.gstraymond.R;
 import fr.gstraymond.biz.ApplicationLoader;
 import fr.gstraymond.biz.SearchOptions;
 import fr.gstraymond.biz.SplashProcessor;
 import fr.gstraymond.search.model.response.SearchResult;
-import fr.gstraymond.tools.MapperUtil;
 
 public class SplashScreen extends CustomActivity {
 
@@ -19,7 +20,7 @@ public class SplashScreen extends CustomActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
 
-        mapperUtil = new MapperUtil<>(getObjectMapper(), Object.class);
+        mapperUtil = MapperUtil.fromType(getObjectMapper(), Object.class);
 
 		/* chargement du client HTTP / object mapper / assets */
         new ApplicationLoader(this).execute();
