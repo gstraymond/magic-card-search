@@ -60,7 +60,7 @@ public class ChangeLog {
         this.context = context;
 
         // get version numbers
-        this.lastVersion = sp.getString(VERSION_KEY, NO_VERSION);
+        this.lastVersion = sp.getString(VERSION_KEY, NO_VERSION).replace(" debug", "");
         Log.d(TAG, "lastVersion: " + lastVersion);
         try {
             this.thisVersion = context.getPackageManager().getPackageInfo(context.getPackageName(),
