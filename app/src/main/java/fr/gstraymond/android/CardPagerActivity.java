@@ -8,7 +8,7 @@ import fr.gstraymond.android.fragment.CardPagerFragment;
 
 import static fr.gstraymond.constants.Consts.POSITION;
 
-public class CardPagerActivity extends CardCommonActivy {
+public class CardPagerActivity extends CardCommonActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

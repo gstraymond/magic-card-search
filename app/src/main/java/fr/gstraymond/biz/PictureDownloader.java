@@ -15,6 +15,7 @@ import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.UnknownHostException;
 
 import fr.gstraymond.R;
 import fr.gstraymond.android.CustomApplication;
@@ -54,6 +55,8 @@ public class PictureDownloader extends AsyncTask<Void, Void, Bitmap> {
         } catch (FileNotFoundException e) {
             log.w("file not found: " + url);
             bitmap = BitmapFactory.decodeResource(application.getResources(), R.drawable.mtg_card_back);
+        } catch (UnknownHostException e) {
+            log.w("unknown host: " + e.getMessage());
         } catch (Exception e) {
             log.e("error", e);
         } finally {

@@ -8,7 +8,7 @@ import fr.gstraymond.tools.LanguageUtil;
 
 import static fr.gstraymond.constants.Consts.CARD;
 
-public abstract class CardCommonActivy extends CustomActivity {
+public abstract class CardCommonActivity extends CustomActivity {
 
     private Card card;
 

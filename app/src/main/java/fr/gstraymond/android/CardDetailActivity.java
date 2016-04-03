@@ -18,7 +18,7 @@ import fr.gstraymond.tools.LanguageUtil;
 import static fr.gstraymond.constants.Consts.CARD;
 import static fr.gstraymond.constants.Consts.POSITION;
 
-public class CardDetailActivity extends CardCommonActivy implements
+public class CardDetailActivity extends CardCommonActivity implements
         CardDetailFragment.Callbacks {
 
     @Override

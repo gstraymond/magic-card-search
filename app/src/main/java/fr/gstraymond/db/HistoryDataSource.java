@@ -60,6 +60,7 @@ public class HistoryDataSource {
             BufferedReader br = new BufferedReader(new InputStreamReader(inputStream));
             String line;
             while ((line = br.readLine()) != null) {
+                if (line.isEmpty()) continue;
                 try {
                     History history = new History(line);
                     cardHistories.add(history);

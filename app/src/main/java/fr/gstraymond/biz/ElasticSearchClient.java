@@ -12,6 +12,7 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.net.UnknownHostException;
 import java.util.zip.GZIPInputStream;
 
 import fr.gstraymond.db.HistoryDataSource;
@@ -72,6 +73,8 @@ public class ElasticSearchClient {
             callbacks.getResponse();
             searchResult = parse(inputStream);
             callbacks.end();
+        } catch (UnknownHostException e) {
+            log.w("unknown host: " + e.getMessage());
         } catch (IOException e) {
             log.e("process", e);
         } finally {
