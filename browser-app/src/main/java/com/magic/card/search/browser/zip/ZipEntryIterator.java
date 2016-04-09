@@ -30,6 +30,7 @@ public abstract class ZipEntryIterator<A> {
             while ((entry = zis.getNextEntry()) != null) {
                 zipEntryProcessor.process(entry, zis);
             }
+            zis.close();
         } catch (IOException e) {
             log.e("getAllEntries", e);
         }
