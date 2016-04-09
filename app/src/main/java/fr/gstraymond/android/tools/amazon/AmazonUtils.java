@@ -6,6 +6,8 @@ import com.amazon.device.associates.AssociatesAPI;
 import com.amazon.device.associates.LinkService;
 import com.amazon.device.associates.NotInitializedException;
 import com.amazon.device.associates.OpenSearchPageRequest;
+import com.crashlytics.android.answers.Answers;
+import com.crashlytics.android.answers.ContentViewEvent;
 import com.magic.card.search.commons.log.Log;
 
 import fr.gstraymond.search.model.response.Card;
@@ -20,6 +22,7 @@ public class AmazonUtils {
     }
 
     public static void openSearch(Context context, Card card) {
+        Answers.getInstance().logContentView(new ContentViewEvent().putContentName("Amazon").putContentId(card.getTitle()));
         OpenSearchPageRequest request = new OpenSearchPageRequest(formatBuyTitle(context, card));
         try {
             LinkService linkService = AssociatesAPI.getLinkService();

@@ -3,7 +3,8 @@ package fr.gstraymond.android;
 import android.app.Activity;
 import android.app.Fragment;
 import android.os.Bundle;
-
+import com.crashlytics.android.answers.Answers;
+import com.crashlytics.android.answers.ContentViewEvent;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 public abstract class CustomActivity extends Activity {
@@ -51,5 +52,15 @@ public abstract class CustomActivity extends Activity {
         if (getActionBar() != null) {
             getActionBar().setTitle(titleId);
         }
+    }
+
+    protected ContentViewEvent buildContentViewEvent() {
+        return new ContentViewEvent().putContentName(getClass().getSimpleName());
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Answers.getInstance().logContentView(buildContentViewEvent());
     }
 }

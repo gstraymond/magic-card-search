@@ -16,9 +16,9 @@ import android.widget.ProgressBar;
 import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
-
+import com.crashlytics.android.answers.Answers;
+import com.crashlytics.android.answers.ContentViewEvent;
 import com.magic.card.search.commons.log.Log;
-
 import fr.gstraymond.R;
 import fr.gstraymond.android.fragment.CardDetailFragment;
 import fr.gstraymond.android.fragment.CardListFragment;
@@ -327,6 +327,7 @@ public class CardListActivity extends CustomActivity implements
                 return true;
 
             case R.id.changelog_tab:
+                Answers.getInstance().logContentView(new ContentViewEvent().putContentName("Changelog"));
                 changeLog.getFullLogDialog().show();
                 return true;
         }

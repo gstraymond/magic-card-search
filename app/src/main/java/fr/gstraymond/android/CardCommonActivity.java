@@ -3,6 +3,7 @@ package fr.gstraymond.android;
 import android.os.Bundle;
 import android.view.MenuItem;
 
+import com.crashlytics.android.answers.ContentViewEvent;
 import fr.gstraymond.search.model.response.Card;
 import fr.gstraymond.tools.LanguageUtil;
 
@@ -50,5 +51,10 @@ public abstract class CardCommonActivity extends CustomActivity {
 
     protected Card getCard() {
         return card;
+    }
+
+    protected ContentViewEvent buildContentViewEvent() {
+        ContentViewEvent event = super.buildContentViewEvent();
+        return event.putContentId(getCard().getTitle());
     }
 }

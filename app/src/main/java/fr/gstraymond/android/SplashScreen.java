@@ -2,9 +2,7 @@ package fr.gstraymond.android;
 
 import android.content.Intent;
 import android.os.Bundle;
-
 import com.magic.card.search.commons.json.MapperUtil;
-
 import fr.gstraymond.R;
 import fr.gstraymond.biz.ApplicationLoader;
 import fr.gstraymond.biz.SearchOptions;
