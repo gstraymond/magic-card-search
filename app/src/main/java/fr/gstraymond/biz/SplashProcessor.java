@@ -7,18 +7,18 @@ import com.magic.card.search.commons.log.Log;
 
 import fr.gstraymond.R;
 import fr.gstraymond.android.CustomApplication;
-import fr.gstraymond.android.SplashScreen;
+import fr.gstraymond.android.SplashScreenActivity;
 import fr.gstraymond.search.model.response.SearchResult;
 
 public class SplashProcessor extends AsyncTask<Void, Integer, SearchResult> {
 
-    private SplashScreen activity;
+    private SplashScreenActivity activity;
     private SearchOptions options;
     private ProgressBarUpdater progressBarUpdater;
     private ElasticSearchClient elasticSearchClient;
     private Log log = new Log(this);
 
-    public SplashProcessor(SplashScreen activity, SearchOptions options) {
+    public SplashProcessor(SplashScreenActivity activity, SearchOptions options) {
         super();
         this.activity = activity;
         this.progressBarUpdater = new ProgressBarUpdater(getProgressBar());
@@ -32,9 +32,9 @@ public class SplashProcessor extends AsyncTask<Void, Integer, SearchResult> {
         SearchResult searchResult = elasticSearchClient.process(options, progressBarUpdater);
 
         if (searchResult != null && searchResult.getHits() != null) {
-            log.i(searchResult.getHits().getTotal() + " cards found in " + searchResult.getTook() + " ms");
+            log.i("%s cards found in %s ms", searchResult.getHits().getTotal(), searchResult.getTook());
         }
-        log.i("search took " + (System.currentTimeMillis() - now) + "ms");
+        log.i("search took %sms", System.currentTimeMillis() - now);
 
         return searchResult;
     }

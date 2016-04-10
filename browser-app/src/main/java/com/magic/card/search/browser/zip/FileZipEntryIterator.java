@@ -28,7 +28,7 @@ public class FileZipEntryIterator extends ZipEntryIterator<Void> implements ZipE
     @Override
     public void process(ZipEntry zipEntry, ZipInputStream zis) {
         try {
-            log.df("inflating %s...", zipEntry.getName());
+            log.d("inflating %s...", zipEntry.getName());
             FileOutputStream zos = context.openFileOutput(zipEntry.getName(), Context.MODE_PRIVATE);
             int length;
             byte[] buffer = new byte[1024];

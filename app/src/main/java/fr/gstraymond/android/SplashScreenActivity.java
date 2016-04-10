@@ -1,5 +1,6 @@
 package fr.gstraymond.android;
 
+import android.app.SearchManager;
 import android.content.Intent;
 import android.os.Bundle;
 import com.magic.card.search.commons.json.MapperUtil;
@@ -9,7 +10,7 @@ import fr.gstraymond.biz.SearchOptions;
 import fr.gstraymond.biz.SplashProcessor;
 import fr.gstraymond.search.model.response.SearchResult;
 
-public class SplashScreen extends CustomActivity {
+public class SplashScreenActivity extends CustomActivity {
 
     private MapperUtil<Object> mapperUtil;
 
@@ -23,8 +24,12 @@ public class SplashScreen extends CustomActivity {
 		/* chargement du client HTTP / object mapper / assets */
         new ApplicationLoader(this).execute();
 
-		/* lancement de la recherche */
         SearchOptions options = new SearchOptions().setRandom(true).setAddToHistory(false);
+        if (Intent.ACTION_SEARCH.equals(getIntent().getAction())) {
+            String query = getIntent().getStringExtra(SearchManager.QUERY);
+            options = options.setQuery(query).setRandom(false).setAddToHistory(true);
+        }
+		/* lancement de la recherche */
         new SplashProcessor(this, options).execute();
     }
 

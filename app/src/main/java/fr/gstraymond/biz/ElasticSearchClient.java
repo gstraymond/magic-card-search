@@ -54,9 +54,10 @@ public class ElasticSearchClient {
 
     public SearchResult process(SearchOptions options, CallBacks callbacks) {
         callbacks.start();
+        log.d("options as json : %s", options);
         Request request = new Request(options);
         String queryAsJson = mapperUtil.asJsonString(request);
-        log.d("query as json : " + queryAsJson);
+        log.d("query as json : %s", queryAsJson);
         callbacks.buildRequest();
 
         Answers.getInstance().logSearch(buildSearchEvent(options));

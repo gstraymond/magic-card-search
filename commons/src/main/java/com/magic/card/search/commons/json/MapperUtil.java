@@ -40,7 +40,7 @@ public class MapperUtil<T> {
         long now = System.currentTimeMillis();
         try {
             T t = objectMapper.readValue(stream, javaType);
-            log.df("read %s took %sms", javaType, System.currentTimeMillis() - now);
+            log.d("read %s took %sms", javaType, System.currentTimeMillis() - now);
             return t;
         } catch (Exception e) {
             log.e("read", e);
@@ -53,7 +53,7 @@ public class MapperUtil<T> {
         long now = System.currentTimeMillis();
         try {
             T t = objectMapper.readValue(string, javaType);
-            log.df("read %s took %sms", javaType, System.currentTimeMillis() - now);
+            log.d("read %s took %sms", javaType, System.currentTimeMillis() - now);
             return t;
         } catch (Exception e) {
             log.e("read", e);
@@ -66,7 +66,7 @@ public class MapperUtil<T> {
         long now = System.currentTimeMillis();
         try {
             String s = objectMapper.writeValueAsString(object);
-            log.df("to json took %sms", System.currentTimeMillis() - now);
+            log.d("to json took %sms", System.currentTimeMillis() - now);
             return s;
         } catch (JsonProcessingException e) {
             log.e("asJsonString", e);

@@ -177,14 +177,15 @@ public class SearchOptions extends CustomParcelable {
 
     @Override
     public String toString() {
-        return "searchOptions:[" +
-                "query:" + query + "," +
-                "append:" + append + "," +
-                "random:" + random + "," +
-                "addToHistory:" + addToHistory + "," +
-                "from:" + from + "," +
-                "size:" + size + "," +
-                "facets:" + facets + "]" + "," +
-                "facetSize:" + facetSize + "]";
+        return String.format(
+                "searchOptions:[query:%s, append:%s, random:%s, addToHistory:%s, from:%s, size:%s, facets:%s, facetSize:%S]",
+                query,
+                append,
+                random,
+                addToHistory,
+                from,
+                size,
+                facets,
+                facetSize);
     }
 }

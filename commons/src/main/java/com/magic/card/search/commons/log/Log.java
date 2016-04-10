@@ -14,12 +14,16 @@ public class Log {
         android.util.Log.d(caller.getCanonicalName(), msg);
     }
 
-    public void df(String msg, Object... args) {
+    public void d(String msg, Object... args) {
         android.util.Log.d(caller.getCanonicalName(), String.format(msg, args));
     }
 
     public void i(String msg) {
         android.util.Log.i(caller.getCanonicalName(), msg);
+    }
+
+    public void i(String msg, Object... args) {
+        android.util.Log.i(caller.getCanonicalName(), String.format(msg, args));
     }
 
     public void w(String msg) {

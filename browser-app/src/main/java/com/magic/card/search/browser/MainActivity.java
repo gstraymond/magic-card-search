@@ -112,7 +112,7 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         String entryName = item.getTitle().toString();
         List<MTGCard> cards = zipDatabase.getCards(entryName);
-        log.df("number of cards found %s for %s", cards.size(), entryName);
+        log.d("number of cards found %s for %s", cards.size(), entryName);
         dataPresenter.setCards(cards);
         getDrawerLayout().closeDrawer(GravityCompat.START);
         return true;

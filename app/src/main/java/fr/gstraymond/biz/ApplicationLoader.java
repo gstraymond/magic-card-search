@@ -2,20 +2,20 @@ package fr.gstraymond.biz;
 
 import android.os.AsyncTask;
 
-import fr.gstraymond.android.SplashScreen;
+import fr.gstraymond.android.SplashScreenActivity;
 
 public class ApplicationLoader extends AsyncTask<Void, Void, Void> {
 
-    private SplashScreen splashScreen;
+    private SplashScreenActivity splashScreenActivity;
 
-    public ApplicationLoader(SplashScreen splashScreen) {
+    public ApplicationLoader(SplashScreenActivity splashScreenActivity) {
         super();
-        this.splashScreen = splashScreen;
+        this.splashScreenActivity = splashScreenActivity;
     }
 
     @Override
     protected Void doInBackground(Void... arg0) {
-        splashScreen.getCustomApplication().init();
+        splashScreenActivity.getCustomApplication().init();
         return null;
     }
 }
