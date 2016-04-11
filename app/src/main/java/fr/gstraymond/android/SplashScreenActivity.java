@@ -28,7 +28,7 @@ public class SplashScreenActivity extends CustomActivity {
         if (Intent.ACTION_SEARCH.equals(getIntent().getAction())
                 || "com.google.android.gms.actions.SEARCH_ACTION".equals(getIntent().getAction())) {
             String query = getIntent().getStringExtra(SearchManager.QUERY);
-            options = options.setQuery(query).setRandom(false).setAddToHistory(true);
+            options = options.setQuery(query).setRandom(false).setAddToHistory(true).setFromOkGoogle(true);
         }
 		/* lancement de la recherche */
         new SplashProcessor(this, options).execute();

@@ -19,6 +19,8 @@ public class SearchOptions extends CustomParcelable {
     private boolean append = false;
     private boolean random = false;
     private boolean addToHistory = true;
+
+    private boolean fromOkGoogle = false;
     private int from = 0;
     private int size = 30;
     private Facets facets = new Facets();
@@ -46,6 +48,7 @@ public class SearchOptions extends CustomParcelable {
         facets = readFacets(source);
         // facetSize : pas de persistence de la taille des facettes
         // addToHistory : pas de persistence de l'ajout à l'historique
+        // fromOkGoogle : pas de persistence
     }
 
     public SearchOptions() {
@@ -66,6 +69,7 @@ public class SearchOptions extends CustomParcelable {
         writeFacets(dest, facets);
         // facetSize : pas de persistence de la taille des facettes
         // addToHistory : pas de persistence de l'ajout à l'historique
+        // fromOkGoogle : pas de persistence
     }
 
     public String getQuery() {
@@ -175,10 +179,19 @@ public class SearchOptions extends CustomParcelable {
         this.facetSize = facetSize;
     }
 
+    public SearchOptions setFromOkGoogle(boolean fromOkGoogle) {
+        this.fromOkGoogle = fromOkGoogle;
+        return this;
+    }
+
+    public boolean isFromOkGoogle() {
+        return fromOkGoogle;
+    }
+
     @Override
     public String toString() {
         return String.format(
-                "searchOptions:[query:%s, append:%s, random:%s, addToHistory:%s, from:%s, size:%s, facets:%s, facetSize:%S]",
+                "searchOptions:[query:%s, append:%s, random:%s, addToHistory:%s, from:%s, size:%s, facets:%s, facetSize:%s, okGoogle:%s]",
                 query,
                 append,
                 random,
@@ -186,6 +199,7 @@ public class SearchOptions extends CustomParcelable {
                 from,
                 size,
                 facets,
-                facetSize);
+                facetSize,
+                fromOkGoogle);
     }
 }

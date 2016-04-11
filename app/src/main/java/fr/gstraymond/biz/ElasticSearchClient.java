@@ -2,15 +2,12 @@ package fr.gstraymond.biz;
 
 import android.content.Context;
 import android.text.TextUtils;
+
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.SearchEvent;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.magic.card.search.commons.json.MapperUtil;
 import com.magic.card.search.commons.log.Log;
-import fr.gstraymond.db.HistoryDataSource;
-import fr.gstraymond.search.model.request.Request;
-import fr.gstraymond.search.model.response.SearchResult;
-import fr.gstraymond.tools.VersionUtils;
 
 import java.io.BufferedInputStream;
 import java.io.IOException;
@@ -19,7 +16,15 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.zip.GZIPInputStream;
+
+import fr.gstraymond.db.HistoryDataSource;
+import fr.gstraymond.search.model.request.Request;
+import fr.gstraymond.search.model.response.SearchResult;
+import fr.gstraymond.tools.VersionUtils;
 
 public class ElasticSearchClient {
 
@@ -89,13 +94,16 @@ public class ElasticSearchClient {
 
     private SearchEvent buildSearchEvent(SearchOptions options) {
         SearchEvent searchEvent = new SearchEvent()
-                .putQuery(options.getQuery());
+                .putQuery(options.getQuery())
+                .putCustomAttribute("okGoogle", options.isFromOkGoogle() + "");
 
         if (options.getFacets().isEmpty())
             return searchEvent;
 
+        List<String> facets = new ArrayList<>(options.getFacets().keySet());
+        Collections.sort(facets);
         return searchEvent
-                .putCustomAttribute("facets", TextUtils.join(" - ", options.getFacets().keySet()));
+                .putCustomAttribute("facets", TextUtils.join(" - ", facets));
     }
 
     private HttpURLConnection buildRequest(String query) throws IOException {
