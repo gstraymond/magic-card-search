@@ -25,7 +25,8 @@ public class SplashScreenActivity extends CustomActivity {
         new ApplicationLoader(this).execute();
 
         SearchOptions options = new SearchOptions().setRandom(true).setAddToHistory(false);
-        if (Intent.ACTION_SEARCH.equals(getIntent().getAction())) {
+        if (Intent.ACTION_SEARCH.equals(getIntent().getAction())
+                || "com.google.android.gms.actions.SEARCH_ACTION".equals(getIntent().getAction())) {
             String query = getIntent().getStringExtra(SearchManager.QUERY);
             options = options.setQuery(query).setRandom(false).setAddToHistory(true);
         }
