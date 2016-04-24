@@ -18,7 +18,7 @@ public class FacetConst {
     private static final String COLOR = "colors.exact";
     private static final String DEVOTION = "devotions";
     private static final String SET = "editions.exact";
-    private static final String FORMAT = "formats";
+    private static final String FORMAT = "formats.exact";
     private static final String POWER = "power";
     private static final String RARITY = "rarities";
     private static final String TOUGHNESS = "toughness";
@@ -45,17 +45,18 @@ public class FacetConst {
 
         facetOrder = new ArrayList<>();
         facetOrder.add(COLOR);
-        facetOrder.add(DEVOTION);
-        facetOrder.add(CMC);
         facetOrder.add(TYPE);
-        facetOrder.add(PRICE);
-        facetOrder.add(ABILITY);
-        facetOrder.add(POWER);
-        facetOrder.add(TOUGHNESS);
+        facetOrder.add(FORMAT);
+        facetOrder.add(CMC);
         facetOrder.add(RARITY);
         facetOrder.add(SET);
-        facetOrder.add(FORMAT);
+        facetOrder.add(ABILITY);
+        facetOrder.add(DEVOTION);
+        facetOrder.add(POWER);
+        facetOrder.add(TOUGHNESS);
+        facetOrder.add(PRICE);
         facetOrder.add(ARTIST);
+
     }
 
     private static void putInFacets(Map<String, Facet> facets, String facet) {
