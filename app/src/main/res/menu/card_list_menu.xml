@@ -16,6 +16,7 @@
         android:id="@+id/help_tab"
         android:icon="@drawable/info"
         android:showAsAction="ifRoom"
+        android:visible="false"
         android:title="@string/list_menu_help" />
 
     <item

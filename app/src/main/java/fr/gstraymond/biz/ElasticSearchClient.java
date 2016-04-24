@@ -1,6 +1,7 @@
 package fr.gstraymond.biz;
 
 import android.content.Context;
+import android.system.ErrnoException;
 import android.text.TextUtils;
 
 import com.crashlytics.android.answers.Answers;
@@ -84,8 +85,12 @@ public class ElasticSearchClient {
             callbacks.end();
         } catch (UnknownHostException e) {
             log.w("unknown host: " + e.getMessage());
-        } catch (IOException e) {
-            log.e("process", e);
+        } catch (Exception e) {
+            if (e.getMessage().contains("ETIMEDOUT")) {
+                log.w("timeout:" + e.getMessage());
+            } else {
+                log.e("process", e);
+            }
         } finally {
             if (urlConnection != null) urlConnection.disconnect();
         }

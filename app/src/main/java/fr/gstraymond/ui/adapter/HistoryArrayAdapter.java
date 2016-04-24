@@ -107,7 +107,9 @@ public class HistoryArrayAdapter extends ArrayAdapter<History> {
         List<String> l = new ArrayList<>();
         for (Map.Entry<String, List<String>> e : facets.entrySet()) {
             String facetName = FacetConst.getFacetName(e.getKey(), getContext());
-            l.add(facetName + ": <b>" + TextUtils.join("</b>, <b>", e.getValue()) + "</b>");
+            if (facetName != null) {
+                l.add(facetName + ": <b>" + TextUtils.join("</b>, <b>", e.getValue()) + "</b>");
+            }
         }
         return TextUtils.join("<br/>", l);
     }

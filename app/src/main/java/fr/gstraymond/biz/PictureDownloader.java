@@ -58,7 +58,11 @@ public class PictureDownloader extends AsyncTask<Void, Void, Bitmap> {
         } catch (UnknownHostException e) {
             log.w("unknown host: " + e.getMessage());
         } catch (Exception e) {
-            log.e("error", e);
+            if (e.getMessage().contains("ETIMEDOUT")) {
+                log.w("timeout:" + e.getMessage());
+            } else {
+                log.e("process", e);
+            }
         } finally {
             if (urlConnection != null) urlConnection.disconnect();
         }

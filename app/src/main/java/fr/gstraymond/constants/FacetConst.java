@@ -81,7 +81,10 @@ public class FacetConst {
     }
 
     public static String getFacetName(String facet, Context context) {
-        return context.getString(facetNames.get(facet));
+        Integer resId = facetNames.get(facet);
+        if (resId == null) return null;
+
+        return context.getString(resId);
     }
 
     public static List<String> getFacetOrder() {

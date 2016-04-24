@@ -10,7 +10,8 @@
         android:id="@+id/buy_tab"
         android:icon="@drawable/buy"
         android:showAsAction="always"
-        android:title="@string/detail_buy_amazon" />
+        android:title="@string/detail_buy_amazon"
+        android:visible="false" />
     <item
         android:id="@+id/pictures_tab"
         android:icon="@drawable/picture"
@@ -36,7 +37,8 @@
         android:id="@+id/help_tab"
         android:icon="@drawable/info"
         android:showAsAction="ifRoom"
-        android:title="@string/list_menu_help" />
+        android:title="@string/list_menu_help"
+        android:visible="false" />
 
     <item
         android:id="@+id/changelog_tab"
