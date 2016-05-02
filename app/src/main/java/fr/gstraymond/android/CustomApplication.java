@@ -8,7 +8,6 @@ import java.net.URL;
 
 import fr.gstraymond.R;
 import fr.gstraymond.biz.ElasticSearchClient;
-import fr.gstraymond.cache.BitmapCache;
 import fr.gstraymond.ui.CastingCostAssetLoader;
 
 public class CustomApplication extends BaseApplication {
@@ -21,7 +20,6 @@ public class CustomApplication extends BaseApplication {
     private ElasticSearchClient elasticSearchClient;
     private CastingCostAssetLoader castingCostAssetLoader;
     private Boolean isTablet;
-    private BitmapCache bitmapCache;
     private Log log = new Log(this);
 
     @Override
@@ -29,7 +27,6 @@ public class CustomApplication extends BaseApplication {
         super.onCreate();
         initElasticSearchClient();
         initIsTablet();
-        initBitmapCache();
     }
 
     public void init() {
@@ -59,11 +56,6 @@ public class CustomApplication extends BaseApplication {
         setTablet(TABLET.equals(mode));
     }
 
-    private void initBitmapCache() {
-        log.d("initBitmapCache");
-        setBitmapCache(new BitmapCache());
-    }
-
     public ElasticSearchClient getElasticSearchClient() {
         return elasticSearchClient;
     }
@@ -81,13 +73,5 @@ public class CustomApplication extends BaseApplication {
 
     public void setTablet(boolean isTablet) {
         this.isTablet = isTablet;
-    }
-
-    public BitmapCache getBitmapCache() {
-        return bitmapCache;
-    }
-
-    public void setBitmapCache(BitmapCache bitmapCache) {
-        this.bitmapCache = bitmapCache;
     }
 }

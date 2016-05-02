@@ -40,9 +40,7 @@ public class CardPagerFragment extends Fragment {
     }
 
     private CardViewPager getViewPager(Card card, View rootView) {
-        CardViewPager viewPager = ((CardViewPager) rootView
-                .findViewById(R.id.pager)).setCard(card);
-        return viewPager;
+        return ((CardViewPager) rootView.findViewById(R.id.pager)).setCard(card);
     }
 
     private PagerAdapter getPagerAdapter(Card card) {

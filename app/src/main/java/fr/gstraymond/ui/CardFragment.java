@@ -8,29 +8,44 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 
-import fr.gstraymond.R;
-import fr.gstraymond.android.CustomApplication;
-import fr.gstraymond.biz.PictureDownloader;
+import com.bumptech.glide.Glide;
+import com.magic.card.search.commons.log.Log;
 
-public class CardFragment extends Fragment {
+import fr.gstraymond.R;
+import fr.gstraymond.biz.PictureRequestListener;
+
+public class CardFragment extends Fragment implements PictureRequestListener.Callbacks {
 
     public static final String URL = "url";
 
+    private Log log = new Log(this);
+
+    private ImageView imageView;
+    private ProgressBar progressBar;
+    private String url;
+
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_card, container, false);
-        ImageView imageView = (ImageView) rootView.findViewById(R.id.fragment_card_picture);
-        ProgressBar progressBar = (ProgressBar) rootView.findViewById(R.id.fragment_card_progress_bar);
+        imageView = (ImageView) rootView.findViewById(R.id.fragment_card_picture);
+        progressBar = (ProgressBar) rootView.findViewById(R.id.fragment_card_progress_bar);
 
-        String url = getArguments().getString(URL);
-        new PictureDownloader(imageView, progressBar, url, getCustomApplication()).execute();
+        url = getArguments().getString(URL);
+
+        log.d("downloading %s...", url);
+        Glide.with(getActivity())
+                .load(url)
+                .listener(new PictureRequestListener(url, this))
+                .into(imageView);
 
         return rootView;
     }
 
-    private CustomApplication getCustomApplication() {
-        return (CustomApplication) getActivity().getApplication();
+    @Override
+    public void onDownloadComplete() {
+        log.d("downloading %s complete", url);
+        progressBar.setVisibility(View.GONE);
+        imageView.setScaleType(ImageView.ScaleType.FIT_XY);
+        imageView.setAdjustViewBounds(true);
     }
 }
