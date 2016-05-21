@@ -53,6 +53,13 @@ public class HistoryDataSource {
         writeHistory(cleanedHistory);
     }
 
+    public Boolean hasHistory() {
+        for(String file: context.fileList()) {
+            if (file.equals(FILENAME)) return true;
+        }
+        return false;
+    }
+
     public ArrayList<History> getAllHistory() {
         ArrayList<History> cardHistories = new ArrayList<>();
         try {

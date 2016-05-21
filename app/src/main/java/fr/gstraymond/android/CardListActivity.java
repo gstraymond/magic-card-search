@@ -30,6 +30,7 @@ import fr.gstraymond.biz.SearchOptions;
 import fr.gstraymond.biz.SearchProcessor;
 import fr.gstraymond.biz.UIUpdater;
 import fr.gstraymond.db.History;
+import fr.gstraymond.db.json.JsonHistory;
 import fr.gstraymond.search.model.response.Card;
 import fr.gstraymond.ui.EndScrollListener;
 import fr.gstraymond.ui.TextListener;
@@ -339,7 +340,7 @@ public class CardListActivity extends CustomActivity implements
         switch (requestCode) {
             case HISTORY_REQUEST_CODE:
                 if (resultCode == RESULT_OK) {
-                    History history = data.getExtras().getParcelable("history");
+                    JsonHistory history = data.getExtras().getParcelable("history");
 
                     if (!history.getQuery().equals("*")) {
                         searchView.setQuery(history.getQuery(), false);

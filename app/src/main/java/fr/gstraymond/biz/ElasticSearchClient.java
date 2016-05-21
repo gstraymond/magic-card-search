@@ -1,7 +1,6 @@
 package fr.gstraymond.biz;
 
 import android.content.Context;
-import android.system.ErrnoException;
 import android.text.TextUtils;
 
 import com.crashlytics.android.answers.Answers;
@@ -22,7 +21,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.zip.GZIPInputStream;
 
-import fr.gstraymond.db.HistoryDataSource;
+import fr.gstraymond.db.json.JsonHistoryDataSource;
 import fr.gstraymond.search.model.request.Request;
 import fr.gstraymond.search.model.response.SearchResult;
 import fr.gstraymond.tools.VersionUtils;
@@ -37,15 +36,15 @@ public class ElasticSearchClient {
     private URL baseUrl;
     private MapperUtil<SearchResult> mapperUtil;
     private String appName;
-    private HistoryDataSource historyDataSource;
+    private JsonHistoryDataSource historyDataSource;
 
     private Log log = new Log(this);
 
-    public ElasticSearchClient(URL baseUrl, ObjectMapper objectMapper, Context context) {
+    public ElasticSearchClient(URL baseUrl, ObjectMapper objectMapper, Context context, JsonHistoryDataSource jsonHistoryDataSource) {
         this.baseUrl = baseUrl;
         this.mapperUtil = MapperUtil.fromType(objectMapper, SearchResult.class);
         this.appName = VersionUtils.getAppName(context);
-        this.historyDataSource = new HistoryDataSource(context);
+        this.historyDataSource = jsonHistoryDataSource;
     }
 
     public interface CallBacks {
