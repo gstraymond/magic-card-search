@@ -98,10 +98,7 @@ public class JsonHistoryDataSource {
 
     public void migrate() {
         HistoryDataSource historyDataSource = new HistoryDataSource(context);
-        log.d("migrate...");
-        if (!historyDataSource.hasHistory()) {log.d("migrate... no"); return; }
-
-        log.d("migrate... yes");
+        if (!historyDataSource.hasHistory()) return;
 
         ArrayList<History> allHistory = historyDataSource.getAllHistory();
         List<JsonHistory> jsonHistories = new ArrayList<>();

@@ -16,9 +16,11 @@ import android.widget.ProgressBar;
 import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.ContentViewEvent;
 import com.magic.card.search.commons.log.Log;
+
 import fr.gstraymond.R;
 import fr.gstraymond.android.fragment.CardDetailFragment;
 import fr.gstraymond.android.fragment.CardListFragment;
@@ -29,7 +31,6 @@ import fr.gstraymond.biz.ProgressBarUpdater;
 import fr.gstraymond.biz.SearchOptions;
 import fr.gstraymond.biz.SearchProcessor;
 import fr.gstraymond.biz.UIUpdater;
-import fr.gstraymond.db.History;
 import fr.gstraymond.db.json.JsonHistory;
 import fr.gstraymond.search.model.response.Card;
 import fr.gstraymond.ui.EndScrollListener;
