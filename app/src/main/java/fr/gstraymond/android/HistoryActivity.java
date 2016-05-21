@@ -8,12 +8,10 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import java.util.ArrayList;
-import java.util.Collections;
 
 import fr.gstraymond.R;
 import fr.gstraymond.android.fragment.HistoryListFragment;
-import fr.gstraymond.db.History;
-import fr.gstraymond.db.HistoryDataSource;
+import fr.gstraymond.db.json.JsonHistory;
 
 import static fr.gstraymond.constants.Consts.HISTORY_LIST;
 
@@ -24,8 +22,7 @@ public class HistoryActivity extends CustomActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_history);
 
-        HistoryDataSource historyDataSource = new HistoryDataSource(this);
-        showHistory(historyDataSource);
+        showHistory();
 
         actionBarSetDisplayHomeAsUpEnabled(true);
     }
@@ -44,9 +41,8 @@ public class HistoryActivity extends CustomActivity {
 
                 alert.setPositiveButton(getString(R.string.history_alert_ok), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
-                        HistoryDataSource historyDataSource = new HistoryDataSource(getApplicationContext());
-                        historyDataSource.clearNonFavoriteHistory();
-                        showHistory(historyDataSource);
+                        getJsonHistoryDataSource().clearNonFavoriteHistory();
+                        showHistory();
                     }
                 });
                 alert.setNegativeButton(getString(R.string.history_alert_cancel), new DialogInterface.OnClickListener() {
@@ -68,9 +64,8 @@ public class HistoryActivity extends CustomActivity {
         return true;
     }
 
-    private void showHistory(HistoryDataSource historyDataSource) {
-        ArrayList<History> allHistory = historyDataSource.getAllHistory();
-        Collections.reverse(allHistory);
+    private void showHistory() {
+        ArrayList<JsonHistory> allHistory = getJsonHistoryDataSource().getAllHistory();
 
         Bundle bundle = new Bundle();
         bundle.putParcelableArrayList(HISTORY_LIST, allHistory);

@@ -66,7 +66,7 @@ public class MapperUtil<T> {
         long now = System.currentTimeMillis();
         try {
             String s = objectMapper.writeValueAsString(object);
-            log.d("to json took %sms", System.currentTimeMillis() - now);
+            log.d("to json %s took %sms", object.getClass(), System.currentTimeMillis() - now);
             return s;
         } catch (JsonProcessingException e) {
             log.e("asJsonString", e);

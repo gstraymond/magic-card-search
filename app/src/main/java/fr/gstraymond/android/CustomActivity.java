@@ -7,6 +7,8 @@ import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.ContentViewEvent;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import fr.gstraymond.db.json.JsonHistoryDataSource;
+
 public abstract class CustomActivity extends Activity {
 
     public CustomApplication getCustomApplication() {
@@ -21,9 +23,11 @@ public abstract class CustomActivity extends Activity {
         return !isTablet();
     }
 
-    protected ObjectMapper getObjectMapper() {
+    public ObjectMapper getObjectMapper() {
         return getCustomApplication().getObjectMapper();
     }
+
+    public JsonHistoryDataSource getJsonHistoryDataSource() { return getCustomApplication().getJsonHistoryDataSource(); }
 
     public void replaceFragment(Fragment fragment, int id) {
         replaceFragment(fragment, id, null);

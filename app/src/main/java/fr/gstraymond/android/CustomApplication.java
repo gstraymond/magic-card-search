@@ -8,6 +8,7 @@ import java.net.URL;
 
 import fr.gstraymond.R;
 import fr.gstraymond.biz.ElasticSearchClient;
+import fr.gstraymond.db.json.JsonHistoryDataSource;
 import fr.gstraymond.ui.CastingCostAssetLoader;
 
 public class CustomApplication extends BaseApplication {
@@ -19,14 +20,17 @@ public class CustomApplication extends BaseApplication {
 
     private ElasticSearchClient elasticSearchClient;
     private CastingCostAssetLoader castingCostAssetLoader;
+    private JsonHistoryDataSource jsonHistoryDataSource;
     private Boolean isTablet;
     private Log log = new Log(this);
 
     @Override
     public void onCreate() {
         super.onCreate();
+        initJsonHistoryDataSource();
         initElasticSearchClient();
         initIsTablet();
+        migrateHistory();
     }
 
     public void init() {
@@ -37,7 +41,7 @@ public class CustomApplication extends BaseApplication {
         log.d("initElasticSearchClient");
         try {
             URL url = new URL("http://" + SEARCH_SERVER_HOST + "/magic/card/_search");
-            this.elasticSearchClient = new ElasticSearchClient(url, getObjectMapper(), this);
+            this.elasticSearchClient = new ElasticSearchClient(url, getObjectMapper(), this, getJsonHistoryDataSource());
         } catch (MalformedURLException e) {
             log.e("Error in constructor", e);
         }
@@ -54,6 +58,10 @@ public class CustomApplication extends BaseApplication {
         log.d("initIsTablet");
         String mode = getApplicationContext().getString(R.string.mode);
         setTablet(TABLET.equals(mode));
+    }
+
+    private void initJsonHistoryDataSource() {
+        this.jsonHistoryDataSource = new JsonHistoryDataSource(this, getObjectMapper());
     }
 
     public ElasticSearchClient getElasticSearchClient() {
@@ -73,5 +81,16 @@ public class CustomApplication extends BaseApplication {
 
     public void setTablet(boolean isTablet) {
         this.isTablet = isTablet;
+    }
+
+    public JsonHistoryDataSource getJsonHistoryDataSource() {
+        if (jsonHistoryDataSource == null) {
+            initJsonHistoryDataSource();
+        }
+        return jsonHistoryDataSource;
+    }
+
+    private void migrateHistory() {
+        jsonHistoryDataSource.migrate();
     }
 }

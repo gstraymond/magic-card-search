@@ -22,11 +22,11 @@ import java.util.Map;
 import fr.gstraymond.R;
 import fr.gstraymond.biz.Facets;
 import fr.gstraymond.constants.FacetConst;
-import fr.gstraymond.db.History;
-import fr.gstraymond.db.HistoryDataSource;
+import fr.gstraymond.db.json.JsonHistory;
+import fr.gstraymond.db.json.JsonHistoryDataSource;
 
 
-public class HistoryArrayAdapter extends ArrayAdapter<History> {
+public class HistoryArrayAdapter extends ArrayAdapter<JsonHistory> {
 
     private java.text.DateFormat dayFormat;
     private java.text.DateFormat dateFormat;
@@ -34,7 +34,8 @@ public class HistoryArrayAdapter extends ArrayAdapter<History> {
     private View.OnClickListener clickListener;
 
     public HistoryArrayAdapter(final Context context, int resource,
-                               int textViewResourceId, List<History> objects) {
+                               int textViewResourceId, List<JsonHistory> objects,
+                               final JsonHistoryDataSource jsonHistoryDataSource) {
         super(context, resource, textViewResourceId, objects);
         dateFormat = DateFormat.getDateFormat(context);
         timeFormat = DateFormat.getTimeFormat(context);
@@ -43,11 +44,9 @@ public class HistoryArrayAdapter extends ArrayAdapter<History> {
         clickListener = new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                HistoryDataSource historyDataSource = new HistoryDataSource(context);
-
                 CheckBox checkbox = (CheckBox) view;
-                History history = (History) checkbox.getTag();
-                historyDataSource.manageFavorite(history, checkbox.isChecked());
+                JsonHistory history = (JsonHistory) checkbox.getTag();
+                jsonHistoryDataSource.manageFavorite(history, checkbox.isChecked());
             }
         };
     }
@@ -61,14 +60,14 @@ public class HistoryArrayAdapter extends ArrayAdapter<History> {
             LayoutInflater inflater = LayoutInflater.from(parent.getContext());
             view = inflater.inflate(R.layout.array_adapter_history, null);
         }
-        History history = getItem(position);
+        JsonHistory history = getItem(position);
 
         CheckBox favoriteView = (CheckBox) view.findViewById(R.id.array_adapter_history_favorite);
         TextView indexView = (TextView) view.findViewById(R.id.array_adapter_history_index);
         TextView dateView = (TextView) view.findViewById(R.id.array_adapter_history_date);
         TextView queryView = (TextView) view.findViewById(R.id.array_adapter_history_query);
 
-        indexView.setText(history.getId() + ".");
+        indexView.setText((position + 1) + ".");
         dateView.setText(formatDate(history));
         queryView.setText(formatQueryFacets(history));
         favoriteView.setChecked(history.isFavorite());
@@ -78,7 +77,7 @@ public class HistoryArrayAdapter extends ArrayAdapter<History> {
         return view;
     }
 
-    private String formatDate(History history) {
+    private String formatDate(JsonHistory history) {
         Date historyDate = history.getDate();
 
         String hDate = dayFormat.format(historyDate);
@@ -90,7 +89,7 @@ public class HistoryArrayAdapter extends ArrayAdapter<History> {
         return dateFormat.format(historyDate);
     }
 
-    private Spanned formatQueryFacets(History history) {
+    private Spanned formatQueryFacets(JsonHistory history) {
         if (history.getQuery().equals("*")) {
             return Html.fromHtml(formatFacets(history));
         }
@@ -98,7 +97,7 @@ public class HistoryArrayAdapter extends ArrayAdapter<History> {
         return Html.fromHtml(query + "<br />" + formatFacets(history));
     }
 
-    private String formatFacets(History history) {
+    private String formatFacets(JsonHistory history) {
         Facets facets = history.getFacets();
         if (facets.isEmpty()) {
             return "";

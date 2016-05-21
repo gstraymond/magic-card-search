@@ -15,7 +15,9 @@ import java.util.List;
 import java.util.Map;
 
 import fr.gstraymond.R;
-import fr.gstraymond.db.History;
+import fr.gstraymond.android.CustomActivity;
+import fr.gstraymond.db.json.JsonHistory;
+import fr.gstraymond.db.json.JsonHistoryDataSource;
 import fr.gstraymond.ui.adapter.HistoryArrayAdapter;
 
 import static fr.gstraymond.constants.Consts.HISTORY_LIST;
@@ -25,11 +27,11 @@ public class HistoryListFragment extends ListFragment {
     public static final String EMPTY = "empty";
 
     private List<Map<String, String>> messages;
-    private ArrayList<History> allHistory;
+    private ArrayList<JsonHistory> allHistory;
 
     private void initEmptyMsg() {
-        messages = new ArrayList<Map<String, String>>();
-        Map<String, String> map = new HashMap<String, String>();
+        messages = new ArrayList<>();
+        Map<String, String> map = new HashMap<>();
         map.put(EMPTY, getResources().getString(R.string.history_empty));
         messages.add(map);
     }
@@ -47,9 +49,10 @@ public class HistoryListFragment extends ListFragment {
                     messages, android.R.layout.simple_list_item_1, new String[]{EMPTY},
                     new int[]{android.R.id.text1});
         } else {
+            JsonHistoryDataSource jsonHistoryDataSource = ((CustomActivity) getActivity()).getJsonHistoryDataSource();
             arrayAdapter = new HistoryArrayAdapter(getActivity(),
                     android.R.layout.simple_list_item_activated_1,
-                    android.R.id.text2, allHistory);
+                    android.R.id.text2, allHistory, jsonHistoryDataSource);
         }
 
         setListAdapter(arrayAdapter);
@@ -59,6 +62,8 @@ public class HistoryListFragment extends ListFragment {
     @Override
     public void onListItemClick(ListView listView, View view, int position, long id) {
         super.onListItemClick(listView, view, position, id);
+
+        if (allHistory == null) return;
 
         Bundle bundle = new Bundle();
         bundle.putParcelable("history", allHistory.get(position));
