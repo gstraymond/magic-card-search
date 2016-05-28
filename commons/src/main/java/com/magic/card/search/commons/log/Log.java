@@ -15,7 +15,7 @@ public class Log {
     }
 
     public void d(String msg, Object... args) {
-        android.util.Log.d(caller.getCanonicalName(), String.format(msg, args));
+        d(String.format(msg, args));
     }
 
     public void i(String msg) {
@@ -23,11 +23,15 @@ public class Log {
     }
 
     public void i(String msg, Object... args) {
-        android.util.Log.i(caller.getCanonicalName(), String.format(msg, args));
+        i(String.format(msg, args));
     }
 
     public void w(String msg) {
         android.util.Log.w(caller.getCanonicalName(), msg);
+    }
+
+    public void w(String msg, Object... args) {
+        w(String.format(msg, args));
     }
 
     public void e(String msg, Throwable t) {

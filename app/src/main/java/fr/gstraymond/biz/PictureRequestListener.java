@@ -5,6 +5,9 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.magic.card.search.commons.log.Log;
 
+import java.io.IOException;
+import java.net.SocketTimeoutException;
+
 public class PictureRequestListener implements RequestListener<String, GlideDrawable> {
 
     public interface Callbacks {
@@ -23,7 +26,11 @@ public class PictureRequestListener implements RequestListener<String, GlideDraw
 
     @Override
     public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
-        log.e("error downloading: " + url, e);
+        if (e instanceof IOException) {
+            log.w("error downloading: %s %s", url, e.getMessage());
+        } else  {
+            log.e("error downloading: " + url, e);
+        }
         return false;
     }
 
