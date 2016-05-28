@@ -13,6 +13,7 @@ import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
+import java.net.SocketException;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.net.UnknownHostException;
@@ -82,8 +83,10 @@ public class ElasticSearchClient {
             callbacks.getResponse();
             searchResult = parse(inputStream);
             callbacks.end();
+        } catch (SocketException e) {
+            log.w("Socket exception: %s", e.getMessage());
         } catch (UnknownHostException e) {
-            log.w("unknown host: " + e.getMessage());
+            log.w("unknown host: %s", e.getMessage());
         } catch (Exception e) {
             if (e.getMessage().contains("ETIMEDOUT")) {
                 log.w("timeout:" + e.getMessage());
