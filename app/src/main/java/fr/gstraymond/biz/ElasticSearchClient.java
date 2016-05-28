@@ -66,8 +66,6 @@ public class ElasticSearchClient {
         log.d("query as json : %s", queryAsJson);
         callbacks.buildRequest();
 
-        Answers.getInstance().logSearch(buildSearchEvent(options));
-
         HttpURLConnection urlConnection = null;
         SearchResult searchResult = null;
         try {
@@ -79,10 +77,20 @@ public class ElasticSearchClient {
                 historyDataSource.appendHistory(options);
             }
 
+            Long httpNow = System.currentTimeMillis();
             InputStream inputStream = getInputStream(urlConnection);
+            Long httpDuration = System.currentTimeMillis() - httpNow;
+            log.i("http took %s ms", httpDuration);
+
             callbacks.getResponse();
-            searchResult = parse(inputStream);
+
+            Long parseNow = System.currentTimeMillis();
+            searchResult = mapperUtil.read(inputStream);
+            Long parseDuration = System.currentTimeMillis() - parseNow;
+            log.i("parse took %s ms", parseDuration);
+
             callbacks.end();
+            Answers.getInstance().logSearch(buildSearchEvent(options, httpDuration, parseDuration, searchResult.getHits().getTotal()));
         } catch (SocketException e) {
             log.w("Socket exception: %s", e.getMessage());
         } catch (UnknownHostException e) {
@@ -99,10 +107,13 @@ public class ElasticSearchClient {
         return searchResult;
     }
 
-    private SearchEvent buildSearchEvent(SearchOptions options) {
+    private SearchEvent buildSearchEvent(SearchOptions options, long httpDuration, long parseDuration, int results) {
         SearchEvent searchEvent = new SearchEvent()
                 .putQuery(options.getQuery())
-                .putCustomAttribute("okGoogle", options.isFromOkGoogle() + "");
+                .putCustomAttribute("okGoogle", options.isFromOkGoogle() + "")
+                .putCustomAttribute("http duration", httpDuration)
+                .putCustomAttribute("parse duration", parseDuration)
+                .putCustomAttribute("results", results);
 
         if (options.getFacets().isEmpty())
             return searchEvent;
@@ -130,12 +141,5 @@ public class ElasticSearchClient {
             return new GZIPInputStream(bis);
         }
         return bis;
-    }
-
-    private SearchResult parse(InputStream stream) {
-        long now = System.currentTimeMillis();
-        SearchResult searchResult = mapperUtil.read(stream);
-        log.i("parse took " + (System.currentTimeMillis() - now) + "ms");
-        return searchResult;
     }
 }
