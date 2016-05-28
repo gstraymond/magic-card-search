@@ -63,6 +63,8 @@ public class MapperUtil<T> {
     }
 
     public String asJsonString(Object object) {
+        if (object == null) return null;
+
         long now = System.currentTimeMillis();
         try {
             String s = objectMapper.writeValueAsString(object);
@@ -70,8 +72,7 @@ public class MapperUtil<T> {
             return s;
         } catch (JsonProcessingException e) {
             log.e("asJsonString", e);
+            return null;
         }
-
-        return null;
     }
 }
