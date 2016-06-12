@@ -62,5 +62,4 @@ dependencies {
     compile project(':commons')
     compile 'com.github.bumptech.glide:glide:3.7.0'
     compile 'com.android.support:support-v13:23.2.1'
-    compile files('libs/amazon-mobile-associates-1.0.54.0.jar')
 }

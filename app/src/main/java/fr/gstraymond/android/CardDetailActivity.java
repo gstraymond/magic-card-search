@@ -8,11 +8,9 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.TextView;
 
-import com.crashlytics.android.answers.ContentViewEvent;
 import fr.gstraymond.R;
 import fr.gstraymond.android.fragment.CardDetailFragment;
 import fr.gstraymond.android.fragment.CardPagerFragment;
-import fr.gstraymond.android.tools.amazon.AmazonUtils;
 import fr.gstraymond.search.model.response.Card;
 import fr.gstraymond.tools.LanguageUtil;
 
@@ -26,7 +24,6 @@ public class CardDetailActivity extends CardCommonActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_card_detail);
-        AmazonUtils.initAmazonApi(this);
 
         TextView titleTextView = (TextView) findViewById(R.id.card_detail_title);
         titleTextView.setText(formatTitle(this, getCard()));
@@ -42,10 +39,6 @@ public class CardDetailActivity extends CardCommonActivity implements
                 Intent intent = new Intent(this, CardPagerActivity.class);
                 intent.putExtra(CARD, getCard());
                 startActivity(intent);
-                return true;
-
-            case R.id.buy_tab:
-                AmazonUtils.openSearch(this, getCard());
                 return true;
         }
 

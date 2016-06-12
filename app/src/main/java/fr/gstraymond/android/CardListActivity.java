@@ -26,7 +26,6 @@ import fr.gstraymond.android.fragment.CardDetailFragment;
 import fr.gstraymond.android.fragment.CardListFragment;
 import fr.gstraymond.android.fragment.CardPagerFragment;
 import fr.gstraymond.android.fragment.CardParentListFragment;
-import fr.gstraymond.android.tools.amazon.AmazonUtils;
 import fr.gstraymond.biz.ProgressBarUpdater;
 import fr.gstraymond.biz.SearchOptions;
 import fr.gstraymond.biz.SearchProcessor;
@@ -79,7 +78,6 @@ public class CardListActivity extends CustomActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_card_list);
-        AmazonUtils.initAmazonApi(this);
 
         replaceFragment(new CardParentListFragment(), R.id.parent_fragment);
 
@@ -294,10 +292,6 @@ public class CardListActivity extends CustomActivity implements
                     intent.putExtra(CARD, currentCard);
                     startActivity(intent);
                 }
-                return true;
-
-            case R.id.buy_tab:
-                AmazonUtils.openSearch(this, currentCard);
                 return true;
 
             case R.id.oracle_tab:
