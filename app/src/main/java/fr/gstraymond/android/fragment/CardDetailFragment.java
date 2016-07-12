@@ -2,7 +2,10 @@ package fr.gstraymond.android.fragment;
 
 import android.app.Activity;
 import android.app.ListFragment;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
+import android.util.TypedValue;
 import android.view.View;
 import android.widget.ListAdapter;
 import android.widget.ListView;
@@ -10,12 +13,13 @@ import android.widget.ListView;
 import java.util.ArrayList;
 import java.util.List;
 
+import fr.gstraymond.R;
 import fr.gstraymond.search.model.response.Card;
 import fr.gstraymond.ui.adapter.SetArrayAdapter;
 
 import static fr.gstraymond.constants.Consts.CARD;
 
-public class CardDetailFragment extends ListFragment {
+public class CardDetailFragment extends CustomListFragment {
 
     private Callbacks callbacks = dummyCallbacks;
 
@@ -43,6 +47,13 @@ public class CardDetailFragment extends ListFragment {
                 android.R.layout.simple_list_item_activated_1,
                 android.R.id.text2, objects);
         setListAdapter(arrayAdapter);
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        getListView().setDivider(new ColorDrawable(ContextCompat.getColor(getActivity(), R.color.colorAccent)));
+        getListView().setDividerHeight((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 2, getResources().getDisplayMetrics()));
     }
 
     @Override

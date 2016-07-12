@@ -18,7 +18,7 @@ import fr.gstraymond.ui.adapter.CardArrayAdapter;
 
 import static fr.gstraymond.constants.Consts.CARD_LIST;
 
-public class CardListFragment extends ListFragment {
+public class CardListFragment extends CustomListFragment {
 
     private List<Card> cards;
 
@@ -51,7 +51,7 @@ public class CardListFragment extends ListFragment {
 
         arrayAdapter = new CardArrayAdapter(getActivity(),
                 android.R.layout.simple_list_item_activated_1,
-                android.R.id.text2, cards, castingCostAssetLoader);
+                android.R.id.text1, cards, castingCostAssetLoader);
 
         setListAdapter(arrayAdapter);
     }

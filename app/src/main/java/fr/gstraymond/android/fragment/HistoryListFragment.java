@@ -22,7 +22,7 @@ import fr.gstraymond.ui.adapter.HistoryArrayAdapter;
 
 import static fr.gstraymond.constants.Consts.HISTORY_LIST;
 
-public class HistoryListFragment extends ListFragment {
+public class HistoryListFragment extends CustomListFragment {
 
     public static final String EMPTY = "empty";
 

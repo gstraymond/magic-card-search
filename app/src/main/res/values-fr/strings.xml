@@ -56,7 +56,7 @@
     <string name="facet_more">Plus de filtres…</string>
 
     <string name="loading_initial">recherche…</string>
-    <string name="loading_more">chargement des 30 cartes suivantes…</string>
+    <string name="loading_more">plus de résultats…</string>
     <string name="loading_clear">suppression de la recherche …</string>
     <string name="loading_facet">filtrage de la recherche…</string>
     <string name="loading_more_facet">ajout de filtres…</string>

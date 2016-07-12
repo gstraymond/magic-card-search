@@ -2,6 +2,7 @@ package fr.gstraymond.android;
 
 import android.app.Fragment;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 
 import fr.gstraymond.R;
 import fr.gstraymond.android.fragment.CardPagerFragment;
@@ -14,6 +15,10 @@ public class CardPagerActivity extends CardCommonActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_card_pager);
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         replaceFragment(new CardPagerFragment(), R.id.card_pager_container, getBundle());
     }

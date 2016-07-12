@@ -4,6 +4,8 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.design.widget.NavigationView;
+import android.view.Menu;
 import android.widget.ExpandableListView;
 import android.widget.TextView;
 
@@ -11,6 +13,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.magic.card.search.commons.json.MapperUtil;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 import fr.gstraymond.R;
 import fr.gstraymond.android.CardListActivity;
@@ -18,6 +21,7 @@ import fr.gstraymond.android.fragment.CardListFragment;
 import fr.gstraymond.search.model.response.Card;
 import fr.gstraymond.search.model.response.Hit;
 import fr.gstraymond.search.model.response.SearchResult;
+import fr.gstraymond.search.model.response.facet.Facet;
 import fr.gstraymond.ui.FacetOnChildClickListener;
 import fr.gstraymond.ui.adapter.FacetListAdapter;
 

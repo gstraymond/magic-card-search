@@ -8,7 +8,7 @@ import java.util.List;
 public class CastingCostFormatter {
 
     public String format(String castingCost) {
-        List<String> costs = new ArrayList<String>();
+        List<String> costs = new ArrayList<>();
         if (castingCost.contains(" ")) {
             for (String cost : castingCost.split(" ")) {
                 costs.add(replace(cost));

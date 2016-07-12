@@ -140,10 +140,9 @@ public class FacetListAdapter extends BaseExpandableListAdapter {
 
         if (selectedTerms.contains(term)) {
             counterTextView = counterTextViewActive;
-            textTextView.setText(Html.fromHtml("<b>" + text + "</b>", null, null));
-        } else {
-            textTextView.setText(text);
         }
+
+        textTextView.setText(text);
 
         counterTextView.setVisibility(View.VISIBLE);
 

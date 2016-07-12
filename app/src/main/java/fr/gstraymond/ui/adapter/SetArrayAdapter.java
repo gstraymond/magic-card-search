@@ -54,23 +54,22 @@ public class SetArrayAdapter extends ArrayAdapter<Object> {
     @SuppressLint("InflateParams")
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        View view = convertView;
-        if (view == null) {
-            view = getLayoutInflater().inflate(R.layout.card_textview, null);
-        }
 
         Object object = getItem(position);
-        TextView text = getTextView(view, object);
 
         if (object instanceof Card) {
+            View detail = getLayoutInflater().inflate(R.layout.card_detail, null);
             Card card = (Card) object;
+            TextView text = (TextView) detail.findViewById(R.id.card_textview_detail);
             text.setText(formatCard(card));
-        } else if (object instanceof Publication) {
+            return detail;
+        } else {
+            View set = getLayoutInflater().inflate(R.layout.card_set, null);
             Publication publication = (Publication) object;
+            TextView text = (TextView) set.findViewById(R.id.card_textview_set);
             text.setText(formatPublication(publication));
+            return set;
         }
-
-        return view;
     }
 
     private Spanned formatCard(Card card) {
@@ -138,21 +137,6 @@ public class SetArrayAdapter extends ArrayAdapter<Object> {
 
         BigDecimal bd = new BigDecimal(price).round(new MathContext(2, RoundingMode.HALF_EVEN));
         return " $" + bd.toPlainString();
-    }
-
-    private TextView getTextView(View view, Object object) {
-        TextView detail = (TextView) view.findViewById(R.id.card_textview_detail);
-        TextView set = (TextView) view.findViewById(R.id.card_textview_set);
-        detail.setVisibility(View.GONE);
-        set.setVisibility(View.GONE);
-
-        TextView textview = set;
-        if (object instanceof Card) {
-            textview = detail;
-        }
-        textview.setVisibility(View.VISIBLE);
-
-        return textview;
     }
 
     private LayoutInflater getLayoutInflater() {

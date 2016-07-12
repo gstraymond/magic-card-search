@@ -1,42 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
         android:id="@+id/search_tab"
         android:icon="@android:drawable/ic_menu_search"
-        android:showAsAction="always"
-        android:title="@string/list_menu_search" />
+        android:title="@string/list_menu_search"
+        app:showAsAction="always" />
     <item
         android:id="@+id/pictures_tab"
         android:icon="@drawable/picture"
-        android:showAsAction="always"
-        android:title="@string/detail_menu_pictures" />
+        android:title="@string/detail_menu_pictures"
+        app:showAsAction="always" />
     <item
         android:id="@+id/oracle_tab"
         android:icon="@drawable/text_letter"
-        android:showAsAction="always"
         android:title="@string/detail_menu_oracle"
-        android:visible="false" />
+        android:visible="false"
+        app:showAsAction="always" />
     <item
         android:id="@+id/clear_tab"
         android:icon="@drawable/delete"
-        android:showAsAction="always"
-        android:title="@string/list_menu_clear" />
+        android:title="@string/list_menu_clear"
+        app:showAsAction="always" />
     <item
         android:id="@+id/history_tab"
         android:icon="@drawable/clock"
-        android:showAsAction="always"
-        android:title="@string/list_menu_history" />
+        android:title="@string/list_menu_history"
+        app:showAsAction="always" />
     <item
         android:id="@+id/help_tab"
         android:icon="@drawable/info"
-        android:showAsAction="ifRoom"
         android:title="@string/list_menu_help"
-        android:visible="false" />
+        android:visible="false"
+        app:showAsAction="ifRoom" />
 
     <item
         android:id="@+id/changelog_tab"
-        android:showAsAction="never"
-        android:title="@string/changelog_title" />
+        android:title="@string/changelog_title"
+        app:showAsAction="never" />
 
 </menu>

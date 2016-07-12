@@ -3,6 +3,7 @@ package fr.gstraymond.android;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -24,9 +25,15 @@ public class CardDetailActivity extends CardCommonActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_card_detail);
+        String title = formatTitle(this, getCard());
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setTitle(title);
 
         TextView titleTextView = (TextView) findViewById(R.id.card_detail_title);
-        titleTextView.setText(formatTitle(this, getCard()));
+        titleTextView.setText(title);
 
         replaceFragment(new CardDetailFragment(), R.id.card_detail_container, getBundle());
     }

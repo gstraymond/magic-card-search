@@ -1,15 +1,16 @@
 package fr.gstraymond.android;
 
-import android.app.Activity;
 import android.app.Fragment;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.ContentViewEvent;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import fr.gstraymond.db.json.JsonHistoryDataSource;
 
-public abstract class CustomActivity extends Activity {
+public abstract class CustomActivity extends AppCompatActivity {
 
     public CustomApplication getCustomApplication() {
         return (CustomApplication) getApplication();

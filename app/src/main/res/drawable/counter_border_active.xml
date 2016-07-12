@@ -7,7 +7,7 @@
         android:right="4dp"
         android:top="0dp" />
 
-    <solid android:color="@android:color/holo_blue_light" />
+    <solid android:color="@color/colorPrimary" />
 
     <corners android:radius="6dp" />
 

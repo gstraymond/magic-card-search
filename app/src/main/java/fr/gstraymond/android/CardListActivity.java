@@ -5,13 +5,13 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Parcelable;
-import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.SearchView;
 import android.widget.TextView;
@@ -79,6 +79,9 @@ public class CardListActivity extends CustomActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_card_list);
 
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
         replaceFragment(new CardParentListFragment(), R.id.parent_fragment);
 
         if (savedInstanceState != null) {
@@ -93,32 +96,14 @@ public class CardListActivity extends CustomActivity implements
 
         if (isSmartphone()) {
             drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-            drawerToggle = new ActionBarDrawerToggle(this, /* host Activity */
-                    drawerLayout, /* DrawerLayout object */
-                    R.drawable.ic_drawer, /* nav drawer icon to replace 'Up' caret */
-                    R.string.drawer_open, /* "open drawer" description */
-                    R.string.drawer_close /* "close drawer" description */
-            ) {
+            drawerToggle = new ActionBarDrawerToggle(
+                    this,
+                    drawerLayout,
+                    toolbar,
+                    R.string.drawer_open,
+                    R.string.drawer_close);
 
-                /**
-                 * Called when a drawer has settled in a completely closed
-                 * state.
-                 */
-                public void onDrawerClosed(View view) {
-                    super.onDrawerClosed(view);
-                    actionBarSetTitle(R.string.drawer_open);
-                }
-
-                /** Called when a drawer has settled in a completely open state. */
-                public void onDrawerOpened(View drawerView) {
-                    super.onDrawerOpened(drawerView);
-                    actionBarSetTitle(R.string.drawer_close);
-                }
-            };
-
-            // Set the drawer toggle as the DrawerListener
-            drawerLayout.setDrawerListener(drawerToggle);
-            actionBarSetDisplayHomeAsUpEnabled(true);
+            drawerLayout.addDrawerListener(drawerToggle);
         }
 
         progressBarUpdater = new ProgressBarUpdater((ProgressBar) findViewById(R.id.progress_bar));
