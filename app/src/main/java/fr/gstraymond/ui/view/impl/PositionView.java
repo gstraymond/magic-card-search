@@ -21,7 +21,7 @@ public class PositionView extends CommonDisplayableView {
     @Override
     public void setValue(Card card, int position) {
         TextView view = (TextView) getView();
-        view.setText(String.format("%d.", position + 1));
+        view.setText(String.format("%d", position + 1));
     }
 
 }

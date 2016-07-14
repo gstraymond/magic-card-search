@@ -9,6 +9,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.TextView;
 
+import org.w3c.dom.Text;
+
 import fr.gstraymond.R;
 import fr.gstraymond.android.fragment.CardDetailFragment;
 import fr.gstraymond.android.fragment.CardPagerFragment;
@@ -25,15 +27,13 @@ public class CardDetailActivity extends CardCommonActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_card_detail);
-        String title = formatTitle(this, getCard());
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle(title);
 
-        TextView titleTextView = (TextView) findViewById(R.id.card_detail_title);
-        titleTextView.setText(title);
+        TextView title = (TextView) findViewById(R.id.toolbar_title);
+        title.setText(formatTitle(this, getCard()));
 
         replaceFragment(new CardDetailFragment(), R.id.card_detail_container, getBundle());
     }
@@ -80,7 +80,7 @@ public class CardDetailActivity extends CardCommonActivity implements
 
     public static String formatTitle(Context context, Card card) {
         if (LanguageUtil.showFrench(context) && card.getFrenchTitle() != null) {
-            return card.getFrenchTitle() + "\n(" + card.getTitle() + ")";
+            return String.format("%s (%s)", card.getFrenchTitle(), card.getTitle());
         }
 
         return card.getTitle();

@@ -13,25 +13,30 @@
 
         <TextView
             android:id="@+id/array_adapter_card_position"
-            style="@android:style/TextAppearance.Medium"
+            style="@android:style/TextAppearance.Small"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            tools:text="1." />
+            android:layout_marginBottom="2dp"
+            android:background="@drawable/counter_border_active"
+            android:gravity="center_horizontal"
+            android:minWidth="24dp"
+            android:textColor="@android:color/white"
+            tools:text="1" />
 
         <TextView
             android:id="@+id/array_adapter_card_casting_cost"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="4dp"
+            android:layout_marginLeft="8dp"
             tools:text="UUU" />
 
         <TextView
             android:id="@+id/array_adapter_text"
             style="@android:style/TextAppearance.Medium"
             android:layout_width="wrap_content"
-            android:layout_marginLeft="4dp"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
             android:ellipsize="end"
             android:singleLine="true"
             tools:text="Abandon de l'espoir" />
@@ -43,14 +48,14 @@
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:singleLine="true"
-            tools:text="Sorcery" />
+            tools:text=" - Sorcery" />
     </LinearLayout>
 
     <TextView
         android:id="@+id/array_adapter_description"
         style="@android:style/TextAppearance.Medium"
         android:layout_width="wrap_content"
-        android:layout_height="24dp"
+        android:layout_height="28dp"
         android:ellipsize="end"
         android:singleLine="true"
         android:textColor="@android:color/darker_gray"

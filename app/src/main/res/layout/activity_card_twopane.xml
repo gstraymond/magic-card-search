@@ -23,7 +23,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:baselineAligned="false"
-        android:divider="@android:drawable/divider_horizontal_bright"
+        android:divider="@drawable/layout_divider"
         android:focusable="true"
         android:focusableInTouchMode="true"
         android:orientation="horizontal"
@@ -81,21 +81,15 @@
             android:layout_weight="0.33"
             android:orientation="vertical">
 
-            <RelativeLayout
-                android:layout_width="match_parent"
+            <TextView
+                android:id="@+id/card_detail_title"
+                style="@android:style/TextAppearance.Large"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:id="@+id/card_detail_title"
-                    style="@android:style/TextAppearance.Large"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true"
-                    android:textIsSelectable="true"
-                    android:textStyle="bold" />
-
-            </RelativeLayout>
+                android:gravity="center"
+                android:padding="8dp"
+                android:textIsSelectable="true"
+                android:textStyle="bold" />
 
             <ProgressBar
                 style="@android:style/Widget.ProgressBar.Horizontal"

@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.text.Html;
 import android.text.Spanned;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -66,8 +67,16 @@ public class SetArrayAdapter extends ArrayAdapter<Object> {
         } else {
             View set = getLayoutInflater().inflate(R.layout.card_set, null);
             Publication publication = (Publication) object;
-            TextView text = (TextView) set.findViewById(R.id.card_textview_set);
-            text.setText(formatPublication(publication));
+            TextView publicationImage = (TextView) set.findViewById(R.id.card_textview_set_image);
+            TextView publicationText = (TextView) set.findViewById(R.id.card_textview_set_text);
+            Spanned imageText = formatPublicationImage(publication);
+            if (TextUtils.isEmpty(imageText)) {
+                publicationImage.setVisibility(View.GONE);
+            } else {
+                publicationImage.setVisibility(View.VISIBLE);
+                publicationImage.setText(imageText);
+            }
+            publicationText.setText(publication.getEdition() + formatPrice(publication));
             return set;
         }
     }
@@ -117,10 +126,9 @@ public class SetArrayAdapter extends ArrayAdapter<Object> {
         return castingCostFormatter.format(card.getCastingCost());
     }
 
-    private Spanned formatPublication(Publication publication) {
-        String price = formatPrice(publication);
-        String line = getEditionImage(publication) + " " + publication.getEdition() + price;
-        return Html.fromHtml(line, setImageGetter, null);
+    private Spanned formatPublicationImage(Publication publication) {
+        String editionImage = getEditionImage(publication);
+        return Html.fromHtml(editionImage, setImageGetter, null);
     }
 
     private String getEditionImage(Publication pub) {
