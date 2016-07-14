@@ -17,7 +17,7 @@
 
     <TextView
         android:id="@+id/array_adapter_history_index"
-        style="@android:style/TextAppearance.Holo.Medium"
+        style="@android:style/TextAppearance.Medium"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
@@ -25,7 +25,7 @@
 
     <TextView
         android:id="@+id/array_adapter_history_date"
-        style="@android:style/TextAppearance.Holo.Medium"
+        style="@android:style/TextAppearance.Medium"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
@@ -33,7 +33,7 @@
 
     <TextView
         android:id="@+id/array_adapter_history_query"
-        style="@android:style/TextAppearance.Holo.Medium"
+        style="@android:style/TextAppearance.Medium"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center_vertical"

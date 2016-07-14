@@ -16,7 +16,6 @@
             style="@android:style/TextAppearance.Medium"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@android:color/darker_gray"
             android:layout_gravity="center_vertical"
             tools:text="1." />
 
@@ -25,13 +24,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="4dp"
-            android:layout_marginRight="4dp"
             tools:text="UUU" />
 
         <TextView
             android:id="@+id/array_adapter_text"
             style="@android:style/TextAppearance.Medium"
             android:layout_width="wrap_content"
+            android:layout_marginLeft="4dp"
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:singleLine="true"

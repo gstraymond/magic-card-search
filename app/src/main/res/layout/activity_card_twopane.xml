@@ -23,7 +23,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:baselineAligned="false"
-        android:divider="?android:attr/dividerHorizontal"
+        android:divider="@android:drawable/divider_horizontal_bright"
         android:focusable="true"
         android:focusableInTouchMode="true"
         android:orientation="horizontal"
@@ -38,7 +38,7 @@
 
             <TextView
                 android:id="@+id/welcome_text_view"
-                style="?android:attr/textAppearanceMedium"
+                style="@android:style/TextAppearance.Medium"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="6dp"
@@ -88,7 +88,7 @@
 
                 <TextView
                     android:id="@+id/card_detail_title"
-                    style="?android:attr/textAppearanceLarge"
+                    style="@android:style/TextAppearance.Large"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"

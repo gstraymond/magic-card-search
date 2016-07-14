@@ -26,7 +26,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/history_check_text"
-        style="?android:attr/textAppearanceMedium"
+        style="@android:style/TextAppearance.Medium"
         android:padding="4dp"
         android:gravity="center"/>
 

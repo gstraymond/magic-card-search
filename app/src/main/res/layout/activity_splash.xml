@@ -22,7 +22,7 @@
         android:src="@drawable/ic_launcher" />
 
     <TextView
-        style="?android:attr/textAppearanceLarge"
+        style="@android:style/TextAppearance.Large"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"

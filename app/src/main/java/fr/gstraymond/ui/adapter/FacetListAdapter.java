@@ -132,18 +132,19 @@ public class FacetListAdapter extends BaseExpandableListAdapter {
 
         TextView textTextView = (TextView) view.findViewById(R.id.drawer_child_text);
         TextView counterTextViewInactive = (TextView) view.findViewById(R.id.drawer_child_counter_inactive);
-        counterTextViewInactive.setVisibility(View.GONE);
         TextView counterTextViewActive = (TextView) view.findViewById(R.id.drawer_child_counter_active);
-        counterTextViewActive.setVisibility(View.GONE);
 
         TextView counterTextView = counterTextViewInactive;
+        TextView hiddenCounterTextView = counterTextViewActive;
 
         if (selectedTerms.contains(term)) {
             counterTextView = counterTextViewActive;
+            hiddenCounterTextView = counterTextViewInactive;
         }
 
         textTextView.setText(text);
 
+        hiddenCounterTextView.setVisibility(View.GONE);
         counterTextView.setVisibility(View.VISIBLE);
 
         if (term.getCount() > 0) {

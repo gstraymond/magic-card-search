@@ -1,11 +1,7 @@
 package fr.gstraymond.android.fragment;
 
 import android.app.Activity;
-import android.app.ListFragment;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.support.v4.content.ContextCompat;
-import android.util.TypedValue;
 import android.view.View;
 import android.widget.ListAdapter;
 import android.widget.ListView;
@@ -13,7 +9,6 @@ import android.widget.ListView;
 import java.util.ArrayList;
 import java.util.List;
 
-import fr.gstraymond.R;
 import fr.gstraymond.search.model.response.Card;
 import fr.gstraymond.ui.adapter.SetArrayAdapter;
 
@@ -52,8 +47,7 @@ public class CardDetailFragment extends CustomListFragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        getListView().setDivider(new ColorDrawable(ContextCompat.getColor(getActivity(), R.color.colorAccent)));
-        getListView().setDividerHeight((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 2, getResources().getDisplayMetrics()));
+        getListView().setDividerHeight(0);
     }
 
     @Override
