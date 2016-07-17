@@ -76,7 +76,6 @@ public class JsonHistoryDataSource {
         for (JsonHistory history : jsonHistories) {
             log.d("h1 %s h2 %s", history.getDate().getTime(), jsonHistory.getDate().getTime());
             if (history.getDate().equals(jsonHistory.getDate())) {
-                log.d("pouet");
                 history.setFavorite(add);
                 break;
             }

@@ -1,14 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="64dp"
-    android:orientation="vertical"
     android:padding="8dp">
+    
+    <Button
+        android:id="@+id/card_favorite"
+        android:layout_width="42dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_marginLeft="4dp"
+        android:layout_centerVertical="true"
+        android:text=""
+        android:drawableLeft="@drawable/ic_star_rate_white_18dp"
+        android:focusable="false" />
 
     <LinearLayout
+        android:id="@+id/card_first_line"
         android:layout_width="match_parent"
         android:layout_height="24dp"
+        android:layout_toLeftOf="@id/card_favorite"
         android:orientation="horizontal">
 
         <TextView
@@ -26,8 +38,8 @@
             android:id="@+id/array_adapter_card_casting_cost"
             android:layout_width="wrap_content"
             android:layout_height="@dimen/castingCostSize"
-            android:layout_marginLeft="8dp"
             android:layout_gravity="bottom"
+            android:layout_marginLeft="8dp"
             tools:text="UUU" />
 
         <TextView
@@ -38,7 +50,7 @@
             android:layout_marginLeft="8dp"
             android:ellipsize="end"
             android:singleLine="true"
-            tools:text="Abandon de l'espoir" />
+            tools:text="Abandon de l'espoir, foo" />
 
         <TextView
             android:id="@+id/array_adapter_card_type_pt"
@@ -55,9 +67,12 @@
         style="@android:style/TextAppearance.Medium"
         android:layout_width="wrap_content"
         android:layout_height="28dp"
+        android:layout_below="@id/card_first_line"
+        android:layout_toLeftOf="@id/card_favorite"
+        android:layout_alignParentLeft="true"
         android:ellipsize="end"
         android:singleLine="true"
         android:textColor="@android:color/darker_gray"
         tools:text="As an additionnal cost to cast Abandon Hp" />
 
-</LinearLayout>
+</RelativeLayout>

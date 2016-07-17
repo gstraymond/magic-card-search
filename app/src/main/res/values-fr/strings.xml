@@ -67,4 +67,7 @@
     <string name="changelog_title">Historique des versions</string>
     <string name="changelog_ok_button">OK</string>
     <string name="changelog_show_full">plus…</string>
+
+    <string name="wishlist_title">Wishlist</string>
+    <string name="wishlist_empty_text">Votre wishlist est vide.\n\nAjoutez des cartes avec le bouton STAR dans les résultas de recherche.</string>
 </resources>

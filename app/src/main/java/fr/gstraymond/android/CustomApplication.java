@@ -9,6 +9,7 @@ import java.net.URL;
 import fr.gstraymond.R;
 import fr.gstraymond.biz.ElasticSearchClient;
 import fr.gstraymond.db.json.JsonHistoryDataSource;
+import fr.gstraymond.db.json.JsonList;
 import fr.gstraymond.ui.CastingCostAssetLoader;
 
 public class CustomApplication extends BaseApplication {
@@ -21,6 +22,7 @@ public class CustomApplication extends BaseApplication {
     private ElasticSearchClient elasticSearchClient;
     private CastingCostAssetLoader castingCostAssetLoader;
     private JsonHistoryDataSource jsonHistoryDataSource;
+    private JsonList wishlist;
     private Boolean isTablet;
     private Log log = new Log(this);
 
@@ -31,6 +33,7 @@ public class CustomApplication extends BaseApplication {
         initElasticSearchClient();
         initIsTablet();
         migrateHistory();
+        wishlist = new JsonList(this, getObjectMapper(), "wishlist");
     }
 
     public void init() {
@@ -92,5 +95,9 @@ public class CustomApplication extends BaseApplication {
 
     private void migrateHistory() {
         jsonHistoryDataSource.migrate();
+    }
+
+    public JsonList getWishlist() {
+        return wishlist;
     }
 }
