@@ -33,10 +33,15 @@ public class CardFragment extends Fragment implements PictureRequestListener.Cal
         url = getArguments().getString(URL);
 
         log.d("downloading %s...", url);
-        Glide.with(getActivity())
-                .load(url)
-                .listener(new PictureRequestListener(url, this))
-                .into(imageView);
+        if (url == null) {
+            progressBar.setVisibility(View.GONE);
+            imageView.setImageResource(R.drawable.mtg_card_back);
+        } else {
+            Glide.with(getActivity())
+                    .load(url)
+                    .listener(new PictureRequestListener(url, this))
+                    .into(imageView);
+        }
 
         return rootView;
     }
