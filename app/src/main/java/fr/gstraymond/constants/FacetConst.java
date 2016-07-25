@@ -24,6 +24,8 @@ public class FacetConst {
     private static final String TOUGHNESS = "toughness";
     private static final String TYPE = "type";
     private static final String PRICE = "priceRanges.exact";
+    private static final String BLOCK = "blocks.exact";
+    private static final String LAYOUT = "layout.exact";
 
     private static Map<String, Integer> facetNames;
     private static List<String> facetOrder;
@@ -39,17 +41,21 @@ public class FacetConst {
         facetNames.put(POWER, R.string.facet_power);
         facetNames.put(RARITY, R.string.facet_rarity);
         facetNames.put(SET, R.string.facet_set);
+        facetNames.put(BLOCK, R.string.block_set);
         facetNames.put(TOUGHNESS, R.string.facet_toughness);
         facetNames.put(TYPE, R.string.facet_type);
+        facetNames.put(LAYOUT, R.string.layout_type);
         facetNames.put(PRICE, R.string.facet_price);
 
         facetOrder = new ArrayList<>();
         facetOrder.add(COLOR);
         facetOrder.add(TYPE);
+        facetOrder.add(LAYOUT);
         facetOrder.add(FORMAT);
         facetOrder.add(CMC);
         facetOrder.add(RARITY);
         facetOrder.add(SET);
+        facetOrder.add(BLOCK);
         facetOrder.add(ABILITY);
         facetOrder.add(DEVOTION);
         facetOrder.add(POWER);
@@ -67,16 +73,18 @@ public class FacetConst {
         Map<String, Facet> facets = new HashMap<>();
         putInFacets(facets, ABILITY);
         putInFacets(facets, ARTIST);
+        putInFacets(facets, BLOCK);
         putInFacets(facets, COLOR);
         putInFacets(facets, CMC);
         putInFacets(facets, DEVOTION);
-        putInFacets(facets, SET);
         putInFacets(facets, FORMAT);
+        putInFacets(facets, LAYOUT);
         putInFacets(facets, POWER);
+        putInFacets(facets, PRICE);
         putInFacets(facets, RARITY);
         putInFacets(facets, TOUGHNESS);
         putInFacets(facets, TYPE);
-        putInFacets(facets, PRICE);
+        putInFacets(facets, SET);
         return facets;
     }
 

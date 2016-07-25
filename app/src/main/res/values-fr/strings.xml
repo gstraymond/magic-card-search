@@ -54,6 +54,8 @@
     <string name="facet_type">Type</string>
     <string name="facet_price">Prix</string>
     <string name="facet_more">Plus de filtres…</string>
+    <string name="block_set">Bloc</string>
+    <string name="layout_type">Disposition</string>
 
     <string name="loading_initial">recherche…</string>
     <string name="loading_more">plus de résultats…</string>
