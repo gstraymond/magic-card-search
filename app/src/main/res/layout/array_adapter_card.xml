@@ -16,10 +16,8 @@
             style="@android:style/TextAppearance.Small"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginBottom="2dp"
             android:background="@drawable/counter_border_active"
-            android:gravity="center_horizontal"
+            android:gravity="center_horizontal|bottom"
             android:minWidth="24dp"
             android:textColor="@android:color/white"
             tools:text="1" />
@@ -27,8 +25,9 @@
         <TextView
             android:id="@+id/array_adapter_card_casting_cost"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/castingCostSize"
             android:layout_marginLeft="8dp"
+            android:layout_gravity="bottom"
             tools:text="UUU" />
 
         <TextView
