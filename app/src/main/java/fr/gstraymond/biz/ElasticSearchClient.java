@@ -96,7 +96,7 @@ public class ElasticSearchClient {
         } catch (UnknownHostException e) {
             log.w("unknown host: %s", e.getMessage());
         } catch (Exception e) {
-            if (e.getMessage().contains("ETIMEDOUT")) {
+            if (e.getMessage() != null && e.getMessage().contains("ETIMEDOUT")) {
                 log.w("timeout:" + e.getMessage());
             } else {
                 log.e("process", e);
