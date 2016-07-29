@@ -5,6 +5,7 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Parcelable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -12,6 +13,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.SearchView;
 import android.widget.TextView;
@@ -113,6 +115,16 @@ public class CardListActivity extends CustomActivity implements
         changeLog = new ChangeLog(this);
         if (changeLog.firstRun())
             changeLog.getLogDialog().show();
+
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        if (fab != null) {
+            fab.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    startActivity(new Intent(view.getContext(), WishListActivity.class));
+                }
+            });
+        }
     }
 
     @Override
@@ -298,18 +310,20 @@ public class CardListActivity extends CustomActivity implements
                 return true;
 
             case R.id.history_tab:
-                Intent historyIntent = new Intent(this, HistoryActivity.class);
-                startActivityForResult(historyIntent, HISTORY_REQUEST_CODE);
+                startActivityForResult(new Intent(this, HistoryActivity.class), HISTORY_REQUEST_CODE);
                 return true;
 
             case R.id.help_tab:
-                Intent helpIntent = new Intent(this, HelpActivity.class);
-                startActivity(helpIntent);
+                startActivity(new Intent(this, HelpActivity.class));
                 return true;
 
             case R.id.changelog_tab:
                 Answers.getInstance().logContentView(new ContentViewEvent().putContentName("Changelog"));
                 changeLog.getFullLogDialog().show();
+                return true;
+
+            case R.id.star_tab:
+                startActivity(new Intent(this, WishListActivity.class));
                 return true;
         }
 

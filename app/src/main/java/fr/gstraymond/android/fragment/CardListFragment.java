@@ -1,7 +1,6 @@
 package fr.gstraymond.android.fragment;
 
 import android.app.Activity;
-import android.app.ListFragment;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.view.View;
@@ -13,7 +12,6 @@ import java.util.List;
 import fr.gstraymond.android.CardListActivity;
 import fr.gstraymond.android.CustomApplication;
 import fr.gstraymond.search.model.response.Card;
-import fr.gstraymond.ui.CastingCostAssetLoader;
 import fr.gstraymond.ui.adapter.CardArrayAdapter;
 
 import static fr.gstraymond.constants.Consts.CARD_LIST;
@@ -46,12 +44,13 @@ public class CardListFragment extends CustomListFragment {
 
         cards = getArguments().getParcelableArrayList(CARD_LIST);
 
-        CastingCostAssetLoader castingCostAssetLoader = getCustomApplication()
-                .getCastingCostAssetLoader();
-
-        arrayAdapter = new CardArrayAdapter(getActivity(),
+        arrayAdapter = new CardArrayAdapter(
+                getActivity(),
                 android.R.layout.simple_list_item_activated_1,
-                android.R.id.text1, cards, castingCostAssetLoader);
+                android.R.id.text1, cards,
+                getCustomApplication().getCastingCostAssetLoader(),
+                getCustomApplication().getWishlist()
+        );
 
         setListAdapter(arrayAdapter);
     }

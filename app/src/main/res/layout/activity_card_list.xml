@@ -17,62 +17,76 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <android.support.v4.widget.DrawerLayout
-        android:id="@+id/drawer_layout"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="?attr/actionBarSize">
+        android:layout_height="match_parent">
 
-        <FrameLayout
-            android:id="@+id/parent_fragment"
+        <android.support.v4.widget.DrawerLayout
+            android:id="@+id/drawer_layout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-
-        <android.support.design.widget.NavigationView
-            android:id="@+id/navigation_view"
-            android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_gravity="start">
+            android:layout_marginTop="?attr/actionBarSize">
 
-            <LinearLayout
+            <FrameLayout
+                android:id="@+id/parent_fragment"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+            <android.support.design.widget.NavigationView
+                android:id="@+id/navigation_view"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:layout_height="match_parent"
+                android:layout_gravity="start">
 
-                <TextView
-                    android:id="@+id/welcome_text_view"
-                    style="@android:style/TextAppearance.Medium"
-                    android:layout_width="match_parent"
+                <LinearLayout
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="6dp"
-                    android:layout_marginTop="8dp"
-                    android:gravity="center"
-                    android:text="@string/welcome_text" />
+                    android:orientation="vertical">
 
-                <ProgressBar
-                    android:id="@+id/progress_bar"
-                    style="@android:style/Widget.ProgressBar.Horizontal"
-                    android:layout_width="match_parent"
-                    android:layout_height="2dp"
-                    android:progress="100"
-                    android:progressDrawable="@drawable/progress_drawable" />
+                    <TextView
+                        android:id="@+id/welcome_text_view"
+                        style="@android:style/TextAppearance.Medium"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="6dp"
+                        android:layout_marginTop="8dp"
+                        android:gravity="center"
+                        android:text="@string/welcome_text" />
 
-                <SearchView
-                    android:id="@+id/search_input"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:iconifiedByDefault="false"
-                    android:queryHint="@string/search_hint" />
+                    <ProgressBar
+                        android:id="@+id/progress_bar"
+                        style="@android:style/Widget.ProgressBar.Horizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="2dp"
+                        android:progress="100"
+                        android:progressDrawable="@drawable/progress_drawable" />
 
-                <ExpandableListView
-                    android:id="@+id/left_drawer"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:childDivider="#00000000"
-                    android:divider="#00000000" />
-            </LinearLayout>
-        </android.support.design.widget.NavigationView>
+                    <SearchView
+                        android:id="@+id/search_input"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:iconifiedByDefault="false"
+                        android:queryHint="@string/search_hint" />
 
-    </android.support.v4.widget.DrawerLayout>
+                    <ExpandableListView
+                        android:id="@+id/left_drawer"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:childDivider="#00000000"
+                        android:divider="#00000000" />
+                </LinearLayout>
+            </android.support.design.widget.NavigationView>
+
+        </android.support.v4.widget.DrawerLayout>
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:layout_margin="16dp"
+            android:src="@drawable/ic_star_rate_white_18dp" />
+
+    </FrameLayout>
 
 </android.support.design.widget.CoordinatorLayout>

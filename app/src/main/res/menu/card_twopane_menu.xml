@@ -8,6 +8,16 @@
         android:title="@string/list_menu_search"
         app:showAsAction="always" />
     <item
+        android:id="@+id/clear_tab"
+        android:icon="@drawable/delete"
+        android:title="@string/list_menu_clear"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/star_tab"
+        android:icon="@drawable/ic_star_rate_white_36dp"
+        android:title="@string/wishlist_title"
+        app:showAsAction="always" />
+    <item
         android:id="@+id/pictures_tab"
         android:icon="@drawable/picture"
         android:title="@string/detail_menu_pictures"
@@ -17,11 +27,6 @@
         android:icon="@drawable/text_letter"
         android:title="@string/detail_menu_oracle"
         android:visible="false"
-        app:showAsAction="always" />
-    <item
-        android:id="@+id/clear_tab"
-        android:icon="@drawable/delete"
-        android:title="@string/list_menu_clear"
         app:showAsAction="always" />
     <item
         android:id="@+id/history_tab"
