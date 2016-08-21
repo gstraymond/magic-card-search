@@ -12,7 +12,7 @@ import fr.gstraymond.tools.CastingCostFormatter;
 import fr.gstraymond.ui.CastingCostAssetLoader;
 import fr.gstraymond.ui.view.CommonDisplayableView;
 
-public class CastingCostView extends CommonDisplayableView {
+public class CastingCostView extends CommonDisplayableView<TextView> {
     private CastingCostImageGetter imageGetter;
     private CastingCostFormatter ccFormatter;
 
@@ -26,8 +26,7 @@ public class CastingCostView extends CommonDisplayableView {
         String castingCost = ccFormatter.format(card.getCastingCost());
         Spanned html = Html.fromHtml(castingCost, imageGetter, null);
 
-        TextView view = (TextView) getView();
-        view.setText(html);
+        getView().setText(html);
     }
 
     @Override

@@ -9,7 +9,7 @@ import fr.gstraymond.tools.PowerToughnessFormatter;
 import fr.gstraymond.tools.TypeFormatter;
 import fr.gstraymond.ui.view.CommonDisplayableView;
 
-public class TypePTView extends CommonDisplayableView {
+public class TypePTView extends CommonDisplayableView<TextView> {
 
     private PowerToughnessFormatter ptFormatter;
     private TypeFormatter typeFormatter;
@@ -21,8 +21,7 @@ public class TypePTView extends CommonDisplayableView {
 
     @Override
     public void setValue(Card card, int position) {
-        TextView view = (TextView) getView();
-        view.setText(" — " + getPTorType(card));
+        getView().setText(" — " + getPTorType(card));
     }
 
     @Override

@@ -6,7 +6,7 @@ import fr.gstraymond.R;
 import fr.gstraymond.search.model.response.Card;
 import fr.gstraymond.ui.view.CommonDisplayableView;
 
-public class PositionView extends CommonDisplayableView {
+public class PositionView extends CommonDisplayableView<TextView> {
 
     @Override
     public boolean display(Card card) {
@@ -20,8 +20,7 @@ public class PositionView extends CommonDisplayableView {
 
     @Override
     public void setValue(Card card, int position) {
-        TextView view = (TextView) getView();
-        view.setText(String.format("%d", position + 1));
+        getView().setText(String.format("%d", position + 1));
     }
 
 }

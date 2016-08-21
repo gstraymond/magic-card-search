@@ -4,30 +4,28 @@
     android:layout_width="match_parent"
     android:layout_height="64dp"
     android:padding="8dp">
-    
+
     <Button
         android:id="@+id/card_favorite"
-        android:layout_width="42dp"
+        android:layout_width="48dp"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
-        android:layout_marginLeft="4dp"
         android:layout_centerVertical="true"
-        android:text=""
-        android:drawableLeft="@drawable/ic_star_rate_white_18dp"
-        android:focusable="false" />
+        android:focusable="false"
+        android:text="$$$" />
 
-    <LinearLayout
+    <RelativeLayout
         android:id="@+id/card_first_line"
         android:layout_width="match_parent"
         android:layout_height="24dp"
-        android:layout_toLeftOf="@id/card_favorite"
-        android:orientation="horizontal">
+        android:layout_toLeftOf="@id/card_favorite">
 
         <TextView
             android:id="@+id/array_adapter_card_position"
             style="@android:style/TextAppearance.Small"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
             android:background="@drawable/counter_border_active"
             android:gravity="center_horizontal|bottom"
             android:minWidth="24dp"
@@ -40,6 +38,7 @@
             android:layout_height="@dimen/castingCostSize"
             android:layout_gravity="bottom"
             android:layout_marginLeft="8dp"
+            android:layout_toRightOf="@id/array_adapter_card_position"
             tools:text="UUU" />
 
         <TextView
@@ -48,6 +47,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="8dp"
+            android:layout_toRightOf="@id/array_adapter_card_casting_cost"
             android:ellipsize="end"
             android:singleLine="true"
             tools:text="Abandon de l'espoir, foo" />
@@ -57,19 +57,20 @@
             style="@android:style/TextAppearance.Medium"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/array_adapter_text"
             android:ellipsize="end"
             android:singleLine="true"
             tools:text=" - Sorcery" />
-    </LinearLayout>
+    </RelativeLayout>
 
     <TextView
         android:id="@+id/array_adapter_description"
         style="@android:style/TextAppearance.Medium"
         android:layout_width="wrap_content"
         android:layout_height="28dp"
+        android:layout_alignParentLeft="true"
         android:layout_below="@id/card_first_line"
         android:layout_toLeftOf="@id/card_favorite"
-        android:layout_alignParentLeft="true"
         android:ellipsize="end"
         android:singleLine="true"
         android:textColor="@android:color/darker_gray"

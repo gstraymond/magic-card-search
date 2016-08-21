@@ -10,13 +10,12 @@ import fr.gstraymond.search.model.response.Card;
 import fr.gstraymond.tools.LanguageUtil;
 import fr.gstraymond.ui.view.CommonDisplayableView;
 
-public class TitleView extends CommonDisplayableView {
+public class TitleView extends CommonDisplayableView<TextView> {
     private boolean showFrenchTitle;
 
     @Override
     public void setValue(Card card, int position) {
-        TextView view = (TextView) getView();
-        view.setText(formatCard(card));
+        getView().setText(formatCard(card));
     }
 
     public TitleView(Context context) {

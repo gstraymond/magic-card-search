@@ -13,7 +13,7 @@ import fr.gstraymond.db.json.JsonList;
 import fr.gstraymond.search.model.response.Card;
 import fr.gstraymond.ui.view.CommonDisplayableView;
 
-public class FavoriteView extends CommonDisplayableView {
+public class FavoriteView extends CommonDisplayableView<AppCompatButton> {
 
     private JsonList wishlist;
     private ClickCallbacks clickCallbacks;
@@ -41,7 +41,7 @@ public class FavoriteView extends CommonDisplayableView {
 
     @Override
     public void setValue(final Card card, final int position) {
-        AppCompatButton button = (AppCompatButton) getView();
+        AppCompatButton button = getView();
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
