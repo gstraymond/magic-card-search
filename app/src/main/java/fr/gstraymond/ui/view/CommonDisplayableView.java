@@ -4,7 +4,7 @@ import android.view.View;
 
 import fr.gstraymond.api.ui.view.DisplayableView;
 
-public abstract class CommonDisplayableView implements DisplayableView {
+public abstract class CommonDisplayableView<A extends View> implements DisplayableView {
 
     protected View parentView;
 
@@ -14,8 +14,8 @@ public abstract class CommonDisplayableView implements DisplayableView {
     }
 
     @Override
-    public View getView() {
-        return parentView.findViewById(getId());
+    public A getView() {
+        return (A) parentView.findViewById(getId());
     }
 
     private boolean show() {

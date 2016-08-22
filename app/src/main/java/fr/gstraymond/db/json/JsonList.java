@@ -21,7 +21,7 @@ public class JsonList {
     private Context context;
     private MapperUtil<List<Card>> mapperUtil;
     private String listName;
-    private List<Card> cards;
+    private List<Card> cards = new ArrayList<>();
 
     public JsonList(Context context, ObjectMapper objectMapper, String listName) {
         this.context = context;
@@ -35,8 +35,9 @@ public class JsonList {
             FileInputStream inputStream = context.openFileInput(listName);
             return new ArrayList<>(mapperUtil.read(inputStream));
         } catch (FileNotFoundException e) {
-            log.e("get", e);
-            return new ArrayList<>();
+            log.w("get: %s", e);
+            save();
+            return cards;
         }
     }
 
