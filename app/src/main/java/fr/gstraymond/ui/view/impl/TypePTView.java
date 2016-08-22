@@ -21,7 +21,7 @@ public class TypePTView extends CommonDisplayableView<TextView> {
 
     @Override
     public void setValue(Card card, int position) {
-        getView().setText(" " + getPTorType(card));
+        getView().setText(" — " + getPTorType(card));
     }
 
     @Override
