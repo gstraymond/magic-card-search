@@ -19,13 +19,16 @@ public class TitleView extends CommonDisplayableView<TextView> {
     @Override
     public void setValue(Card card, int position) {
         Integer color = android.R.color.white;
-        if (card.getColors().contains("Gold")) color = R.color.gold;
-        else if (card.getColors().contains("White")) color = R.color.white;
-        else if (card.getColors().contains("Red")) color = R.color.red;
-        else if (card.getColors().contains("Green")) color = R.color.green;
-        else if (card.getColors().contains("Black")) color = R.color.black;
-        else if (card.getColors().contains("Blue")) color = R.color.blue;
-        else if (card.getColors().contains("Uncolored") && card.getType().contains("Artifact")) color = R.color.uncolored;
+        if (card.getColors() != null) {
+            if (card.getColors().contains("Gold")) color = R.color.gold;
+            else if (card.getColors().contains("White")) color = R.color.white;
+            else if (card.getColors().contains("Red")) color = R.color.red;
+            else if (card.getColors().contains("Green")) color = R.color.green;
+            else if (card.getColors().contains("Black")) color = R.color.black;
+            else if (card.getColors().contains("Blue")) color = R.color.blue;
+            else if (card.getColors().contains("Uncolored") && card.getType().contains("Artifact"))
+                color = R.color.uncolored;
+        }
 
         getView().setText(formatCard(card));
         getView().setTextColor(ResourcesCompat.getColor(resources, color, null));
