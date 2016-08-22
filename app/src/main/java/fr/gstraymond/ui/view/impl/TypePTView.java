@@ -36,9 +36,7 @@ public class TypePTView extends CommonDisplayableView<TextView> {
 
     private String getPTorType(Card card) {
         String pt = ptFormatter.format(card);
-        if (pt.length() > 0) {
-            return pt;
-        }
+        if (!pt.isEmpty()) return pt;
 
         return typeFormatter.formatFirst(card);
     }
