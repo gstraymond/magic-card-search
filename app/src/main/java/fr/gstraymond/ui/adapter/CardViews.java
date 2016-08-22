@@ -14,7 +14,6 @@ import fr.gstraymond.ui.view.impl.CastingCostView;
 import fr.gstraymond.ui.view.impl.CostView;
 import fr.gstraymond.ui.view.impl.DescriptionView;
 import fr.gstraymond.ui.view.impl.FavoriteView;
-import fr.gstraymond.ui.view.impl.PositionView;
 import fr.gstraymond.ui.view.impl.TitleView;
 import fr.gstraymond.ui.view.impl.TypePTView;
 
@@ -27,7 +26,6 @@ public class CardViews {
         displayableViews.add(new DescriptionView(castingCostAssetLoader));
         displayableViews.add(new CastingCostView(castingCostAssetLoader));
         displayableViews.add(new TypePTView(context));
-        displayableViews.add(new PositionView());
         displayableViews.add(new FavoriteView(wishlist, clickCallbacks, context));
         displayableViews.add(new CostView());
     }

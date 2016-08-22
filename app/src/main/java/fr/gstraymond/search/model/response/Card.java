@@ -16,6 +16,7 @@ public class Card implements Parcelable {
     private String description;
     private List<Publication> publications;
     private List<String> formats;
+    private List<String> colors;
 
     public static final Parcelable.Creator<Card> CREATOR = new Parcelable.Creator<Card>() {
         @Override
@@ -44,6 +45,8 @@ public class Card implements Parcelable {
         source.readList(publications, Publication.class.getClassLoader());
         formats = new ArrayList<>();
         source.readList(formats, String.class.getClassLoader());
+        colors = new ArrayList<>();
+        source.readList(colors, String.class.getClassLoader());
     }
 
     @Override
@@ -62,6 +65,7 @@ public class Card implements Parcelable {
         dest.writeString(description);
         dest.writeList(publications);
         dest.writeList(formats);
+        dest.writeList(colors);
     }
 
     @Override
@@ -139,5 +143,13 @@ public class Card implements Parcelable {
 
     public void setFormats(List<String> formats) {
         this.formats = formats;
+    }
+
+    public List<String> getColors() {
+        return colors;
+    }
+
+    public void setColors(List<String> colors) {
+        this.colors = colors;
     }
 }
