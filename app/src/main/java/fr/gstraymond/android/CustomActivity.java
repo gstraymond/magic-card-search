@@ -3,6 +3,7 @@ package fr.gstraymond.android;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.MenuItem;
 
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.ContentViewEvent;
@@ -67,5 +68,16 @@ public abstract class CustomActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         Answers.getInstance().logContentView(buildContentViewEvent());
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
+
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

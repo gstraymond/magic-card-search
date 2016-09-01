@@ -8,6 +8,8 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 
+import com.crashlytics.android.answers.ContentViewEvent;
+
 import fr.gstraymond.R;
 import fr.gstraymond.android.adapter.WishlistAdapter;
 import fr.gstraymond.db.json.JsonList;
@@ -53,5 +55,12 @@ public class WishListActivity extends CustomActivity implements WishlistAdapter.
         Intent intent = new Intent(this, CardDetailActivity.class);
         intent.putExtra(CARD, card);
         startActivity(intent);
+    }
+
+    @Override
+    protected ContentViewEvent buildContentViewEvent() {
+        ContentViewEvent event = super.buildContentViewEvent();
+        event.putCustomAttribute("wishlist_size", getCustomApplication().getWishlist().getCards().size());
+        return event;
     }
 }

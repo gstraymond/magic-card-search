@@ -2,6 +2,9 @@ package fr.gstraymond.search.model.response;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
+
+import java.util.Date;
 
 public class Publication implements Parcelable {
 
@@ -13,6 +16,7 @@ public class Publication implements Parcelable {
     private String image;
     private String editionImage;
     private double price;
+    private Date editionReleaseDate;
 
     public static final Parcelable.Creator<Publication> CREATOR = new Parcelable.Creator<Publication>() {
         @Override
@@ -30,6 +34,7 @@ public class Publication implements Parcelable {
     }
 
     public Publication(Parcel source) {
+        Log.e("prout", "1");
         edition = source.readString();
         editionCode = source.readString();
         stdEditionCode = source.readString();
@@ -38,6 +43,8 @@ public class Publication implements Parcelable {
         image = source.readString();
         editionImage = source.readString();
         price = source.readDouble();
+        long date = source.readLong();
+        editionReleaseDate = date != 0 ? new Date(date) : null;
     }
 
     @Override
@@ -55,6 +62,7 @@ public class Publication implements Parcelable {
         dest.writeString(image);
         dest.writeString(editionImage);
         dest.writeDouble(price);
+        dest.writeLong(editionReleaseDate != null ? editionReleaseDate.getTime() : 0);
     }
 
     public String getRarity() {
@@ -119,5 +127,13 @@ public class Publication implements Parcelable {
 
     public void setPrice(double price) {
         this.price = price;
+    }
+
+    public Date getEditionReleaseDate() {
+        return editionReleaseDate;
+    }
+
+    public void setEditionReleaseDate(Date editionReleaseDate) {
+        this.editionReleaseDate = editionReleaseDate;
     }
 }
