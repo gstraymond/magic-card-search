@@ -2,7 +2,6 @@ package fr.gstraymond.search.model.response;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.util.Log;
 
 import java.util.Date;
 
@@ -34,7 +33,6 @@ public class Publication implements Parcelable {
     }
 
     public Publication(Parcel source) {
-        Log.e("prout", "1");
         edition = source.readString();
         editionCode = source.readString();
         stdEditionCode = source.readString();
