@@ -1,9 +1,9 @@
 package fr.gstraymond.android;
 
 import android.os.Bundle;
-import android.view.MenuItem;
 
 import com.crashlytics.android.answers.ContentViewEvent;
+
 import fr.gstraymond.search.model.response.Card;
 import fr.gstraymond.tools.LanguageUtil;
 
@@ -36,17 +36,6 @@ public abstract class CardCommonActivity extends CustomActivity {
         }
 
         return card.getTitle();
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                finish();
-                return true;
-
-        }
-        return super.onOptionsItemSelected(item);
     }
 
     protected Card getCard() {

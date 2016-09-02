@@ -14,7 +14,9 @@ import android.widget.TextView;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.math.RoundingMode;
+import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.Locale;
 
 import fr.gstraymond.R;
 import fr.gstraymond.android.CustomApplication;
@@ -39,6 +41,8 @@ public class SetArrayAdapter extends ArrayAdapter<Object> {
 
     private Html.ImageGetter setImageGetter;
     private Html.ImageGetter castingCostImageGetter;
+
+    private SimpleDateFormat yearFormat = new SimpleDateFormat("yyyy — ", Locale.getDefault());
 
     public SetArrayAdapter(Context context, int resource,
                            int textViewResourceId, List<Object> objects) {
@@ -76,7 +80,11 @@ public class SetArrayAdapter extends ArrayAdapter<Object> {
                 publicationImage.setVisibility(View.VISIBLE);
                 publicationImage.setText(imageText);
             }
-            publicationText.setText(publication.getEdition() + formatPrice(publication));
+            String year = "";
+            if (publication.getEditionReleaseDate() != null) {
+                year = yearFormat.format(publication.getEditionReleaseDate());
+            }
+            publicationText.setText(year + publication.getEdition() + formatPrice(publication));
             return set;
         }
     }
@@ -144,7 +152,7 @@ public class SetArrayAdapter extends ArrayAdapter<Object> {
         if (price == 0d) return "";
 
         BigDecimal bd = new BigDecimal(price).round(new MathContext(2, RoundingMode.HALF_EVEN));
-        return " $" + bd.toPlainString();
+        return " — $" + bd.toPlainString();
     }
 
     private LayoutInflater getLayoutInflater() {
