@@ -42,7 +42,7 @@ public class SetArrayAdapter extends ArrayAdapter<Object> {
     private Html.ImageGetter setImageGetter;
     private Html.ImageGetter castingCostImageGetter;
 
-    private SimpleDateFormat yearFormat = new SimpleDateFormat("yyyy — ", Locale.getDefault());
+    private SimpleDateFormat yearFormat = new SimpleDateFormat("yyyy", Locale.getDefault());
 
     public SetArrayAdapter(Context context, int resource,
                            int textViewResourceId, List<Object> objects) {
@@ -73,6 +73,8 @@ public class SetArrayAdapter extends ArrayAdapter<Object> {
             Publication publication = (Publication) object;
             TextView publicationImage = (TextView) set.findViewById(R.id.card_textview_set_image);
             TextView publicationText = (TextView) set.findViewById(R.id.card_textview_set_text);
+            TextView publicationYear = (TextView) set.findViewById(R.id.card_textview_set_year);
+            TextView publicationPrice = (TextView) set.findViewById(R.id.card_textview_set_price);
             Spanned imageText = formatPublicationImage(publication);
             if (TextUtils.isEmpty(imageText)) {
                 publicationImage.setVisibility(View.GONE);
@@ -80,11 +82,20 @@ public class SetArrayAdapter extends ArrayAdapter<Object> {
                 publicationImage.setVisibility(View.VISIBLE);
                 publicationImage.setText(imageText);
             }
-            String year = "";
             if (publication.getEditionReleaseDate() != null) {
-                year = yearFormat.format(publication.getEditionReleaseDate());
+                publicationYear.setText(yearFormat.format(publication.getEditionReleaseDate()));
+            } else {
+                publicationYear.setText("");
             }
-            publicationText.setText(year + publication.getEdition() + formatPrice(publication));
+            publicationText.setText(publication.getEdition());
+            String price = formatPrice(publication);
+            if (price.equals("")) {
+                publicationPrice.setVisibility(View.GONE);
+            } else {
+                publicationPrice.setVisibility(View.VISIBLE);
+                publicationPrice.setText(price);
+            }
+
             return set;
         }
     }
@@ -152,7 +163,7 @@ public class SetArrayAdapter extends ArrayAdapter<Object> {
         if (price == 0d) return "";
 
         BigDecimal bd = new BigDecimal(price).round(new MathContext(2, RoundingMode.HALF_EVEN));
-        return " — $" + bd.toPlainString();
+        return "$" + bd.toPlainString();
     }
 
     private LayoutInflater getLayoutInflater() {
