@@ -65,8 +65,25 @@ public class SetArrayAdapter extends ArrayAdapter<Object> {
         if (object instanceof Card) {
             View detail = getLayoutInflater().inflate(R.layout.card_detail, null);
             Card card = (Card) object;
-            TextView text = (TextView) detail.findViewById(R.id.card_textview_detail);
-            text.setText(formatCard(card));
+            TextView ccptView = (TextView) detail.findViewById(R.id.card_textview_ccpt);
+            TextView typeView = (TextView) detail.findViewById(R.id.card_textview_type);
+            TextView descView = (TextView) detail.findViewById(R.id.card_textview_description);
+            TextView formatsView = (TextView) detail.findViewById(R.id.card_textview_formats);
+
+            Spanned ccpt = formatCCPT(card);
+            if (ccpt.toString().isEmpty()) ccptView.setVisibility(View.GONE);
+            else ccptView.setText(ccpt);
+
+            String type = typeFormatter.format(card);
+            if (type.isEmpty()) typeView.setVisibility(View.GONE);
+            else typeView.setText(type);
+
+            formatsView.setText(formatFormatter.format(card));
+
+            String desc = descFormatter.format(card, true);
+            if (desc.isEmpty()) descView.setVisibility(View.GONE);
+            else descView.setText(Html.fromHtml(desc, castingCostImageGetter, null));
+
             return detail;
         } else {
             View set = getLayoutInflater().inflate(R.layout.card_set, null);
@@ -100,16 +117,10 @@ public class SetArrayAdapter extends ArrayAdapter<Object> {
         }
     }
 
-    private Spanned formatCard(Card card) {
+    private Spanned formatCCPT(Card card) {
         String cc = formatCC(card);
         String pt = ptFormatter.format(card);
-        String cc_pt = formatCC_PT(cc, pt);
-        String type = typeFormatter.format(card);
-        String description = descFormatter.format(card);
-        String formats = formatFormatter.format(card);
-        String html = getHtml(cc_pt, type, description, formats);
-
-        return Html.fromHtml(html, castingCostImageGetter, null);
+        return Html.fromHtml(formatCC_PT(cc, pt), castingCostImageGetter, null);
     }
 
     private String formatCC_PT(String cc, String pt) {

@@ -24,7 +24,7 @@ public class DescriptionView extends CommonDisplayableView<TextView> {
 
     @Override
     public void setValue(Card card, int position) {
-        String desc = descFormatter.format(card);
+        String desc = descFormatter.format(card, false);
         Spanned html = Html.fromHtml(desc, imageGetter, null);
 
         getView().setText(html);
