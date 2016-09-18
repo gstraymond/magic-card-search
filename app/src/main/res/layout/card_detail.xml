@@ -38,7 +38,7 @@
 
     <TextView
         android:id="@+id/card_textview_formats"
-        style="@android:style/TextAppearance.Large"
+        style="@android:style/TextAppearance.Medium"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textIsSelectable="true" />

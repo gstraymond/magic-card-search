@@ -9,14 +9,11 @@
     android:paddingRight="16dp"
     android:paddingTop="8dp">
 
-    <TextView
+    <ImageView
         android:id="@+id/card_textview_set_image"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:background="@drawable/counter_border_active"
-        android:maxWidth="40dp"
-        android:padding="4dp" />
+        android:layout_width="48dp"
+        android:layout_height="24dp"
+        android:scaleType="fitCenter" />
 
     <TextView
         android:id="@+id/card_textview_set_price"
@@ -33,7 +30,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
-        android:layout_marginLeft="48dp"
+        android:layout_marginLeft="56dp"
+        android:fontFamily="sans-serif-condensed"
         android:textColor="@android:color/darker_gray" />
 
     <TextView
@@ -45,6 +43,7 @@
         android:layout_toLeftOf="@id/card_textview_set_price"
         android:layout_toRightOf="@id/card_textview_set_year"
         android:ellipsize="end"
+        android:fontFamily="sans-serif-condensed"
         android:singleLine="true" />
 
 </RelativeLayout>
