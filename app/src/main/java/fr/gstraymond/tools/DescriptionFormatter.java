@@ -6,6 +6,10 @@ import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import fr.gstraymond.constants.Abilities;
+import fr.gstraymond.constants.KeywordAbilities;
+import fr.gstraymond.constants.KeywordActions;
+import fr.gstraymond.constants.Zones;
 import fr.gstraymond.search.model.response.Card;
 
 public class DescriptionFormatter {
@@ -16,7 +20,7 @@ public class DescriptionFormatter {
         this.pattern = Pattern.compile("\\{(.*?)\\}");
     }
 
-    public String format(Card card) {
+    public String format(Card card, Boolean highlight) {
         if (card.getDescription() == null) {
             return "";
         }
@@ -35,7 +39,27 @@ public class DescriptionFormatter {
             }
         }
 
-        return TextUtils.join("<br /><br />", tmp.split("\n"));
+        String join = TextUtils.join("<br /><br />", tmp.split("\n"));
+        if (highlight) {
+            /*for (String keywordAction: KeywordActions.ALL) {
+                join = join.replaceAll(keywordAction + " ", "<b>" + keywordAction + "</b> ");
+                join = join.replaceAll(keywordAction.toLowerCase() + " ", "<b>" + keywordAction.toLowerCase() + "</b> ");
+            }*/
+            for (String keywordAction : KeywordAbilities.ALL) {
+                join = join.replaceAll(keywordAction, "<b>" + keywordAction + "</b>");
+                join = join.replaceAll(", " + keywordAction.toLowerCase(), ", <b>" + keywordAction.toLowerCase() + "</b>");
+                join = join.replaceAll(" " + keywordAction.toLowerCase(), " <b>" + keywordAction.toLowerCase() + "</b>");
+            }
+
+            for (String ability: Abilities.ALL) {
+                join = join.replaceAll(ability, "<b>" + ability + "</b>");
+            }
+
+            for (String ability: Zones.ALL) {
+                join = join.replaceAll(ability, "<b>" + ability + "</b>");
+            }
+        }
+        return join;
     }
 
     private String replace(String cost) {

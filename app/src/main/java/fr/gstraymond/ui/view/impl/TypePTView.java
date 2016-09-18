@@ -21,7 +21,9 @@ public class TypePTView extends CommonDisplayableView<TextView> {
 
     @Override
     public void setValue(Card card, int position) {
-        getView().setText(" — " + getPTorType(card));
+        String ptOrType = getPtOrType(card);
+        if (ptOrType.isEmpty()) getView().setText("");
+        else getView().setText(" — " + ptOrType);
     }
 
     @Override
@@ -34,7 +36,7 @@ public class TypePTView extends CommonDisplayableView<TextView> {
         return R.id.array_adapter_card_type_pt;
     }
 
-    private String getPTorType(Card card) {
+    private String getPtOrType(Card card) {
         String pt = ptFormatter.format(card);
         if (!pt.isEmpty()) return pt;
 

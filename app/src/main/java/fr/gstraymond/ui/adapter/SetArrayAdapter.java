@@ -2,13 +2,14 @@ package fr.gstraymond.ui.adapter;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.text.Html;
 import android.text.Spanned;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.math.BigDecimal;
@@ -39,10 +40,10 @@ public class SetArrayAdapter extends ArrayAdapter<Object> {
     private PowerToughnessFormatter ptFormatter;
     private TypeFormatter typeFormatter;
 
-    private Html.ImageGetter setImageGetter;
+    private SetImageGetter setImageGetter;
     private Html.ImageGetter castingCostImageGetter;
 
-    private SimpleDateFormat yearFormat = new SimpleDateFormat("yyyy — ", Locale.getDefault());
+    private SimpleDateFormat yearFormat = new SimpleDateFormat("yyyy", Locale.getDefault());
 
     public SetArrayAdapter(Context context, int resource,
                            int textViewResourceId, List<Object> objects) {
@@ -65,40 +66,63 @@ public class SetArrayAdapter extends ArrayAdapter<Object> {
         if (object instanceof Card) {
             View detail = getLayoutInflater().inflate(R.layout.card_detail, null);
             Card card = (Card) object;
-            TextView text = (TextView) detail.findViewById(R.id.card_textview_detail);
-            text.setText(formatCard(card));
+            TextView ccptView = (TextView) detail.findViewById(R.id.card_textview_ccpt);
+            TextView typeView = (TextView) detail.findViewById(R.id.card_textview_type);
+            TextView descView = (TextView) detail.findViewById(R.id.card_textview_description);
+            TextView formatsView = (TextView) detail.findViewById(R.id.card_textview_formats);
+
+            Spanned ccpt = formatCCPT(card);
+            if (ccpt.toString().isEmpty()) ccptView.setVisibility(View.GONE);
+            else ccptView.setText(ccpt);
+
+            String type = typeFormatter.format(card);
+            if (type.isEmpty()) typeView.setVisibility(View.GONE);
+            else typeView.setText(type);
+
+            formatsView.setText(formatFormatter.format(card));
+
+            String desc = descFormatter.format(card, true);
+            if (desc.isEmpty()) descView.setVisibility(View.GONE);
+            else descView.setText(Html.fromHtml(desc, castingCostImageGetter, null));
+
             return detail;
         } else {
             View set = getLayoutInflater().inflate(R.layout.card_set, null);
             Publication publication = (Publication) object;
-            TextView publicationImage = (TextView) set.findViewById(R.id.card_textview_set_image);
+            ImageView publicationImage = (ImageView) set.findViewById(R.id.card_textview_set_image);
             TextView publicationText = (TextView) set.findViewById(R.id.card_textview_set_text);
-            Spanned imageText = formatPublicationImage(publication);
-            if (TextUtils.isEmpty(imageText)) {
+            TextView publicationYear = (TextView) set.findViewById(R.id.card_textview_set_year);
+            TextView publicationPrice = (TextView) set.findViewById(R.id.card_textview_set_price);
+            Drawable setDrawable = setImageGetter.getDrawable(publication);
+
+            if (setDrawable == null) {
                 publicationImage.setVisibility(View.GONE);
             } else {
                 publicationImage.setVisibility(View.VISIBLE);
-                publicationImage.setText(imageText);
+                publicationImage.setImageDrawable(setDrawable);
             }
-            String year = "";
             if (publication.getEditionReleaseDate() != null) {
-                year = yearFormat.format(publication.getEditionReleaseDate());
+                publicationYear.setText(yearFormat.format(publication.getEditionReleaseDate()));
+            } else {
+                publicationYear.setText("");
             }
-            publicationText.setText(year + publication.getEdition() + formatPrice(publication));
+            publicationText.setText(publication.getEdition());
+            String price = formatPrice(publication);
+            if (price.equals("")) {
+                publicationPrice.setVisibility(View.GONE);
+            } else {
+                publicationPrice.setVisibility(View.VISIBLE);
+                publicationPrice.setText(price);
+            }
+
             return set;
         }
     }
 
-    private Spanned formatCard(Card card) {
+    private Spanned formatCCPT(Card card) {
         String cc = formatCC(card);
         String pt = ptFormatter.format(card);
-        String cc_pt = formatCC_PT(cc, pt);
-        String type = typeFormatter.format(card);
-        String description = descFormatter.format(card);
-        String formats = formatFormatter.format(card);
-        String html = getHtml(cc_pt, type, description, formats);
-
-        return Html.fromHtml(html, castingCostImageGetter, null);
+        return Html.fromHtml(formatCC_PT(cc, pt), castingCostImageGetter, null);
     }
 
     private String formatCC_PT(String cc, String pt) {
@@ -116,17 +140,6 @@ public class SetArrayAdapter extends ArrayAdapter<Object> {
         return application.getCastingCostAssetLoader();
     }
 
-    private String getHtml(String... strings) {
-        StringBuilder builder = new StringBuilder();
-        for (String string : strings) {
-            if (!string.isEmpty() && !builder.toString().isEmpty()) {
-                builder.append("<br /><br />");
-            }
-            builder.append(string);
-        }
-        return builder.toString();
-    }
-
     private String formatCC(Card card) {
         if (card.getCastingCost() == null) {
             return "";
@@ -134,25 +147,12 @@ public class SetArrayAdapter extends ArrayAdapter<Object> {
         return castingCostFormatter.format(card.getCastingCost());
     }
 
-    private Spanned formatPublicationImage(Publication publication) {
-        String editionImage = getEditionImage(publication);
-        return Html.fromHtml(editionImage, setImageGetter, null);
-    }
-
-    private String getEditionImage(Publication pub) {
-        if (pub.getStdEditionCode() == null) {
-            return "";
-        }
-
-        return "<img src='" + pub.getStdEditionCode() + "/" + pub.getRarityCode() + ".png' />";
-    }
-
     private String formatPrice(Publication publication) {
         double price = publication.getPrice();
         if (price == 0d) return "";
 
         BigDecimal bd = new BigDecimal(price).round(new MathContext(2, RoundingMode.HALF_EVEN));
-        return " — $" + bd.toPlainString();
+        return "$" + bd.toPlainString();
     }
 
     private LayoutInflater getLayoutInflater() {

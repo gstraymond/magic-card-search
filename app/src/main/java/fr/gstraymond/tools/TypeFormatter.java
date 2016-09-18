@@ -17,8 +17,7 @@ public class TypeFormatter {
     }
 
     public String format(Card card) {
-        String type = card.getType().replaceAll(SEP, QUADRAT);
-        return context.getString(R.string.card_type) + " " + type;
+        return card.getType().replaceAll(SEP, QUADRAT);
     }
 
     public String formatFirst(Card card) {
