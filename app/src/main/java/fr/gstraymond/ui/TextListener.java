@@ -1,10 +1,12 @@
 package fr.gstraymond.ui;
 
-
 import android.widget.SearchView.OnQueryTextListener;
+
+import com.magic.card.search.commons.log.Log;
 
 import fr.gstraymond.R;
 import fr.gstraymond.android.CardListActivity;
+import fr.gstraymond.biz.AutocompleteProcessor;
 import fr.gstraymond.biz.Facets;
 import fr.gstraymond.biz.SearchOptions;
 import fr.gstraymond.biz.SearchProcessor;
@@ -14,13 +16,17 @@ public class TextListener implements OnQueryTextListener {
     private CardListActivity activity;
     private boolean canSearch = true;
 
+    private Log log = new Log(this);
+
     public TextListener(CardListActivity activity) {
         this.activity = activity;
     }
 
     @Override
     public boolean onQueryTextChange(String text) {
-        return false;
+        log.d("text: %s", text);
+        new AutocompleteProcessor(activity.getObjectMapper(), activity).execute(text);
+        return true;
     }
 
     @Override
