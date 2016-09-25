@@ -122,14 +122,15 @@ public class SetArrayAdapter extends ArrayAdapter<Object> {
     private Spanned formatCCPT(Card card) {
         String cc = formatCC(card);
         String pt = ptFormatter.format(card);
+        if (pt.isEmpty() && card.getLoyalty() != null) pt = card.getLoyalty();
         return Html.fromHtml(formatCC_PT(cc, pt), castingCostImageGetter, null);
     }
 
     private String formatCC_PT(String cc, String pt) {
-        if (cc.length() == 0) {
+        if (cc.isEmpty()) {
             return pt;
         }
-        if (pt.length() == 0) {
+        if (pt.isEmpty()) {
             return cc;
         }
         return cc + " — " + pt;
