@@ -2,6 +2,7 @@ package fr.gstraymond.ui.adapter;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.text.Html;
 import android.text.Spanned;
@@ -12,6 +13,9 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.DrawableRequestBuilder;
+import com.bumptech.glide.Glide;
+
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.math.RoundingMode;
@@ -20,9 +24,11 @@ import java.util.List;
 import java.util.Locale;
 
 import fr.gstraymond.R;
+import fr.gstraymond.android.CardPagerActivity;
 import fr.gstraymond.android.CustomApplication;
 import fr.gstraymond.biz.CastingCostImageGetter;
 import fr.gstraymond.biz.SetImageGetter;
+import fr.gstraymond.glide.RoundedCornersTransformation;
 import fr.gstraymond.search.model.response.Card;
 import fr.gstraymond.search.model.response.Publication;
 import fr.gstraymond.tools.CastingCostFormatter;
@@ -30,7 +36,11 @@ import fr.gstraymond.tools.DescriptionFormatter;
 import fr.gstraymond.tools.FormatFormatter;
 import fr.gstraymond.tools.PowerToughnessFormatter;
 import fr.gstraymond.tools.TypeFormatter;
+import fr.gstraymond.tools.glide.RotateTransformation;
 import fr.gstraymond.ui.CastingCostAssetLoader;
+
+import static fr.gstraymond.constants.Consts.CARD;
+import static fr.gstraymond.constants.Consts.POSITION;
 
 public class SetArrayAdapter extends ArrayAdapter<Object> {
 
@@ -39,7 +49,6 @@ public class SetArrayAdapter extends ArrayAdapter<Object> {
     private FormatFormatter formatFormatter;
     private PowerToughnessFormatter ptFormatter;
     private TypeFormatter typeFormatter;
-
     private SetImageGetter setImageGetter;
     private Html.ImageGetter castingCostImageGetter;
 
@@ -65,9 +74,10 @@ public class SetArrayAdapter extends ArrayAdapter<Object> {
 
         if (object instanceof Card) {
             View detail = getLayoutInflater().inflate(R.layout.card_detail, null);
-            Card card = (Card) object;
+            final Card card = (Card) object;
             TextView ccptView = (TextView) detail.findViewById(R.id.card_textview_ccpt);
             TextView typeView = (TextView) detail.findViewById(R.id.card_textview_type);
+            ImageView pictureView = (ImageView) detail.findViewById(R.id.card_picture);
             TextView descView = (TextView) detail.findViewById(R.id.card_textview_description);
             TextView formatsView = (TextView) detail.findViewById(R.id.card_textview_formats);
 
@@ -78,6 +88,44 @@ public class SetArrayAdapter extends ArrayAdapter<Object> {
             String type = typeFormatter.format(card);
             if (type.isEmpty()) typeView.setVisibility(View.GONE);
             else typeView.setText(type);
+
+            String url = null;
+            int urlPosition = 0;
+            for (int i = 0; i < card.getPublications().size(); i++) {
+            //for (Publication publication : card.getPublications()) {
+                Publication publication = card.getPublications().get(i);
+                if (publication.getImage() != null) {
+                    url = publication.getImage();
+                    urlPosition = i;
+                }
+            }
+
+            if (url != null) {
+                DrawableRequestBuilder<String> builder = Glide.with(getContext()).load(url);
+
+                if ("split".equals(card.getLayout())) {
+                    builder.bitmapTransform(
+                            new RotateTransformation(getContext(), 90f),
+                            new RoundedCornersTransformation(getContext(), 10, 2));
+                } else {
+                    builder.bitmapTransform(new RoundedCornersTransformation(getContext(), 10, 2));
+                }
+
+                builder.into(pictureView);
+            } else {
+                pictureView.setVisibility(View.GONE);
+            }
+
+            final int finalPosition = urlPosition;
+            pictureView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(getContext(), CardPagerActivity.class);
+                    intent.putExtra(CARD, card);
+                    intent.putExtra(POSITION, finalPosition);
+                    getContext().startActivity(intent);
+                }
+            });
 
             formatsView.setText(formatFormatter.format(card));
 
