@@ -21,9 +21,11 @@ public class SetImageGetter {
     }
 
     public Drawable getDrawable(Publication pub) {
-        if (pub.getStdEditionCode() == null) return null;
+        String stdEditionCode = pub.getStdEditionCode();
+        if (stdEditionCode == null) return null;
+        if (stdEditionCode.equals("MPS")) stdEditionCode = "KLD"; // Hick hack kaladesh inventions
 
-        String path = pub.getStdEditionCode() + "/" + pub.getRarityCode() + ".png";
+        String path = stdEditionCode + "/" + pub.getRarityCode() + ".png";
         try {
             return Drawable.createFromStream(
                     getAssetManager().open(PATH + "/" + path),

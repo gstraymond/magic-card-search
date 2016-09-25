@@ -90,6 +90,7 @@ public class SetArrayAdapter extends ArrayAdapter<Object> {
             View set = getLayoutInflater().inflate(R.layout.card_set, null);
             Publication publication = (Publication) object;
             ImageView publicationImage = (ImageView) set.findViewById(R.id.card_textview_set_image);
+            TextView publicationImageAlt = (TextView) set.findViewById(R.id.card_textview_set_image_alt);
             TextView publicationText = (TextView) set.findViewById(R.id.card_textview_set_text);
             TextView publicationYear = (TextView) set.findViewById(R.id.card_textview_set_year);
             TextView publicationPrice = (TextView) set.findViewById(R.id.card_textview_set_price);
@@ -97,7 +98,10 @@ public class SetArrayAdapter extends ArrayAdapter<Object> {
 
             if (setDrawable == null) {
                 publicationImage.setVisibility(View.GONE);
+                publicationImageAlt.setVisibility(View.VISIBLE);
+                publicationImageAlt.setText("?");
             } else {
+                publicationImageAlt.setVisibility(View.GONE);
                 publicationImage.setVisibility(View.VISIBLE);
                 publicationImage.setImageDrawable(setDrawable);
             }
