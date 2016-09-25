@@ -8,6 +8,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.magic.card.search.commons.json.MapperUtil;
 import com.magic.card.search.commons.log.Log;
 
+import java.util.List;
+
 import fr.gstraymond.autocomplete.response.AutocompleteResult;
 import fr.gstraymond.network.ElasticSearchConnector;
 import fr.gstraymond.network.Result;
@@ -15,6 +17,7 @@ import fr.gstraymond.network.Result;
 public class AutocompleteProcessor extends AsyncTask<String, String, AutocompleteResult> {
 
     private ElasticSearchConnector<AutocompleteResult> connector;
+    private Callbacks callbacks;
 
     private static final String query = ("" +
             "{" +
@@ -30,13 +33,14 @@ public class AutocompleteProcessor extends AsyncTask<String, String, Autocomplet
             "      }" +
             "    }" +
             "  }" +
-            "}").replaceAll(" ", "");
+            "}").replace(" ", "");
 
     private Log log = new Log(this);
 
-    public AutocompleteProcessor(ObjectMapper objectMapper, Context context) {
+    public AutocompleteProcessor(ObjectMapper objectMapper, Context context, Callbacks callbacks) {
         MapperUtil<AutocompleteResult> mapperUtil = MapperUtil.fromType(objectMapper, AutocompleteResult.class);
         this.connector = new ElasticSearchConnector<>(context, mapperUtil);
+        this.callbacks = callbacks;
     }
 
     @Override
@@ -49,7 +53,12 @@ public class AutocompleteProcessor extends AsyncTask<String, String, Autocomplet
 
     @Override
     protected void onPostExecute(AutocompleteResult autocompleteResult) {
-        log.d("autocomplete %s", TextUtils.join(",", autocompleteResult.getResults()));
+        List<String> results = autocompleteResult.getResults();
+        log.d("autocomplete %s", TextUtils.join(",", results));
+        callbacks.bindAutocompleteResults(results);
+    }
 
+    public interface Callbacks {
+        void bindAutocompleteResults(List<String> results);
     }
 }

@@ -4,6 +4,10 @@ import android.widget.SearchView.OnQueryTextListener;
 
 import com.magic.card.search.commons.log.Log;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import fr.gstraymond.R;
 import fr.gstraymond.android.CardListActivity;
 import fr.gstraymond.biz.AutocompleteProcessor;
@@ -11,21 +15,37 @@ import fr.gstraymond.biz.Facets;
 import fr.gstraymond.biz.SearchOptions;
 import fr.gstraymond.biz.SearchProcessor;
 
+import static fr.gstraymond.biz.AutocompleteProcessor.*;
+
 public class TextListener implements OnQueryTextListener {
 
     private CardListActivity activity;
+    private Callbacks callbacks;
+
     private boolean canSearch = true;
 
     private Log log = new Log(this);
 
-    public TextListener(CardListActivity activity) {
+    public TextListener(CardListActivity activity, Callbacks callbacks) {
         this.activity = activity;
+        this.callbacks = callbacks;
     }
 
     @Override
     public boolean onQueryTextChange(String text) {
         log.d("text: %s", text);
-        new AutocompleteProcessor(activity.getObjectMapper(), activity).execute(text);
+        if (text.isEmpty() || text.endsWith(" ")) {
+            callbacks.bindAutocompleteResults(new ArrayList<String>());
+            return false;
+        }
+
+        String query = text;
+        if (text.contains(" ")) {
+            List<String> split = Arrays.asList(text.split(" "));
+            query = split.get(split.size() - 1);
+        }
+
+        new AutocompleteProcessor(activity.getObjectMapper(), activity, callbacks).execute(query);
         return true;
     }
 
