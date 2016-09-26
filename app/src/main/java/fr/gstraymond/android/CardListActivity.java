@@ -119,6 +119,26 @@ public class CardListActivity extends CustomActivity implements
                     R.string.drawer_close);
 
             drawerLayout.addDrawerListener(drawerToggle);
+            drawerLayout.addDrawerListener(new DrawerLayout.DrawerListener() {
+                @Override
+                public void onDrawerSlide(View drawerView, float slideOffset) {
+
+                }
+
+                @Override
+                public void onDrawerOpened(View drawerView) {
+                }
+
+                @Override
+                public void onDrawerClosed(View drawerView) {
+                    searchView.clearFocus();
+                }
+
+                @Override
+                public void onDrawerStateChanged(int newState) {
+
+                }
+            });
         }
 
         progressBarUpdater = new ProgressBarUpdater((ProgressBar) findViewById(R.id.progress_bar));
