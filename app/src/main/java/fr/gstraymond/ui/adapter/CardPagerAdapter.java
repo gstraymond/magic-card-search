@@ -23,7 +23,7 @@ public class CardPagerAdapter extends FragmentStatePagerAdapter {
 
         Bundle bundle = new Bundle();
         bundle.putString(CardFragment.URL, publication.getImage());
-        bundle.putBoolean(CardFragment.ROTATE, "split".equals(card.getLayout()));
+        bundle.putParcelable(CardFragment.CARD, card);
 
         CardFragment cardFragment = new CardFragment();
         cardFragment.setArguments(bundle);

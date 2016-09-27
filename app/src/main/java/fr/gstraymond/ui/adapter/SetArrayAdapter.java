@@ -2,13 +2,16 @@ package fr.gstraymond.ui.adapter;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.text.Html;
 import android.text.Spanned;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -16,13 +19,19 @@ import java.math.BigDecimal;
 import java.math.MathContext;
 import java.math.RoundingMode;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
 import fr.gstraymond.R;
+import fr.gstraymond.android.CardListActivity;
 import fr.gstraymond.android.CustomApplication;
 import fr.gstraymond.biz.CastingCostImageGetter;
+import fr.gstraymond.biz.Facets;
+import fr.gstraymond.biz.SearchOptions;
 import fr.gstraymond.biz.SetImageGetter;
+import fr.gstraymond.constants.FacetConst;
+import fr.gstraymond.glide.CardLoader;
 import fr.gstraymond.search.model.response.Card;
 import fr.gstraymond.search.model.response.Publication;
 import fr.gstraymond.tools.CastingCostFormatter;
@@ -39,14 +48,21 @@ public class SetArrayAdapter extends ArrayAdapter<Object> {
     private FormatFormatter formatFormatter;
     private PowerToughnessFormatter ptFormatter;
     private TypeFormatter typeFormatter;
-
     private SetImageGetter setImageGetter;
     private Html.ImageGetter castingCostImageGetter;
+    private Callbacks callbacks;
 
     private SimpleDateFormat yearFormat = new SimpleDateFormat("yyyy", Locale.getDefault());
 
-    public SetArrayAdapter(Context context, int resource,
-                           int textViewResourceId, List<Object> objects) {
+    public interface Callbacks {
+        void onImageClick(int position);
+    }
+
+    public SetArrayAdapter(Context context,
+                           int resource,
+                           int textViewResourceId,
+                           List<Object> objects,
+                           Callbacks callbacks) {
         super(context, resource, textViewResourceId, objects);
         this.castingCostFormatter = new CastingCostFormatter();
         this.descFormatter = new DescriptionFormatter();
@@ -55,6 +71,7 @@ public class SetArrayAdapter extends ArrayAdapter<Object> {
         this.typeFormatter = new TypeFormatter(context);
         this.setImageGetter = new SetImageGetter(context);
         this.castingCostImageGetter = new CastingCostImageGetter(getAssetLoader());
+        this.callbacks = callbacks;
     }
 
     @SuppressLint("InflateParams")
@@ -65,11 +82,13 @@ public class SetArrayAdapter extends ArrayAdapter<Object> {
 
         if (object instanceof Card) {
             View detail = getLayoutInflater().inflate(R.layout.card_detail, null);
-            Card card = (Card) object;
+            final Card card = (Card) object;
             TextView ccptView = (TextView) detail.findViewById(R.id.card_textview_ccpt);
             TextView typeView = (TextView) detail.findViewById(R.id.card_textview_type);
+            ImageView pictureView = (ImageView) detail.findViewById(R.id.card_picture);
             TextView descView = (TextView) detail.findViewById(R.id.card_textview_description);
             TextView formatsView = (TextView) detail.findViewById(R.id.card_textview_formats);
+            Button altView = (Button) detail.findViewById(R.id.card_alt);
 
             Spanned ccpt = formatCCPT(card);
             if (ccpt.toString().isEmpty()) ccptView.setVisibility(View.GONE);
@@ -79,17 +98,62 @@ public class SetArrayAdapter extends ArrayAdapter<Object> {
             if (type.isEmpty()) typeView.setVisibility(View.GONE);
             else typeView.setText(type);
 
+            String url = null;
+            int urlPosition = 0;
+            for (int i = 0; i < card.getPublications().size(); i++) {
+            //for (Publication publication : card.getPublications()) {
+                Publication publication = card.getPublications().get(i);
+                if (publication.getImage() != null) {
+                    url = publication.getImage();
+                    urlPosition = i;
+                }
+            }
+
+            if (url != null) {
+                new CardLoader(url, card, pictureView).load(getContext());
+            } else {
+                pictureView.setVisibility(View.GONE);
+            }
+
+            final int finalPosition = urlPosition;
+            pictureView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    callbacks.onImageClick(finalPosition);
+                }
+            });
+
             formatsView.setText(formatFormatter.format(card));
 
             String desc = descFormatter.format(card, true);
             if (desc.isEmpty()) descView.setVisibility(View.GONE);
             else descView.setText(Html.fromHtml(desc, castingCostImageGetter, null));
 
+            if (card.getAltTitles().isEmpty()) {
+                altView.setVisibility(View.GONE);
+            } else {
+                altView.setText(TextUtils.join("\n", card.getAltTitles()));
+                altView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent intent = new Intent(getContext(), CardListActivity.class);
+                        Facets facets = new Facets();
+                        ArrayList<String> layouts = new ArrayList<>();
+                        layouts.add(card.getLayout());
+                        facets.put(FacetConst.LAYOUT,  layouts);
+                        SearchOptions options = new SearchOptions().setQuery(card.getTitle()).setFacets(facets);
+                        intent.putExtra(CardListActivity.SEARCH_QUERY, options);
+                        getContext().startActivity(intent);
+                    }
+                });
+            }
+
             return detail;
         } else {
             View set = getLayoutInflater().inflate(R.layout.card_set, null);
             Publication publication = (Publication) object;
             ImageView publicationImage = (ImageView) set.findViewById(R.id.card_textview_set_image);
+            TextView publicationImageAlt = (TextView) set.findViewById(R.id.card_textview_set_image_alt);
             TextView publicationText = (TextView) set.findViewById(R.id.card_textview_set_text);
             TextView publicationYear = (TextView) set.findViewById(R.id.card_textview_set_year);
             TextView publicationPrice = (TextView) set.findViewById(R.id.card_textview_set_price);
@@ -97,7 +161,10 @@ public class SetArrayAdapter extends ArrayAdapter<Object> {
 
             if (setDrawable == null) {
                 publicationImage.setVisibility(View.GONE);
+                publicationImageAlt.setVisibility(View.VISIBLE);
+                publicationImageAlt.setText("?");
             } else {
+                publicationImageAlt.setVisibility(View.GONE);
                 publicationImage.setVisibility(View.VISIBLE);
                 publicationImage.setImageDrawable(setDrawable);
             }
@@ -122,14 +189,15 @@ public class SetArrayAdapter extends ArrayAdapter<Object> {
     private Spanned formatCCPT(Card card) {
         String cc = formatCC(card);
         String pt = ptFormatter.format(card);
+        if (pt.isEmpty() && card.getLoyalty() != null) pt = card.getLoyalty();
         return Html.fromHtml(formatCC_PT(cc, pt), castingCostImageGetter, null);
     }
 
     private String formatCC_PT(String cc, String pt) {
-        if (cc.length() == 0) {
+        if (cc.isEmpty()) {
             return pt;
         }
-        if (pt.length() == 0) {
+        if (pt.isEmpty()) {
             return cc;
         }
         return cc + " — " + pt;

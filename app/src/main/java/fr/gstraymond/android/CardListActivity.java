@@ -1,7 +1,9 @@
 package fr.gstraymond.android;
 
+import android.app.SearchManager;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.database.MatrixCursor;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Parcelable;
@@ -10,12 +12,15 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AutoCompleteTextView;
 import android.widget.ProgressBar;
 import android.widget.SearchView;
+import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,11 +28,16 @@ import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.ContentViewEvent;
 import com.magic.card.search.commons.log.Log;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import fr.gstraymond.R;
 import fr.gstraymond.android.fragment.CardDetailFragment;
 import fr.gstraymond.android.fragment.CardListFragment;
 import fr.gstraymond.android.fragment.CardPagerFragment;
 import fr.gstraymond.android.fragment.CardParentListFragment;
+import fr.gstraymond.biz.AutocompleteProcessor;
 import fr.gstraymond.biz.ProgressBarUpdater;
 import fr.gstraymond.biz.SearchOptions;
 import fr.gstraymond.biz.SearchProcessor;
@@ -42,11 +52,14 @@ import static fr.gstraymond.constants.Consts.CARD;
 import static fr.gstraymond.constants.Consts.POSITION;
 
 public class CardListActivity extends CustomActivity implements
-        CardListFragment.Callbacks, CardDetailFragment.Callbacks {
+        CardListFragment.Callbacks,
+        CardDetailFragment.Callbacks,
+        AutocompleteProcessor.Callbacks {
 
     private static final int DRAWER_DELAY = 1200;
     private static final String CURRENT_SEARCH = "currentSearch";
     public static final String CARD_RESULT = "result";
+    public static final String SEARCH_QUERY = "searchQuery";
     public static final int HISTORY_REQUEST_CODE = 1000;
 
     private TextListener textListener;
@@ -66,13 +79,16 @@ public class CardListActivity extends CustomActivity implements
     private DrawerLayout drawerLayout;
     private Toast loadingToast;
     private ProgressBarUpdater progressBarUpdater;
+    private List<String> autocompleteResults = new ArrayList<>();
 
     ChangeLog changeLog;
+    private SearchView.OnSuggestionListener suggestionListener;
+    private SimpleCursorAdapter suggestionsAdapter;
 
     public CardListActivity() {
         super();
 
-        this.textListener = new TextListener(this);
+        this.textListener = new TextListener(this, this);
         this.endScrollListener = new EndScrollListener(this);
     }
 
@@ -106,6 +122,26 @@ public class CardListActivity extends CustomActivity implements
                     R.string.drawer_close);
 
             drawerLayout.addDrawerListener(drawerToggle);
+            drawerLayout.addDrawerListener(new DrawerLayout.DrawerListener() {
+                @Override
+                public void onDrawerSlide(View drawerView, float slideOffset) {
+
+                }
+
+                @Override
+                public void onDrawerOpened(View drawerView) {
+                }
+
+                @Override
+                public void onDrawerClosed(View drawerView) {
+                    searchView.clearFocus();
+                }
+
+                @Override
+                public void onDrawerStateChanged(int newState) {
+
+                }
+            });
         }
 
         progressBarUpdater = new ProgressBarUpdater((ProgressBar) findViewById(R.id.progress_bar));
@@ -131,39 +167,89 @@ public class CardListActivity extends CustomActivity implements
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
 
+        suggestionListener = new SearchView.OnSuggestionListener() {
+            @Override
+            public boolean onSuggestionSelect(int i) {
+                return false;
+            }
+
+            @Override
+            public boolean onSuggestionClick(int i) {
+                if (autocompleteResults.size() > i) {
+                    String result = autocompleteResults.get(i);
+                    String query = searchView.getQuery().toString();
+                    if (query.contains(" ")) {
+                        List<String> split = new ArrayList<>(Arrays.asList(query.split(" ")));
+                        split.remove(split.get(split.size() - 1));
+                        split.add(result);
+                        query = TextUtils.join(" ", split);
+                    } else {
+                        query = result;
+                    }
+
+                    searchView.setQuery(query, true);
+                    return true;
+                }
+                return false;
+            }
+        };
+
+        suggestionsAdapter = new SimpleCursorAdapter(
+                this,
+                android.R.layout.simple_list_item_1,
+                null,
+                new String[]{SearchManager.SUGGEST_COLUMN_TEXT_1},
+                new int[]{android.R.id.text1},
+                0
+        );
+
         // Sync the toggle state after onRestoreInstanceState has occurred.
         if (isSmartphone()) {
             drawerToggle.syncState();
-
-            openDrawer();
+            if (getIntent().getParcelableExtra(SEARCH_QUERY) == null) {
+                openDrawer();
+            }
         }
 
         if (findViewById(R.id.search_input) != null) {
             searchView = (SearchView) findViewById(R.id.search_input);
             searchView.setOnQueryTextListener(textListener);
+            searchView.setOnSuggestionListener(suggestionListener);
+            searchView.setSuggestionsAdapter(suggestionsAdapter);
+
+            // -- hack for settings min size suggestion
+            int autoCompleteTextViewID = getResources().getIdentifier("android:id/search_src_text", "id", getPackageName());
+            ((AutoCompleteTextView) searchView.findViewById(autoCompleteTextViewID)).setThreshold(1);
         }
 
         if (currentSearch == null) {
             currentSearch = new SearchOptions();
         }
 
-        if (isRestored) {
-            currentSearch.setAppend(false);
-        }
-        if (!hasDeviceRotated) {
-            String resultAsString = getIntent().getStringExtra(CARD_RESULT);
-            if (resultAsString != null && !isRestored) {
-                new UIUpdater(this, resultAsString, getObjectMapper())
-                        .execute();
-            } else {
-                new SearchProcessor(this, currentSearch, R.string.loading_initial).execute();
-            }
+        if (getIntent().getParcelableExtra(SEARCH_QUERY) != null) {
+            currentSearch = getIntent().getParcelableExtra(SEARCH_QUERY);
+            searchView.setQuery(currentSearch.getQuery(), false);
+            new SearchProcessor(this, currentSearch, R.string.loading_initial).execute();
         } else {
-            hasDeviceRotated = false;
+            if (isRestored) {
+                currentSearch.setAppend(false);
+            }
+            if (!hasDeviceRotated) {
+                String resultAsString = getIntent().getStringExtra(CARD_RESULT);
+                if (resultAsString != null && !isRestored) {
+                    new UIUpdater(this, resultAsString, getObjectMapper())
+                            .execute();
+                } else {
+                    new SearchProcessor(this, currentSearch, R.string.loading_initial).execute();
+                }
+            } else {
+                hasDeviceRotated = false;
+            }
         }
     }
 
     private void openDrawer() {
+        if (searchView != null) searchView.clearFocus();
         if (isSmartphone()) {
             new Handler().postDelayed(openDrawerRunnable(), DRAWER_DELAY);
         }
@@ -245,8 +331,14 @@ public class CardListActivity extends CustomActivity implements
             searchView = new SearchView(this);
             searchView.setIconifiedByDefault(false);
             searchView.setOnQueryTextListener(textListener);
+            searchView.setOnSuggestionListener(suggestionListener);
+            searchView.setSuggestionsAdapter(suggestionsAdapter);
             searchView.setQueryHint(getString(R.string.search_hint));
             menu.findItem(R.id.search_tab).setActionView(searchView);
+
+            // -- hack for settings min size suggestion
+            int autoCompleteTextViewID = getResources().getIdentifier("android:id/search_src_text", "id", getPackageName());
+            ((AutoCompleteTextView) searchView.findViewById(autoCompleteTextViewID)).setThreshold(1);
         }
 
         return true;
@@ -377,6 +469,16 @@ public class CardListActivity extends CustomActivity implements
         super.onSaveInstanceState(outState);
         outState.putParcelable(CURRENT_SEARCH, currentSearch);
         log.d("onSaveInstanceState " + outState);
+    }
+
+    @Override
+    public void bindAutocompleteResults(List<String> results) {
+        autocompleteResults = results;
+        MatrixCursor cursor = new MatrixCursor(new String[]{"_id", SearchManager.SUGGEST_COLUMN_TEXT_1});
+        for (int i = 0; i < results.size(); i++) {
+            cursor.addRow(new Object[]{i, results.get(i)});
+        }
+        searchView.getSuggestionsAdapter().changeCursor(cursor);
     }
 
     private TextView getTitleTextView() {

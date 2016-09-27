@@ -37,6 +37,8 @@ public class TypePTView extends CommonDisplayableView<TextView> {
     }
 
     private String getPtOrType(Card card) {
+        if (card.getLoyalty() != null) return card.getLoyalty();
+
         String pt = ptFormatter.format(card);
         if (!pt.isEmpty()) return pt;
 

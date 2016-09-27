@@ -80,8 +80,6 @@ public class SearchProcessor extends AsyncTask<Void, Void, SearchResult> {
 
         new UIUpdater(activity).onPostExecute(searchResult);
         enableSearch();
-        // suppression du focus sur le search et fermeture du clavier
-        getActivity().getSearchView().clearFocus();
     }
 
     private FragmentManager getFragmentManager() {

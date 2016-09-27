@@ -12,20 +12,20 @@ import fr.gstraymond.search.model.request.facet.Facet;
 
 public class FacetConst {
 
-    private static final String ABILITY = "abilities.exact";
-    private static final String ARTIST = "artists.exact";
-    private static final String CMC = "convertedManaCost";
-    private static final String COLOR = "colors.exact";
-    private static final String DEVOTION = "devotions";
-    private static final String SET = "editions.exact";
-    private static final String FORMAT = "formats.exact";
-    private static final String POWER = "power";
-    private static final String RARITY = "rarities";
-    private static final String TOUGHNESS = "toughness";
-    private static final String TYPE = "type";
-    private static final String PRICE = "priceRanges.exact";
-    private static final String BLOCK = "blocks.exact";
-    private static final String LAYOUT = "layout.exact";
+    public static final String ABILITY = "abilities.exact";
+    public static final String ARTIST = "artists.exact";
+    public static final String CMC = "convertedManaCost";
+    public static final String COLOR = "colors.exact";
+    public static final String DEVOTION = "devotions";
+    public static final String SET = "editions.exact";
+    public static final String FORMAT = "formats.exact";
+    public static final String POWER = "power";
+    public static final String RARITY = "rarities";
+    public static final String TOUGHNESS = "toughness";
+    public static final String TYPE = "type";
+    public static final String PRICE = "priceRanges.exact";
+    public static final String BLOCK = "blocks.exact";
+    public static final String LAYOUT = "layout.exact";
 
     private static Map<String, Integer> facetNames;
     private static List<String> facetOrder;

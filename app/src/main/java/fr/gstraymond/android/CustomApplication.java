@@ -3,9 +3,6 @@ package fr.gstraymond.android;
 import com.magic.card.search.commons.application.BaseApplication;
 import com.magic.card.search.commons.log.Log;
 
-import java.net.MalformedURLException;
-import java.net.URL;
-
 import fr.gstraymond.R;
 import fr.gstraymond.biz.ElasticSearchClient;
 import fr.gstraymond.db.json.JsonHistoryDataSource;
@@ -15,9 +12,6 @@ import fr.gstraymond.ui.CastingCostAssetLoader;
 public class CustomApplication extends BaseApplication {
 
     private static final String TABLET = "tablet";
-
-    private static final String SEARCH_SERVER_HOST = "engine.magic-card-search.com:8080";
-//	private static final String SEARCH_SERVER_HOST = "local-gsr:9200";
 
     private ElasticSearchClient elasticSearchClient;
     private CastingCostAssetLoader castingCostAssetLoader;
@@ -42,12 +36,7 @@ public class CustomApplication extends BaseApplication {
 
     private void initElasticSearchClient() {
         log.d("initElasticSearchClient");
-        try {
-            URL url = new URL("http://" + SEARCH_SERVER_HOST + "/magic/card/_search");
-            this.elasticSearchClient = new ElasticSearchClient(url, getObjectMapper(), this, getJsonHistoryDataSource());
-        } catch (MalformedURLException e) {
-            log.e("Error in constructor", e);
-        }
+        this.elasticSearchClient = new ElasticSearchClient(getObjectMapper(), this, getJsonHistoryDataSource());
     }
 
     private void initCastingCostAssetLoader() {

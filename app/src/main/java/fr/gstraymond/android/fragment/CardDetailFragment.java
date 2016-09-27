@@ -38,9 +38,17 @@ public class CardDetailFragment extends CustomListFragment {
         objects.add(card);
         objects.addAll(card.getPublications());
 
-        ListAdapter arrayAdapter = new SetArrayAdapter(getActivity(),
+        ListAdapter arrayAdapter = new SetArrayAdapter(
+                getActivity(),
                 android.R.layout.simple_list_item_activated_1,
-                android.R.id.text2, objects);
+                android.R.id.text2,
+                objects,
+                new SetArrayAdapter.Callbacks() {
+                    @Override
+                    public void onImageClick(int position) {
+                        callbacks.onItemSelected(position + 1);
+                    }
+                });
         setListAdapter(arrayAdapter);
     }
 

@@ -16,6 +16,12 @@
         android:scaleType="fitCenter" />
 
     <TextView
+        android:id="@+id/card_textview_set_image_alt"
+        android:layout_width="48dp"
+        android:layout_height="24dp"
+        android:gravity="center" />
+
+    <TextView
         android:id="@+id/card_textview_set_price"
         style="@android:style/TextAppearance.Medium"
         android:layout_width="wrap_content"
