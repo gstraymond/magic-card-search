@@ -20,6 +20,8 @@ public class Card implements Parcelable {
     private String layout;
     private String loyalty;
 
+    private List<String> altTitles;
+
     public static final Parcelable.Creator<Card> CREATOR = new Parcelable.Creator<Card>() {
         @Override
         public Card createFromParcel(Parcel source) {
@@ -51,6 +53,8 @@ public class Card implements Parcelable {
         source.readList(colors, String.class.getClassLoader());
         layout = source.readString();
         loyalty = source.readString();
+        altTitles = new ArrayList<>();
+        source.readList(altTitles, String.class.getClassLoader());
     }
 
     @Override
@@ -72,6 +76,7 @@ public class Card implements Parcelable {
         dest.writeList(colors);
         dest.writeString(layout);
         dest.writeString(loyalty);
+        dest.writeList(altTitles);
     }
 
     @Override
@@ -173,5 +178,13 @@ public class Card implements Parcelable {
 
     public void setLoyalty(String loyalty) {
         this.loyalty = loyalty;
+    }
+
+    public List<String> getAltTitles() {
+        return altTitles;
+    }
+
+    public void setAltTitles(List<String> altTitles) {
+        this.altTitles = altTitles;
     }
 }

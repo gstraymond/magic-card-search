@@ -6,7 +6,6 @@ import com.bumptech.glide.request.target.Target;
 import com.magic.card.search.commons.log.Log;
 
 import java.io.IOException;
-import java.net.SocketTimeoutException;
 
 public class PictureRequestListener implements RequestListener<String, GlideDrawable> {
 

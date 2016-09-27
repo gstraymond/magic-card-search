@@ -9,26 +9,25 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 
-import com.bumptech.glide.DrawableRequestBuilder;
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.RequestManager;
 import com.magic.card.search.commons.log.Log;
 
 import fr.gstraymond.R;
 import fr.gstraymond.biz.PictureRequestListener;
+import fr.gstraymond.glide.CardLoader;
 import fr.gstraymond.glide.RoundedCornersTransformation;
-import fr.gstraymond.tools.glide.RotateTransformation;
+import fr.gstraymond.search.model.response.Card;
 
 public class CardFragment extends Fragment implements PictureRequestListener.Callbacks {
 
     public static final String URL = "url";
-    public static final String ROTATE = "rotate";
+    public static final String CARD = "card";
 
     private Log log = new Log(this);
 
     private ProgressBar progressBar;
     private String url;
-    private Boolean rotate;
+    private Card card;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -37,28 +36,18 @@ public class CardFragment extends Fragment implements PictureRequestListener.Cal
         progressBar = (ProgressBar) rootView.findViewById(R.id.fragment_card_progress_bar);
 
         url = getArguments().getString(URL);
-        rotate = getArguments().getBoolean(ROTATE);
+        card = getArguments().getParcelable(CARD);
 
         log.d("downloading %s...", url);
-        RequestManager request = Glide.with(getActivity());
-        DrawableRequestBuilder<?> builder;
         if (url == null) {
             progressBar.setVisibility(View.GONE);
-            builder = request.fromResource()
+            Glide.with(getActivity()).fromResource()
                     .load(R.drawable.mtg_card_back)
-                    .bitmapTransform(new RoundedCornersTransformation(getActivity(), dpToPx(20), dpToPx(2)));
+                    .bitmapTransform(new RoundedCornersTransformation(getActivity(), dpToPx(20), dpToPx(2)))
+                    .into(imageView);
         } else {
-            builder = request.load(url).listener(new PictureRequestListener(url, this));
-
-            if (rotate)
-                builder.bitmapTransform(
-                        new RotateTransformation(getActivity(), 90f),
-                        new RoundedCornersTransformation(getActivity(), 10, 2));
-            else
-                builder.bitmapTransform(new RoundedCornersTransformation(getActivity(), 10, 2));
-
+            new CardLoader(url, card, imageView, new PictureRequestListener(url, this)).load(getActivity());
         }
-        builder.into(imageView);
 
         return rootView;
     }
@@ -70,7 +59,7 @@ public class CardFragment extends Fragment implements PictureRequestListener.Cal
 
     @Override
     public void onDownloadComplete() {
-        log.d("downloading %s complete (rotate? %s)", url, rotate);
+        log.d("downloading %s complete (%s)", url, card.getTitle());
         progressBar.setVisibility(View.GONE);
     }
 }

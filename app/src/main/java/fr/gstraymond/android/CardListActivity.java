@@ -59,6 +59,7 @@ public class CardListActivity extends CustomActivity implements
     private static final int DRAWER_DELAY = 1200;
     private static final String CURRENT_SEARCH = "currentSearch";
     public static final String CARD_RESULT = "result";
+    public static final String SEARCH_QUERY = "searchQuery";
     public static final int HISTORY_REQUEST_CODE = 1000;
 
     private TextListener textListener;
@@ -167,8 +168,9 @@ public class CardListActivity extends CustomActivity implements
         // Sync the toggle state after onRestoreInstanceState has occurred.
         if (isSmartphone()) {
             drawerToggle.syncState();
-
-            openDrawer();
+            if (getIntent().getParcelableExtra(SEARCH_QUERY) == null) {
+                openDrawer();
+            }
         }
 
         if (findViewById(R.id.search_input) != null) {
@@ -220,19 +222,25 @@ public class CardListActivity extends CustomActivity implements
             currentSearch = new SearchOptions();
         }
 
-        if (isRestored) {
-            currentSearch.setAppend(false);
-        }
-        if (!hasDeviceRotated) {
-            String resultAsString = getIntent().getStringExtra(CARD_RESULT);
-            if (resultAsString != null && !isRestored) {
-                new UIUpdater(this, resultAsString, getObjectMapper())
-                        .execute();
-            } else {
-                new SearchProcessor(this, currentSearch, R.string.loading_initial).execute();
-            }
+        if (getIntent().getParcelableExtra(SEARCH_QUERY) != null) {
+            currentSearch = getIntent().getParcelableExtra(SEARCH_QUERY);
+            searchView.setQuery(currentSearch.getQuery(), false);
+            new SearchProcessor(this, currentSearch, R.string.loading_initial).execute();
         } else {
-            hasDeviceRotated = false;
+            if (isRestored) {
+                currentSearch.setAppend(false);
+            }
+            if (!hasDeviceRotated) {
+                String resultAsString = getIntent().getStringExtra(CARD_RESULT);
+                if (resultAsString != null && !isRestored) {
+                    new UIUpdater(this, resultAsString, getObjectMapper())
+                            .execute();
+                } else {
+                    new SearchProcessor(this, currentSearch, R.string.loading_initial).execute();
+                }
+            } else {
+                hasDeviceRotated = false;
+            }
         }
     }
 

@@ -6,29 +6,33 @@ import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.text.Html;
 import android.text.Spanned;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-
-import com.bumptech.glide.DrawableRequestBuilder;
-import com.bumptech.glide.Glide;
 
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.math.RoundingMode;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
 import fr.gstraymond.R;
+import fr.gstraymond.android.CardListActivity;
 import fr.gstraymond.android.CardPagerActivity;
 import fr.gstraymond.android.CustomApplication;
 import fr.gstraymond.biz.CastingCostImageGetter;
+import fr.gstraymond.biz.Facets;
+import fr.gstraymond.biz.SearchOptions;
 import fr.gstraymond.biz.SetImageGetter;
-import fr.gstraymond.glide.RoundedCornersTransformation;
+import fr.gstraymond.constants.FacetConst;
+import fr.gstraymond.glide.CardLoader;
 import fr.gstraymond.search.model.response.Card;
 import fr.gstraymond.search.model.response.Publication;
 import fr.gstraymond.tools.CastingCostFormatter;
@@ -36,7 +40,6 @@ import fr.gstraymond.tools.DescriptionFormatter;
 import fr.gstraymond.tools.FormatFormatter;
 import fr.gstraymond.tools.PowerToughnessFormatter;
 import fr.gstraymond.tools.TypeFormatter;
-import fr.gstraymond.tools.glide.RotateTransformation;
 import fr.gstraymond.ui.CastingCostAssetLoader;
 
 import static fr.gstraymond.constants.Consts.CARD;
@@ -80,6 +83,7 @@ public class SetArrayAdapter extends ArrayAdapter<Object> {
             ImageView pictureView = (ImageView) detail.findViewById(R.id.card_picture);
             TextView descView = (TextView) detail.findViewById(R.id.card_textview_description);
             TextView formatsView = (TextView) detail.findViewById(R.id.card_textview_formats);
+            Button altView = (Button) detail.findViewById(R.id.card_alt);
 
             Spanned ccpt = formatCCPT(card);
             if (ccpt.toString().isEmpty()) ccptView.setVisibility(View.GONE);
@@ -101,17 +105,7 @@ public class SetArrayAdapter extends ArrayAdapter<Object> {
             }
 
             if (url != null) {
-                DrawableRequestBuilder<String> builder = Glide.with(getContext()).load(url);
-
-                if ("split".equals(card.getLayout())) {
-                    builder.bitmapTransform(
-                            new RotateTransformation(getContext(), 90f),
-                            new RoundedCornersTransformation(getContext(), 10, 2));
-                } else {
-                    builder.bitmapTransform(new RoundedCornersTransformation(getContext(), 10, 2));
-                }
-
-                builder.into(pictureView);
+                new CardLoader(url, card, pictureView).load(getContext());
             } else {
                 pictureView.setVisibility(View.GONE);
             }
@@ -132,6 +126,25 @@ public class SetArrayAdapter extends ArrayAdapter<Object> {
             String desc = descFormatter.format(card, true);
             if (desc.isEmpty()) descView.setVisibility(View.GONE);
             else descView.setText(Html.fromHtml(desc, castingCostImageGetter, null));
+
+            if (card.getAltTitles().isEmpty()) {
+                altView.setVisibility(View.GONE);
+            } else {
+                altView.setText(TextUtils.join("\n", card.getAltTitles()));
+                altView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent intent = new Intent(getContext(), CardListActivity.class);
+                        Facets facets = new Facets();
+                        ArrayList<String> layouts = new ArrayList<>();
+                        layouts.add(card.getLayout());
+                        facets.put(FacetConst.LAYOUT,  layouts);
+                        SearchOptions options = new SearchOptions().setQuery(card.getTitle()).setFacets(facets);
+                        intent.putExtra(CardListActivity.SEARCH_QUERY, options);
+                        getContext().startActivity(intent);
+                    }
+                });
+            }
 
             return detail;
         } else {
