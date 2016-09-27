@@ -25,7 +25,6 @@ import java.util.Locale;
 
 import fr.gstraymond.R;
 import fr.gstraymond.android.CardListActivity;
-import fr.gstraymond.android.CardPagerActivity;
 import fr.gstraymond.android.CustomApplication;
 import fr.gstraymond.biz.CastingCostImageGetter;
 import fr.gstraymond.biz.Facets;
@@ -42,9 +41,6 @@ import fr.gstraymond.tools.PowerToughnessFormatter;
 import fr.gstraymond.tools.TypeFormatter;
 import fr.gstraymond.ui.CastingCostAssetLoader;
 
-import static fr.gstraymond.constants.Consts.CARD;
-import static fr.gstraymond.constants.Consts.POSITION;
-
 public class SetArrayAdapter extends ArrayAdapter<Object> {
 
     private CastingCostFormatter castingCostFormatter;
@@ -54,11 +50,19 @@ public class SetArrayAdapter extends ArrayAdapter<Object> {
     private TypeFormatter typeFormatter;
     private SetImageGetter setImageGetter;
     private Html.ImageGetter castingCostImageGetter;
+    private Callbacks callbacks;
 
     private SimpleDateFormat yearFormat = new SimpleDateFormat("yyyy", Locale.getDefault());
 
-    public SetArrayAdapter(Context context, int resource,
-                           int textViewResourceId, List<Object> objects) {
+    public interface Callbacks {
+        void onImageClick(int position);
+    }
+
+    public SetArrayAdapter(Context context,
+                           int resource,
+                           int textViewResourceId,
+                           List<Object> objects,
+                           Callbacks callbacks) {
         super(context, resource, textViewResourceId, objects);
         this.castingCostFormatter = new CastingCostFormatter();
         this.descFormatter = new DescriptionFormatter();
@@ -67,6 +71,7 @@ public class SetArrayAdapter extends ArrayAdapter<Object> {
         this.typeFormatter = new TypeFormatter(context);
         this.setImageGetter = new SetImageGetter(context);
         this.castingCostImageGetter = new CastingCostImageGetter(getAssetLoader());
+        this.callbacks = callbacks;
     }
 
     @SuppressLint("InflateParams")
@@ -114,10 +119,7 @@ public class SetArrayAdapter extends ArrayAdapter<Object> {
             pictureView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Intent intent = new Intent(getContext(), CardPagerActivity.class);
-                    intent.putExtra(CARD, card);
-                    intent.putExtra(POSITION, finalPosition);
-                    getContext().startActivity(intent);
+                    callbacks.onImageClick(finalPosition);
                 }
             });
 

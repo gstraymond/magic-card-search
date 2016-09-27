@@ -82,6 +82,8 @@ public class CardListActivity extends CustomActivity implements
     private List<String> autocompleteResults = new ArrayList<>();
 
     ChangeLog changeLog;
+    private SearchView.OnSuggestionListener suggestionListener;
+    private SimpleCursorAdapter suggestionsAdapter;
 
     public CardListActivity() {
         super();
@@ -165,6 +167,42 @@ public class CardListActivity extends CustomActivity implements
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
 
+        suggestionListener = new SearchView.OnSuggestionListener() {
+            @Override
+            public boolean onSuggestionSelect(int i) {
+                return false;
+            }
+
+            @Override
+            public boolean onSuggestionClick(int i) {
+                if (autocompleteResults.size() > i) {
+                    String result = autocompleteResults.get(i);
+                    String query = searchView.getQuery().toString();
+                    if (query.contains(" ")) {
+                        List<String> split = new ArrayList<>(Arrays.asList(query.split(" ")));
+                        split.remove(split.get(split.size() - 1));
+                        split.add(result);
+                        query = TextUtils.join(" ", split);
+                    } else {
+                        query = result;
+                    }
+
+                    searchView.setQuery(query, true);
+                    return true;
+                }
+                return false;
+            }
+        };
+
+        suggestionsAdapter = new SimpleCursorAdapter(
+                this,
+                android.R.layout.simple_list_item_1,
+                null,
+                new String[]{SearchManager.SUGGEST_COLUMN_TEXT_1},
+                new int[]{android.R.id.text1},
+                0
+        );
+
         // Sync the toggle state after onRestoreInstanceState has occurred.
         if (isSmartphone()) {
             drawerToggle.syncState();
@@ -176,42 +214,8 @@ public class CardListActivity extends CustomActivity implements
         if (findViewById(R.id.search_input) != null) {
             searchView = (SearchView) findViewById(R.id.search_input);
             searchView.setOnQueryTextListener(textListener);
-            searchView.setOnSuggestionListener(new SearchView.OnSuggestionListener() {
-                @Override
-                public boolean onSuggestionSelect(int i) {
-                    return false;
-                }
-
-                @Override
-                public boolean onSuggestionClick(int i) {
-                    if (autocompleteResults.size() > i) {
-                        String result = autocompleteResults.get(i);
-                        String query = searchView.getQuery().toString();
-                        if (query.contains(" ")) {
-                            List<String> split = new ArrayList<>(Arrays.asList(query.split(" ")));
-                            split.remove(split.get(split.size() - 1));
-                            split.add(result);
-                            query = TextUtils.join(" ", split);
-                        } else {
-                            query = result;
-                        }
-
-                        searchView.setQuery(query, true);
-                        return true;
-                    }
-                    return false;
-                }
-            });
-            searchView.setSuggestionsAdapter(
-                    new SimpleCursorAdapter(
-                            this,
-                            android.R.layout.simple_list_item_1,
-                            null,
-                            new String[]{SearchManager.SUGGEST_COLUMN_TEXT_1},
-                            new int[]{android.R.id.text1},
-                            0
-                    )
-            );
+            searchView.setOnSuggestionListener(suggestionListener);
+            searchView.setSuggestionsAdapter(suggestionsAdapter);
 
             // -- hack for settings min size suggestion
             int autoCompleteTextViewID = getResources().getIdentifier("android:id/search_src_text", "id", getPackageName());
@@ -245,6 +249,7 @@ public class CardListActivity extends CustomActivity implements
     }
 
     private void openDrawer() {
+        searchView.clearFocus();
         if (isSmartphone()) {
             new Handler().postDelayed(openDrawerRunnable(), DRAWER_DELAY);
         }
@@ -326,8 +331,14 @@ public class CardListActivity extends CustomActivity implements
             searchView = new SearchView(this);
             searchView.setIconifiedByDefault(false);
             searchView.setOnQueryTextListener(textListener);
+            searchView.setOnSuggestionListener(suggestionListener);
+            searchView.setSuggestionsAdapter(suggestionsAdapter);
             searchView.setQueryHint(getString(R.string.search_hint));
             menu.findItem(R.id.search_tab).setActionView(searchView);
+
+            // -- hack for settings min size suggestion
+            int autoCompleteTextViewID = getResources().getIdentifier("android:id/search_src_text", "id", getPackageName());
+            ((AutoCompleteTextView) searchView.findViewById(autoCompleteTextViewID)).setThreshold(1);
         }
 
         return true;
