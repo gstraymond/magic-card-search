@@ -249,7 +249,7 @@ public class CardListActivity extends CustomActivity implements
     }
 
     private void openDrawer() {
-        searchView.clearFocus();
+        if (searchView != null) searchView.clearFocus();
         if (isSmartphone()) {
             new Handler().postDelayed(openDrawerRunnable(), DRAWER_DELAY);
         }
