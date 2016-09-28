@@ -14,10 +14,8 @@
  public static final org.codehaus.jackson.annotate.JsonAutoDetect$Visibility *;
  }
 
--keep public class fr.gstraymond.** {
-  public void set*(***);
-  public *** get*();
-}
+-keep class fr.gstraymond.** { *; }
+-keepclassmembers class fr.gstraymond.** { *; }
 
 -assumenosideeffects class android.util.Log {
     public static boolean isLoggable(java.lang.String, int);
