@@ -101,11 +101,11 @@ public class SetArrayAdapter extends ArrayAdapter<Object> {
             String url = null;
             int urlPosition = 0;
             for (int i = 0; i < card.getPublications().size(); i++) {
-            //for (Publication publication : card.getPublications()) {
                 Publication publication = card.getPublications().get(i);
                 if (publication.getImage() != null) {
                     url = publication.getImage();
                     urlPosition = i;
+                    break;
                 }
             }
 
