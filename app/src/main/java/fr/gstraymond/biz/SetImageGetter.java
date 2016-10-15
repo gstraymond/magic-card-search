@@ -23,7 +23,6 @@ public class SetImageGetter {
     public Drawable getDrawable(Publication pub) {
         String stdEditionCode = pub.getStdEditionCode();
         if (stdEditionCode == null) return null;
-        if (stdEditionCode.equals("MPS")) stdEditionCode = "KLD"; // Hick hack kaladesh inventions
 
         String path = stdEditionCode + "/" + pub.getRarityCode() + ".png";
         try {

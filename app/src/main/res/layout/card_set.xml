@@ -34,7 +34,7 @@
     <TextView
         android:id="@+id/card_textview_set_year"
         style="@android:style/TextAppearance.Medium"
-        android:layout_width="72dp"
+        android:layout_width="76dp"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_marginLeft="56dp"
