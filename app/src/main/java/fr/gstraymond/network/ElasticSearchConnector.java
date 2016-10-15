@@ -7,6 +7,7 @@ import com.magic.card.search.commons.log.Log;
 
 import java.io.BufferedInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.SocketException;
 import java.net.URL;
@@ -18,11 +19,12 @@ import fr.gstraymond.tools.VersionUtils;
 
 
 public class ElasticSearchConnector<A> {
+    private static final String CONTENT_ENCODING = "Content-Encoding";
     private static final String ACCEPT_ENCODING = "Accept-Encoding";
     private static final String GZIP = "gzip";
     private static final String ENCODING = "UTF-8";
     private static final String SEARCH_SERVER_HOST = "engine.magic-card-search.com:8080";
-//	private static final String SEARCH_SERVER_HOST = "local-gsr:9200";
+	//private static final String SEARCH_SERVER_HOST = "192.168.1.15:9200";
 
     private String appName;
     private MapperUtil<A> mapperUtil;
@@ -45,12 +47,16 @@ public class ElasticSearchConnector<A> {
             connection = buildRequest(url);
 
             Long httpNow = System.currentTimeMillis();
-            BufferedInputStream bis = new BufferedInputStream(connection.getInputStream());
+            InputStream bis = new BufferedInputStream(connection.getInputStream());
             Long httpDuration = System.currentTimeMillis() - httpNow;
             log.i("http took %s ms", httpDuration);
 
             Long parseNow = System.currentTimeMillis();
-            A a = mapperUtil.read(new GZIPInputStream(bis));
+            String contentEncoding = connection.getHeaderField(CONTENT_ENCODING);
+            if (GZIP.equalsIgnoreCase(contentEncoding)) {
+                bis = new GZIPInputStream(bis);
+            }
+            A a = mapperUtil.read(bis);
             Long parseDuration = System.currentTimeMillis() - parseNow;
             log.i("parse took %s ms", parseDuration);
 
