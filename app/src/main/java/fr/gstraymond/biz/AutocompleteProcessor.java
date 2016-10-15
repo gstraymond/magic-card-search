@@ -30,7 +30,10 @@ public class AutocompleteProcessor extends AsyncTask<String, String, Autocomplet
             "      \"text\": \"%s\"," +
             "      \"completion\": {" +
             "        \"size\": 10," +
-            "        \"field\": \"suggest\"" +
+            "        \"field\": \"suggest\"," +
+            "        \"fuzzy\" : {\n" +
+            "          \"fuzziness\" : 2\n" +
+            "        }" +
             "      }" +
             "    }" +
             "  }" +

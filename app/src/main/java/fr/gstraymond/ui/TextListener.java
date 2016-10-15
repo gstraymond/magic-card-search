@@ -34,14 +34,14 @@ public class TextListener implements OnQueryTextListener {
     @Override
     public boolean onQueryTextChange(String text) {
         log.d("text: %s", text);
-        if (text.isEmpty() || text.endsWith(" ")) {
+        if (text.isEmpty() || text.endsWith("\u00A0")) {
             callbacks.bindAutocompleteResults(new ArrayList<String>());
             return false;
         }
 
         String query = text;
-        if (text.contains(" ")) {
-            List<String> split = Arrays.asList(text.split(" "));
+        if (text.contains("\u00A0")) {
+            List<String> split = Arrays.asList(text.split("\u00A0"));
             query = split.get(split.size() - 1);
         }
 

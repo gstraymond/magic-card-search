@@ -178,16 +178,16 @@ public class CardListActivity extends CustomActivity implements
                 if (autocompleteResults.size() > i) {
                     String result = autocompleteResults.get(i);
                     String query = searchView.getQuery().toString();
-                    if (query.contains(" ")) {
-                        List<String> split = new ArrayList<>(Arrays.asList(query.split(" ")));
+                    if (query.contains("\u00A0")) {
+                        List<String> split = new ArrayList<>(Arrays.asList(query.split("\u00A0")));
                         split.remove(split.get(split.size() - 1));
                         split.add(result);
-                        query = TextUtils.join(" ", split);
+                        query = TextUtils.join("\u00A0", split);
                     } else {
                         query = result;
                     }
 
-                    searchView.setQuery(query + " ", true);
+                    searchView.setQuery(query + "\u00A0", true);
                     return true;
                 }
                 return false;
