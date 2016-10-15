@@ -29,6 +29,7 @@ public class AutocompleteProcessor extends AsyncTask<String, String, Autocomplet
             "    \"card\": {" +
             "      \"text\": \"%s\"," +
             "      \"completion\": {" +
+            "        \"size\": 10," +
             "        \"field\": \"suggest\"" +
             "      }" +
             "    }" +

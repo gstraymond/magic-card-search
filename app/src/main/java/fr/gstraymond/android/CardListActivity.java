@@ -187,7 +187,7 @@ public class CardListActivity extends CustomActivity implements
                         query = result;
                     }
 
-                    searchView.setQuery(query, true);
+                    searchView.setQuery(query + " ", true);
                     return true;
                 }
                 return false;
