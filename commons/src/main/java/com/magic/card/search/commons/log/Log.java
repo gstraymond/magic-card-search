@@ -10,6 +10,10 @@ public class Log {
         this.caller = caller.getClass();
     }
 
+    public Log(Class<?> class_) {
+        this.caller = class_;
+    }
+
     public void d(String msg) {
         android.util.Log.d(caller.getCanonicalName(), msg);
     }

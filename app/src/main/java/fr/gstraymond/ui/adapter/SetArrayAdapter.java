@@ -81,6 +81,7 @@ public class SetArrayAdapter extends ArrayAdapter<Object> {
 
         Object object = getItem(position);
 
+        // FIXME use getItemViewType / getItemViewTypeCount
         if (object instanceof Card) {
             View detail = getLayoutInflater().inflate(R.layout.card_detail, null);
             final Card card = (Card) object;
