@@ -11,6 +11,7 @@ import com.magic.card.search.commons.log.Log;
 import java.util.List;
 
 import fr.gstraymond.autocomplete.response.AutocompleteResult;
+import fr.gstraymond.autocomplete.response.Option;
 import fr.gstraymond.network.ElasticSearchConnector;
 import fr.gstraymond.network.Result;
 
@@ -29,7 +30,11 @@ public class AutocompleteProcessor extends AsyncTask<String, String, Autocomplet
             "    \"card\": {" +
             "      \"text\": \"%s\"," +
             "      \"completion\": {" +
-            "        \"field\": \"suggest\"" +
+            "        \"size\": 10," +
+            "        \"field\": \"suggest\"," +
+            "        \"fuzzy\" : {\n" +
+            "          \"fuzziness\" : 1\n" +
+            "        }" +
             "      }" +
             "    }" +
             "  }" +
@@ -53,12 +58,12 @@ public class AutocompleteProcessor extends AsyncTask<String, String, Autocomplet
 
     @Override
     protected void onPostExecute(AutocompleteResult autocompleteResult) {
-        List<String> results = autocompleteResult.getResults();
+        List<Option> results = autocompleteResult.getResults();
         log.d("autocomplete %s", TextUtils.join(",", results));
         callbacks.bindAutocompleteResults(results);
     }
 
     public interface Callbacks {
-        void bindAutocompleteResults(List<String> results);
+        void bindAutocompleteResults(List<Option> results);
     }
 }

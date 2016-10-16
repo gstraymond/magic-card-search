@@ -35,7 +35,7 @@
             android:layout_height="wrap_content"
             android:layout_toRightOf="@id/array_adapter_card_casting_cost"
             android:ellipsize="end"
-            android:singleLine="true"
+            android:maxLines="1"
             tools:text="Abandon de l'espoir, foo" />
 
         <TextView
@@ -45,7 +45,7 @@
             android:layout_height="wrap_content"
             android:layout_toRightOf="@id/array_adapter_text"
             android:ellipsize="end"
-            android:singleLine="true"
+            android:maxLines="1"
             tools:text=" - Sorcery" />
     </RelativeLayout>
 
@@ -58,7 +58,7 @@
         android:layout_below="@id/card_first_line"
         android:layout_toLeftOf="@id/card_favorite"
         android:ellipsize="end"
-        android:singleLine="true"
+        android:maxLines="1"
         android:textColor="@android:color/darker_gray"
         tools:text="As an additionnal cost to cast Abandon Hp" />
 

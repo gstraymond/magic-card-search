@@ -26,6 +26,8 @@ public class FacetConst {
     public static final String PRICE = "priceRanges.exact";
     public static final String BLOCK = "blocks.exact";
     public static final String LAYOUT = "layout.exact";
+    public static final String LAND = "land.exact";
+    public static final String SPECIAL = "special.exact";
 
     private static Map<String, Integer> facetNames;
     private static List<String> facetOrder;
@@ -46,16 +48,20 @@ public class FacetConst {
         facetNames.put(TYPE, R.string.facet_type);
         facetNames.put(LAYOUT, R.string.layout_type);
         facetNames.put(PRICE, R.string.facet_price);
+        facetNames.put(LAND, R.string.facet_land);
+        facetNames.put(SPECIAL, R.string.facet_special);
 
         facetOrder = new ArrayList<>();
         facetOrder.add(COLOR);
         facetOrder.add(TYPE);
+        facetOrder.add(LAND);
         facetOrder.add(LAYOUT);
         facetOrder.add(FORMAT);
         facetOrder.add(CMC);
         facetOrder.add(RARITY);
         facetOrder.add(SET);
         facetOrder.add(BLOCK);
+        facetOrder.add(SPECIAL);
         facetOrder.add(ABILITY);
         facetOrder.add(DEVOTION);
         facetOrder.add(POWER);
@@ -78,10 +84,12 @@ public class FacetConst {
         putInFacets(facets, CMC);
         putInFacets(facets, DEVOTION);
         putInFacets(facets, FORMAT);
+        putInFacets(facets, LAND);
         putInFacets(facets, LAYOUT);
         putInFacets(facets, POWER);
         putInFacets(facets, PRICE);
         putInFacets(facets, RARITY);
+        putInFacets(facets, SPECIAL);
         putInFacets(facets, TOUGHNESS);
         putInFacets(facets, TYPE);
         putInFacets(facets, SET);

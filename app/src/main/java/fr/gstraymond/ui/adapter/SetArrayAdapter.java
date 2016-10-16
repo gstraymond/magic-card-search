@@ -18,6 +18,7 @@ import android.widget.TextView;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.math.RoundingMode;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -52,7 +53,7 @@ public class SetArrayAdapter extends ArrayAdapter<Object> {
     private Html.ImageGetter castingCostImageGetter;
     private Callbacks callbacks;
 
-    private SimpleDateFormat yearFormat = new SimpleDateFormat("yyyy", Locale.getDefault());
+    private DateFormat dateFormat = new SimpleDateFormat("MMM yyyy", Locale.getDefault());
 
     public interface Callbacks {
         void onImageClick(int position);
@@ -80,6 +81,7 @@ public class SetArrayAdapter extends ArrayAdapter<Object> {
 
         Object object = getItem(position);
 
+        // FIXME use getItemViewType / getItemViewTypeCount
         if (object instanceof Card) {
             View detail = getLayoutInflater().inflate(R.layout.card_detail, null);
             final Card card = (Card) object;
@@ -101,11 +103,11 @@ public class SetArrayAdapter extends ArrayAdapter<Object> {
             String url = null;
             int urlPosition = 0;
             for (int i = 0; i < card.getPublications().size(); i++) {
-            //for (Publication publication : card.getPublications()) {
                 Publication publication = card.getPublications().get(i);
                 if (publication.getImage() != null) {
                     url = publication.getImage();
                     urlPosition = i;
+                    break;
                 }
             }
 
@@ -169,7 +171,7 @@ public class SetArrayAdapter extends ArrayAdapter<Object> {
                 publicationImage.setImageDrawable(setDrawable);
             }
             if (publication.getEditionReleaseDate() != null) {
-                publicationYear.setText(yearFormat.format(publication.getEditionReleaseDate()));
+                publicationYear.setText(dateFormat.format(publication.getEditionReleaseDate()));
             } else {
                 publicationYear.setText("");
             }
