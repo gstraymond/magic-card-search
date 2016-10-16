@@ -23,16 +23,30 @@ public class SetImageGetter {
     public Drawable getDrawable(Publication pub) {
         String stdEditionCode = pub.getStdEditionCode();
         if (stdEditionCode == null) return null;
+        return getDrawable(stdEditionCode, pub.getRarityCode());
+    }
 
-        String path = stdEditionCode + "/" + pub.getRarityCode() + ".png";
+    private Drawable getDrawable(String stdEditionCode, String rarityCode) {
+        String path = stdEditionCode + "/" + rarityCode + ".png";
         try {
             return Drawable.createFromStream(
                     getAssetManager().open(PATH + "/" + path),
                     null);
         } catch (IOException e) {
-            log.e("getDrawable", e);
+            log.w("getDrawable %s", e.getMessage());
         }
         return null;
+    }
+
+    public Drawable getDrawable(String stdEditionCode) {
+        if (stdEditionCode == null) return null;
+
+        Drawable drawable = getDrawable(stdEditionCode, "M");
+        if (drawable == null) drawable = getDrawable(stdEditionCode, "R");
+        if (drawable == null) drawable = getDrawable(stdEditionCode, "S");
+        if (drawable == null) drawable = getDrawable(stdEditionCode, "U");
+        if (drawable == null) drawable = getDrawable(stdEditionCode, "C");
+        return drawable;
     }
 
     private AssetManager getAssetManager() {

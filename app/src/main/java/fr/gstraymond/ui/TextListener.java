@@ -10,6 +10,7 @@ import java.util.List;
 
 import fr.gstraymond.R;
 import fr.gstraymond.android.CardListActivity;
+import fr.gstraymond.autocomplete.response.Option;
 import fr.gstraymond.biz.AutocompleteProcessor;
 import fr.gstraymond.biz.Facets;
 import fr.gstraymond.biz.SearchOptions;
@@ -35,7 +36,7 @@ public class TextListener implements OnQueryTextListener {
     public boolean onQueryTextChange(String text) {
         log.d("text: %s", text);
         if (text.isEmpty() || text.endsWith("\u00A0")) {
-            callbacks.bindAutocompleteResults(new ArrayList<String>());
+            callbacks.bindAutocompleteResults(new ArrayList<Option>());
             return false;
         }
 
@@ -53,7 +54,7 @@ public class TextListener implements OnQueryTextListener {
     public boolean onQueryTextSubmit(String text) {
         if (canSearch) {
             Facets facets = activity.getCurrentSearch().getFacets();
-            SearchOptions options = new SearchOptions().setQuery(text).setFacets(facets);
+            SearchOptions options = new SearchOptions().setQuery(text.replace(":", "")).setFacets(facets);
             new SearchProcessor(activity, options, R.string.loading_initial).execute();
         }
         return true;

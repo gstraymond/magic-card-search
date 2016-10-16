@@ -16,12 +16,10 @@ public class AutocompleteResult {
         this.suggest = suggest;
     }
 
-    public List<String> getResults() {
-        List<String> results = new ArrayList<>();
+    public List<Option> getResults() {
+        List<Option> results = new ArrayList<>();
         for (Card card : suggest.getCard()) {
-            for (Option option : card.getOptions()) {
-                results.add(option.getText());
-            }
+            results.addAll(card.getOptions());
         }
         return results;
     }

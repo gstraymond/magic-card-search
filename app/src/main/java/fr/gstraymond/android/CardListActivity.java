@@ -1,9 +1,7 @@
 package fr.gstraymond.android;
 
-import android.app.SearchManager;
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.database.MatrixCursor;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Parcelable;
@@ -20,7 +18,6 @@ import android.view.View;
 import android.widget.AutoCompleteTextView;
 import android.widget.ProgressBar;
 import android.widget.SearchView;
-import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,6 +34,7 @@ import fr.gstraymond.android.fragment.CardDetailFragment;
 import fr.gstraymond.android.fragment.CardListFragment;
 import fr.gstraymond.android.fragment.CardPagerFragment;
 import fr.gstraymond.android.fragment.CardParentListFragment;
+import fr.gstraymond.autocomplete.response.Option;
 import fr.gstraymond.biz.AutocompleteProcessor;
 import fr.gstraymond.biz.ProgressBarUpdater;
 import fr.gstraymond.biz.SearchOptions;
@@ -46,6 +44,7 @@ import fr.gstraymond.db.json.JsonHistory;
 import fr.gstraymond.search.model.response.Card;
 import fr.gstraymond.ui.EndScrollListener;
 import fr.gstraymond.ui.TextListener;
+import fr.gstraymond.ui.adapter.SearchViewCursorAdapter;
 import sheetrock.panda.changelog.ChangeLog;
 
 import static fr.gstraymond.constants.Consts.CARD;
@@ -79,11 +78,11 @@ public class CardListActivity extends CustomActivity implements
     private DrawerLayout drawerLayout;
     private Toast loadingToast;
     private ProgressBarUpdater progressBarUpdater;
-    private List<String> autocompleteResults = new ArrayList<>();
+    private List<Option> autocompleteResults = new ArrayList<>();
 
     ChangeLog changeLog;
     private SearchView.OnSuggestionListener suggestionListener;
-    private SimpleCursorAdapter suggestionsAdapter;
+    private SearchViewCursorAdapter suggestionsAdapter;
 
     public CardListActivity() {
         super();
@@ -176,7 +175,7 @@ public class CardListActivity extends CustomActivity implements
             @Override
             public boolean onSuggestionClick(int i) {
                 if (autocompleteResults.size() > i) {
-                    String result = autocompleteResults.get(i);
+                    String result = autocompleteResults.get(i).getText();
                     String query = searchView.getQuery().toString();
                     if (query.contains("\u00A0")) {
                         List<String> split = new ArrayList<>(Arrays.asList(query.split("\u00A0")));
@@ -194,14 +193,7 @@ public class CardListActivity extends CustomActivity implements
             }
         };
 
-        suggestionsAdapter = new SimpleCursorAdapter(
-                this,
-                android.R.layout.simple_list_item_1,
-                null,
-                new String[]{SearchManager.SUGGEST_COLUMN_TEXT_1},
-                new int[]{android.R.id.text1},
-                0
-        );
+        suggestionsAdapter = SearchViewCursorAdapter.empty(this);
 
         // Sync the toggle state after onRestoreInstanceState has occurred.
         if (isSmartphone()) {
@@ -472,13 +464,9 @@ public class CardListActivity extends CustomActivity implements
     }
 
     @Override
-    public void bindAutocompleteResults(List<String> results) {
+    public void bindAutocompleteResults(List<Option> results) {
         autocompleteResults = results;
-        MatrixCursor cursor = new MatrixCursor(new String[]{"_id", SearchManager.SUGGEST_COLUMN_TEXT_1});
-        for (int i = 0; i < results.size(); i++) {
-            cursor.addRow(new Object[]{i, results.get(i)});
-        }
-        searchView.getSuggestionsAdapter().changeCursor(cursor);
+        suggestionsAdapter.changeCursor(results);
     }
 
     private TextView getTitleTextView() {
@@ -499,10 +487,6 @@ public class CardListActivity extends CustomActivity implements
 
     public void setCurrentSearch(SearchOptions currentSearch) {
         this.currentSearch = currentSearch;
-    }
-
-    public SearchView getSearchView() {
-        return searchView;
     }
 
     public int getTotalCardCount() {
