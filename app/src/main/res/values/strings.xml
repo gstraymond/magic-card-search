@@ -47,6 +47,7 @@
     <string name="facet_cmc">Converted Mana Cost</string>
     <string name="facet_devotion">Devotion</string>
     <string name="facet_format">Format</string>
+    <string name="facet_land">Land</string>
     <string name="facet_power">Power</string>
     <string name="facet_rarity">Rarity</string>
     <string name="facet_set">Set</string>
@@ -55,6 +56,7 @@
     <string name="facet_more">More filters…</string>
     <string name="facet_price">Price</string>
     <string name="block_set">Block</string>
+    <string name="facet_special">Special</string>
     <string name="layout_type">Layout</string>
 
     <string name="loading_initial">searching…</string>
