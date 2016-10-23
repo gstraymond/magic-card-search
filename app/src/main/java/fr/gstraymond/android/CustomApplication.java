@@ -7,14 +7,12 @@ import fr.gstraymond.R;
 import fr.gstraymond.biz.ElasticSearchClient;
 import fr.gstraymond.db.json.JsonHistoryDataSource;
 import fr.gstraymond.db.json.JsonList;
-import fr.gstraymond.ui.CastingCostAssetLoader;
 
 public class CustomApplication extends BaseApplication {
 
     private static final String TABLET = "tablet";
 
     private ElasticSearchClient elasticSearchClient;
-    private CastingCostAssetLoader castingCostAssetLoader;
     private JsonHistoryDataSource jsonHistoryDataSource;
     private JsonList wishlist;
     private Boolean isTablet;
@@ -30,19 +28,9 @@ public class CustomApplication extends BaseApplication {
         wishlist = new JsonList(this, getObjectMapper(), "wishlist");
     }
 
-    public void init() {
-        initCastingCostAssetLoader();
-    }
-
     private void initElasticSearchClient() {
         log.d("initElasticSearchClient");
         this.elasticSearchClient = new ElasticSearchClient(getObjectMapper(), this, getJsonHistoryDataSource());
-    }
-
-    private void initCastingCostAssetLoader() {
-        CastingCostAssetLoader loader = new CastingCostAssetLoader();
-        loader.init(this);
-        this.castingCostAssetLoader = loader;
     }
 
     // FIXME find another way
@@ -58,13 +46,6 @@ public class CustomApplication extends BaseApplication {
 
     public ElasticSearchClient getElasticSearchClient() {
         return elasticSearchClient;
-    }
-
-    public CastingCostAssetLoader getCastingCostAssetLoader() {
-        if (castingCostAssetLoader == null) {
-            initCastingCostAssetLoader();
-        }
-        return castingCostAssetLoader;
     }
 
     public boolean isTablet() {

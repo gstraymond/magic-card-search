@@ -11,10 +11,8 @@ import com.magic.card.search.commons.json.MapperUtil;
 import java.io.InputStream;
 
 import fr.gstraymond.R;
-import fr.gstraymond.biz.CastingCostImageGetter;
 import fr.gstraymond.search.help.HelpText;
 import fr.gstraymond.tools.HelpFormatter;
-import fr.gstraymond.ui.CastingCostAssetLoader;
 
 public class HelpActivity extends CustomActivity {
 
@@ -23,10 +21,9 @@ public class HelpActivity extends CustomActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_help);
 
-        CastingCostImageGetter imageGetter = new CastingCostImageGetter(getCCAssetLoader());
-        HelpFormatter formatter = new HelpFormatter(imageGetter);
+        HelpFormatter formatter = new HelpFormatter();
 
-        Spanned text = formatter.format(getHelpText());
+        Spanned text = formatter.format(getHelpText(), this);
 
         TextView view = getTextView();
         view.setText(text);
@@ -34,10 +31,6 @@ public class HelpActivity extends CustomActivity {
         view.setMovementMethod(LinkMovementMethod.getInstance());
 
         actionBarSetDisplayHomeAsUpEnabled(true);
-    }
-
-    private CastingCostAssetLoader getCCAssetLoader() {
-        return getCustomApplication().getCastingCostAssetLoader();
     }
 
     private HelpText getHelpText() {

@@ -32,7 +32,6 @@ public class WishListActivity extends CustomActivity implements WishlistAdapter.
         JsonList wishlist = getCustomApplication().getWishlist();
         WishlistAdapter adapter = new WishlistAdapter(
                 this,
-                getCustomApplication().getCastingCostAssetLoader(),
                 wishlist,
                 this);
 

@@ -9,7 +9,6 @@ import android.view.ViewGroup;
 import fr.gstraymond.R;
 import fr.gstraymond.db.json.JsonList;
 import fr.gstraymond.search.model.response.Card;
-import fr.gstraymond.ui.CastingCostAssetLoader;
 import fr.gstraymond.ui.adapter.CardViews;
 import fr.gstraymond.ui.view.impl.FavoriteView;
 
@@ -19,9 +18,8 @@ public class WishlistAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     private JsonList wishlist;
     private ClickCallbacks clickCallbacks;
 
-    public WishlistAdapter(Context context, CastingCostAssetLoader castingCostAssetLoader,
-                           JsonList wishlist, ClickCallbacks clickCallbacks) {
-        this.cardViews = new CardViews(context, castingCostAssetLoader, wishlist, new FavoriteViewClickCallbacks());
+    public WishlistAdapter(Context context, JsonList wishlist, ClickCallbacks clickCallbacks) {
+        this.cardViews = new CardViews(context, wishlist, new FavoriteViewClickCallbacks());
         this.wishlist = wishlist;
         this.clickCallbacks = clickCallbacks;
     }
@@ -51,7 +49,7 @@ public class WishlistAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         return wishlist.getCards().size();
     }
 
-    class FavoriteViewClickCallbacks implements FavoriteView.ClickCallbacks {
+    private class FavoriteViewClickCallbacks implements FavoriteView.ClickCallbacks {
 
         @Override
         public void itemAdded(int position) {

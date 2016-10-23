@@ -11,7 +11,6 @@ import java.util.List;
 import fr.gstraymond.R;
 import fr.gstraymond.db.json.JsonList;
 import fr.gstraymond.search.model.response.Card;
-import fr.gstraymond.ui.CastingCostAssetLoader;
 import fr.gstraymond.ui.view.impl.FavoriteView;
 
 public class CardArrayAdapter extends ArrayAdapter<Card> {
@@ -20,9 +19,9 @@ public class CardArrayAdapter extends ArrayAdapter<Card> {
 
     public CardArrayAdapter(Context context, int resource,
                             int textViewResourceId, List<Card> objects,
-                            CastingCostAssetLoader castingCostAssetLoader, JsonList wishlist) {
+                            JsonList wishlist) {
         super(context, resource, textViewResourceId, objects);
-        cardViews = new CardViews(context, castingCostAssetLoader, wishlist, new FavoriteViewClickCallbacks());
+        cardViews = new CardViews(context, wishlist, new FavoriteViewClickCallbacks());
     }
 
     @Override
@@ -38,7 +37,7 @@ public class CardArrayAdapter extends ArrayAdapter<Card> {
         return view;
     }
 
-    class FavoriteViewClickCallbacks implements FavoriteView.ClickCallbacks {
+    private class FavoriteViewClickCallbacks implements FavoriteView.ClickCallbacks {
 
         @Override
         public void itemAdded(int position) {
