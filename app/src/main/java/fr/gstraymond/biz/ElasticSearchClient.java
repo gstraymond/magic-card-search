@@ -58,7 +58,7 @@ public class ElasticSearchClient {
         Result<SearchResult> result = connector.connect("magic/card/_search", queryAsJson);
         callbacks.getResponse();
 
-        if (result == null) return null;
+        if (result == null || result.elem == null) return null;
         SearchResult searchResult = result.elem;
 
         callbacks.end();
