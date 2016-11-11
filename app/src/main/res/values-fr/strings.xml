@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="welcome_text"></string>
     <string name="progress_card_found">carte trouvée</string>
     <string name="progress_cards_found">cartes trouvées</string>
     <string name="website_url">magic-card-search.com</string>
@@ -12,6 +11,8 @@
     <string name="list_menu_search">Recherche</string>
     <string name="list_menu_help">A l\'aide !</string>
     <string name="list_menu_history">Recherches récentes</string>
+    <string name="added_to_wishlist">%1$s ajouté à votre wishlist</string>
+    <string name="removed_from_wishlist">%1$s supprimé de votre wishlist</string>
 
     <string name="detail_menu_oracle">Texte</string>
     <string name="detail_menu_pictures">Images</string>
@@ -72,4 +73,5 @@
 
     <string name="wishlist_title">Wishlist</string>
     <string name="wishlist_empty_text">Votre wishlist est vide.\n\nAjoutez des cartes avec le bouton STAR dans les résultats de recherche.</string>
+    <string name="deck_list_empty_text">Votre liste de getDecks est vide.\n\nImportez des getDecks ou créer en un.</string>
 </resources>

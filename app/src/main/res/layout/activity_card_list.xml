@@ -33,12 +33,21 @@
                 android:layout_height="match_parent" />
 
             <android.support.design.widget.FloatingActionButton
-                android:id="@+id/fab"
+                android:id="@+id/fab_wishlist"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom|end"
                 android:layout_margin="16dp"
                 android:src="@drawable/ic_star_rate_white_18dp" />
+
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/fab_deck"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|end"
+                android:layout_marginRight="16dp"
+                android:layout_marginBottom="88dp"
+                android:src="@android:drawable/ic_dialog_email" />
 
         </android.support.design.widget.CoordinatorLayout>
 
@@ -60,8 +69,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="6dp"
                     android:layout_marginTop="8dp"
-                    android:gravity="center"
-                    android:text="@string/welcome_text" />
+                    android:gravity="center" />
 
                 <ProgressBar
                     android:id="@+id/progress_bar"

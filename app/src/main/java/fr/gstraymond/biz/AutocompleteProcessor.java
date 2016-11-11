@@ -14,6 +14,7 @@ import fr.gstraymond.autocomplete.response.AutocompleteResult;
 import fr.gstraymond.autocomplete.response.Option;
 import fr.gstraymond.network.ElasticSearchConnector;
 import fr.gstraymond.network.Result;
+import fr.gstraymond.tools.VersionUtils;
 
 public class AutocompleteProcessor extends AsyncTask<String, String, AutocompleteResult> {
 
@@ -44,14 +45,14 @@ public class AutocompleteProcessor extends AsyncTask<String, String, Autocomplet
 
     public AutocompleteProcessor(ObjectMapper objectMapper, Context context, Callbacks callbacks) {
         MapperUtil<AutocompleteResult> mapperUtil = MapperUtil.fromType(objectMapper, AutocompleteResult.class);
-        this.connector = new ElasticSearchConnector<>(context, mapperUtil);
+        this.connector = new ElasticSearchConnector<>(VersionUtils.getAppName(context), mapperUtil);
         this.callbacks = callbacks;
     }
 
     @Override
     protected AutocompleteResult doInBackground(String... strings) {
         String q = String.format(query, strings[0]);
-        Result<AutocompleteResult> result = connector.connect("autocomplete/card/_search", q);
+        Result<AutocompleteResult> result = connector.connect("autocomplete/card/_search", "source", q);
         if (result == null) return new AutocompleteResult();
         return result.elem;
     }

@@ -27,22 +27,23 @@ public class ElasticSearchConnector<A> {
 	//private static final String SEARCH_SERVER_HOST = "192.168.1.15:9200";
 
     private String appName;
+
     private MapperUtil<A> mapperUtil;
 
     private Log log = new Log(this);
 
-    public ElasticSearchConnector (Context context, MapperUtil<A> mapperUtil) {
-        this.appName = VersionUtils.getAppName(context);
+    public ElasticSearchConnector (String appName, MapperUtil<A> mapperUtil) {
+        this.appName = appName;
         this.mapperUtil = mapperUtil;
     }
 
-    public Result<A> connect(String path, String query) {
+    public Result<A> connect(String path, String paramName, String query) {
         HttpURLConnection connection = null;
         Result<A> result = null;
         try {
             log.d("query : %s", query);
             String q = URLEncoder.encode(query, ENCODING);
-            URL url = new URL(String.format("http://%s/%s?source=%s", SEARCH_SERVER_HOST, path, q));
+            URL url = new URL(String.format("http://%s/%s?%s=%s", SEARCH_SERVER_HOST, path, paramName, q));
             log.d("full query : %s", url);
             connection = buildRequest(url);
 
@@ -84,5 +85,9 @@ public class ElasticSearchConnector<A> {
         connection.setRequestProperty("User-Agent", "Android Java/" + VersionUtils.getOsVersion());
         connection.setRequestProperty("Referer", appName + " - " + VersionUtils.getAppVersion());
         return connection;
+    }
+
+    public MapperUtil<A> getMapperUtil() {
+        return mapperUtil;
     }
 }

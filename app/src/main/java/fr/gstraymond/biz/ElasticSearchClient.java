@@ -1,12 +1,9 @@
 package fr.gstraymond.biz;
 
-import android.content.Context;
 import android.text.TextUtils;
 
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.SearchEvent;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.magic.card.search.commons.json.MapperUtil;
 import com.magic.card.search.commons.log.Log;
 
 import java.util.ArrayList;
@@ -21,16 +18,14 @@ import fr.gstraymond.search.model.response.SearchResult;
 
 public class ElasticSearchClient {
 
-    private MapperUtil<SearchResult> mapperUtil;
     private JsonHistoryDataSource historyDataSource;
     private ElasticSearchConnector<SearchResult> connector;
 
     private Log log = new Log(this);
 
-    public ElasticSearchClient(ObjectMapper objectMapper, Context context, JsonHistoryDataSource jsonHistoryDataSource) {
-        this.mapperUtil = MapperUtil.fromType(objectMapper, SearchResult.class);
+    public ElasticSearchClient(ElasticSearchConnector<SearchResult> connector, JsonHistoryDataSource jsonHistoryDataSource) {
         this.historyDataSource = jsonHistoryDataSource;
-        this.connector = new ElasticSearchConnector<>(context, mapperUtil);
+        this.connector = connector;
     }
 
     interface CallBacks {
@@ -47,7 +42,7 @@ public class ElasticSearchClient {
         callbacks.start();
         log.d("options as json : %s", options);
         Request request = new Request(options);
-        String queryAsJson = mapperUtil.asJsonString(request);
+        String queryAsJson = connector.getMapperUtil().asJsonString(request);
         callbacks.buildRequest();
 
         if (options.isAddToHistory()) {
@@ -55,7 +50,7 @@ public class ElasticSearchClient {
             historyDataSource.appendHistory(options);
         }
 
-        Result<SearchResult> result = connector.connect("magic/card/_search", queryAsJson);
+        Result<SearchResult> result = connector.connect("magic/card/_search", "source", queryAsJson);
         callbacks.getResponse();
 
         if (result == null || result.elem == null) return null;

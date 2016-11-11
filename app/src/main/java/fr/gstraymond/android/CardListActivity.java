@@ -151,12 +151,22 @@ public class CardListActivity extends CustomActivity implements
         if (changeLog.firstRun())
             changeLog.getLogDialog().show();
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        if (fab != null) {
-            fab.setOnClickListener(new View.OnClickListener() {
+        FloatingActionButton fab_wishlist = (FloatingActionButton) findViewById(R.id.fab_wishlist);
+        if (fab_wishlist != null) {
+            fab_wishlist.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     startActivity(new Intent(view.getContext(), WishListActivity.class));
+                }
+            });
+        }
+
+        FloatingActionButton fab_deck = (FloatingActionButton) findViewById(R.id.fab_deck);
+        if (fab_deck != null) {
+            fab_deck.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    startActivity(new Intent(view.getContext(), DeckListActivity.class));
                 }
             });
         }

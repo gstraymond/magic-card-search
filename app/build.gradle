@@ -1,15 +1,20 @@
 buildscript {
+    ext.kotlin_version = '1+'
+
     repositories {
         maven { url 'https://maven.fabric.io/public' }
+        jcenter()
     }
 
     dependencies {
         classpath 'io.fabric.tools:gradle:1.+'
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     }
 }
 
 apply plugin: 'com.android.application'
 apply plugin: 'io.fabric'
+apply plugin: 'kotlin-android'
 
 repositories {
     maven { url 'https://maven.fabric.io/public' }
@@ -56,6 +61,15 @@ android {
         exclude 'META-INF/LICENSE'
         exclude 'META-INF/NOTICE'
     }
+
+    sourceSets {
+        main.java.srcDirs += 'src/main/kotlin'
+        test.java.srcDirs += 'src/test/kotlin'
+    }
+
+    testOptions {
+        unitTests.returnDefaultValues = true
+    }
 }
 
 dependencies {
@@ -64,4 +78,7 @@ dependencies {
     compile 'com.android.support:support-v13:24.+'
     compile 'com.android.support:appcompat-v7:24.+'
     compile 'com.android.support:design:24.+'
+    compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+
+    testCompile 'junit:junit:4.12'
 }

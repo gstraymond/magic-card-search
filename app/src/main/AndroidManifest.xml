@@ -20,6 +20,7 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+            <!--
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -30,8 +31,10 @@
                     android:host="magic-card-search.com"
                     android:scheme="http" />
             </intent-filter>
+            -->
             <intent-filter>
                 <action android:name="com.google.android.gms.actions.SEARCH_ACTION" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
@@ -79,7 +82,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".android.CardListActivity" />
         </activity>
-
         <activity
             android:name=".android.WishListActivity"
             android:parentActivityName=".android.CardListActivity"
@@ -87,6 +89,42 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".android.CardListActivity" />
+        </activity>
+        <activity
+            android:name=".android.DeckListActivity"
+            android:parentActivityName=".android.CardListActivity"
+            android:theme="@style/AppTheme">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".android.CardListActivity" />
+        </activity>
+
+        <activity android:name=".android.DeckImporterActivity"
+            android:parentActivityName=".android.DeckListActivity"
+            android:theme="@style/AppTheme">
+            <intent-filter>
+                <action android:name="android.intent.action.SEND" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:mimeType="text/plain" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <data android:mimeType="text/plain"/>
+            </intent-filter>
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".android.DeckDetailActivity" />
+        </activity>
+
+        <activity
+            android:name=".android.DeckDetailActivity"
+            android:parentActivityName=".android.DeckListActivity"
+            android:theme="@style/AppTheme">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".android.DeckDetailActivity" />
         </activity>
 
         <meta-data

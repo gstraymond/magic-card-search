@@ -29,17 +29,16 @@ public class WishListActivity extends CustomActivity implements WishlistAdapter.
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle(getString(R.string.wishlist_title));
 
-        JsonList wishlist = getCustomApplication().getWishlist();
         WishlistAdapter adapter = new WishlistAdapter(
                 this,
-                wishlist,
+                getCustomApplication().getWishlist(),
                 this);
 
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.wishlist_recyclerview);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);
 
-        if (!wishlist.getCards().isEmpty()) {
+        if (!((JsonList) getCustomApplication().getWishlist()).getElems().isEmpty()) {
             findViewById(R.id.wishlist_empty_text).setVisibility(View.GONE);
         }
     }
@@ -59,7 +58,7 @@ public class WishListActivity extends CustomActivity implements WishlistAdapter.
     @Override
     protected ContentViewEvent buildContentViewEvent() {
         ContentViewEvent event = super.buildContentViewEvent();
-        event.putCustomAttribute("wishlist_size", getCustomApplication().getWishlist().getCards().size());
+        event.putCustomAttribute("wishlist_size", getCustomApplication().getWishlist().getElems().size());
         return event;
     }
 }

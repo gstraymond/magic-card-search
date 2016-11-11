@@ -15,10 +15,10 @@ public class JsonHistory extends CustomParcelable {
     private boolean favorite;
     private Facets facets;
 
-    public JsonHistory() {
+    JsonHistory() {
     }
 
-    public JsonHistory(String query, boolean favorite, Facets facets) {
+    JsonHistory(String query, boolean favorite, Facets facets) {
         this.query = query;
         this.date = new Date();
         this.favorite = favorite;
@@ -37,7 +37,7 @@ public class JsonHistory extends CustomParcelable {
         }
     };
 
-    public JsonHistory(Parcel source) {
+    private JsonHistory(Parcel source) {
         query = source.readString();
         date = new Date(source.readLong());
         favorite = source.readString().equals("1");

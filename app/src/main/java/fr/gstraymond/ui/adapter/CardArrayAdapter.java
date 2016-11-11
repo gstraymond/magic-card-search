@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Toast;
 
 import java.util.List;
 
@@ -42,11 +43,15 @@ public class CardArrayAdapter extends ArrayAdapter<Card> {
         @Override
         public void itemAdded(int position) {
             notifyDataSetChanged();
+            String message = String.format(getContext().getResources().getString(R.string.added_to_wishlist), getItem(position).getTitle());
+            Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show();
         }
 
         @Override
         public void itemRemoved(int position) {
             notifyDataSetChanged();
+            String message = String.format(getContext().getResources().getString(R.string.removed_from_wishlist), getItem(position).getTitle());
+            Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show();
         }
     }
 }
