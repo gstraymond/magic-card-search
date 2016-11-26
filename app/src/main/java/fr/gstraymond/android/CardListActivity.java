@@ -162,14 +162,15 @@ public class CardListActivity extends CustomActivity implements
         }
 
         FloatingActionButton fab_deck = (FloatingActionButton) findViewById(R.id.fab_deck);
-        if (fab_deck != null) {
+        fab_deck.setVisibility(View.GONE); // FIXME when feature complete
+        /*if (fab_deck != null) {
             fab_deck.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     startActivity(new Intent(view.getContext(), DeckListActivity.class));
                 }
             });
-        }
+        }*/
     }
 
     @Override
