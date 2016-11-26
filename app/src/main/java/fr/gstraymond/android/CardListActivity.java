@@ -95,6 +95,7 @@ public class CardListActivity extends CustomActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_card_list);
+        endScrollListener.setFab((FloatingActionButton) findViewById(R.id.fab_wishlist));
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
