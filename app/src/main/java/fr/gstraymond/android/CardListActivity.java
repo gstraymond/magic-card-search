@@ -470,7 +470,7 @@ public class CardListActivity extends CustomActivity implements
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
+        //super.onSaveInstanceState(outState); // FIX !!! FAILED BINDER TRANSACTION !!!  (parcel size = 705760) android.os.TransactionTooLargeException
         outState.putParcelable(CURRENT_SEARCH, currentSearch);
         log.d("onSaveInstanceState " + outState);
     }
