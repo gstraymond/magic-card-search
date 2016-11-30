@@ -1,5 +1,6 @@
 package fr.gstraymond.ui;
 
+import android.support.design.widget.FloatingActionButton;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.Toast;
@@ -18,6 +19,8 @@ public class EndScrollListener implements OnScrollListener {
 
     private boolean canLoadMoreItems = true;
     private CardListActivity activity;
+    private FloatingActionButton fab;
+
     private Log log = new Log(this);
 
     public EndScrollListener(CardListActivity activity) {
@@ -25,21 +28,26 @@ public class EndScrollListener implements OnScrollListener {
     }
 
     @Override
-    public void onScroll(AbsListView view, int firstVisible, int visibleCount,
+    public void onScroll(AbsListView view,
+                         int firstVisible,
+                         int visibleCount,
                          int totalCount) {
-        boolean endReached = totalCount > 10
-                && firstVisible + visibleCount >= totalCount;
-        if (canLoadMoreItems && endReached) {
-            int cardListCount = activity.getTotalCardCount();
-
-            boolean allCardsLoaded = totalCount == cardListCount;
-            if (!allCardsLoaded) {
+        if (canLoadMoreItems && hasEndReached(firstVisible, visibleCount, totalCount)) {
+            if (totalCount != activity.getTotalCardCount()) {
                 log.i("onScroll - endReached");
                 SearchOptions options = activity.getCurrentSearch().setAppend(true).setAddToHistory(false);
                 showLoadingToast();
                 new SearchProcessor(activity, options, R.string.loading_more).execute();
+            } else {
+                fab.hide();
             }
+        } else {
+            fab.show();
         }
+    }
+
+    private boolean hasEndReached(int firstVisible, int visibleCount, int totalCount) {
+        return firstVisible + visibleCount >= totalCount;
     }
 
     private void showLoadingToast() {
@@ -55,12 +63,11 @@ public class EndScrollListener implements OnScrollListener {
     public void onScrollStateChanged(AbsListView view, int arg1) {
     }
 
-    public boolean isCanLoadMoreItems() {
-        return canLoadMoreItems;
-    }
-
     public void setCanLoadMoreItems(boolean canLoadMoreItems) {
         this.canLoadMoreItems = canLoadMoreItems;
     }
 
+    public void setFab(FloatingActionButton fab) {
+        this.fab = fab;
+    }
 }

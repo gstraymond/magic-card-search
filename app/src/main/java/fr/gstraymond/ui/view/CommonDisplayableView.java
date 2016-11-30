@@ -6,7 +6,7 @@ import fr.gstraymond.api.ui.view.DisplayableView;
 
 public abstract class CommonDisplayableView<A extends View> implements DisplayableView {
 
-    protected View parentView;
+    private View parentView;
 
     @Override
     public void setParentView(View parentView) {

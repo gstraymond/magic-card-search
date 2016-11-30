@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="8dp">
+
+    <CheckBox
+        android:id="@+id/array_adapter_deck_delete"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
+        android:padding="4dp"
+        android:scaleX="1.5"
+        android:scaleY="1.5" />
+
+    <TextView
+        android:id="@+id/array_adapter_deck_name"
+        style="@android:style/TextAppearance.Large"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/array_adapter_deck_delete"
+        android:ellipsize="end"
+        android:maxLines="1"
+        tools:text="deck" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="24dp"
+        android:layout_below="@id/array_adapter_deck_name"
+        android:layout_toRightOf="@id/array_adapter_deck_delete">
+
+        <TextView
+            android:id="@+id/array_adapter_deck_colors"
+            style="@android:style/TextAppearance.Medium"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:gravity="center_vertical"
+            android:paddingRight="8dp"
+            tools:text="deck" />
+
+        <TextView
+            android:id="@+id/array_adapter_deck_format"
+            style="@android:style/TextAppearance.Medium"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/darker_gray"
+            tools:text="deck" />
+
+    </LinearLayout>
+
+</RelativeLayout>

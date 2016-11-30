@@ -1,6 +1,6 @@
 package fr.gstraymond.ui.view.impl;
 
-import android.widget.Button;
+import android.widget.TextView;
 
 import com.magic.card.search.commons.log.Log;
 
@@ -9,7 +9,7 @@ import fr.gstraymond.search.model.response.Card;
 import fr.gstraymond.search.model.response.Publication;
 import fr.gstraymond.ui.view.CommonDisplayableView;
 
-public class CostView extends CommonDisplayableView<Button> {
+public class CostView extends CommonDisplayableView<TextView> {
 
     private static double max$ = 1d;
     private static double max$$ = 10d;
@@ -23,7 +23,7 @@ public class CostView extends CommonDisplayableView<Button> {
 
     @Override
     public int getId() {
-        return R.id.card_favorite;
+        return R.id.array_adapter_card_price;
     }
 
     @Override
@@ -44,6 +44,11 @@ public class CostView extends CommonDisplayableView<Button> {
 
         log.d("$ %s $$ %s $$$ %s -> %s", count$, count$$, count$$$, $$$);
 
-        getView().setText($$$);
+        if ($$$.equals("?")) {
+            display(false);
+        } else {
+            display(true);
+            getView().setText($$$);
+        }
     }
 }

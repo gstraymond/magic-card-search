@@ -95,6 +95,7 @@ public class CardListActivity extends CustomActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_card_list);
+        endScrollListener.setFab((FloatingActionButton) findViewById(R.id.fab_wishlist));
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -151,15 +152,26 @@ public class CardListActivity extends CustomActivity implements
         if (changeLog.firstRun())
             changeLog.getLogDialog().show();
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        if (fab != null) {
-            fab.setOnClickListener(new View.OnClickListener() {
+        FloatingActionButton fab_wishlist = (FloatingActionButton) findViewById(R.id.fab_wishlist);
+        if (fab_wishlist != null) {
+            fab_wishlist.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     startActivity(new Intent(view.getContext(), WishListActivity.class));
                 }
             });
         }
+
+        FloatingActionButton fab_deck = (FloatingActionButton) findViewById(R.id.fab_deck);
+        fab_deck.setVisibility(View.GONE); // FIXME when feature complete
+        /*if (fab_deck != null) {
+            fab_deck.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    startActivity(new Intent(view.getContext(), DeckListActivity.class));
+                }
+            });
+        }*/
     }
 
     @Override
@@ -458,7 +470,7 @@ public class CardListActivity extends CustomActivity implements
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
+        //super.onSaveInstanceState(outState); // FIX !!! FAILED BINDER TRANSACTION !!!  (parcel size = 705760) android.os.TransactionTooLargeException
         outState.putParcelable(CURRENT_SEARCH, currentSearch);
         log.d("onSaveInstanceState " + outState);
     }

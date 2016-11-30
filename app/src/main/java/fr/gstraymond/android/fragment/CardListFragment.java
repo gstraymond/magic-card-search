@@ -48,7 +48,6 @@ public class CardListFragment extends CustomListFragment {
                 getActivity(),
                 android.R.layout.simple_list_item_activated_1,
                 android.R.id.text1, cards,
-                getCustomApplication().getCastingCostAssetLoader(),
                 getCustomApplication().getWishlist()
         );
 

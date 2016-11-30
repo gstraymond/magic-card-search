@@ -1,5 +1,6 @@
 package fr.gstraymond.ui.view.impl;
 
+import android.content.Context;
 import android.text.Html;
 import android.text.Spanned;
 import android.text.TextUtils;
@@ -9,16 +10,16 @@ import fr.gstraymond.R;
 import fr.gstraymond.biz.CastingCostImageGetter;
 import fr.gstraymond.search.model.response.Card;
 import fr.gstraymond.tools.CastingCostFormatter;
-import fr.gstraymond.ui.CastingCostAssetLoader;
 import fr.gstraymond.ui.view.CommonDisplayableView;
 
 public class CastingCostView extends CommonDisplayableView<TextView> {
-    private CastingCostImageGetter imageGetter;
-    private CastingCostFormatter ccFormatter;
 
-    public CastingCostView(CastingCostAssetLoader castingCostAssetLoader) {
-        this.imageGetter = new CastingCostImageGetter(castingCostAssetLoader);
+    private CastingCostFormatter ccFormatter;
+    private Html.ImageGetter imageGetter;
+
+    public CastingCostView(Context context) {
         this.ccFormatter = new CastingCostFormatter();
+        this.imageGetter = CastingCostImageGetter.small(context);
     }
 
     @Override

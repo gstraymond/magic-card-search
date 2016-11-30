@@ -1,6 +1,6 @@
-Magic Card Search
-=================
+MTG Search
+==========
 
-Android version for http://magic-card-search.com
+Android version for http://mtg-search.com
 
 Mobile application for powerful and fast search on Magic: The Gathering cards

@@ -1,53 +1,54 @@
 package fr.gstraymond.android;
 
 import com.magic.card.search.commons.application.BaseApplication;
+import com.magic.card.search.commons.json.MapperUtil;
 import com.magic.card.search.commons.log.Log;
 
 import fr.gstraymond.R;
 import fr.gstraymond.biz.ElasticSearchClient;
+import fr.gstraymond.db.json.Decklist;
+import fr.gstraymond.db.json.JsonDeck;
 import fr.gstraymond.db.json.JsonHistoryDataSource;
 import fr.gstraymond.db.json.JsonList;
-import fr.gstraymond.ui.CastingCostAssetLoader;
+import fr.gstraymond.db.json.Wishlist;
+import fr.gstraymond.impex.DeckResolver;
+import fr.gstraymond.network.ElasticSearchConnector;
+import fr.gstraymond.search.model.response.SearchResult;
+import fr.gstraymond.tools.VersionUtils;
 
 public class CustomApplication extends BaseApplication {
 
     private static final String TABLET = "tablet";
 
     private ElasticSearchClient elasticSearchClient;
-    private CastingCostAssetLoader castingCostAssetLoader;
     private JsonHistoryDataSource jsonHistoryDataSource;
-    private JsonList wishlist;
+    private Wishlist wishlist;
+    private Decklist decklist;
+    private JsonDeck jsonDeck;
+    private DeckResolver deckResolver;
+
     private Boolean isTablet;
-    private Log log = new Log(this);
 
     @Override
     public void onCreate() {
         super.onCreate();
+        ElasticSearchConnector<SearchResult> connector = new ElasticSearchConnector<>(VersionUtils.getAppName(this), MapperUtil.fromType(getObjectMapper(), SearchResult.class));
         initJsonHistoryDataSource();
-        initElasticSearchClient();
+        initElasticSearchClient(connector);
         initIsTablet();
         migrateHistory();
-        wishlist = new JsonList(this, getObjectMapper(), "wishlist");
+        wishlist = new Wishlist(this, getObjectMapper());
+        decklist = new Decklist(this, getObjectMapper());
+        jsonDeck = new JsonDeck(this, getObjectMapper());
+        deckResolver = new DeckResolver(connector);
     }
 
-    public void init() {
-        initCastingCostAssetLoader();
-    }
-
-    private void initElasticSearchClient() {
-        log.d("initElasticSearchClient");
-        this.elasticSearchClient = new ElasticSearchClient(getObjectMapper(), this, getJsonHistoryDataSource());
-    }
-
-    private void initCastingCostAssetLoader() {
-        CastingCostAssetLoader loader = new CastingCostAssetLoader();
-        loader.init(this);
-        this.castingCostAssetLoader = loader;
+    private void initElasticSearchClient(ElasticSearchConnector<SearchResult> connector) {
+        this.elasticSearchClient = new ElasticSearchClient(connector, getJsonHistoryDataSource());
     }
 
     // FIXME find another way
     private void initIsTablet() {
-        log.d("initIsTablet");
         String mode = getApplicationContext().getString(R.string.mode);
         setTablet(TABLET.equals(mode));
     }
@@ -58,13 +59,6 @@ public class CustomApplication extends BaseApplication {
 
     public ElasticSearchClient getElasticSearchClient() {
         return elasticSearchClient;
-    }
-
-    public CastingCostAssetLoader getCastingCostAssetLoader() {
-        if (castingCostAssetLoader == null) {
-            initCastingCostAssetLoader();
-        }
-        return castingCostAssetLoader;
     }
 
     public boolean isTablet() {
@@ -86,7 +80,19 @@ public class CustomApplication extends BaseApplication {
         jsonHistoryDataSource.migrate();
     }
 
-    public JsonList getWishlist() {
+    public Wishlist getWishlist() {
         return wishlist;
+    }
+
+    public JsonDeck getJsonDeck() {
+        return jsonDeck;
+    }
+
+    public DeckResolver getDeckResolver() {
+        return deckResolver;
+    }
+
+    public Decklist getDecklist() {
+        return decklist;
     }
 }

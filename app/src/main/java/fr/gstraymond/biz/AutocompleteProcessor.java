@@ -2,8 +2,9 @@ package fr.gstraymond.biz;
 
 import android.content.Context;
 import android.os.AsyncTask;
-import android.text.TextUtils;
 
+import com.crashlytics.android.answers.Answers;
+import com.crashlytics.android.answers.CustomEvent;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.magic.card.search.commons.json.MapperUtil;
 import com.magic.card.search.commons.log.Log;
@@ -14,13 +15,14 @@ import fr.gstraymond.autocomplete.response.AutocompleteResult;
 import fr.gstraymond.autocomplete.response.Option;
 import fr.gstraymond.network.ElasticSearchConnector;
 import fr.gstraymond.network.Result;
+import fr.gstraymond.tools.VersionUtils;
 
 public class AutocompleteProcessor extends AsyncTask<String, String, AutocompleteResult> {
 
     private ElasticSearchConnector<AutocompleteResult> connector;
     private Callbacks callbacks;
 
-    private static final String query = ("" +
+    private static final String templateQuery = ("" +
             "{" +
             "  \"query\": {" +
             "    \"match_all\": {}" +
@@ -44,22 +46,31 @@ public class AutocompleteProcessor extends AsyncTask<String, String, Autocomplet
 
     public AutocompleteProcessor(ObjectMapper objectMapper, Context context, Callbacks callbacks) {
         MapperUtil<AutocompleteResult> mapperUtil = MapperUtil.fromType(objectMapper, AutocompleteResult.class);
-        this.connector = new ElasticSearchConnector<>(context, mapperUtil);
+        this.connector = new ElasticSearchConnector<>(VersionUtils.getAppName(context), mapperUtil);
         this.callbacks = callbacks;
     }
 
     @Override
     protected AutocompleteResult doInBackground(String... strings) {
-        String q = String.format(query, strings[0]);
-        Result<AutocompleteResult> result = connector.connect("autocomplete/card/_search", q);
+        String query = strings[0];
+        String q = String.format(templateQuery, query);
+        Result<AutocompleteResult> result = connector.connect("autocomplete/card/_search", "source", q);
         if (result == null) return new AutocompleteResult();
+
+        CustomEvent event = new CustomEvent("autocomplete")
+                .putCustomAttribute("results", result.elem.getResults().size())
+                .putCustomAttribute("http duration", result.httpDuration)
+                .putCustomAttribute("parse duration", result.parseDuration);
+        if (query.length() > 2) event.putCustomAttribute("query", query);
+        Answers.getInstance().logCustom(event);
+
         return result.elem;
     }
 
     @Override
     protected void onPostExecute(AutocompleteResult autocompleteResult) {
         List<Option> results = autocompleteResult.getResults();
-        log.d("autocomplete %s", TextUtils.join(",", results));
+        log.d("autocomplete %s elems", results.size());
         callbacks.bindAutocompleteResults(results);
     }
 

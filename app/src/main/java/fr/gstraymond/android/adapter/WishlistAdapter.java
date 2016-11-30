@@ -7,21 +7,19 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import fr.gstraymond.R;
-import fr.gstraymond.db.json.JsonList;
+import fr.gstraymond.db.json.Wishlist;
 import fr.gstraymond.search.model.response.Card;
-import fr.gstraymond.ui.CastingCostAssetLoader;
 import fr.gstraymond.ui.adapter.CardViews;
 import fr.gstraymond.ui.view.impl.FavoriteView;
 
 public class WishlistAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private CardViews cardViews;
-    private JsonList wishlist;
+    private Wishlist wishlist;
     private ClickCallbacks clickCallbacks;
 
-    public WishlistAdapter(Context context, CastingCostAssetLoader castingCostAssetLoader,
-                           JsonList wishlist, ClickCallbacks clickCallbacks) {
-        this.cardViews = new CardViews(context, castingCostAssetLoader, wishlist, new FavoriteViewClickCallbacks());
+    public WishlistAdapter(Context context, Wishlist wishlist, ClickCallbacks clickCallbacks) {
+        this.cardViews = new CardViews(context, wishlist, new FavoriteViewClickCallbacks());
         this.wishlist = wishlist;
         this.clickCallbacks = clickCallbacks;
     }
@@ -36,7 +34,7 @@ public class WishlistAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        final Card card = wishlist.getCards().get(position);
+        final Card card = wishlist.getElems().get(position);
         cardViews.display(holder.itemView, card, position);
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -48,10 +46,10 @@ public class WishlistAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     @Override
     public int getItemCount() {
-        return wishlist.getCards().size();
+        return wishlist.getElems().size();
     }
 
-    class FavoriteViewClickCallbacks implements FavoriteView.ClickCallbacks {
+    private class FavoriteViewClickCallbacks implements FavoriteView.ClickCallbacks {
 
         @Override
         public void itemAdded(int position) {
@@ -60,7 +58,7 @@ public class WishlistAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         @Override
         public void itemRemoved(int position) {
             notifyItemRemoved(position);
-            int total = wishlist.getCards().size();
+            int total = wishlist.getElems().size();
             if (position < total) {
                 notifyItemRangeChanged(position, total - position);
             }
@@ -72,6 +70,7 @@ public class WishlistAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     public interface ClickCallbacks {
         void onEmptyList();
+
         void cardClicked(Card card);
     }
 }

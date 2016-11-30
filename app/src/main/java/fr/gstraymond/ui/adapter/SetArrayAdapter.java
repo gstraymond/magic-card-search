@@ -26,7 +26,6 @@ import java.util.Locale;
 
 import fr.gstraymond.R;
 import fr.gstraymond.android.CardListActivity;
-import fr.gstraymond.android.CustomApplication;
 import fr.gstraymond.biz.CastingCostImageGetter;
 import fr.gstraymond.biz.Facets;
 import fr.gstraymond.biz.SearchOptions;
@@ -40,7 +39,6 @@ import fr.gstraymond.tools.DescriptionFormatter;
 import fr.gstraymond.tools.FormatFormatter;
 import fr.gstraymond.tools.PowerToughnessFormatter;
 import fr.gstraymond.tools.TypeFormatter;
-import fr.gstraymond.ui.CastingCostAssetLoader;
 
 public class SetArrayAdapter extends ArrayAdapter<Object> {
 
@@ -50,10 +48,10 @@ public class SetArrayAdapter extends ArrayAdapter<Object> {
     private PowerToughnessFormatter ptFormatter;
     private TypeFormatter typeFormatter;
     private SetImageGetter setImageGetter;
-    private Html.ImageGetter castingCostImageGetter;
     private Callbacks callbacks;
 
     private DateFormat dateFormat = new SimpleDateFormat("MMM yyyy", Locale.getDefault());
+    private Html.ImageGetter imageGetter;
 
     public interface Callbacks {
         void onImageClick(int position);
@@ -71,8 +69,8 @@ public class SetArrayAdapter extends ArrayAdapter<Object> {
         this.ptFormatter = new PowerToughnessFormatter();
         this.typeFormatter = new TypeFormatter(context);
         this.setImageGetter = new SetImageGetter(context);
-        this.castingCostImageGetter = new CastingCostImageGetter(getAssetLoader());
         this.callbacks = callbacks;
+        this.imageGetter = CastingCostImageGetter.large(getContext());
     }
 
     @SuppressLint("InflateParams")
@@ -129,7 +127,7 @@ public class SetArrayAdapter extends ArrayAdapter<Object> {
 
             String desc = descFormatter.format(card, true);
             if (desc.isEmpty()) descView.setVisibility(View.GONE);
-            else descView.setText(Html.fromHtml(desc, castingCostImageGetter, null));
+            else descView.setText(Html.fromHtml(desc, imageGetter, null));
 
             if (card.getAltTitles().isEmpty()) {
                 altView.setVisibility(View.GONE);
@@ -192,7 +190,7 @@ public class SetArrayAdapter extends ArrayAdapter<Object> {
         String cc = formatCC(card);
         String pt = ptFormatter.format(card);
         if (pt.isEmpty() && card.getLoyalty() != null) pt = card.getLoyalty();
-        return Html.fromHtml(formatCC_PT(cc, pt), castingCostImageGetter, null);
+        return Html.fromHtml(formatCC_PT(cc, pt), imageGetter, null);
     }
 
     private String formatCC_PT(String cc, String pt) {
@@ -203,11 +201,6 @@ public class SetArrayAdapter extends ArrayAdapter<Object> {
             return cc;
         }
         return cc + " — " + pt;
-    }
-
-    private CastingCostAssetLoader getAssetLoader() {
-        CustomApplication application = (CustomApplication) getContext().getApplicationContext();
-        return application.getCastingCostAssetLoader();
     }
 
     private String formatCC(Card card) {

@@ -1,0 +1,16 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/decklist_import"
+        android:icon="@android:drawable/ic_menu_add"
+        android:title="TODO"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/decklist_delete"
+        android:icon="@drawable/delete"
+        android:title="TODO"
+        app:showAsAction="ifRoom" />
+
+</menu>

@@ -29,7 +29,9 @@ public abstract class CustomActivity extends AppCompatActivity {
         return getCustomApplication().getObjectMapper();
     }
 
-    public JsonHistoryDataSource getJsonHistoryDataSource() { return getCustomApplication().getJsonHistoryDataSource(); }
+    public JsonHistoryDataSource getJsonHistoryDataSource() {
+        return getCustomApplication().getJsonHistoryDataSource();
+    }
 
     public void replaceFragment(Fragment fragment, int id) {
         replaceFragment(fragment, id, null);
@@ -61,7 +63,9 @@ public abstract class CustomActivity extends AppCompatActivity {
     }
 
     protected ContentViewEvent buildContentViewEvent() {
-        return new ContentViewEvent().putContentName(getClass().getSimpleName());
+        return new ContentViewEvent()
+                .putContentName(getClass().getSimpleName())
+                .putCustomAttribute("isTablet", getCustomApplication().isTablet() + "");
     }
 
     @Override

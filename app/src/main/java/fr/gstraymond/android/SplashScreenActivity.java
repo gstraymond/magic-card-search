@@ -3,9 +3,10 @@ package fr.gstraymond.android;
 import android.app.SearchManager;
 import android.content.Intent;
 import android.os.Bundle;
+
 import com.magic.card.search.commons.json.MapperUtil;
+
 import fr.gstraymond.R;
-import fr.gstraymond.biz.ApplicationLoader;
 import fr.gstraymond.biz.SearchOptions;
 import fr.gstraymond.biz.SplashProcessor;
 import fr.gstraymond.search.model.response.SearchResult;
@@ -21,12 +22,10 @@ public class SplashScreenActivity extends CustomActivity {
 
         mapperUtil = MapperUtil.fromType(getObjectMapper(), Object.class);
 
-		/* chargement du client HTTP / object mapper / assets */
-        new ApplicationLoader(this).execute();
-
         SearchOptions options = new SearchOptions().setRandom(true).setAddToHistory(false);
-        if (Intent.ACTION_SEARCH.equals(getIntent().getAction())
-                || "com.google.android.gms.actions.SEARCH_ACTION".equals(getIntent().getAction())) {
+        String action = getIntent().getAction();
+        if (Intent.ACTION_SEARCH.equals(action)
+                || "com.google.android.gms.actions.SEARCH_ACTION".equals(action)) {
             String query = getIntent().getStringExtra(SearchManager.QUERY);
             options = options.setQuery(query).setRandom(false).setAddToHistory(true).setFromOkGoogle(true);
         }

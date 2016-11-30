@@ -5,13 +5,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Toast;
 
 import java.util.List;
 
 import fr.gstraymond.R;
 import fr.gstraymond.db.json.JsonList;
 import fr.gstraymond.search.model.response.Card;
-import fr.gstraymond.ui.CastingCostAssetLoader;
 import fr.gstraymond.ui.view.impl.FavoriteView;
 
 public class CardArrayAdapter extends ArrayAdapter<Card> {
@@ -20,9 +20,9 @@ public class CardArrayAdapter extends ArrayAdapter<Card> {
 
     public CardArrayAdapter(Context context, int resource,
                             int textViewResourceId, List<Card> objects,
-                            CastingCostAssetLoader castingCostAssetLoader, JsonList wishlist) {
+                            JsonList wishlist) {
         super(context, resource, textViewResourceId, objects);
-        cardViews = new CardViews(context, castingCostAssetLoader, wishlist, new FavoriteViewClickCallbacks());
+        cardViews = new CardViews(context, wishlist, new FavoriteViewClickCallbacks());
     }
 
     @Override
@@ -38,16 +38,20 @@ public class CardArrayAdapter extends ArrayAdapter<Card> {
         return view;
     }
 
-    class FavoriteViewClickCallbacks implements FavoriteView.ClickCallbacks {
+    private class FavoriteViewClickCallbacks implements FavoriteView.ClickCallbacks {
 
         @Override
         public void itemAdded(int position) {
             notifyDataSetChanged();
+            String message = String.format(getContext().getResources().getString(R.string.added_to_wishlist), getItem(position).getTitle());
+            Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show();
         }
 
         @Override
         public void itemRemoved(int position) {
             notifyDataSetChanged();
+            String message = String.format(getContext().getResources().getString(R.string.removed_from_wishlist), getItem(position).getTitle());
+            Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show();
         }
     }
 }
