@@ -23,7 +23,7 @@ public class ElasticSearchConnector<A> {
     private static final String ACCEPT_ENCODING = "Accept-Encoding";
     private static final String GZIP = "gzip";
     private static final String ENCODING = "UTF-8";
-    private static final String SEARCH_SERVER_HOST = "engine.magic-card-search.com:8080";
+    private static final String SEARCH_SERVER_HOST = "engine.mtg-search.com:8080";
 	//private static final String SEARCH_SERVER_HOST = "192.168.1.15:9200";
 
     private String appName;

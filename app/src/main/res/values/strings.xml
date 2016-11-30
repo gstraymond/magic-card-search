@@ -3,7 +3,7 @@
 
     <string name="progress_card_found">card found</string>
     <string name="progress_cards_found">cards found</string>
-    <string name="website_url">magic-card-search.com</string>
+    <string name="website_url">mtg-search.com</string>
     <string name="logo">logo</string>
     <string name="list_menu_cards">Show card list</string>
     <string name="list_menu_facets">Show filters</string>

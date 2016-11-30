@@ -44,16 +44,16 @@ android {
     buildTypes {
         debug {
             minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             applicationIdSuffix ".debug"
             versionNameSuffix " debug"
-            resValue "string", "app_name", "[DEBUG] MGS"
+            resValue "string", "app_name", "[DEBUG] MTG Search"
         }
         release {
             minifyEnabled true
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.release
-            resValue "string", "app_name", "Magic Card Search"
+            resValue "string", "app_name", "MTG Search"
         }
     }
 
@@ -75,9 +75,9 @@ android {
 dependencies {
     compile project(':commons')
     compile 'com.github.bumptech.glide:glide:3.+'
-    compile 'com.android.support:support-v13:24.+'
-    compile 'com.android.support:appcompat-v7:24.+'
-    compile 'com.android.support:design:24.+'
+    compile 'com.android.support:support-v13:25.+'
+    compile 'com.android.support:appcompat-v7:25.+'
+    compile 'com.android.support:design:25.+'
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 
     testCompile 'junit:junit:4.12'
