@@ -4,8 +4,6 @@
 
 -dontwarn com.fasterxml.jackson.databind.**
 
--dontwarn com.amazon.**
-
 -keepattributes InnerClasses
 
 -keep class org.codehaus.** { *; }

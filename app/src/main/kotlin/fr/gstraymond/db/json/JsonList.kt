@@ -22,15 +22,22 @@ abstract class JsonList<A>(private val context: Context,
     private fun load(): MutableList<A> {
         try {
             val inputStream = context.openFileInput(listName)
-            return mapperUtil.read(inputStream).toMutableList()
+            val result = mapperUtil.read(inputStream)
+            return when(result) {
+                null -> {
+                    save(listOf())
+                    mutableListOf()
+                }
+                else -> result.toMutableList()
+            }
         } catch (e: FileNotFoundException) {
             log.w("get: %s", e)
-            save()
+            save(listOf())
             return mutableListOf()
         }
     }
 
-    private fun save() {
+    private fun save(elems: List<A>) {
         try {
             context.openFileOutput(listName, Context.MODE_PRIVATE).apply {
                 write(mapperUtil.asJsonString(elems).toByteArray())
@@ -50,7 +57,7 @@ abstract class JsonList<A>(private val context: Context,
             elems.remove(elem)
             index.remove(getId(elem))
         }
-        save()
+        save(elems)
         log.d("addOrRemove %s -> removed? %s", elem, contain)
         return !contain
     }
