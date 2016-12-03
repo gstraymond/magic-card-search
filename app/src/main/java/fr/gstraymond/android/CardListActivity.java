@@ -95,7 +95,6 @@ public class CardListActivity extends CustomActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_card_list);
-        endScrollListener.setFab((FloatingActionButton) findViewById(R.id.fab_wishlist));
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -162,9 +161,9 @@ public class CardListActivity extends CustomActivity implements
             });
         }
 
-        FloatingActionButton fab_deck = (FloatingActionButton) findViewById(R.id.fab_deck);
+        /*FloatingActionButton fab_deck = (FloatingActionButton) findViewById(R.id.fab_deck);
         fab_deck.setVisibility(View.GONE); // FIXME when feature complete
-        /*if (fab_deck != null) {
+        if (fab_deck != null) {
             fab_deck.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -250,6 +249,12 @@ public class CardListActivity extends CustomActivity implements
                 hasDeviceRotated = false;
             }
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        endScrollListener.setFab((FloatingActionButton) findViewById(R.id.fab_wishlist));
     }
 
     private void openDrawer() {
