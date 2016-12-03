@@ -9,7 +9,6 @@ import android.view.MenuItem
 import android.view.View
 import fr.gstraymond.R
 import fr.gstraymond.android.adapter.DeckListAdapter
-import fr.gstraymond.db.json.Deck
 
 class DeckListActivity : CustomActivity() {
 
@@ -58,7 +57,7 @@ class DeckListActivity : CustomActivity() {
 
     private fun getDecks() = customApplication.decklist.elems
 
-    private fun getSortedDecks() = getDecks().sortedBy(Deck::timestamp).reversed()
+    private fun getSortedDecks() = getDecks().sortedBy { it.timestamp }.reversed()
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.deck_list_menu, menu)

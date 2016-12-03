@@ -11,6 +11,7 @@ import fr.gstraymond.R
 import fr.gstraymond.android.adapter.DeckDetailAdapter
 import fr.gstraymond.biz.DeckStats
 import fr.gstraymond.db.json.CardWithOccurrence
+import fr.gstraymond.search.model.Deck
 import java.util.*
 
 class DeckDetailActivity : CustomActivity() {

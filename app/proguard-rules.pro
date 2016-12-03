@@ -1,16 +1,10 @@
--keepattributes SourceFile,LineNumberTable,*Annotation*,EnclosingMethod,Signature
-
 -keepnames class com.fasterxml.jackson.** { *; }
 
 -dontwarn com.fasterxml.jackson.databind.**
 
--keepattributes InnerClasses
-
--keep class org.codehaus.** { *; }
-
 -keepclassmembers public final enum org.codehaus.jackson.annotate.JsonAutoDetect$Visibility {
- public static final org.codehaus.jackson.annotate.JsonAutoDetect$Visibility *;
- }
+  public static final org.codehaus.jackson.annotate.JsonAutoDetect$Visibility *;
+}
 
 -keep class fr.gstraymond.** { *; }
 -keepclassmembers class fr.gstraymond.** { *; }
