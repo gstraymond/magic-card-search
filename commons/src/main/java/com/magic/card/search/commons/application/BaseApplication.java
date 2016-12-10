@@ -8,7 +8,6 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.module.kotlin.KotlinModule;
 
 import io.fabric.sdk.android.Fabric;
 
@@ -25,7 +24,6 @@ public class BaseApplication extends Application {
 
     private void initObjectMapper() {
         this.objectMapper = new ObjectMapper()
-                .registerModule(new KotlinModule())
                 .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
                 .configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false)
                 .setSerializationInclusion(JsonInclude.Include.NON_NULL);

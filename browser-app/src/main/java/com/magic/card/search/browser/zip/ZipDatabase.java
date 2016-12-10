@@ -67,6 +67,6 @@ public class ZipDatabase {
     }*/
 
     private InputStream getCardsInputStream() {
-        return application.getResources().openRawResource(R.raw.cards);
+        return null; // application.getResources().openRawResource(R.raw.cards);
     }
 }

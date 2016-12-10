@@ -122,23 +122,7 @@ public class CardListFragment extends CustomListFragment {
         return arrayAdapter.getCount();
     }
 
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-
-        // select the first element
-        if (isTablet() && getListAdapter().getCount() > 0) {
-            long itemId = getListAdapter().getItemId(0);
-            View view = getListAdapter().getView(0, null, getListView());
-            getListView().performItemClick(view, 0, itemId);
-        }
-    }
-
     private CustomApplication getCustomApplication() {
         return (CustomApplication) getActivity().getApplication();
-    }
-
-    private boolean isTablet() {
-        return getCustomApplication().isTablet();
     }
 }

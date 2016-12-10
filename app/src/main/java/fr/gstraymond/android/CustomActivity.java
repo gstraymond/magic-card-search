@@ -1,7 +1,9 @@
 package fr.gstraymond.android;
 
 import android.app.Fragment;
+import android.content.res.Configuration;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
@@ -15,14 +17,6 @@ public abstract class CustomActivity extends AppCompatActivity {
 
     public CustomApplication getCustomApplication() {
         return (CustomApplication) getApplication();
-    }
-
-    public boolean isTablet() {
-        return getCustomApplication().isTablet();
-    }
-
-    public boolean isSmartphone() {
-        return !isTablet();
     }
 
     public ObjectMapper getObjectMapper() {
@@ -65,12 +59,18 @@ public abstract class CustomActivity extends AppCompatActivity {
     protected ContentViewEvent buildContentViewEvent() {
         return new ContentViewEvent()
                 .putContentName(getClass().getSimpleName())
-                .putCustomAttribute("isTablet", getCustomApplication().isTablet() + "");
+                .putCustomAttribute("isTablet", isTablet() + "");
+    }
+
+    private boolean isTablet() {
+        return (getResources().getConfiguration().screenLayout
+                & Configuration.SCREENLAYOUT_SIZE_MASK)
+                >= Configuration.SCREENLAYOUT_SIZE_LARGE;
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
+    protected void onPostCreate(@Nullable Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
         Answers.getInstance().logContentView(buildContentViewEvent());
     }
 

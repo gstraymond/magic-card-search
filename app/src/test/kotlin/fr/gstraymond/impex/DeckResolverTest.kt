@@ -12,7 +12,7 @@ import org.junit.Test
 
 class DeckResolverTest {
 
-    @Test
+    /*@Test
     fun foo() {
         val connector = ElasticSearchConnector(
                 "unit-test-${javaClass.canonicalName}",
@@ -34,4 +34,5 @@ class DeckResolverTest {
                     .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
                     .configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false)
                     .setSerializationInclusion(JsonInclude.Include.NON_NULL)
+  */
 }

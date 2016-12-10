@@ -71,7 +71,7 @@ public class SearchProcessor extends AsyncTask<Void, Void, SearchResult> {
     @Override
     protected void onPostExecute(SearchResult searchResult) {
 
-        if (options.isAppend() && activity.isSmartphone()) {
+        if (options.isAppend()) {
             if (activity.getLoadingToast() != null) {
                 activity.getLoadingToast().cancel();
             }

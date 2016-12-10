@@ -18,8 +18,6 @@ import fr.gstraymond.tools.VersionUtils;
 
 public class CustomApplication extends BaseApplication {
 
-    private static final String TABLET = "tablet";
-
     private ElasticSearchClient elasticSearchClient;
     private JsonHistoryDataSource jsonHistoryDataSource;
     private Wishlist wishlist;
@@ -27,15 +25,12 @@ public class CustomApplication extends BaseApplication {
     private JsonDeck jsonDeck;
     private DeckResolver deckResolver;
 
-    private Boolean isTablet;
-
     @Override
     public void onCreate() {
         super.onCreate();
         ElasticSearchConnector<SearchResult> connector = new ElasticSearchConnector<>(VersionUtils.getAppName(this), MapperUtil.fromType(getObjectMapper(), SearchResult.class));
         initJsonHistoryDataSource();
         initElasticSearchClient(connector);
-        initIsTablet();
         migrateHistory();
         wishlist = new Wishlist(this, getObjectMapper());
         decklist = new Decklist(this, getObjectMapper());
@@ -47,26 +42,12 @@ public class CustomApplication extends BaseApplication {
         this.elasticSearchClient = new ElasticSearchClient(connector, getJsonHistoryDataSource());
     }
 
-    // FIXME find another way
-    private void initIsTablet() {
-        String mode = getApplicationContext().getString(R.string.mode);
-        setTablet(TABLET.equals(mode));
-    }
-
     private void initJsonHistoryDataSource() {
         this.jsonHistoryDataSource = new JsonHistoryDataSource(this, getObjectMapper());
     }
 
     public ElasticSearchClient getElasticSearchClient() {
         return elasticSearchClient;
-    }
-
-    public boolean isTablet() {
-        return isTablet;
-    }
-
-    public void setTablet(boolean isTablet) {
-        this.isTablet = isTablet;
     }
 
     public JsonHistoryDataSource getJsonHistoryDataSource() {
