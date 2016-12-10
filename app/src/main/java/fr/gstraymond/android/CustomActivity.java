@@ -69,8 +69,8 @@ public abstract class CustomActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    protected void onPostCreate(@Nullable Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
         Answers.getInstance().logContentView(buildContentViewEvent());
     }
 
