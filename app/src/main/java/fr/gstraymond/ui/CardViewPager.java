@@ -5,10 +5,8 @@ import android.app.Fragment;
 import android.content.Context;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
-import android.widget.TextView;
 
 import fr.gstraymond.R;
-import fr.gstraymond.android.CustomApplication;
 import fr.gstraymond.android.fragment.CardPagerFragment;
 import fr.gstraymond.search.model.response.Card;
 import fr.gstraymond.search.model.response.Publication;
@@ -38,11 +36,7 @@ public class CardViewPager extends ViewPager {
                 text = itemIdDisplayed + "/" + count + " " + text;
             }
 
-            if (isTablet()) {
-                getTitleTextView().setText(text);
-            } else {
-                getActivity().setTitle(text);
-            }
+            getActivity().setTitle(text);
 
             Fragment fragment = getActivity().getFragmentManager().findFragmentById(R.id.card_pager_container);
             if (fragment != null && fragment instanceof CardPagerFragment) {
@@ -52,14 +46,7 @@ public class CardViewPager extends ViewPager {
         super.computeScroll();
     }
 
-    private TextView getTitleTextView() {
-        return (TextView) getActivity().findViewById(R.id.card_detail_title);
-    }
-
     private String getTitle() {
-        if (isTablet()) {
-            return getTitleTextView().getText().toString();
-        }
         return getActivity().getTitle().toString();
     }
 
@@ -70,10 +57,5 @@ public class CardViewPager extends ViewPager {
     public CardViewPager setCard(Card card) {
         this.card = card;
         return this;
-    }
-
-    private boolean isTablet() {
-        CustomApplication application = (CustomApplication) getActivity().getApplication();
-        return application.isTablet();
     }
 }

@@ -51,9 +51,6 @@ public class EndScrollListener implements OnScrollListener {
     }
 
     private void showLoadingToast() {
-        if (activity.isTablet()) {
-            return;
-        }
         Toast loadingToast = makeText(activity, R.string.loading_more, LENGTH_SHORT);
         activity.setLoadingToast(loadingToast);
         loadingToast.show();

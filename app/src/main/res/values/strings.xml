@@ -67,7 +67,6 @@
     <string name="loading_more_facet">adding filters…</string>
 
     <!--suppress MissingTranslation -->
-    <string name="mode">smartphone</string>
 
     <string name="background_color" translatable="false">black</string>
     <string name="changelog_full_title">What\'s new ?</string>

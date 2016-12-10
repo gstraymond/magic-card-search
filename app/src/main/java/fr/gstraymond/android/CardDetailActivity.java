@@ -9,11 +9,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.TextView;
 
-import org.w3c.dom.Text;
-
 import fr.gstraymond.R;
 import fr.gstraymond.android.fragment.CardDetailFragment;
-import fr.gstraymond.android.fragment.CardPagerFragment;
 import fr.gstraymond.search.model.response.Card;
 import fr.gstraymond.tools.LanguageUtil;
 
@@ -61,21 +58,11 @@ public class CardDetailActivity extends CardCommonActivity implements
 
     @Override
     public void onItemSelected(int id) {
-        // FIXME a refactorer avec CardListActivity
-        if (isTablet()) {
-            Bundle bundle = new Bundle();
-            bundle.putParcelable(CARD, getCard());
-            // first element is a card
-            bundle.putInt(POSITION, id - 1);
-
-            replaceFragment(new CardPagerFragment(), R.id.card_detail_container, bundle);
-        } else {
-            Intent intent = new Intent(this, CardPagerActivity.class);
-            intent.putExtra(CARD, getCard());
-            // first element is a card
-            intent.putExtra(POSITION, id - 1);
-            startActivity(intent);
-        }
+        Intent intent = new Intent(this, CardPagerActivity.class);
+        intent.putExtra(CARD, getCard());
+        // first element is a card
+        intent.putExtra(POSITION, id - 1);
+        startActivity(intent);
     }
 
     public static String formatTitle(Context context, Card card) {
