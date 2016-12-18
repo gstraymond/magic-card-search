@@ -13,6 +13,8 @@ import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import fr.gstraymond.models.CardWithOccurrence;
+
 public class JsonDeck {
 
     private Log log = new Log(this);

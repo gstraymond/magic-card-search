@@ -8,7 +8,7 @@ import android.text.Spanned;
 import android.widget.TextView;
 
 import fr.gstraymond.R;
-import fr.gstraymond.models.response.Card;
+import fr.gstraymond.models.search.response.Card;
 import fr.gstraymond.tools.CardColorUtil;
 import fr.gstraymond.tools.LanguageUtil;
 import fr.gstraymond.ui.view.CommonDisplayableView;

@@ -21,7 +21,7 @@ import java.util.Map;
 
 import fr.gstraymond.R;
 import fr.gstraymond.constants.FacetConst;
-import fr.gstraymond.db.json.JsonHistory;
+import fr.gstraymond.models.JsonHistory;
 import fr.gstraymond.db.json.JsonHistoryDataSource;
 
 

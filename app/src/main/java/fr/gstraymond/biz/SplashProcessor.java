@@ -8,7 +8,7 @@ import com.magic.card.search.commons.log.Log;
 import fr.gstraymond.R;
 import fr.gstraymond.android.CustomApplication;
 import fr.gstraymond.android.SplashScreenActivity;
-import fr.gstraymond.models.response.SearchResult;
+import fr.gstraymond.models.search.response.SearchResult;
 
 public class SplashProcessor extends AsyncTask<Void, Integer, SearchResult> {
 

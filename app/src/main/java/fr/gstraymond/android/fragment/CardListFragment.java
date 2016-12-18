@@ -11,7 +11,7 @@ import java.util.List;
 
 import fr.gstraymond.android.CardListActivity;
 import fr.gstraymond.android.CustomApplication;
-import fr.gstraymond.models.response.Card;
+import fr.gstraymond.models.search.response.Card;
 import fr.gstraymond.ui.adapter.CardArrayAdapter;
 
 import static fr.gstraymond.constants.Consts.CARD_LIST;

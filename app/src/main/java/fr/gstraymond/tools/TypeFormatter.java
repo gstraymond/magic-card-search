@@ -1,6 +1,6 @@
 package fr.gstraymond.tools;
 
-import fr.gstraymond.models.response.Card;
+import fr.gstraymond.models.search.response.Card;
 
 public class TypeFormatter {
 

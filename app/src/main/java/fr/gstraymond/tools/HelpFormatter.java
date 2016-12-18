@@ -8,7 +8,7 @@ import android.text.TextUtils;
 import java.util.List;
 
 import fr.gstraymond.biz.CastingCostImageGetter;
-import fr.gstraymond.search.help.HelpText;
+import fr.gstraymond.models.HelpText;
 
 public class HelpFormatter {
 

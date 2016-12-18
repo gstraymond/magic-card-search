@@ -15,9 +15,9 @@ import java.util.ArrayList;
 import fr.gstraymond.R;
 import fr.gstraymond.android.CardListActivity;
 import fr.gstraymond.android.fragment.CardListFragment;
-import fr.gstraymond.models.response.Card;
-import fr.gstraymond.models.response.Hit;
-import fr.gstraymond.models.response.SearchResult;
+import fr.gstraymond.models.search.response.Card;
+import fr.gstraymond.models.search.response.Hit;
+import fr.gstraymond.models.search.response.SearchResult;
 import fr.gstraymond.ui.FacetOnChildClickListener;
 import fr.gstraymond.ui.adapter.FacetListAdapter;
 

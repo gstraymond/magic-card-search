@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 import fr.gstraymond.R;
-import fr.gstraymond.models.request.facet.Facet;
+import fr.gstraymond.models.search.request.facet.Facet;
 
 public class FacetConst {
 

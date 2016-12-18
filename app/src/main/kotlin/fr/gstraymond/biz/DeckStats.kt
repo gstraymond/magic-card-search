@@ -1,6 +1,6 @@
 package fr.gstraymond.biz
 
-import fr.gstraymond.db.json.CardWithOccurrence
+import fr.gstraymond.models.CardWithOccurrence
 
 class DeckStats(cards: List<CardWithOccurrence>) {
 

@@ -16,8 +16,8 @@ import java.util.Map.Entry;
 import fr.gstraymond.R;
 import fr.gstraymond.biz.SearchOptions;
 import fr.gstraymond.constants.FacetConst;
-import fr.gstraymond.models.response.Facet;
-import fr.gstraymond.models.response.Term;
+import fr.gstraymond.models.search.response.Facet;
+import fr.gstraymond.models.search.response.Term;
 
 
 public class FacetListAdapter extends BaseExpandableListAdapter {

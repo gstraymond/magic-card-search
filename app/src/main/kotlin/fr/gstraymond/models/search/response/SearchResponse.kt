@@ -1,4 +1,4 @@
-package fr.gstraymond.models.response
+package fr.gstraymond.models.search.response
 
 data class SearchResult(val took: Int,
                         val hits: Hits,

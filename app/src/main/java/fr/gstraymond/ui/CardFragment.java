@@ -16,7 +16,7 @@ import fr.gstraymond.R;
 import fr.gstraymond.biz.PictureRequestListener;
 import fr.gstraymond.glide.CardLoader;
 import fr.gstraymond.glide.RoundedCornersTransformation;
-import fr.gstraymond.models.response.Card;
+import fr.gstraymond.models.search.response.Card;
 
 public class CardFragment extends Fragment implements PictureRequestListener.Callbacks {
 

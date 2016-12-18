@@ -5,7 +5,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.TextView
 import fr.gstraymond.R
-import fr.gstraymond.db.json.CardWithOccurrence
+import fr.gstraymond.models.CardWithOccurrence
 
 class DeckDetailAdapter(private val cards: List<CardWithOccurrence>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 

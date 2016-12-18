@@ -6,7 +6,7 @@ import android.os.AsyncTask
 import fr.gstraymond.biz.DeckStats
 import fr.gstraymond.db.json.Decklist
 import fr.gstraymond.db.json.JsonDeck
-import fr.gstraymond.search.model.Deck
+import fr.gstraymond.models.Deck
 import java.util.*
 
 class DeckImporterTask(val contentResolver: ContentResolver,

@@ -10,7 +10,7 @@ import fr.gstraymond.R;
 import fr.gstraymond.android.CardListActivity;
 import fr.gstraymond.android.CustomApplication;
 import fr.gstraymond.android.fragment.CardListFragment;
-import fr.gstraymond.models.response.SearchResult;
+import fr.gstraymond.models.search.response.SearchResult;
 
 import static android.widget.Toast.LENGTH_SHORT;
 import static android.widget.Toast.makeText;

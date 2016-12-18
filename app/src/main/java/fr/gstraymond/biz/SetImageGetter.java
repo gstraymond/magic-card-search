@@ -8,7 +8,7 @@ import com.magic.card.search.commons.log.Log;
 
 import java.io.IOException;
 
-import fr.gstraymond.models.response.Publication;
+import fr.gstraymond.models.search.response.Publication;
 
 public class SetImageGetter {
 

@@ -9,7 +9,7 @@ import java.util.regex.Pattern;
 import fr.gstraymond.constants.Abilities;
 import fr.gstraymond.constants.KeywordAbilities;
 import fr.gstraymond.constants.Zones;
-import fr.gstraymond.models.response.Card;
+import fr.gstraymond.models.search.response.Card;
 
 public class DescriptionFormatter {
 

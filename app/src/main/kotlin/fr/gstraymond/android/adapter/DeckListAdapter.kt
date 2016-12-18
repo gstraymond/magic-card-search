@@ -11,7 +11,7 @@ import android.widget.TextView
 import fr.gstraymond.R
 import fr.gstraymond.biz.CastingCostImageGetter
 import fr.gstraymond.biz.Colors
-import fr.gstraymond.search.model.Deck
+import fr.gstraymond.models.Deck
 import fr.gstraymond.tools.CastingCostFormatter
 import java.util.*
 

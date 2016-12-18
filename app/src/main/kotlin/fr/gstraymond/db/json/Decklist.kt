@@ -3,7 +3,7 @@ package fr.gstraymond.db.json
 import android.content.Context
 import com.magic.card.search.commons.json.MapperUtil
 import com.squareup.moshi.Moshi
-import fr.gstraymond.search.model.Deck
+import fr.gstraymond.models.Deck
 
 class Decklist(context: Context, moshi: Moshi) :
         JsonList<Deck>(context, MapperUtil.fromCollectionType(moshi, Deck::class.java), "deck") {

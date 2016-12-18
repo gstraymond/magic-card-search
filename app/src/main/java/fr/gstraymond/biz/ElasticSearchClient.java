@@ -12,8 +12,8 @@ import java.util.Collections;
 import java.util.List;
 
 import fr.gstraymond.db.json.JsonHistoryDataSource;
-import fr.gstraymond.models.request.Request;
-import fr.gstraymond.models.response.SearchResult;
+import fr.gstraymond.models.search.request.Request;
+import fr.gstraymond.models.search.response.SearchResult;
 import fr.gstraymond.network.ElasticSearchConnector;
 import fr.gstraymond.network.Result;
 

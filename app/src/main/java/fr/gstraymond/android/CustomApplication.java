@@ -9,8 +9,8 @@ import fr.gstraymond.db.json.JsonDeck;
 import fr.gstraymond.db.json.JsonHistoryDataSource;
 import fr.gstraymond.db.json.Wishlist;
 import fr.gstraymond.impex.DeckResolver;
-import fr.gstraymond.models.request.Request;
-import fr.gstraymond.models.response.SearchResult;
+import fr.gstraymond.models.search.request.Request;
+import fr.gstraymond.models.search.response.SearchResult;
 import fr.gstraymond.network.ElasticSearchConnector;
 import fr.gstraymond.tools.VersionUtils;
 

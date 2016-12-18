@@ -4,7 +4,7 @@ import android.os.Bundle;
 
 import com.crashlytics.android.answers.ContentViewEvent;
 
-import fr.gstraymond.models.response.Card;
+import fr.gstraymond.models.search.response.Card;
 import fr.gstraymond.tools.LanguageUtil;
 
 import static fr.gstraymond.constants.Consts.CARD;

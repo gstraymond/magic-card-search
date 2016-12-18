@@ -1,7 +1,6 @@
 package fr.gstraymond.android.fragment;
 
 import android.app.Activity;
-import android.app.ListFragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -16,7 +15,7 @@ import java.util.Map;
 
 import fr.gstraymond.R;
 import fr.gstraymond.android.CustomActivity;
-import fr.gstraymond.db.json.JsonHistory;
+import fr.gstraymond.models.JsonHistory;
 import fr.gstraymond.db.json.JsonHistoryDataSource;
 import fr.gstraymond.ui.adapter.HistoryArrayAdapter;
 

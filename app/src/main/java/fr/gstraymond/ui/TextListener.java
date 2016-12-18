@@ -11,7 +11,7 @@ import java.util.Map;
 
 import fr.gstraymond.R;
 import fr.gstraymond.android.CardListActivity;
-import fr.gstraymond.autocomplete.response.Option;
+import fr.gstraymond.models.autocomplete.response.Option;
 import fr.gstraymond.biz.AutocompleteProcessor;
 import fr.gstraymond.biz.SearchOptions;
 import fr.gstraymond.biz.SearchProcessor;

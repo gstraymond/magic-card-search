@@ -8,7 +8,7 @@ import android.widget.TextView;
 
 import fr.gstraymond.R;
 import fr.gstraymond.biz.CastingCostImageGetter;
-import fr.gstraymond.models.response.Card;
+import fr.gstraymond.models.search.response.Card;
 import fr.gstraymond.tools.CastingCostFormatter;
 import fr.gstraymond.ui.view.CommonDisplayableView;
 

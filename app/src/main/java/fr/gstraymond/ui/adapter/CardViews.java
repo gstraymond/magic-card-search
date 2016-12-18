@@ -8,7 +8,7 @@ import java.util.List;
 
 import fr.gstraymond.api.ui.view.DisplayableView;
 import fr.gstraymond.db.json.JsonList;
-import fr.gstraymond.models.response.Card;
+import fr.gstraymond.models.search.response.Card;
 import fr.gstraymond.ui.view.impl.CastingCostView;
 import fr.gstraymond.ui.view.impl.CostView;
 import fr.gstraymond.ui.view.impl.DescriptionView;

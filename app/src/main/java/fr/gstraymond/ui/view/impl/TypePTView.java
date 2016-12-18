@@ -3,7 +3,7 @@ package fr.gstraymond.ui.view.impl;
 import android.widget.TextView;
 
 import fr.gstraymond.R;
-import fr.gstraymond.models.response.Card;
+import fr.gstraymond.models.search.response.Card;
 import fr.gstraymond.tools.PowerToughnessFormatter;
 import fr.gstraymond.tools.TypeFormatter;
 import fr.gstraymond.ui.view.CommonDisplayableView;

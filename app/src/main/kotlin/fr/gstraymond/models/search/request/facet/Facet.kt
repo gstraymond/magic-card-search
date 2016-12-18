@@ -1,4 +1,4 @@
-package fr.gstraymond.models.request.facet
+package fr.gstraymond.models.search.request.facet
 
 data class Facet(val terms: Term) {
     companion object {

@@ -13,7 +13,7 @@ import com.crashlytics.android.answers.ContentViewEvent;
 import fr.gstraymond.R;
 import fr.gstraymond.android.adapter.WishlistAdapter;
 import fr.gstraymond.db.json.JsonList;
-import fr.gstraymond.models.response.Card;
+import fr.gstraymond.models.search.response.Card;
 
 import static fr.gstraymond.constants.Consts.CARD;
 

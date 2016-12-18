@@ -1,8 +1,8 @@
-package fr.gstraymond.models.request
+package fr.gstraymond.models.search.request
 
 import fr.gstraymond.biz.SearchOptions
 import fr.gstraymond.constants.FacetConst
-import fr.gstraymond.models.request.facet.Facet
+import fr.gstraymond.models.search.request.facet.Facet
 
 data class Request(val query: Query,
                    val from: Int,

@@ -18,8 +18,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import fr.gstraymond.R;
-import fr.gstraymond.autocomplete.response.Option;
-import fr.gstraymond.autocomplete.response.Payload;
+import fr.gstraymond.models.autocomplete.response.Option;
+import fr.gstraymond.models.autocomplete.response.Payload;
 import fr.gstraymond.biz.SetImageGetter;
 import fr.gstraymond.tools.CardColorUtil;
 

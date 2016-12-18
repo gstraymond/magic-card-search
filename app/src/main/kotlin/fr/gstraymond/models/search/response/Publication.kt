@@ -1,4 +1,4 @@
-package fr.gstraymond.models.response
+package fr.gstraymond.models.search.response
 
 import android.os.Parcel
 import android.os.Parcelable
