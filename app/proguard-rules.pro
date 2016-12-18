@@ -1,13 +1,7 @@
--keepnames class com.fasterxml.jackson.** { *; }
-
--dontwarn com.fasterxml.jackson.databind.**
-
--keepclassmembers public final enum org.codehaus.jackson.annotate.JsonAutoDetect$Visibility {
-  public static final org.codehaus.jackson.annotate.JsonAutoDetect$Visibility *;
-}
+-dontwarn okio.**
 
 -keep class fr.gstraymond.** { *; }
--keepclassmembers class fr.gstraymond.** { *; }
+-keep class com.magic.card.search.commons.application.** { *; }
 
 -assumenosideeffects class android.util.Log {
     public static boolean isLoggable(java.lang.String, int);

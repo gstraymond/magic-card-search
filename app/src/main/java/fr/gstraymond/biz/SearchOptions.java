@@ -23,8 +23,8 @@ public class SearchOptions extends CustomParcelable {
     private boolean fromOkGoogle = false;
     private int from = 0;
     private int size = 30;
-    private Facets facets = new Facets();
-    private Map<String, Integer> facetSize = new HashMap<String, Integer>();
+    private Map<String, List<String>> facets = new HashMap<>();
+    private Map<String, Integer> facetSize = new HashMap<>();
 
 
     public static final Parcelable.Creator<SearchOptions> CREATOR = new Parcelable.Creator<SearchOptions>() {
@@ -125,7 +125,7 @@ public class SearchOptions extends CustomParcelable {
         if (facets.containsKey(facet)) {
             facets.get(facet).add(term);
         } else {
-            List<String> terms = new ArrayList<String>();
+            List<String> terms = new ArrayList<>();
             terms.add(term);
             facets.put(facet, terms);
         }
@@ -153,16 +153,16 @@ public class SearchOptions extends CustomParcelable {
         return this;
     }
 
-    public Facets getFacets() {
+    public Map<String, List<String>> getFacets() {
         return facets;
     }
 
-    public SearchOptions setFacets(Facets facets) {
+    public SearchOptions setFacets(Map<String, List<String>> facets) {
         this.facets = facets;
         return this;
     }
 
-    public boolean isAddToHistory() {
+    boolean isAddToHistory() {
         return addToHistory;
     }
 
@@ -184,7 +184,7 @@ public class SearchOptions extends CustomParcelable {
         return this;
     }
 
-    public boolean isFromOkGoogle() {
+    boolean isFromOkGoogle() {
         return fromOkGoogle;
     }
 

@@ -5,9 +5,9 @@ import android.os.AsyncTask;
 
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.CustomEvent;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.magic.card.search.commons.json.MapperUtil;
 import com.magic.card.search.commons.log.Log;
+import com.squareup.moshi.Moshi;
 
 import java.util.List;
 
@@ -44,7 +44,7 @@ public class AutocompleteProcessor extends AsyncTask<String, String, Autocomplet
 
     private Log log = new Log(this);
 
-    public AutocompleteProcessor(ObjectMapper objectMapper, Context context, Callbacks callbacks) {
+    public AutocompleteProcessor(Moshi objectMapper, Context context, Callbacks callbacks) {
         MapperUtil<AutocompleteResult> mapperUtil = MapperUtil.fromType(objectMapper, AutocompleteResult.class);
         this.connector = new ElasticSearchConnector<>(VersionUtils.getAppName(context), mapperUtil);
         this.callbacks = callbacks;

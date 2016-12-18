@@ -2,18 +2,16 @@ package fr.gstraymond.android;
 
 import com.magic.card.search.commons.application.BaseApplication;
 import com.magic.card.search.commons.json.MapperUtil;
-import com.magic.card.search.commons.log.Log;
 
-import fr.gstraymond.R;
 import fr.gstraymond.biz.ElasticSearchClient;
 import fr.gstraymond.db.json.Decklist;
 import fr.gstraymond.db.json.JsonDeck;
 import fr.gstraymond.db.json.JsonHistoryDataSource;
-import fr.gstraymond.db.json.JsonList;
 import fr.gstraymond.db.json.Wishlist;
 import fr.gstraymond.impex.DeckResolver;
+import fr.gstraymond.models.request.Request;
+import fr.gstraymond.models.response.SearchResult;
 import fr.gstraymond.network.ElasticSearchConnector;
-import fr.gstraymond.search.model.response.SearchResult;
 import fr.gstraymond.tools.VersionUtils;
 
 public class CustomApplication extends BaseApplication {
@@ -39,7 +37,10 @@ public class CustomApplication extends BaseApplication {
     }
 
     private void initElasticSearchClient(ElasticSearchConnector<SearchResult> connector) {
-        this.elasticSearchClient = new ElasticSearchClient(connector, getJsonHistoryDataSource());
+        this.elasticSearchClient = new ElasticSearchClient(
+                connector,
+                getJsonHistoryDataSource(),
+                MapperUtil.fromType(getObjectMapper(), Request.class));
     }
 
     private void initJsonHistoryDataSource() {

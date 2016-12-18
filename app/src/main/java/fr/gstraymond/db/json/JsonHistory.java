@@ -4,21 +4,22 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 import fr.gstraymond.android.CustomParcelable;
-import fr.gstraymond.biz.Facets;
 
 public class JsonHistory extends CustomParcelable {
 
     private String query;
     private Date date;
     private boolean favorite;
-    private Facets facets;
+    private Map<String, List<String>> facets;
 
     JsonHistory() {
     }
 
-    JsonHistory(String query, boolean favorite, Facets facets) {
+    JsonHistory(String query, boolean favorite, Map<String, List<String>> facets) {
         this.query = query;
         this.date = new Date();
         this.favorite = favorite;
@@ -69,7 +70,7 @@ public class JsonHistory extends CustomParcelable {
         return date;
     }
 
-    public void setDate(Date date) {
+    void setDate(Date date) {
         this.date = date;
     }
 
@@ -77,15 +78,15 @@ public class JsonHistory extends CustomParcelable {
         return favorite;
     }
 
-    public void setFavorite(boolean favorite) {
+    void setFavorite(boolean favorite) {
         this.favorite = favorite;
     }
 
-    public Facets getFacets() {
+    public Map<String, List<String>> getFacets() {
         return facets;
     }
 
-    public void setFacets(Facets facets) {
+    public void setFacets(Map<String, List<String>> facets) {
         this.facets = facets;
     }
 }

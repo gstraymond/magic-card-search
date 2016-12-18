@@ -7,16 +7,16 @@ import com.magic.card.search.commons.log.Log;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 import fr.gstraymond.R;
 import fr.gstraymond.android.CardListActivity;
 import fr.gstraymond.autocomplete.response.Option;
 import fr.gstraymond.biz.AutocompleteProcessor;
-import fr.gstraymond.biz.Facets;
 import fr.gstraymond.biz.SearchOptions;
 import fr.gstraymond.biz.SearchProcessor;
 
-import static fr.gstraymond.biz.AutocompleteProcessor.*;
+import static fr.gstraymond.biz.AutocompleteProcessor.Callbacks;
 
 public class TextListener implements OnQueryTextListener {
 
@@ -53,7 +53,7 @@ public class TextListener implements OnQueryTextListener {
     @Override
     public boolean onQueryTextSubmit(String text) {
         if (canSearch) {
-            Facets facets = activity.getCurrentSearch().getFacets();
+            Map<String, List<String>> facets = activity.getCurrentSearch().getFacets();
             SearchOptions options = new SearchOptions().setQuery(text.replace(":", "")).setFacets(facets);
             new SearchProcessor(activity, options, R.string.loading_initial).execute();
         }

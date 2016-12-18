@@ -21,19 +21,20 @@ import java.math.RoundingMode;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import fr.gstraymond.R;
 import fr.gstraymond.android.CardListActivity;
 import fr.gstraymond.biz.CastingCostImageGetter;
-import fr.gstraymond.biz.Facets;
 import fr.gstraymond.biz.SearchOptions;
 import fr.gstraymond.biz.SetImageGetter;
 import fr.gstraymond.constants.FacetConst;
 import fr.gstraymond.glide.CardLoader;
-import fr.gstraymond.search.model.response.Card;
-import fr.gstraymond.search.model.response.Publication;
+import fr.gstraymond.models.response.Card;
+import fr.gstraymond.models.response.Publication;
 import fr.gstraymond.tools.CastingCostFormatter;
 import fr.gstraymond.tools.DescriptionFormatter;
 import fr.gstraymond.tools.FormatFormatter;
@@ -67,7 +68,7 @@ public class SetArrayAdapter extends ArrayAdapter<Object> {
         this.descFormatter = new DescriptionFormatter();
         this.formatFormatter = new FormatFormatter(context);
         this.ptFormatter = new PowerToughnessFormatter();
-        this.typeFormatter = new TypeFormatter(context);
+        this.typeFormatter = new TypeFormatter();
         this.setImageGetter = new SetImageGetter(context);
         this.callbacks = callbacks;
         this.imageGetter = CastingCostImageGetter.large(getContext());
@@ -137,7 +138,7 @@ public class SetArrayAdapter extends ArrayAdapter<Object> {
                     @Override
                     public void onClick(View view) {
                         Intent intent = new Intent(getContext(), CardListActivity.class);
-                        Facets facets = new Facets();
+                        Map<String, List<String>> facets = new HashMap<>();
                         ArrayList<String> layouts = new ArrayList<>();
                         layouts.add(card.getLayout());
                         facets.put(FacetConst.LAYOUT,  layouts);

@@ -2,9 +2,9 @@ package fr.gstraymond.db.json;
 
 import android.content.Context;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.magic.card.search.commons.json.MapperUtil;
 import com.magic.card.search.commons.log.Log;
+import com.squareup.moshi.Moshi;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -28,7 +28,7 @@ public class JsonHistoryDataSource {
     private MapperUtil<List<JsonHistory>> mapperUtil;
     private Comparator<JsonHistory> jsonHistoryComparator;
 
-    public JsonHistoryDataSource(Context context, ObjectMapper objectMapper) {
+    public JsonHistoryDataSource(Context context, Moshi objectMapper) {
         this.context = context;
         this.mapperUtil = MapperUtil.fromCollectionType(objectMapper, JsonHistory.class);
         this.jsonHistoryComparator = new Comparator<JsonHistory>() {

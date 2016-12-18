@@ -5,23 +5,22 @@ import android.os.Parcelable;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import fr.gstraymond.biz.Facets;
-
 public abstract class CustomParcelable implements Parcelable {
 
-    protected Facets readFacets(Parcel source) {
+    protected Map<String, List<String>> readFacets(Parcel source) {
         return readFacets(source.readString());
     }
 
-    protected void writeFacets(Parcel dest, Facets facets) {
+    protected void writeFacets(Parcel dest, Map<String, List<String>> facets) {
         dest.writeString(writeFacets(facets));
     }
 
-    protected Facets readFacets(String facetsAsString) {
-        Facets facets = new Facets();
+    protected Map<String, List<String>> readFacets(String facetsAsString) {
+        Map<String, List<String>> facets = new HashMap<>();
 
         if (facetsAsString == null || facetsAsString.isEmpty()) {
             return facets;
@@ -42,7 +41,7 @@ public abstract class CustomParcelable implements Parcelable {
         return facets;
     }
 
-    protected String writeFacets(Facets facets) {
+    protected String writeFacets(Map<String, List<String>> facets) {
         StringBuilder facetsAsString = new StringBuilder();
         String firstSep = "";
         for (Map.Entry<String, List<String>> entry : facets.entrySet()) {

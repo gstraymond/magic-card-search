@@ -1,10 +1,9 @@
 package fr.gstraymond.ui.view.impl;
 
-import android.content.Context;
 import android.widget.TextView;
 
 import fr.gstraymond.R;
-import fr.gstraymond.search.model.response.Card;
+import fr.gstraymond.models.response.Card;
 import fr.gstraymond.tools.PowerToughnessFormatter;
 import fr.gstraymond.tools.TypeFormatter;
 import fr.gstraymond.ui.view.CommonDisplayableView;
@@ -14,9 +13,9 @@ public class TypePTView extends CommonDisplayableView<TextView> {
     private PowerToughnessFormatter ptFormatter;
     private TypeFormatter typeFormatter;
 
-    public TypePTView(Context context) {
+    public TypePTView() {
         this.ptFormatter = new PowerToughnessFormatter();
-        this.typeFormatter = new TypeFormatter(context);
+        this.typeFormatter = new TypeFormatter();
     }
 
     @Override

@@ -1,12 +1,12 @@
 package fr.gstraymond.db.json
 
 import android.content.Context
-import com.fasterxml.jackson.databind.ObjectMapper
 import com.magic.card.search.commons.json.MapperUtil
+import com.squareup.moshi.Moshi
 import fr.gstraymond.search.model.Deck
 
-class Decklist(context: Context, objectMapper: ObjectMapper) :
-        JsonList<Deck>(context, MapperUtil.fromCollectionType(objectMapper, Deck::class.java), "deck") {
+class Decklist(context: Context, moshi: Moshi) :
+        JsonList<Deck>(context, MapperUtil.fromCollectionType(moshi, Deck::class.java), "deck") {
 
     override fun getId(elem: Deck) = elem.id.toString()
 

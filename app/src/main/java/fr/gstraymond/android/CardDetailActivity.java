@@ -11,7 +11,7 @@ import android.widget.TextView;
 
 import fr.gstraymond.R;
 import fr.gstraymond.android.fragment.CardDetailFragment;
-import fr.gstraymond.search.model.response.Card;
+import fr.gstraymond.models.response.Card;
 import fr.gstraymond.tools.LanguageUtil;
 
 import static fr.gstraymond.constants.Consts.CARD;

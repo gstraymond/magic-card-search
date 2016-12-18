@@ -1,8 +1,8 @@
 package fr.gstraymond.impex
 
 import fr.gstraymond.db.json.CardWithOccurrence
+import fr.gstraymond.models.response.SearchResult
 import fr.gstraymond.network.ElasticSearchConnector
-import fr.gstraymond.search.model.response.SearchResult
 
 class DeckResolver(val connector: ElasticSearchConnector<SearchResult>) {
 

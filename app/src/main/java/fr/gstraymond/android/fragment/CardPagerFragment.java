@@ -8,7 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import fr.gstraymond.R;
-import fr.gstraymond.search.model.response.Card;
+import fr.gstraymond.models.response.Card;
 import fr.gstraymond.ui.CardViewPager;
 import fr.gstraymond.ui.adapter.CardPagerAdapter;
 

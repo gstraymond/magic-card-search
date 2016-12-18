@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 
 import fr.gstraymond.R;
 import fr.gstraymond.db.json.Wishlist;
-import fr.gstraymond.search.model.response.Card;
+import fr.gstraymond.models.response.Card;
 import fr.gstraymond.ui.adapter.CardViews;
 import fr.gstraymond.ui.view.impl.FavoriteView;
 

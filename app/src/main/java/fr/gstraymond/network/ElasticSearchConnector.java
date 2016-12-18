@@ -1,7 +1,5 @@
 package fr.gstraymond.network;
 
-import android.content.Context;
-
 import com.magic.card.search.commons.json.MapperUtil;
 import com.magic.card.search.commons.log.Log;
 

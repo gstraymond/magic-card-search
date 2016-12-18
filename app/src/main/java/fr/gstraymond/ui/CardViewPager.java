@@ -8,8 +8,8 @@ import android.util.AttributeSet;
 
 import fr.gstraymond.R;
 import fr.gstraymond.android.fragment.CardPagerFragment;
-import fr.gstraymond.search.model.response.Card;
-import fr.gstraymond.search.model.response.Publication;
+import fr.gstraymond.models.response.Card;
+import fr.gstraymond.models.response.Publication;
 
 public class CardViewPager extends ViewPager {
 

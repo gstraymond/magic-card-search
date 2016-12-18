@@ -5,8 +5,8 @@ import android.app.FragmentManager;
 import android.os.Bundle;
 import android.support.v13.app.FragmentStatePagerAdapter;
 
-import fr.gstraymond.search.model.response.Card;
-import fr.gstraymond.search.model.response.Publication;
+import fr.gstraymond.models.response.Card;
+import fr.gstraymond.models.response.Publication;
 import fr.gstraymond.ui.CardFragment;
 
 public class CardPagerAdapter extends FragmentStatePagerAdapter {

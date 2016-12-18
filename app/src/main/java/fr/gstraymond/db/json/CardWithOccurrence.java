@@ -1,6 +1,6 @@
 package fr.gstraymond.db.json;
 
-import fr.gstraymond.search.model.response.Card;
+import fr.gstraymond.models.response.Card;
 
 public class CardWithOccurrence {
 

@@ -11,7 +11,7 @@ import java.util.List;
 
 import fr.gstraymond.R;
 import fr.gstraymond.db.json.JsonList;
-import fr.gstraymond.search.model.response.Card;
+import fr.gstraymond.models.response.Card;
 import fr.gstraymond.ui.view.impl.FavoriteView;
 
 public class CardArrayAdapter extends ArrayAdapter<Card> {

@@ -9,7 +9,7 @@ import com.magic.card.search.commons.json.MapperUtil;
 import fr.gstraymond.R;
 import fr.gstraymond.biz.SearchOptions;
 import fr.gstraymond.biz.SplashProcessor;
-import fr.gstraymond.search.model.response.SearchResult;
+import fr.gstraymond.models.response.SearchResult;
 
 public class SplashScreenActivity extends CustomActivity {
 

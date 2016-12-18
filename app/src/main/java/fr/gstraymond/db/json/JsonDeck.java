@@ -3,9 +3,9 @@ package fr.gstraymond.db.json;
 
 import android.content.Context;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.magic.card.search.commons.json.MapperUtil;
 import com.magic.card.search.commons.log.Log;
+import com.squareup.moshi.Moshi;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -20,7 +20,7 @@ public class JsonDeck {
     private Context context;
     private MapperUtil<List<CardWithOccurrence>> mapperUtil;
 
-    public JsonDeck(Context context, ObjectMapper objectMapper) {
+    public JsonDeck(Context context, Moshi objectMapper) {
         this.context = context;
         this.mapperUtil = MapperUtil.fromCollectionType(objectMapper, CardWithOccurrence.class);
     }

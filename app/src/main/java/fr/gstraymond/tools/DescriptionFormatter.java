@@ -8,9 +8,8 @@ import java.util.regex.Pattern;
 
 import fr.gstraymond.constants.Abilities;
 import fr.gstraymond.constants.KeywordAbilities;
-import fr.gstraymond.constants.KeywordActions;
 import fr.gstraymond.constants.Zones;
-import fr.gstraymond.search.model.response.Card;
+import fr.gstraymond.models.response.Card;
 
 public class DescriptionFormatter {
 
@@ -21,7 +20,7 @@ public class DescriptionFormatter {
     }
 
     public String format(Card card, Boolean highlight) {
-        if (card.getDescription() == null) {
+        if ("".equals(card.getDescription())) {
             return "";
         }
 

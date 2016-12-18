@@ -9,7 +9,7 @@ import android.view.MenuItem;
 
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.ContentViewEvent;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.squareup.moshi.Moshi;
 
 import fr.gstraymond.db.json.JsonHistoryDataSource;
 
@@ -19,7 +19,7 @@ public abstract class CustomActivity extends AppCompatActivity {
         return (CustomApplication) getApplication();
     }
 
-    public ObjectMapper getObjectMapper() {
+    public Moshi getObjectMapper() {
         return getCustomApplication().getObjectMapper();
     }
 

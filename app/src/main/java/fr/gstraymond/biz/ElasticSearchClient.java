@@ -4,6 +4,7 @@ import android.text.TextUtils;
 
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.SearchEvent;
+import com.magic.card.search.commons.json.MapperUtil;
 import com.magic.card.search.commons.log.Log;
 
 import java.util.ArrayList;
@@ -11,21 +12,25 @@ import java.util.Collections;
 import java.util.List;
 
 import fr.gstraymond.db.json.JsonHistoryDataSource;
+import fr.gstraymond.models.request.Request;
+import fr.gstraymond.models.response.SearchResult;
 import fr.gstraymond.network.ElasticSearchConnector;
 import fr.gstraymond.network.Result;
-import fr.gstraymond.search.model.request.Request;
-import fr.gstraymond.search.model.response.SearchResult;
 
 public class ElasticSearchClient {
 
     private JsonHistoryDataSource historyDataSource;
     private ElasticSearchConnector<SearchResult> connector;
+    private MapperUtil<Request> mapperUtil;
 
     private Log log = new Log(this);
 
-    public ElasticSearchClient(ElasticSearchConnector<SearchResult> connector, JsonHistoryDataSource jsonHistoryDataSource) {
+    public ElasticSearchClient(ElasticSearchConnector<SearchResult> connector,
+                               JsonHistoryDataSource jsonHistoryDataSource,
+                               MapperUtil<Request> mapperUtil) {
         this.historyDataSource = jsonHistoryDataSource;
         this.connector = connector;
+        this.mapperUtil = mapperUtil;
     }
 
     interface CallBacks {
@@ -41,8 +46,8 @@ public class ElasticSearchClient {
     SearchResult process(SearchOptions options, CallBacks callbacks) {
         callbacks.start();
         log.d("options as json : %s", options);
-        Request request = new Request(options);
-        String queryAsJson = connector.getMapperUtil().asJsonString(request);
+        Request request = Request.Companion.fromOptions(options);
+        String queryAsJson = mapperUtil.asJsonString(request);
         callbacks.buildRequest();
 
         if (options.isAddToHistory()) {

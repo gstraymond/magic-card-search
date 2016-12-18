@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 import fr.gstraymond.R;
-import fr.gstraymond.search.model.request.facet.Facet;
+import fr.gstraymond.models.request.facet.Facet;
 
 public class FacetConst {
 
@@ -72,7 +72,7 @@ public class FacetConst {
     }
 
     private static void putInFacets(Map<String, Facet> facets, String facet) {
-        facets.put(facet, new Facet(facet));
+        facets.put(facet, Facet.Companion.fromField(facet));
     }
 
     public static Map<String, Facet> getFacets() {
