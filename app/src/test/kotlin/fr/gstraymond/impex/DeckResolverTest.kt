@@ -1,7 +1,7 @@
 package fr.gstraymond.impex
 
 import com.magic.card.search.commons.json.MapperUtil
-import fr.gstraymond.network.ElasticSearchConnector
+import fr.gstraymond.network.ElasticSearchService
 import fr.gstraymond.models.search.response.SearchResult
 import org.junit.Assert.assertEquals
 import org.junit.Test

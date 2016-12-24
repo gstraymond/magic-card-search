@@ -142,7 +142,7 @@ public class SetArrayAdapter extends ArrayAdapter<Object> {
                         ArrayList<String> layouts = new ArrayList<>();
                         layouts.add(card.getLayout());
                         facets.put(FacetConst.LAYOUT,  layouts);
-                        SearchOptions options = new SearchOptions().setQuery(card.getTitle()).setFacets(facets);
+                        SearchOptions options = new SearchOptions().updateQuery(card.getTitle()).updateFacets(facets);
                         intent.putExtra(CardListActivity.SEARCH_QUERY, options);
                         getContext().startActivity(intent);
                     }

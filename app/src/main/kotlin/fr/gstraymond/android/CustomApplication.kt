@@ -9,8 +9,7 @@ import fr.gstraymond.db.json.JsonHistoryDataSource
 import fr.gstraymond.db.json.Wishlist
 import fr.gstraymond.impex.DeckResolver
 import fr.gstraymond.models.search.request.Request
-import fr.gstraymond.models.search.response.SearchResult
-import fr.gstraymond.network.ElasticSearchConnector
+import fr.gstraymond.network.ElasticSearchApi
 import fr.gstraymond.network.ElasticSearchService
 import fr.gstraymond.tools.VersionUtils
 import okhttp3.OkHttpClient
@@ -20,7 +19,7 @@ import retrofit2.converter.moshi.MoshiConverterFactory
 class CustomApplication : BaseApplication() {
 
     lateinit var elasticSearchClient: ElasticSearchClient // FIXME remove me
-    lateinit var elasticSearchService: ElasticSearchService
+    lateinit var searchService: ElasticSearchService
     lateinit var jsonHistoryDataSource: JsonHistoryDataSource
     lateinit var wishlist: Wishlist
     lateinit var decklist: Decklist
@@ -32,13 +31,13 @@ class CustomApplication : BaseApplication() {
 
     override fun onCreate() {
         super.onCreate()
-        val connector = ElasticSearchConnector(VersionUtils.getAppName(this), MapperUtil.fromType(objectMapper, SearchResult::class.java))
-        elasticSearchService = buildRetrofit().create(ElasticSearchService::class.java)
+        val elasticSearchApi = buildRetrofit().create(ElasticSearchApi::class.java)
+        searchService = ElasticSearchService(elasticSearchApi)
 
         jsonHistoryDataSource = JsonHistoryDataSource(this, objectMapper).apply { migrate() }
 
         elasticSearchClient = ElasticSearchClient(
-                elasticSearchService,
+                searchService,
                 jsonHistoryDataSource,
                 MapperUtil.fromType(objectMapper, Request::class.java))
 
@@ -46,7 +45,7 @@ class CustomApplication : BaseApplication() {
         decklist = Decklist(this, objectMapper)
         jsonDeck = JsonDeck(this, objectMapper)
 
-        deckResolver = DeckResolver(connector)
+        deckResolver = DeckResolver(searchService)
     }
 
     private fun buildRetrofit(): Retrofit {

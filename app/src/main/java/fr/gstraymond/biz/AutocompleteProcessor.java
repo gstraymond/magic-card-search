@@ -1,6 +1,5 @@
 package fr.gstraymond.biz;
 
-import android.content.Context;
 import android.os.AsyncTask;
 
 import com.crashlytics.android.answers.Answers;
@@ -14,21 +13,19 @@ import java.util.List;
 import fr.gstraymond.models.autocomplete.request.AutocompleteRequest;
 import fr.gstraymond.models.autocomplete.response.AutocompleteResult;
 import fr.gstraymond.models.autocomplete.response.Option;
-import fr.gstraymond.network.ElasticSearchConnector;
+import fr.gstraymond.network.ElasticSearchService;
 import fr.gstraymond.network.Result;
-import fr.gstraymond.tools.VersionUtils;
 
 public class AutocompleteProcessor extends AsyncTask<String, String, AutocompleteResult> {
 
-    private ElasticSearchConnector<AutocompleteResult> connector;
+    private ElasticSearchService searchService;
     private Callbacks callbacks;
     private MapperUtil<AutocompleteRequest> mapperUtil;
 
     private Log log = new Log(this);
 
-    public AutocompleteProcessor(Moshi objectMapper, Context context, Callbacks callbacks) {
-        MapperUtil<AutocompleteResult> mapperUtil = MapperUtil.fromType(objectMapper, AutocompleteResult.class);
-        this.connector = new ElasticSearchConnector<>(VersionUtils.getAppName(context), mapperUtil);
+    public AutocompleteProcessor(Moshi objectMapper, ElasticSearchService searchService, Callbacks callbacks) {
+        this.searchService = searchService;
         this.callbacks = callbacks;
         this.mapperUtil = MapperUtil.fromType(objectMapper, AutocompleteRequest.class);
     }
@@ -37,17 +34,16 @@ public class AutocompleteProcessor extends AsyncTask<String, String, Autocomplet
     protected AutocompleteResult doInBackground(String... strings) {
         String query = strings[0];
         String q = mapperUtil.asJsonString(AutocompleteRequest.Companion.withQuery(query));
-        Result<AutocompleteResult> result = connector.connect("autocomplete/card/_search", "source", q);
+        Result<AutocompleteResult> result = searchService.autocomplete(q);
         if (result == null) return AutocompleteResult.Companion.empty();
 
         CustomEvent event = new CustomEvent("autocomplete")
-                .putCustomAttribute("results", result.elem.getResults().size())
-                .putCustomAttribute("http duration", result.httpDuration)
-                .putCustomAttribute("parse duration", result.parseDuration);
+                .putCustomAttribute("results", result.getElem().getResults().size())
+                .putCustomAttribute("http duration", result.getHttpDuration());
         if (query.length() > 2) event.putCustomAttribute("query", query);
         Answers.getInstance().logCustom(event);
 
-        return result.elem;
+        return result.getElem();
     }
 
     @Override

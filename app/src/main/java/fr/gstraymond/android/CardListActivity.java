@@ -312,7 +312,7 @@ public class CardListActivity extends CustomActivity implements
 
             case R.id.clear_tab:
                 resetSearchView();
-                SearchOptions options = new SearchOptions().setRandom(true).setAddToHistory(false);
+                SearchOptions options = new SearchOptions().updateRandom(true).updateAddToHistory(false);
                 new SearchProcessor(this, options, R.string.loading_clear)
                         .execute();
                 openDrawer();
@@ -348,9 +348,9 @@ public class CardListActivity extends CustomActivity implements
                     }
 
                     currentSearch = new SearchOptions()
-                            .setQuery(history.getQuery())
-                            .setFacets(history.getFacets())
-                            .setAddToHistory(false);
+                            .updateQuery(history.getQuery())
+                            .updateFacets(history.getFacets())
+                            .updateAddToHistory(false);
                     new SearchProcessor(this, currentSearch, R.string.loading_initial).execute();
                 }
                 break;

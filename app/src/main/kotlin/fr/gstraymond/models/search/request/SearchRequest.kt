@@ -14,7 +14,7 @@ data class Request(val query: Query,
                 Request(query = Query.fromOptions(options),
                         from = options.from,
                         size = options.size,
-                        facets = when (options.isAppend) {
+                        facets = when (options.append) {
                             true -> mapOf()
                             else -> FacetConst.getFacets().apply {
                                 options.facetSize.forEach { facetSize ->
@@ -22,7 +22,7 @@ data class Request(val query: Query,
                                 }
                             }
                         },
-                        sort = when (SearchOptions.QUERY_ALL == options.query && !options.isRandom) {
+                        sort = when (SearchOptions.QUERY_ALL == options.query && !options.random) {
                             true -> listOf("_uid")
                             else -> listOf()
                         }
@@ -46,7 +46,7 @@ data class Bool(val must: List<Any>) {
     companion object {
         fun fromOptions(options: SearchOptions): Bool {
             val must = mutableListOf<Any>()
-            must.add(when (options.isRandom) {
+            must.add(when (options.random) {
                 true -> FunctionScore()
                 else -> QueryString(Query_string(options.query))
             })

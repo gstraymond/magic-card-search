@@ -31,7 +31,9 @@ public class FacetOnChildClickListener implements OnChildClickListener {
         String facet = adapter.getFacet(groupPosition);
         int textId = R.string.loading_facet;
 
-        options.setAppend(false).setFrom(0).setAddToHistory(true);
+
+
+        options.updateAppend(false).updateFrom(0).updateAddToHistory(true);
 
         if (term.getCount() > -1) {
             if (adapter.isTermSelected(term)) {
@@ -45,7 +47,7 @@ public class FacetOnChildClickListener implements OnChildClickListener {
         }
 
         if ("*".equals(options.getQuery()) && options.getFacets().isEmpty()) {
-            options.setAddToHistory(false);
+            options.updateAddToHistory(false);
         }
 
         new SearchProcessor(activity, options, textId).execute();

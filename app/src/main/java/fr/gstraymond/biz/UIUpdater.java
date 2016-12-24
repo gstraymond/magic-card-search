@@ -71,7 +71,7 @@ public class UIUpdater extends AsyncTask<Void, Void, SearchResult> {
 
     private void updateUIList(int totalCardCount, ArrayList<Card> cards) {
         if (!activity.isFinishing()) {
-            if (getOptions().isAppend()) {
+            if (getOptions().getAppend()) {
                 getCardListFragment().appendCards(cards);
             } else {
                 Bundle bundle = new Bundle();
@@ -85,7 +85,7 @@ public class UIUpdater extends AsyncTask<Void, Void, SearchResult> {
 
 
     private void updateUIFacets(SearchResult result) {
-        if (!getOptions().isAppend()) {
+        if (!getOptions().getAppend()) {
             FacetListAdapter adapter = new FacetListAdapter(result.getFacets(), getOptions(), activity);
             getFacetListView().setAdapter(adapter);
 
