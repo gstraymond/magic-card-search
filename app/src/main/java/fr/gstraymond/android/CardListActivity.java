@@ -153,13 +153,13 @@ public class CardListActivity extends CustomActivity implements
             }
         });
 
-        /*FloatingActionButton fab_deck = (FloatingActionButton) findViewById(R.id.fab_deck);
+        FloatingActionButton fab_deck = (FloatingActionButton) findViewById(R.id.fab_deck);
         fab_deck.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(view.getContext(), DeckListActivity.class));
             }
-        });*/
+        });
     }
 
     @Override

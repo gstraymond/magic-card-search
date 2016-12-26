@@ -24,6 +24,7 @@ class DeckListAdapter(context: Context) : RecyclerView.Adapter<RecyclerView.View
     private val selectedItems = SparseBooleanArray()
 
     var decks: List<Deck> = listOf()
+
     var onClickListener: (String) -> View.OnClickListener? = { deckId -> null }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {

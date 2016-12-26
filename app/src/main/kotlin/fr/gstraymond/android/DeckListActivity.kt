@@ -4,11 +4,10 @@ import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.Toolbar
-import android.view.Menu
-import android.view.MenuItem
-import android.view.View
+import android.view.*
 import fr.gstraymond.R
 import fr.gstraymond.android.adapter.DeckListAdapter
+import fr.gstraymond.models.Deck
 
 class DeckListActivity : CustomActivity() {
 
@@ -22,7 +21,7 @@ class DeckListActivity : CustomActivity() {
         setSupportActionBar(toolbar)
         supportActionBar?.apply {
             setDisplayHomeAsUpEnabled(true)
-            title = "Deck Manager" // getString(R.string.wishlist_title)
+            title = "Deck Manager" // FIXME getString(R.string.wishlist_title)
         }
 
         deckListAdapter = DeckListAdapter(this).apply {
@@ -57,7 +56,7 @@ class DeckListActivity : CustomActivity() {
 
     private fun getDecks() = customApplication.decklist.elems
 
-    private fun getSortedDecks() = getDecks().sortedBy { it.timestamp }.reversed()
+    private fun getSortedDecks() = getDecks().sortedBy(Deck::timestamp).reversed()
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.deck_list_menu, menu)

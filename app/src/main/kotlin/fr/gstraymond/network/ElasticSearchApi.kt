@@ -11,7 +11,8 @@ interface ElasticSearchApi {
     fun search(@Query("source") source: String): Call<SearchResult>
 
     @GET("magic/card/_search")
-    fun resolve(@Query("q") query: String, size: Int = 10): Call<SearchResult>
+    fun resolve(@Query("q") query: String,
+                @Query("size") size: Int = 10): Call<SearchResult>
 
     @GET("autocomplete/card/_search")
     fun autocomplete(@Query("source") source: String): Call<AutocompleteResult>
