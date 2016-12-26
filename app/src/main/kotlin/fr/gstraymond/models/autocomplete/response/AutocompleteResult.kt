@@ -13,8 +13,8 @@ data class Suggest(val card: List<Card>)
 data class Card(val options: List<Option>)
 
 data class Option(val text: String,
-                  val payload: Payload)
+                  val payload: Payload?)
 
-data class Payload(val stdEditionCode: String,
+data class Payload(val stdEditionCode: String?,
                    val colors: List<String>,
                    val type: String)

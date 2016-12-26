@@ -193,7 +193,7 @@ public class CardListActivity extends CustomActivity implements
             }
         };
 
-        suggestionsAdapter = SearchViewCursorAdapter.empty(this);
+        suggestionsAdapter = SearchViewCursorAdapter.Companion.empty(this);
 
         // Sync the toggle state after onRestoreInstanceState has occurred.
         drawerToggle.syncState();
