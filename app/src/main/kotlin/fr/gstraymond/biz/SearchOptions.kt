@@ -86,19 +86,6 @@ data class SearchOptions(var query: String = QUERY_ALL,
         this.addToHistory = addToHistory
     }
 
-    override fun toString(): String {
-        return String.format(
-                "searchOptions:[query:%s, append:%s, random:%s, addToHistory:%s, from:%s, size:%s, facets:%s, facetSize:%s]",
-                query,
-                append,
-                random,
-                addToHistory,
-                from,
-                size,
-                facets,
-                facetSize)
-    }
-
     companion object {
         val QUERY_ALL = "*"
 

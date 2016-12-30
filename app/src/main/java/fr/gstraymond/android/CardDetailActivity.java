@@ -60,8 +60,18 @@ public class CardDetailActivity extends CardCommonActivity implements
     public void onItemSelected(int id) {
         Intent intent = new Intent(this, CardPagerActivity.class);
         intent.putExtra(CARD, getCard());
-        // first element is a card
-        intent.putExtra(POSITION, id - 1);
+        intent.putExtra(POSITION, id);
+        startActivity(intent);
+    }
+
+    @Override
+    public void onListSelected(String list) {
+        Intent intent;
+        if ("wishlist".equals(list)) {
+            intent = new Intent(this, WishListActivity.class);
+        } else {
+            intent = DeckDetailActivity.Companion.getIntent(this, list);
+        }
         startActivity(intent);
     }
 

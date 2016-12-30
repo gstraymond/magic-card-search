@@ -29,16 +29,15 @@ import java.util.Arrays;
 import java.util.List;
 
 import fr.gstraymond.R;
-import fr.gstraymond.android.fragment.CardDetailFragment;
 import fr.gstraymond.android.fragment.CardListFragment;
 import fr.gstraymond.android.fragment.CardParentListFragment;
-import fr.gstraymond.models.autocomplete.response.Option;
 import fr.gstraymond.biz.AutocompleteProcessor;
 import fr.gstraymond.biz.ProgressBarUpdater;
 import fr.gstraymond.biz.SearchOptions;
 import fr.gstraymond.biz.SearchProcessor;
 import fr.gstraymond.biz.UIUpdater;
 import fr.gstraymond.models.JsonHistory;
+import fr.gstraymond.models.autocomplete.response.Option;
 import fr.gstraymond.models.search.response.Card;
 import fr.gstraymond.ui.EndScrollListener;
 import fr.gstraymond.ui.TextListener;
@@ -46,11 +45,9 @@ import fr.gstraymond.ui.adapter.SearchViewCursorAdapter;
 import sheetrock.panda.changelog.ChangeLog;
 
 import static fr.gstraymond.constants.Consts.CARD;
-import static fr.gstraymond.constants.Consts.POSITION;
 
 public class CardListActivity extends CustomActivity implements
         CardListFragment.Callbacks,
-        CardDetailFragment.Callbacks,
         AutocompleteProcessor.Callbacks {
 
     private static final int DRAWER_DELAY = 1200;
@@ -268,16 +265,6 @@ public class CardListActivity extends CustomActivity implements
         currentCard = (Card) card;
         Intent intent = new Intent(this, CardDetailActivity.class);
         intent.putExtra(CARD, card);
-        startActivity(intent);
-    }
-
-    @Override
-    public void onItemSelected(int id) {
-        log.d("onItemSelected id %s", id);
-        Intent intent = new Intent(this, CardPagerActivity.class);
-        intent.putExtra(CARD, currentCard);
-        // first element is a card
-        intent.putExtra(POSITION, id - 1);
         startActivity(intent);
     }
 

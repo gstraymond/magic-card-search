@@ -12,6 +12,7 @@ import fr.gstraymond.models.search.request.Request
 import fr.gstraymond.network.ElasticSearchApi
 import fr.gstraymond.network.ElasticSearchService
 import fr.gstraymond.tools.VersionUtils
+import fr.gstraymond.utils.getId
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
@@ -25,6 +26,7 @@ class CustomApplication : BaseApplication() {
     lateinit var decklist: Decklist
     lateinit var jsonDeck: JsonDeck
     lateinit var deckResolver: DeckResolver
+    lateinit var listsCardId: Map<String, List<String>>
 
     private val SEARCH_SERVER_HOST = "http://engine.mtg-search.com:8080"
     //private val SEARCH_SERVER_HOST = "192.168.1.15:9200"
@@ -46,6 +48,8 @@ class CustomApplication : BaseApplication() {
         jsonDeck = JsonDeck(this, objectMapper)
 
         deckResolver = DeckResolver(searchService)
+
+        refreshLists()
     }
 
     private fun buildRetrofit(): Retrofit {
@@ -66,5 +70,18 @@ class CustomApplication : BaseApplication() {
                 .addConverterFactory(MoshiConverterFactory.create(objectMapper))
                 .client(httpClient.build())
                 .baseUrl(SEARCH_SERVER_HOST).build()
+    }
+
+    fun refreshLists() {
+        listsCardId =
+                decklist.elems
+                        .flatMap { deck ->
+                            jsonDeck
+                                    .load(deck.id.toString())
+                                    .map { it.card.getId() to deck.id.toString() }
+                        }
+                        .plus(wishlist.elems.map { it.getId() to "wishlist" })
+                        .groupBy { it.first }
+                        .mapValues { it.value.map { it.second } }
     }
 }

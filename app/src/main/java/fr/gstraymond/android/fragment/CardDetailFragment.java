@@ -9,22 +9,31 @@ import android.widget.ListView;
 import java.util.ArrayList;
 import java.util.List;
 
+import fr.gstraymond.android.CustomActivity;
 import fr.gstraymond.models.search.response.Card;
-import fr.gstraymond.ui.adapter.SetArrayAdapter;
+import fr.gstraymond.ui.adapter.card.detail.CardDetailAdapter;
+import fr.gstraymond.utils.CardIdUtilsKt;
 
 import static fr.gstraymond.constants.Consts.CARD;
 
 public class CardDetailFragment extends CustomListFragment {
 
     private Callbacks callbacks = dummyCallbacks;
+    private List<Object> objects;
 
     public interface Callbacks {
         void onItemSelected(int id);
+
+        void onListSelected(String list);
     }
 
     private static Callbacks dummyCallbacks = new Callbacks() {
         @Override
         public void onItemSelected(int id) {
+        }
+
+        @Override
+        public void onListSelected(String list) {
         }
     };
 
@@ -34,16 +43,21 @@ public class CardDetailFragment extends CustomListFragment {
 
         Card card = getArguments().getParcelable(CARD);
 
-        List<Object> objects = new ArrayList<>();
+        CustomActivity activity = (CustomActivity) getActivity();
+        String id = CardIdUtilsKt.getId(card);
+        List<String> listIds = activity.getCustomApplication().getListsCardId().get(id);
+
+        objects = new ArrayList<>();
         objects.add(card);
+        if (listIds != null) objects.addAll(listIds);
         objects.addAll(card.getPublications());
 
-        ListAdapter arrayAdapter = new SetArrayAdapter(
+        ListAdapter arrayAdapter = new CardDetailAdapter(
                 getActivity(),
                 android.R.layout.simple_list_item_activated_1,
                 android.R.id.text2,
                 objects,
-                new SetArrayAdapter.Callbacks() {
+                new CardDetailAdapter.Callbacks() {
                     @Override
                     public void onImageClick(int position) {
                         callbacks.onItemSelected(position + 1);
@@ -78,9 +92,16 @@ public class CardDetailFragment extends CustomListFragment {
     }
 
     @Override
-    public void onListItemClick(ListView listView, View view, int position,
+    public void onListItemClick(ListView listView,
+                                View view,
+                                int position,
                                 long id) {
-        super.onListItemClick(listView, view, position, id);
-        callbacks.onItemSelected(position);
+        Object object = objects.get(position);
+        if (object instanceof String) {
+            callbacks.onListSelected((String) object);
+        } else {
+            callbacks.onItemSelected(position - 1);
+        }
+
     }
 }
