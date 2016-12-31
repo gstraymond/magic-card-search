@@ -13,18 +13,18 @@ abstract class JsonList<A>(private val customApplication: CustomApplication,
     private val log = Log(this)
     private val listName = "lists_" + listName
 
-    val elems: MutableList<A>  = load()
-    private val index: MutableSet<String>  = loadIndex()
+    val elems: MutableList<A> = load()
+    private var index: Map<String, A> = loadIndex()
 
     abstract fun getId(elem: A): String
 
-    private fun loadIndex() = elems.map { getId(it) }.toHashSet()
+    private fun loadIndex() = elems.map { getId(it) to it }.toMap()
 
     private fun load(): MutableList<A> {
         try {
             val inputStream = customApplication.openFileInput(listName)
             val result = mapperUtil.read(inputStream)
-            return when(result) {
+            return when (result) {
                 null -> {
                     save(listOf())
                     mutableListOf()
@@ -54,21 +54,17 @@ abstract class JsonList<A>(private val customApplication: CustomApplication,
         val contain = contains(elem)
         if (!contain) {
             elems.add(elem)
-            index.add(getId(elem))
+            index += (getId(elem) to elem)
         } else {
             elems.remove(elem)
-            index.remove(getId(elem))
+            index = index.filterKeys { it != getId(elem) }
         }
         save(elems)
         log.d("addOrRemove %s -> removed? %s", elem, contain)
         return !contain
     }
 
-    fun contains(elem: A): Boolean {
-        return index.contains(getId(elem))
-    }
+    fun contains(elem: A): Boolean = index.contains(getId(elem))
 
-    fun get(id: String): A? {
-        return elems.find { getId(it) == id }
-    }
+    fun get(id: String): A? = index[id]
 }

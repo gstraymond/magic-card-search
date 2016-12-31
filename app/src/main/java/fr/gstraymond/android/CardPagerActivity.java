@@ -40,4 +40,9 @@ public class CardPagerActivity extends CardCommonActivity {
             super.replaceFragment(fragment, id);
         }
     }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        //super.onSaveInstanceState(outState);
+    }
 }

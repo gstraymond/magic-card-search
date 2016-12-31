@@ -4,6 +4,7 @@ import android.content.Context
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
+import fr.gstraymond.models.Deck
 import fr.gstraymond.models.search.response.Card
 import fr.gstraymond.models.search.response.Publication
 import fr.gstraymond.ui.adapter.card.detail.CardDetailAdapter.ItemTypes.*
@@ -17,10 +18,12 @@ class CardDetailAdapter(context: Context,
 
     private val cardView = CardView(context, callbacks)
     private val publicationView = PublicationView(context)
-    private val listView = ListView(context)
+    private val listView = ListView(context, callbacks)
 
     interface Callbacks {
         fun onImageClick(position: Int)
+
+        fun getDeck(deckId: String): Deck?
     }
 
     enum class ItemTypes { CARD, PUBLICATION, DECK }

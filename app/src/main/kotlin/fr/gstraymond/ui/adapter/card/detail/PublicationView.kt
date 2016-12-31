@@ -13,8 +13,10 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 class PublicationView(context: Context) : View<Publication>(context, R.layout.card_set) {
+
     private val setImageGetter = SetImageGetter(context)
     private val dateFormat = SimpleDateFormat("MMM yyyy", Locale.getDefault())
+
     override fun getView(item: Publication, view: android.view.View): android.view.View {
         val publicationImage = view.findViewById(R.id.card_textview_set_image) as ImageView
         val publicationImageAlt = view.findViewById(R.id.card_textview_set_image_alt) as TextView

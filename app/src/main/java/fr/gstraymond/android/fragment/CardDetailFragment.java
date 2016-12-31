@@ -6,10 +6,15 @@ import android.view.View;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import fr.gstraymond.android.CustomActivity;
+import fr.gstraymond.android.CustomApplication;
+import fr.gstraymond.models.Deck;
 import fr.gstraymond.models.search.response.Card;
 import fr.gstraymond.ui.adapter.card.detail.CardDetailAdapter;
 import fr.gstraymond.utils.CardIdUtilsKt;
@@ -44,8 +49,10 @@ public class CardDetailFragment extends CustomListFragment {
         Card card = getArguments().getParcelable(CARD);
 
         CustomActivity activity = (CustomActivity) getActivity();
+        final CustomApplication customApplication = activity.getCustomApplication();
+
         String id = CardIdUtilsKt.getId(card);
-        List<String> listIds = activity.getCustomApplication().getListsCardId().get(id);
+        List<String> listIds = customApplication.getListsCardId().get(id);
 
         objects = new ArrayList<>();
         objects.add(card);
@@ -61,6 +68,12 @@ public class CardDetailFragment extends CustomListFragment {
                     @Override
                     public void onImageClick(int position) {
                         callbacks.onItemSelected(position + 1);
+                    }
+
+                    @Nullable
+                    @Override
+                    public Deck getDeck(@NotNull String deckId) {
+                        return customApplication.decklist.get(deckId);
                     }
                 });
         setListAdapter(arrayAdapter);
