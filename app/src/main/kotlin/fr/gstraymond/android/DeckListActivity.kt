@@ -1,27 +1,37 @@
 package fr.gstraymond.android
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.Toolbar
-import android.view.*
+import android.view.Menu
+import android.view.MenuItem
+import android.view.View
 import fr.gstraymond.R
 import fr.gstraymond.android.adapter.DeckListAdapter
 import fr.gstraymond.models.Deck
+import fr.gstraymond.utils.find
+import fr.gstraymond.utils.hide
+import fr.gstraymond.utils.show
 
 class DeckListActivity : CustomActivity() {
 
-    private var deckListAdapter: DeckListAdapter? = null
+    companion object {
+        fun getIntent(context: Context) = Intent(context, DeckListActivity::class.java)
+    }
+
+    private lateinit var deckListAdapter: DeckListAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_deck_list)
 
-        val toolbar = findViewById(R.id.toolbar) as Toolbar
-        setSupportActionBar(toolbar)
+        setSupportActionBar(find<Toolbar>(R.id.toolbar))
         supportActionBar?.apply {
             setDisplayHomeAsUpEnabled(true)
-            title = "Deck Manager" // FIXME getString(R.string.wishlist_title)
+            title = getString(R.string.decklist_title)
         }
 
         deckListAdapter = DeckListAdapter(this).apply {
@@ -32,23 +42,24 @@ class DeckListActivity : CustomActivity() {
             }
         }
 
-        (findViewById(R.id.deck_recyclerview) as RecyclerView).apply {
-            layoutManager = LinearLayoutManager(this@DeckListActivity)
-            adapter = deckListAdapter
-        }
-
-        if (getDecks().isNotEmpty()) {
-            findViewById(R.id.deck_list_empty_text).visibility = View.GONE
+        find<RecyclerView>(R.id.deck_recyclerview).let { it ->
+            it.layoutManager = LinearLayoutManager(this)
+            it.adapter = deckListAdapter
         }
     }
 
     override fun onResume() {
         super.onResume()
         updateDecks()
+        if (getDecks().isEmpty()) {
+            show(R.id.deck_list_empty_text)
+        } else {
+            hide(R.id.deck_list_empty_text)
+        }
     }
 
     private fun updateDecks() {
-        deckListAdapter?.apply {
+        deckListAdapter.apply {
             decks = getSortedDecks()
             notifyDataSetChanged()
         }

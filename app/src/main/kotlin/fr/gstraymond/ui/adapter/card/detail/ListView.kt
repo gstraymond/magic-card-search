@@ -4,6 +4,7 @@ import android.content.Context
 import android.widget.ImageView
 import android.widget.TextView
 import fr.gstraymond.R
+import fr.gstraymond.utils.find
 
 class ListView(val context: Context,
                val callbacks: CardDetailAdapter.Callbacks) : View<String>(context, R.layout.card_list) {
@@ -12,8 +13,8 @@ class ListView(val context: Context,
 
         val imageView = view.find<ImageView>(R.id.card_list_image)
         imageView.setImageResource(when (item) {
-            "wishlist" -> R.drawable.ic_star_rate_white_36dp
-            else -> android.R.drawable.ic_dialog_email
+            "wishlist" -> R.drawable.ic_star_white_18dp
+            else -> R.drawable.ic_bookmark_border_white_48dp
         })
 
         val textView = view.find<TextView>(R.id.card_list_title)

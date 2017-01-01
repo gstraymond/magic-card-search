@@ -15,5 +15,3 @@ abstract class View<in A>(context: Context,
     fun getView(item: A, convertView: View?, parent: ViewGroup): View =
             getView(item, convertView ?: inflater.inflate(layoutId, null))
 }
-
-fun <A : View> View.find(id: Int): A = findViewById(id) as A

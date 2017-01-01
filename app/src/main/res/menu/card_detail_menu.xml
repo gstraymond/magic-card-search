@@ -4,7 +4,7 @@
 
     <item
         android:id="@+id/pictures_tab"
-        android:icon="@drawable/picture"
+        android:icon="@drawable/ic_image_white_48dp"
         android:title="@string/detail_menu_pictures"
         app:showAsAction="always" />
 

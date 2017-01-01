@@ -18,9 +18,7 @@ import fr.gstraymond.impex.DeckImporterTask
 class DeckImporterActivity : CustomActivity() {
 
     companion object {
-        fun getIntent(context: Context): Intent {
-            return Intent(context, DeckImporterActivity::class.java)
-        }
+        fun getIntent(context: Context) = Intent(context, DeckImporterActivity::class.java)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

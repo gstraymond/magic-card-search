@@ -38,16 +38,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom|end"
                 android:layout_margin="16dp"
-                android:src="@drawable/ic_star_rate_white_18dp" />
-
-            <android.support.design.widget.FloatingActionButton
-                android:id="@+id/fab_deck"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="bottom|end"
-                android:layout_marginRight="16dp"
-                android:layout_marginBottom="88dp"
-                android:src="@android:drawable/ic_dialog_email" />
+                android:src="@drawable/ic_star_half_white_36dp" />
 
         </android.support.design.widget.CoordinatorLayout>
 
