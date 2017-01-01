@@ -29,10 +29,7 @@ class ElasticSearchService(val elasticSearchApi: ElasticSearchApi) {
         try {
             val (response, duration) = time { f(query).execute() }
             return when (response.code()) {
-                200 -> {
-                    log.i("http took %s ms", duration)
-                    Result(response.body(), duration)
-                }
+                200 -> Result(response.body(), duration)
                 else -> {
                     log.w("process: bad response %s %s", response.code(), query)
                     null

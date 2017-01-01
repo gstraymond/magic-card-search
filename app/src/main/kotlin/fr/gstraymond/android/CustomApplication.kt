@@ -17,6 +17,7 @@ import fr.gstraymond.network.ElasticSearchService
 import fr.gstraymond.tools.VersionUtils
 import fr.gstraymond.utils.getId
 import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 
@@ -93,6 +94,7 @@ class CustomApplication : BaseApplication() {
 
             chain.proceed(request)
         }
+        httpClient.addInterceptor(HttpLoggingInterceptor().apply { level = HttpLoggingInterceptor.Level.HEADERS })
 
         return Retrofit.Builder()
                 .addConverterFactory(MoshiConverterFactory.create(objectMapper))
