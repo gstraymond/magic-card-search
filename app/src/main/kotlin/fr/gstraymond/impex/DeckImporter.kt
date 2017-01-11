@@ -16,28 +16,24 @@ class DeckImporter(private val contentResolver: ContentResolver) {
 
     private val log = Log(this)
 
-    val formats = listOf(
-            MTGODeckFormat(),
-            MagicWorkstationDeckFormat())
+    private val deckParser = DeckParser()
 
     fun importFromUri(uri: Uri): ImportedDeck? {
         val deckList = openUrl(uri)
         log.d("decklist: \n$deckList")
+        return deckList?.run { parse(this, uri) }
+    }
 
-        val lines = (deckList?.split("\n") ?: listOf())
-                .map { it.replace("\r", "") }
-                .filterNot(String::isBlank)
-
-        return lines.run {
-            if (isEmpty()) null
-            else formats.find { it.detectFormat(lines) }?.let {
-                val resolvedUri = when (uri.scheme) {
-                    "content" -> resolveFileUri(uri) ?: uri
-                    else -> uri
-                }
-                ImportedDeck(name = it.extractName(resolvedUri, lines),
-                        lines = it.parse(lines))
+    private fun parse(deckList: String, uri: Uri): ImportedDeck? {
+        return deckParser.parse(deckList)?.run {
+            val (deckFormat, lines) = this
+            val resolvedUri = when (uri.scheme) {
+                "content" -> resolveFileUri(uri) ?: uri
+                else -> uri
             }
+            ImportedDeck(
+                    name = deckFormat.extractName(resolvedUri, deckList.split("\n")),
+                    lines = lines)
         }?.apply {
             log.d("imported: ")
             log.d(name)
@@ -55,6 +51,8 @@ class DeckImporter(private val contentResolver: ContentResolver) {
             resolvedUri
         } else {
             null
+        }.apply {
+            close()
         }
     }
 
@@ -64,22 +62,25 @@ class DeckImporter(private val contentResolver: ContentResolver) {
         else -> null
     }
 
-    private fun fetchHTTP(uri: Uri): String? =
-            (URL(uri.toString()).openConnection() as HttpURLConnection).run {
-                try {
-                    setRequestProperty("connection", "close")
-                    inputStream.bufferedReader().use { it.readText() }
-                } catch (e: IOException) {
-                    e.printStackTrace()
-                    null
-                } finally {
-                    disconnect()
-                }
-            }
+    private fun fetchHTTP(uri: Uri): String? = uri.fetch()
 
     private fun fetchContent(uri: Uri): String? =
             contentResolver
                     .openInputStream(uri)
                     .bufferedReader()
                     .use { it.readText() }
+}
+
+fun Uri.fetch(): String? = URL(toString()).fetch()
+
+fun URL.fetch(): String? = (openConnection() as HttpURLConnection).run {
+    try {
+        setRequestProperty("connection", "close")
+        inputStream.bufferedReader().use { it.readText() }
+    } catch (e: IOException) {
+        e.printStackTrace()
+        null
+    } finally {
+        disconnect()
+    }
 }
