@@ -6,7 +6,9 @@ interface DeckFormat {
 
     fun detectFormat(lines: List<String>): Boolean
 
-    fun parse(lines: List<String>): List<DeckLine>
+    fun split(lines: List<String>): Pair<List<String>, List<String>>
+
+    fun parse(line: String, sideboard: Boolean): DeckLine
 
     fun extractName(uri: Uri, lines: List<String>): String
 }
