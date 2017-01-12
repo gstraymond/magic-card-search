@@ -18,35 +18,31 @@ class DeckImporter(private val contentResolver: ContentResolver) {
 
     private val deckParser = DeckParser()
 
-    fun importFromUri(uri: Uri): ImportedDeck? {
-        val deckList = openUrl(uri)
+    fun importFromUri(url: URL): ImportedDeck? {
+        val deckList = openUrl(url)
         log.d("decklist: \n$deckList")
-        return deckList?.run { parse(this, uri) }
+        return deckList?.run { parse(this, url) }
     }
 
-    private fun parse(deckList: String, uri: Uri): ImportedDeck? {
-        return deckParser.parse(deckList)?.run {
-            val (deckFormat, lines) = this
-            val resolvedUri = when (uri.scheme) {
-                "content" -> resolveFileUri(uri) ?: uri
-                else -> uri
-            }
-            ImportedDeck(
-                    name = deckFormat.extractName(resolvedUri, deckList.split("\n")),
-                    lines = lines)
-        }?.apply {
+    private fun parse(deckList: String, url: URL): ImportedDeck? {
+        val resolvedUri = when (url.protocol) {
+            "content" -> resolveFileURL(url)
+            else -> null
+        } ?: url
+
+        return deckParser.parse(deckList, resolvedUri)?.apply {
             log.d("imported: ")
             log.d(name)
-            log.d(this.lines.joinToString("\n"))
+            log.d(lines.joinToString("\n"))
         }
     }
 
     private val proj = arrayOf(MediaStore.Images.Media.TITLE)
 
-    private fun resolveFileUri(uri: Uri) = contentResolver.query(uri, proj, null, null, null)?.run {
+    private fun resolveFileURL(url: URL) = contentResolver.query(Uri.parse(url.toString()), proj, null, null, null)?.run {
         if (count != 0) {
             moveToFirst()
-            val resolvedUri = Uri.parse("content://downloads/${getString(getColumnIndexOrThrow(proj.first()))}")
+            val resolvedUri = URL("content://downloads/${getString(getColumnIndexOrThrow(proj.first()))}")
             close()
             resolvedUri
         } else {
@@ -56,17 +52,17 @@ class DeckImporter(private val contentResolver: ContentResolver) {
         }
     }
 
-    private fun openUrl(uri: Uri): String? = when (uri.scheme) {
-        "http", "https" -> fetchHTTP(uri)
-        "content" -> fetchContent(uri)
+    private fun openUrl(url: URL): String? = when (url.protocol) {
+        "http", "https" -> fetchHTTP(url)
+        "content" -> fetchContent(url)
         else -> null
     }
 
-    private fun fetchHTTP(uri: Uri): String? = uri.fetch()
+    private fun fetchHTTP(url: URL): String? = url.fetch()
 
-    private fun fetchContent(uri: Uri): String? =
+    private fun fetchContent(url: URL): String? =
             contentResolver
-                    .openInputStream(uri)
+                    .openInputStream(Uri.parse(url.toString()))
                     .bufferedReader()
                     .use { it.readText() }
 }
@@ -78,7 +74,7 @@ fun URL.fetch(): String? = (openConnection() as HttpURLConnection).run {
         setRequestProperty("connection", "close")
         inputStream.bufferedReader().use { it.readText() }
     } catch (e: IOException) {
-        e.printStackTrace()
+        Log(this).w("fetch: ${e.message}")
         null
     } finally {
         disconnect()

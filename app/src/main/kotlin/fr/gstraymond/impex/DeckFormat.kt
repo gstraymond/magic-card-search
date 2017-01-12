@@ -1,6 +1,6 @@
 package fr.gstraymond.impex
 
-import android.net.Uri
+import java.net.URL
 
 interface DeckFormat {
 
@@ -10,5 +10,5 @@ interface DeckFormat {
 
     fun parse(line: String, sideboard: Boolean): DeckLine
 
-    fun extractName(uri: Uri, lines: List<String>): String
+    fun extractName(url: URL, lines: List<String>): String
 }

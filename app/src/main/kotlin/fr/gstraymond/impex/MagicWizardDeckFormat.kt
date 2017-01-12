@@ -1,6 +1,9 @@
 package fr.gstraymond.impex
 
 import android.net.Uri
+import fr.gstraymond.utils.getParameters
+import fr.gstraymond.utils.getPathSegment
+import java.net.URL
 
 class MagicWizardDeckFormat : DeckFormat {
 
@@ -19,11 +22,11 @@ class MagicWizardDeckFormat : DeckFormat {
     }
 
     // TODO refactor
-    override fun extractName(uri: Uri, lines: List<String>): String {
+    override fun extractName(url: URL, lines: List<String>): String {
         val candidates =
-                uri.queryParameterNames
-                        .map { uri.getQueryParameter(it) }
-                        .plus(uri.lastPathSegment)
+                url.getParameters()
+                        .values
+                        .plus(url.getPathSegment().last())
         return candidates.maxBy { it.length } ?: candidates.first()
     }
 }

@@ -10,27 +10,34 @@ class DeckParserTest {
 
     @Test
     fun should_import_mtgo_format_decks() {
-        testUrl("http://mtgtop8.com/mtgo?d=281503&f=Standard_Azorius_Aggro_by_Brad_Carpenter")
+        testUrl("http://mtgtop8.com/mtgo?d=281503&f=Standard_Azorius_Aggro_by_Brad_Carpenter",
+                "Standard_Azorius_Aggro_by_Brad_Carpenter")
     }
 
     @Test
     fun should_import_mtgo_format_decks_2() {
-        testUrl("http://www.mtgdecks.net/decks/view/660419/txt")
+        testUrl("http://www.mtgdecks.net/decks/view/660419/txt",
+                "txt")
     }
 
     @Test
     fun should_import_mtgo_format_decks_3() {
-        testUrl("https://www.mtggoldfish.com/deck/download/542503", 100, 0)
+        testUrl("https://www.mtggoldfish.com/deck/download/542503",
+                "542503",
+                100,
+                0)
     }
 
     @Test
     fun should_import_magic_workstation_format_decks() {
-        testUrl("http://mtgtop8.com/export_files/deck281503.mwDeck")
+        testUrl("http://mtgtop8.com/export_files/deck281503.mwDeck",
+                "Azorius Aggro")
     }
 
     @Test
     fun should_import_magic_workstation_format_decks_2() {
-        testUrl("http://www.mtgdecks.net/decks/view/660419/dec")
+        testUrl("http://www.mtgdecks.net/decks/view/660419/dec",
+                "Azorius Flash a Standard MTG deck played by Misplacedginger in Competitive Standard Constructed League - MTGDECKS.NET ")
     }
 
     @Test
@@ -62,7 +69,9 @@ class DeckParserTest {
 4 Galvanic Bombardment
 2 Declaration in Stone"""
 
-        testDeck(deck)
+        testDeck(deck,
+                 URL("http://www.mtgdecks.net/decks/view/660419/dec"),
+                 "dec")
     }
 
     @Test
@@ -99,37 +108,37 @@ SB: 2 Murder
 SB: 4 Ruinous Path
 SB: 4 Transgress the Mind"""
 
-        testDeck(deck, sideboardSize = 14)
+        testDeck(deck,
+                 URL("http://www.mtgdecks.net/decks/view/660419/dec"),
+                 "Artifact (10)",
+                 sideboardSize = 14)
     }
 
     @Test
     fun should_handle_bad_url() {
-        val url = URL("http://google.com/test")
-        val deckList = url.fetch() ?: ""
-        println("should_handle_bad_url: $deckList")
-        val result = DeckParser().parse(deckList)
-        println("should_handle_bad_url: $result")
+        val uri = URL("http://google.com/test")
+        val result = DeckParser().parse(uri.fetch() ?: "", uri)
         assertTrue("deck must be null", result == null)
     }
 
     @Test
     fun should_handle_image() {
         val url = URL("https://www.google.com/s2/favicons?domain=www.google.com")
-        val result = DeckParser().parse(url.fetch() ?: "")
+        val result = DeckParser().parse(url.fetch() ?: "", url)
         assertTrue("deck must be null", result == null)
     }
 
-    private fun testUrl(url: String, deckSize: Int = 60, sideboardSize: Int = 15) {
+    private fun testUrl(url: String, expectedName: String, deckSize: Int = 60, sideboardSize: Int = 15) {
         println("testParseOk url $url")
-        testDeck(URL(url).fetch() ?: "", deckSize, sideboardSize)
+        testDeck(URL(url).fetch() ?: "", URL(url), expectedName, deckSize, sideboardSize)
     }
 
-    private fun testDeck(deck: String, deckSize: Int = 60, sideboardSize: Int = 15) {
+    private fun testDeck(deck: String, url: URL, expectedName: String, deckSize: Int = 60, sideboardSize: Int = 15) {
         println("testDeck deck\n$deck")
-        DeckParser().parse(deck)?.run {
-            val lines = second
+        DeckParser().parse(deck, url)?.run {
             assertEquals(deckSize, lines.filterNot { it.isSideboard }.map { it.occurrence }.sum())
             assertEquals(sideboardSize, lines.filter { it.isSideboard }.map { it.occurrence }.sum())
+            assertEquals(expectedName, name)
         } ?: fail()
     }
 }

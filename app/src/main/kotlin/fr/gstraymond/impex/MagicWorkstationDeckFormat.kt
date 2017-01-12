@@ -1,6 +1,7 @@
 package fr.gstraymond.impex
 
-import android.net.Uri
+import fr.gstraymond.utils.getPathSegment
+import java.net.URL
 
 class MagicWorkstationDeckFormat : DeckFormat {
 
@@ -33,11 +34,14 @@ class MagicWorkstationDeckFormat : DeckFormat {
         return DeckLine(occ.toInt(), name, sideboard)
     }
 
-    override fun extractName(uri: Uri, lines: List<String>): String {
-        return lines
+    override fun extractName(url: URL, lines: List<String>) =
+            extractNameFromComments(lines)
+                    ?: url.getPathSegment().last()
+
+    private fun extractNameFromComments(lines: List<String>): String? {
+        val nameComment = lines
                 .find { it.startsWith(COMMENT + " NAME : ") }
                 ?.replace(COMMENT + " NAME : ", "")
-                ?: uri.lastPathSegment
+        return nameComment ?: lines.find { it.startsWith(COMMENT) }?.replace(COMMENT, "")
     }
-
 }

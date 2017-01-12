@@ -1,6 +1,8 @@
 package fr.gstraymond.impex
 
-import android.net.Uri
+import fr.gstraymond.utils.getParameters
+import fr.gstraymond.utils.getPathSegment
+import java.net.URL
 
 class MTGODeckFormat : DeckFormat {
 
@@ -17,18 +19,16 @@ class MTGODeckFormat : DeckFormat {
         return DeckLine(occ.toInt(), title, sideboard)
     }
 
-    override fun split(lines: List<String>): Pair<List<String>, List<String>> {
-        return lines.filter(String::isNotEmpty).run {
-            val sideboardIndex = lines.indexOfFirst { isSideboard(it) }
-            take(sideboardIndex) to drop(sideboardIndex + 1)
-        }
+    override fun split(lines: List<String>) = lines.filter(String::isNotEmpty).run {
+        val sideboardIndex = lines.indexOfFirst { isSideboard(it) }
+        take(sideboardIndex) to drop(sideboardIndex + 1)
     }
 
-    override fun extractName(uri: Uri, lines: List<String>): String {
+    override fun extractName(url: URL, lines: List<String>): String {
         val candidates =
-                uri.queryParameterNames
-                        .map { uri.getQueryParameter(it) }
-                        .plus(uri.lastPathSegment)
+                url.getParameters()
+                        .values
+                        .plus(url.getPathSegment().last())
         return candidates.maxBy { it.length } ?: candidates.first()
     }
 }
