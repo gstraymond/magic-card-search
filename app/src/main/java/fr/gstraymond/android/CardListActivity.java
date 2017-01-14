@@ -38,7 +38,6 @@ import fr.gstraymond.biz.SearchProcessor;
 import fr.gstraymond.biz.UIUpdater;
 import fr.gstraymond.models.JsonHistory;
 import fr.gstraymond.models.autocomplete.response.Option;
-import fr.gstraymond.models.search.response.Card;
 import fr.gstraymond.ui.EndScrollListener;
 import fr.gstraymond.ui.TextListener;
 import fr.gstraymond.ui.adapter.SearchViewCursorAdapter;
@@ -60,7 +59,6 @@ public class CardListActivity extends CustomActivity implements
     private EndScrollListener endScrollListener;
     private SearchView searchView;
 
-    private Card currentCard;
     private int totalCardCount;
     private SearchOptions currentSearch;
     private Log log = new Log(this);
@@ -136,7 +134,6 @@ public class CardListActivity extends CustomActivity implements
 
         progressBarUpdater = new ProgressBarUpdater((ProgressBar) findViewById(R.id.progress_bar));
         actionBarSetHomeButtonEnabled(true);
-        actionBarSetTitle(R.string.drawer_open);
 
         changeLog = new ChangeLog(this);
         if (changeLog.firstRun())
@@ -253,7 +250,6 @@ public class CardListActivity extends CustomActivity implements
      */
     @Override
     public void onItemSelected(Parcelable card) {
-        currentCard = (Card) card;
         Intent intent = new Intent(this, CardDetailActivity.class);
         intent.putExtra(CARD, card);
         startActivity(intent);
@@ -281,12 +277,6 @@ public class CardListActivity extends CustomActivity implements
         }
 
         switch (item.getItemId()) {
-
-            case R.id.pictures_tab:
-                Intent intent = new Intent(this, CardPagerActivity.class);
-                intent.putExtra(CARD, currentCard);
-                startActivity(intent);
-                return true;
 
             case R.id.clear_tab:
                 resetSearchView();

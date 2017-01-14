@@ -16,7 +16,7 @@
 
     <string name="detail_menu_oracle">Texte</string>
     <string name="detail_menu_pictures">Images</string>
-    <string name="detail_buy_amazon">Acheter sur Amazon</string>
+    <string name="detail_buy_ebay">Acheter sur Ebay</string>
 
     <string name="history_menu_clear">Effacer les recherches</string>
     <string name="history_empty">Pas de recherche récente</string>

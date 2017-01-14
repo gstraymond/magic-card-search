@@ -3,6 +3,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
+        android:id="@+id/ebay_tab"
+        android:icon="@drawable/ic_shopping_cart_white_48dp"
+        android:title="@string/detail_buy_ebay"
+        app:showAsAction="always" />
+
+    <item
         android:id="@+id/pictures_tab"
         android:icon="@drawable/ic_image_white_48dp"
         android:title="@string/detail_menu_pictures"
