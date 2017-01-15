@@ -8,6 +8,8 @@ import android.support.v7.widget.Toolbar
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.TextView
+import com.crashlytics.android.answers.Answers
+import com.crashlytics.android.answers.CustomEvent
 import fr.gstraymond.R
 import fr.gstraymond.affiliate.ebay.LinkGenerator
 import fr.gstraymond.android.fragment.CardDetailFragment
@@ -48,6 +50,8 @@ class CardDetailActivity : CardCommonActivity(), CardDetailFragment.Callbacks {
                     data = Uri.parse(LinkGenerator.generate(card.title))
                 }
             }
+            val event = CustomEvent("ebay").putCustomAttribute("card", card.title)
+            Answers.getInstance().logCustom(event)
             true
         }
 
