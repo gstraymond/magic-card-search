@@ -43,7 +43,7 @@ class CardView(val context: Context,
         else typeView.text = type
 
         val images = item.publications.map { it.image }
-        val url = images.first { it != null }
+        val url = images.firstOrNull { it != null }
         val urlPosition = images.indexOfFirst { it != null }
 
         if (url != null) CardLoader(url, item, pictureView).load(context)
