@@ -4,7 +4,7 @@ import android.content.Context;
 import android.text.TextUtils;
 
 import fr.gstraymond.R;
-import fr.gstraymond.search.model.response.Card;
+import fr.gstraymond.models.search.response.Card;
 
 public class FormatFormatter {
 

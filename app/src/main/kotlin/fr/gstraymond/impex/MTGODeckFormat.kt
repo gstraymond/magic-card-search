@@ -1,27 +1,34 @@
 package fr.gstraymond.impex
 
-import android.net.Uri
+import fr.gstraymond.utils.getParameters
+import fr.gstraymond.utils.getPathSegment
+import java.net.URL
 
 class MTGODeckFormat : DeckFormat {
-    private val SIDEBOARD = "Sideboard"
 
-    override fun detectFormat(lines: List<String>): Boolean {
-        return lines.all { it.first().isDigit() || it == SIDEBOARD }
+    private val SIDEBOARD = "sideboard"
+
+    override fun detectFormat(lines: List<String>) = lines
+            .filter(String::isNotEmpty)
+            .all { it.first().isDigit() || isSideboard(it) }
+
+    private fun isSideboard(line: String) = line.toLowerCase().contains(SIDEBOARD)
+
+    override fun parse(line: String, sideboard: Boolean): DeckLine {
+        val (occ, title) = line.split(Regex(" "), 2)
+        return DeckLine(occ.toInt(), title, sideboard)
     }
 
-    override fun parse(lines: List<String>): List<DeckLine> {
-        val sideboardIndex = lines.indexOfFirst { it == SIDEBOARD }
-        return lines.filterNot { it == SIDEBOARD }.mapIndexed { i, line ->
-            val (occ, title) = line.split(Regex(" "), 2)
-            DeckLine(occ.toInt(), title, i >= sideboardIndex)
-        }
+    override fun split(lines: List<String>) = lines.filter(String::isNotEmpty).run {
+        val sideboardIndex = lines.indexOfFirst { isSideboard(it) }
+        take(sideboardIndex) to drop(sideboardIndex + 1)
     }
 
-    override fun extractName(uri: Uri, lines: List<String>): String {
+    override fun extractName(url: URL, lines: List<String>): String {
         val candidates =
-                uri.queryParameterNames
-                        .map { uri.getQueryParameter(it) }
-                        .plus(uri.lastPathSegment)
+                url.getParameters()
+                        .values
+                        .plus(url.getPathSegment().last())
         return candidates.maxBy { it.length } ?: candidates.first()
     }
 }

@@ -16,7 +16,7 @@
 
     <string name="detail_menu_oracle">Text</string>
     <string name="detail_menu_pictures">Pictures</string>
-    <string name="detail_buy_amazon">Buy on Amazon</string>
+    <string name="detail_buy_ebay">Buy on Ebay</string>
 
     <string name="history_menu_clear">Clear searches</string>
     <string name="history_empty">No recent search</string>
@@ -77,4 +77,8 @@
     <string name="wishlist_title">Wishlist</string>
     <string name="wishlist_empty_text">Your wishlist is empty.\n\nAdd any card with the STAR button on search results.</string>
     <string name="deck_list_empty_text">Your deck list is empty.\n\nImport getDecks or create one.</string>
+
+    <string name="decklist_title">Deck Manager</string>
+    <string name="decklist_menu_import">Import</string>
+    <string name="decklist_menu_delete">Delete</string>
 </resources>

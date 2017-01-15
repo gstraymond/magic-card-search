@@ -20,9 +20,8 @@ import java.util.List;
 import java.util.Map;
 
 import fr.gstraymond.R;
-import fr.gstraymond.biz.Facets;
 import fr.gstraymond.constants.FacetConst;
-import fr.gstraymond.db.json.JsonHistory;
+import fr.gstraymond.models.JsonHistory;
 import fr.gstraymond.db.json.JsonHistoryDataSource;
 
 
@@ -98,7 +97,7 @@ public class HistoryArrayAdapter extends ArrayAdapter<JsonHistory> {
     }
 
     private String formatFacets(JsonHistory history) {
-        Facets facets = history.getFacets();
+        Map<String, List<String>> facets = history.getFacets();
         if (facets.isEmpty()) {
             return "";
         }

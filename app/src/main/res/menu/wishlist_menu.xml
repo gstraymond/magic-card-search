@@ -1,0 +1,11 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/wishlist_decklist"
+        android:icon="@drawable/ic_bookmark_border_white_48dp"
+        android:title="@string/decklist_title"
+        android:visible="false"
+        app:showAsAction="ifRoom" />
+
+</menu>

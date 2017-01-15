@@ -10,8 +10,7 @@ import android.widget.TextView
 import fr.gstraymond.R
 import fr.gstraymond.android.adapter.DeckDetailAdapter
 import fr.gstraymond.biz.DeckStats
-import fr.gstraymond.db.json.CardWithOccurrence
-import fr.gstraymond.search.model.Deck
+import fr.gstraymond.models.CardWithOccurrence
 import java.util.*
 
 class DeckDetailActivity : CustomActivity() {
@@ -19,10 +18,10 @@ class DeckDetailActivity : CustomActivity() {
     companion object {
         val DECK_EXTRA = "deck"
 
-        fun getIntent(context: Context, deckId: String): Intent {
-            val intent = Intent(context, DeckDetailActivity::class.java)
-            return intent.putExtra(DECK_EXTRA, deckId)
-        }
+        fun getIntent(context: Context, deckId: String) =
+                Intent(context, DeckDetailActivity::class.java).apply {
+                    putExtra(DECK_EXTRA, deckId)
+                }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

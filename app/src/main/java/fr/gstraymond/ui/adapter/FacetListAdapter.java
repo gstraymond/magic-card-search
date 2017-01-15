@@ -1,7 +1,6 @@
 package fr.gstraymond.ui.adapter;
 
 import android.content.Context;
-import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,8 +16,8 @@ import java.util.Map.Entry;
 import fr.gstraymond.R;
 import fr.gstraymond.biz.SearchOptions;
 import fr.gstraymond.constants.FacetConst;
-import fr.gstraymond.search.model.response.facet.Facet;
-import fr.gstraymond.search.model.response.facet.Term;
+import fr.gstraymond.models.search.response.Facet;
+import fr.gstraymond.models.search.response.Term;
 
 
 public class FacetListAdapter extends BaseExpandableListAdapter {
@@ -64,9 +63,7 @@ public class FacetListAdapter extends BaseExpandableListAdapter {
             String facetAsString = facetEntry.getKey();
             Facet facet = facetEntry.getValue();
             if (showLoadMore(facet, facetAsString)) {
-                Term loadMoreTerm = new Term();
-                loadMoreTerm.setTerm(context.getString(R.string.facet_more));
-                loadMoreTerm.setCount(-1);
+                Term loadMoreTerm = new Term(context.getString(R.string.facet_more), -1);
                 facet.getTerms().add(loadMoreTerm);
             }
         }

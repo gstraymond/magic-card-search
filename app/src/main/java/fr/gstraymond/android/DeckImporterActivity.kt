@@ -3,7 +3,6 @@ package fr.gstraymond.android
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.support.v7.widget.Toolbar
 import android.view.View
@@ -14,13 +13,12 @@ import android.widget.TextView
 import com.magic.card.search.commons.log.Log
 import fr.gstraymond.R
 import fr.gstraymond.impex.DeckImporterTask
+import java.net.URL
 
 class DeckImporterActivity : CustomActivity() {
 
     companion object {
-        fun getIntent(context: Context): Intent {
-            return Intent(context, DeckImporterActivity::class.java)
-        }
+        fun getIntent(context: Context) = Intent(context, DeckImporterActivity::class.java)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -53,7 +51,7 @@ class DeckImporterActivity : CustomActivity() {
         button.setOnClickListener { view ->
             form.visibility = View.GONE
             process.visibility = View.VISIBLE
-            val url = Uri.parse(editText.text.toString())
+            val url = URL(editText.text.toString())
             log.text = "Importing $url"
             DeckImporterTask(
                     contentResolver,

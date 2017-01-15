@@ -11,7 +11,7 @@ import com.magic.card.search.commons.json.MapperUtil;
 import java.io.InputStream;
 
 import fr.gstraymond.R;
-import fr.gstraymond.search.help.HelpText;
+import fr.gstraymond.models.HelpText;
 import fr.gstraymond.tools.HelpFormatter;
 
 public class HelpActivity extends CustomActivity {

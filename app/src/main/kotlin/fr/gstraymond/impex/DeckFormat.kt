@@ -1,12 +1,14 @@
 package fr.gstraymond.impex
 
-import android.net.Uri
+import java.net.URL
 
 interface DeckFormat {
 
     fun detectFormat(lines: List<String>): Boolean
 
-    fun parse(lines: List<String>): List<DeckLine>
+    fun split(lines: List<String>): Pair<List<String>, List<String>>
 
-    fun extractName(uri: Uri, lines: List<String>): String
+    fun parse(line: String, sideboard: Boolean): DeckLine
+
+    fun extractName(url: URL, lines: List<String>): String
 }

@@ -6,9 +6,11 @@ import android.text.TextUtils;
 
 import java.text.ParseException;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import fr.gstraymond.android.CustomParcelable;
-import fr.gstraymond.biz.Facets;
 
 public class History extends CustomParcelable {
 
@@ -18,7 +20,7 @@ public class History extends CustomParcelable {
     private String query;
     private Date date;
     private boolean favorite;
-    private Facets facets;
+    private Map<String, List<String>> facets;
 
     public static final Parcelable.Creator<History> CREATOR = new Parcelable.Creator<History>() {
         @Override
@@ -54,7 +56,7 @@ public class History extends CustomParcelable {
         writeFacets(dest, facets);
     }
 
-    public History(int id, String query, boolean favorite, Facets facets) {
+    public History(int id, String query, boolean favorite, Map<String, List<String>> facets) {
         this.id = id;
         this.query = query;
         this.date = new Date();
@@ -71,7 +73,7 @@ public class History extends CustomParcelable {
         if (split.length > 4) {
             this.facets = readFacets(split[4]);
         } else {
-            this.facets = new Facets();
+            this.facets = new HashMap<>();
         }
     }
 
@@ -103,7 +105,7 @@ public class History extends CustomParcelable {
         return favorite;
     }
 
-    public Facets getFacets() {
+    public Map<String, List<String>> getFacets() {
         return facets;
     }
 
@@ -112,7 +114,7 @@ public class History extends CustomParcelable {
         return this;
     }
 
-    public void setFavorite(boolean favorite) {
+    void setFavorite(boolean favorite) {
         this.favorite = favorite;
     }
 }

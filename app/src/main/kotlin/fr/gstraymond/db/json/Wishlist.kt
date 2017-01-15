@@ -1,14 +1,13 @@
 package fr.gstraymond.db.json
 
-import android.content.Context
-import com.fasterxml.jackson.databind.ObjectMapper
 import com.magic.card.search.commons.json.MapperUtil
-import fr.gstraymond.search.model.response.Card
+import com.squareup.moshi.Moshi
+import fr.gstraymond.android.CustomApplication
+import fr.gstraymond.models.search.response.Card
+import fr.gstraymond.utils.getId
 
-class Wishlist(context: Context, objectMapper: ObjectMapper) :
-        JsonList<Card>(context, MapperUtil.fromCollectionType(objectMapper, Card::class.java), "wishlist") {
+class Wishlist(customApplication: CustomApplication, moshi: Moshi) :
+        JsonList<Card>(customApplication, MapperUtil.fromCollectionType(moshi, Card::class.java), "wishlist") {
 
-    override fun getId(elem: Card): String {
-        return String.format("%s %s %s", elem.title, elem.type, elem.castingCost)
-    }
+    override fun getId(elem: Card) = elem.getId()
 }

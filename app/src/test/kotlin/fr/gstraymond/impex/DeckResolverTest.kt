@@ -1,12 +1,8 @@
 package fr.gstraymond.impex
 
-import com.fasterxml.jackson.annotation.JsonInclude
-import com.fasterxml.jackson.databind.DeserializationFeature
-import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.databind.SerializationFeature
 import com.magic.card.search.commons.json.MapperUtil
-import fr.gstraymond.network.ElasticSearchConnector
-import fr.gstraymond.search.model.response.SearchResult
+import fr.gstraymond.network.ElasticSearchService
+import fr.gstraymond.models.search.response.SearchResult
 import org.junit.Assert.assertEquals
 import org.junit.Test
 

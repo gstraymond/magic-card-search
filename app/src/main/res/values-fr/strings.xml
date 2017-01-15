@@ -16,7 +16,7 @@
 
     <string name="detail_menu_oracle">Texte</string>
     <string name="detail_menu_pictures">Images</string>
-    <string name="detail_buy_amazon">Acheter sur Amazon</string>
+    <string name="detail_buy_ebay">Acheter sur Ebay</string>
 
     <string name="history_menu_clear">Effacer les recherches</string>
     <string name="history_empty">Pas de recherche récente</string>
@@ -74,4 +74,8 @@
     <string name="wishlist_title">Wishlist</string>
     <string name="wishlist_empty_text">Votre wishlist est vide.\n\nAjoutez des cartes avec le bouton STAR dans les résultats de recherche.</string>
     <string name="deck_list_empty_text">Votre liste de getDecks est vide.\n\nImportez des getDecks ou créer en un.</string>
+
+    <string name="decklist_title">Deck Manager</string>
+    <string name="decklist_menu_import">Importer</string>
+    <string name="decklist_menu_delete">Supprimer</string>
 </resources>

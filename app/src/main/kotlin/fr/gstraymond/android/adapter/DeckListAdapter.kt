@@ -11,7 +11,7 @@ import android.widget.TextView
 import fr.gstraymond.R
 import fr.gstraymond.biz.CastingCostImageGetter
 import fr.gstraymond.biz.Colors
-import fr.gstraymond.search.model.Deck
+import fr.gstraymond.models.Deck
 import fr.gstraymond.tools.CastingCostFormatter
 import java.util.*
 
@@ -24,6 +24,7 @@ class DeckListAdapter(context: Context) : RecyclerView.Adapter<RecyclerView.View
     private val selectedItems = SparseBooleanArray()
 
     var decks: List<Deck> = listOf()
+
     var onClickListener: (String) -> View.OnClickListener? = { deckId -> null }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {

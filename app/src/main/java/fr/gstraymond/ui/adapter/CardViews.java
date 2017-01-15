@@ -8,7 +8,7 @@ import java.util.List;
 
 import fr.gstraymond.api.ui.view.DisplayableView;
 import fr.gstraymond.db.json.JsonList;
-import fr.gstraymond.search.model.response.Card;
+import fr.gstraymond.models.search.response.Card;
 import fr.gstraymond.ui.view.impl.CastingCostView;
 import fr.gstraymond.ui.view.impl.CostView;
 import fr.gstraymond.ui.view.impl.DescriptionView;
@@ -24,7 +24,7 @@ public class CardViews {
         displayableViews.add(new TitleView(context));
         displayableViews.add(new DescriptionView(context));
         displayableViews.add(new CastingCostView(context));
-        displayableViews.add(new TypePTView(context));
+        displayableViews.add(new TypePTView());
         displayableViews.add(new FavoriteView(wishlist, clickCallbacks, context));
         displayableViews.add(new CostView());
     }

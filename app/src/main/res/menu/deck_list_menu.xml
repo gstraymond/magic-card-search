@@ -3,14 +3,14 @@
 
     <item
         android:id="@+id/decklist_import"
-        android:icon="@android:drawable/ic_menu_add"
-        android:title="TODO"
+        android:icon="@drawable/ic_cloud_download_white_48dp"
+        android:title="@string/decklist_menu_import"
         app:showAsAction="ifRoom" />
 
     <item
         android:id="@+id/decklist_delete"
-        android:icon="@drawable/delete"
-        android:title="TODO"
+        android:icon="@drawable/ic_clear_white_48dp"
+        android:title="@string/decklist_menu_delete"
         app:showAsAction="ifRoom" />
 
 </menu>

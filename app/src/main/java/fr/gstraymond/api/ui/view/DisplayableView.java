@@ -2,7 +2,7 @@ package fr.gstraymond.api.ui.view;
 
 import android.view.View;
 
-import fr.gstraymond.search.model.response.Card;
+import fr.gstraymond.models.search.response.Card;
 
 public interface DisplayableView {
 

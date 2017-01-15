@@ -4,24 +4,20 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.design.widget.NavigationView;
-import android.view.Menu;
 import android.widget.ExpandableListView;
 import android.widget.TextView;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.magic.card.search.commons.json.MapperUtil;
+import com.squareup.moshi.Moshi;
 
 import java.util.ArrayList;
-import java.util.Map;
 
 import fr.gstraymond.R;
 import fr.gstraymond.android.CardListActivity;
 import fr.gstraymond.android.fragment.CardListFragment;
-import fr.gstraymond.search.model.response.Card;
-import fr.gstraymond.search.model.response.Hit;
-import fr.gstraymond.search.model.response.SearchResult;
-import fr.gstraymond.search.model.response.facet.Facet;
+import fr.gstraymond.models.search.response.Card;
+import fr.gstraymond.models.search.response.Hit;
+import fr.gstraymond.models.search.response.SearchResult;
 import fr.gstraymond.ui.FacetOnChildClickListener;
 import fr.gstraymond.ui.adapter.FacetListAdapter;
 
@@ -33,13 +29,13 @@ public class UIUpdater extends AsyncTask<Void, Void, SearchResult> {
     private String resultAsString;
     private MapperUtil<SearchResult> mapperUtil;
 
-    public UIUpdater(CardListActivity activity, String resultAsString, ObjectMapper objectMapper) {
+    public UIUpdater(CardListActivity activity, String resultAsString, Moshi objectMapper) {
         this(activity);
         this.resultAsString = resultAsString;
         this.mapperUtil = MapperUtil.fromType(objectMapper, SearchResult.class);
     }
 
-    public UIUpdater(CardListActivity activity) {
+    UIUpdater(CardListActivity activity) {
         this.activity = activity;
     }
 
@@ -55,14 +51,10 @@ public class UIUpdater extends AsyncTask<Void, Void, SearchResult> {
             return;
         }
 
-        int totalCardCount = 0;
         ArrayList<Card> cards = new ArrayList<>();
-
-        if (result.getHits() != null) {
-            totalCardCount = result.getHits().getTotal();
-            for (Hit hit : result.getHits().getHits()) {
-                cards.add(hit.get_source());
-            }
+        int totalCardCount = result.getHits().getTotal();
+        for (Hit hit : result.getHits().getHits()) {
+            cards.add(hit.get_source());
         }
 
         int textId = R.string.progress_cards_found;
@@ -79,7 +71,7 @@ public class UIUpdater extends AsyncTask<Void, Void, SearchResult> {
 
     private void updateUIList(int totalCardCount, ArrayList<Card> cards) {
         if (!activity.isFinishing()) {
-            if (getOptions().isAppend()) {
+            if (getOptions().getAppend()) {
                 getCardListFragment().appendCards(cards);
             } else {
                 Bundle bundle = new Bundle();
@@ -93,7 +85,7 @@ public class UIUpdater extends AsyncTask<Void, Void, SearchResult> {
 
 
     private void updateUIFacets(SearchResult result) {
-        if (!getOptions().isAppend()) {
+        if (!getOptions().getAppend()) {
             FacetListAdapter adapter = new FacetListAdapter(result.getFacets(), getOptions(), activity);
             getFacetListView().setAdapter(adapter);
 

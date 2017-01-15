@@ -10,7 +10,7 @@ import fr.gstraymond.R;
 import fr.gstraymond.android.CardListActivity;
 import fr.gstraymond.android.CustomApplication;
 import fr.gstraymond.android.fragment.CardListFragment;
-import fr.gstraymond.search.model.response.SearchResult;
+import fr.gstraymond.models.search.response.SearchResult;
 
 import static android.widget.Toast.LENGTH_SHORT;
 import static android.widget.Toast.makeText;
@@ -71,7 +71,7 @@ public class SearchProcessor extends AsyncTask<Void, Void, SearchResult> {
     @Override
     protected void onPostExecute(SearchResult searchResult) {
 
-        if (options.isAppend()) {
+        if (options.getAppend()) {
             if (activity.getLoadingToast() != null) {
                 activity.getLoadingToast().cancel();
             }
@@ -91,13 +91,13 @@ public class SearchProcessor extends AsyncTask<Void, Void, SearchResult> {
     }
 
     private SearchResult launchSearch(SearchOptions options) {
-        if (options.isAppend()) {
+        if (options.getAppend()) {
             options.setFrom(getCardListFragment().getCardListCount());
         }
 
         SearchResult searchResult = getApplicationContext().getElasticSearchClient().process(options, activity.getProgressBarUpdater());
 
-        if (searchResult != null && searchResult.getHits() != null) {
+        if (searchResult != null) {
             log.i(searchResult.getHits().getTotal() + " cards found in " + searchResult.getTook() + " ms");
         }
 

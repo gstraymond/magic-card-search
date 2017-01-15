@@ -2,9 +2,9 @@ package fr.gstraymond.db.json;
 
 import android.content.Context;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.magic.card.search.commons.json.MapperUtil;
 import com.magic.card.search.commons.log.Log;
+import com.squareup.moshi.Moshi;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -12,11 +12,13 @@ import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 
 import fr.gstraymond.biz.SearchOptions;
 import fr.gstraymond.db.History;
 import fr.gstraymond.db.HistoryDataSource;
+import fr.gstraymond.models.JsonHistory;
 
 public class JsonHistoryDataSource {
 
@@ -28,7 +30,7 @@ public class JsonHistoryDataSource {
     private MapperUtil<List<JsonHistory>> mapperUtil;
     private Comparator<JsonHistory> jsonHistoryComparator;
 
-    public JsonHistoryDataSource(Context context, ObjectMapper objectMapper) {
+    public JsonHistoryDataSource(Context context, Moshi objectMapper) {
         this.context = context;
         this.mapperUtil = MapperUtil.fromCollectionType(objectMapper, JsonHistory.class);
         this.jsonHistoryComparator = new Comparator<JsonHistory>() {
@@ -49,7 +51,7 @@ public class JsonHistoryDataSource {
         }
     }
     public void appendHistory(SearchOptions options) {
-        JsonHistory jsonHistory = new JsonHistory(options.getQuery(), false, options.getFacets());
+        JsonHistory jsonHistory = new JsonHistory(options.getQuery(), false, options.getFacets(), new Date());
         ArrayList<JsonHistory> allHistory = getAllHistory();
         allHistory.add(jsonHistory);
         writeHistory(allHistory);
@@ -83,7 +85,7 @@ public class JsonHistoryDataSource {
         writeHistory(jsonHistories);
     }
 
-    public void writeHistory(List<JsonHistory> jsonHistories) {
+    private void writeHistory(List<JsonHistory> jsonHistories) {
         Collections.sort(jsonHistories, jsonHistoryComparator);
         List<JsonHistory> subList = jsonHistories.subList(0, jsonHistories.size() > MAX ? MAX : jsonHistories.size());
         try {
@@ -102,11 +104,10 @@ public class JsonHistoryDataSource {
         ArrayList<History> allHistory = historyDataSource.getAllHistory();
         List<JsonHistory> jsonHistories = new ArrayList<>();
         for(History history : allHistory) {
-            JsonHistory jsonHistory = new JsonHistory();
-            jsonHistory.setDate(history.getDate());
-            jsonHistory.setFacets(history.getFacets());
-            jsonHistory.setFavorite(history.isFavorite());
-            jsonHistory.setQuery(history.getQuery());
+            JsonHistory jsonHistory = new JsonHistory(history.getQuery(),
+                    history.isFavorite(),
+                    history.getFacets(),
+                    history.getDate());
             jsonHistories.add(jsonHistory);
         }
         writeHistory(jsonHistories);

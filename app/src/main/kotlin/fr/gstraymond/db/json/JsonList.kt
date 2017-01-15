@@ -3,27 +3,28 @@ package fr.gstraymond.db.json
 import android.content.Context
 import com.magic.card.search.commons.json.MapperUtil
 import com.magic.card.search.commons.log.Log
+import fr.gstraymond.android.CustomApplication
 import java.io.FileNotFoundException
 
-abstract class JsonList<A>(private val context: Context,
+abstract class JsonList<A>(private val customApplication: CustomApplication,
                            private val mapperUtil: MapperUtil<List<A>>,
                            listName: String) {
 
     private val log = Log(this)
     private val listName = "lists_" + listName
 
-    val elems: MutableList<A>  = load()
-    private val index: MutableSet<String>  = loadIndex()
+    val elems: MutableList<A> = load()
+    private var index: Map<String, A> = loadIndex()
 
     abstract fun getId(elem: A): String
 
-    private fun loadIndex() = elems.map { getId(it) }.toHashSet()
+    private fun loadIndex() = elems.map { getId(it) to it }.toMap()
 
     private fun load(): MutableList<A> {
         try {
-            val inputStream = context.openFileInput(listName)
+            val inputStream = customApplication.openFileInput(listName)
             val result = mapperUtil.read(inputStream)
-            return when(result) {
+            return when (result) {
                 null -> {
                     save(listOf())
                     mutableListOf()
@@ -39,10 +40,11 @@ abstract class JsonList<A>(private val context: Context,
 
     private fun save(elems: List<A>) {
         try {
-            context.openFileOutput(listName, Context.MODE_PRIVATE).apply {
+            customApplication.openFileOutput(listName, Context.MODE_PRIVATE).apply {
                 write(mapperUtil.asJsonString(elems).toByteArray())
                 close()
             }
+            customApplication.refreshLists()
         } catch (e: Exception) {
             log.e("save", e)
         }
@@ -52,21 +54,17 @@ abstract class JsonList<A>(private val context: Context,
         val contain = contains(elem)
         if (!contain) {
             elems.add(elem)
-            index.add(getId(elem))
+            index += (getId(elem) to elem)
         } else {
             elems.remove(elem)
-            index.remove(getId(elem))
+            index = index.filterKeys { it != getId(elem) }
         }
         save(elems)
         log.d("addOrRemove %s -> removed? %s", elem, contain)
         return !contain
     }
 
-    fun contains(elem: A): Boolean {
-        return index.contains(getId(elem))
-    }
+    fun contains(elem: A): Boolean = index.contains(getId(elem))
 
-    fun get(id: String): A? {
-        return elems.find { getId(it) == id }
-    }
+    fun get(id: String): A? = index[id]
 }

@@ -12,7 +12,7 @@ import java.util.ArrayList;
 
 import fr.gstraymond.R;
 import fr.gstraymond.android.fragment.HistoryListFragment;
-import fr.gstraymond.db.json.JsonHistory;
+import fr.gstraymond.models.JsonHistory;
 
 import static fr.gstraymond.constants.Consts.HISTORY_LIST;
 

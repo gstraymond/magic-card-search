@@ -29,28 +29,24 @@ import java.util.Arrays;
 import java.util.List;
 
 import fr.gstraymond.R;
-import fr.gstraymond.android.fragment.CardDetailFragment;
 import fr.gstraymond.android.fragment.CardListFragment;
 import fr.gstraymond.android.fragment.CardParentListFragment;
-import fr.gstraymond.autocomplete.response.Option;
 import fr.gstraymond.biz.AutocompleteProcessor;
 import fr.gstraymond.biz.ProgressBarUpdater;
 import fr.gstraymond.biz.SearchOptions;
 import fr.gstraymond.biz.SearchProcessor;
 import fr.gstraymond.biz.UIUpdater;
-import fr.gstraymond.db.json.JsonHistory;
-import fr.gstraymond.search.model.response.Card;
+import fr.gstraymond.models.JsonHistory;
+import fr.gstraymond.models.autocomplete.response.Option;
 import fr.gstraymond.ui.EndScrollListener;
 import fr.gstraymond.ui.TextListener;
 import fr.gstraymond.ui.adapter.SearchViewCursorAdapter;
 import sheetrock.panda.changelog.ChangeLog;
 
 import static fr.gstraymond.constants.Consts.CARD;
-import static fr.gstraymond.constants.Consts.POSITION;
 
 public class CardListActivity extends CustomActivity implements
         CardListFragment.Callbacks,
-        CardDetailFragment.Callbacks,
         AutocompleteProcessor.Callbacks {
 
     private static final int DRAWER_DELAY = 1200;
@@ -63,7 +59,6 @@ public class CardListActivity extends CustomActivity implements
     private EndScrollListener endScrollListener;
     private SearchView searchView;
 
-    private Card currentCard;
     private int totalCardCount;
     private SearchOptions currentSearch;
     private Log log = new Log(this);
@@ -77,7 +72,7 @@ public class CardListActivity extends CustomActivity implements
     private ProgressBarUpdater progressBarUpdater;
     private List<Option> autocompleteResults = new ArrayList<>();
 
-    ChangeLog changeLog;
+    private ChangeLog changeLog;
     private SearchViewCursorAdapter suggestionsAdapter;
 
     public CardListActivity() {
@@ -139,11 +134,11 @@ public class CardListActivity extends CustomActivity implements
 
         progressBarUpdater = new ProgressBarUpdater((ProgressBar) findViewById(R.id.progress_bar));
         actionBarSetHomeButtonEnabled(true);
-        actionBarSetTitle(R.string.drawer_open);
 
         changeLog = new ChangeLog(this);
-        if (changeLog.firstRun())
+        if (changeLog.firstRun()) {
             changeLog.getLogDialog().show();
+        }
 
         FloatingActionButton fab_wishlist = (FloatingActionButton) findViewById(R.id.fab_wishlist);
         fab_wishlist.setOnClickListener(new View.OnClickListener() {
@@ -152,14 +147,6 @@ public class CardListActivity extends CustomActivity implements
                 startActivity(new Intent(view.getContext(), WishListActivity.class));
             }
         });
-
-        /*FloatingActionButton fab_deck = (FloatingActionButton) findViewById(R.id.fab_deck);
-        fab_deck.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(view.getContext(), DeckListActivity.class));
-            }
-        });*/
     }
 
     @Override
@@ -193,7 +180,7 @@ public class CardListActivity extends CustomActivity implements
             }
         };
 
-        suggestionsAdapter = SearchViewCursorAdapter.empty(this);
+        suggestionsAdapter = SearchViewCursorAdapter.Companion.empty(this);
 
         // Sync the toggle state after onRestoreInstanceState has occurred.
         drawerToggle.syncState();
@@ -264,20 +251,8 @@ public class CardListActivity extends CustomActivity implements
      */
     @Override
     public void onItemSelected(Parcelable card) {
-        log.d("onItemSelected parcelable %s", card);
-        currentCard = (Card) card;
         Intent intent = new Intent(this, CardDetailActivity.class);
         intent.putExtra(CARD, card);
-        startActivity(intent);
-    }
-
-    @Override
-    public void onItemSelected(int id) {
-        log.d("onItemSelected id %s", id);
-        Intent intent = new Intent(this, CardPagerActivity.class);
-        intent.putExtra(CARD, currentCard);
-        // first element is a card
-        intent.putExtra(POSITION, id - 1);
         startActivity(intent);
     }
 
@@ -304,15 +279,9 @@ public class CardListActivity extends CustomActivity implements
 
         switch (item.getItemId()) {
 
-            case R.id.pictures_tab:
-                Intent intent = new Intent(this, CardPagerActivity.class);
-                intent.putExtra(CARD, currentCard);
-                startActivity(intent);
-                return true;
-
             case R.id.clear_tab:
                 resetSearchView();
-                SearchOptions options = new SearchOptions().setRandom(true).setAddToHistory(false);
+                SearchOptions options = new SearchOptions().updateRandom(true).updateAddToHistory(false);
                 new SearchProcessor(this, options, R.string.loading_clear)
                         .execute();
                 openDrawer();
@@ -348,9 +317,9 @@ public class CardListActivity extends CustomActivity implements
                     }
 
                     currentSearch = new SearchOptions()
-                            .setQuery(history.getQuery())
-                            .setFacets(history.getFacets())
-                            .setAddToHistory(false);
+                            .updateQuery(history.getQuery())
+                            .updateFacets(history.getFacets())
+                            .updateAddToHistory(false);
                     new SearchProcessor(this, currentSearch, R.string.loading_initial).execute();
                 }
                 break;
@@ -366,7 +335,6 @@ public class CardListActivity extends CustomActivity implements
     protected void onSaveInstanceState(Bundle outState) {
         //super.onSaveInstanceState(outState); // FIX !!! FAILED BINDER TRANSACTION !!!  (parcel size = 705760) android.os.TransactionTooLargeException
         outState.putParcelable(CURRENT_SEARCH, currentSearch);
-        log.d("onSaveInstanceState " + outState);
     }
 
     @Override

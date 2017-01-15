@@ -8,7 +8,7 @@ import com.magic.card.search.commons.log.Log;
 import fr.gstraymond.R;
 import fr.gstraymond.android.CustomApplication;
 import fr.gstraymond.android.SplashScreenActivity;
-import fr.gstraymond.search.model.response.SearchResult;
+import fr.gstraymond.models.search.response.SearchResult;
 
 public class SplashProcessor extends AsyncTask<Void, Integer, SearchResult> {
 
@@ -31,7 +31,7 @@ public class SplashProcessor extends AsyncTask<Void, Integer, SearchResult> {
         long now = System.currentTimeMillis();
         SearchResult searchResult = elasticSearchClient.process(options, progressBarUpdater);
 
-        if (searchResult != null && searchResult.getHits() != null) {
+        if (searchResult != null) {
             log.i("%s cards found in %s ms", searchResult.getHits().getTotal(), searchResult.getTook());
         }
         log.i("search took %sms", System.currentTimeMillis() - now);

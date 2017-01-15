@@ -5,8 +5,8 @@ import android.widget.TextView;
 import com.magic.card.search.commons.log.Log;
 
 import fr.gstraymond.R;
-import fr.gstraymond.search.model.response.Card;
-import fr.gstraymond.search.model.response.Publication;
+import fr.gstraymond.models.search.response.Card;
+import fr.gstraymond.models.search.response.Publication;
 import fr.gstraymond.ui.view.CommonDisplayableView;
 
 public class CostView extends CommonDisplayableView<TextView> {

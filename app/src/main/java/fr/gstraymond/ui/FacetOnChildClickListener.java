@@ -8,7 +8,7 @@ import fr.gstraymond.R;
 import fr.gstraymond.android.CardListActivity;
 import fr.gstraymond.biz.SearchOptions;
 import fr.gstraymond.biz.SearchProcessor;
-import fr.gstraymond.search.model.response.facet.Term;
+import fr.gstraymond.models.search.response.Term;
 import fr.gstraymond.ui.adapter.FacetListAdapter;
 
 public class FacetOnChildClickListener implements OnChildClickListener {
@@ -31,7 +31,9 @@ public class FacetOnChildClickListener implements OnChildClickListener {
         String facet = adapter.getFacet(groupPosition);
         int textId = R.string.loading_facet;
 
-        options.setAppend(false).setFrom(0).setAddToHistory(true);
+
+
+        options.updateAppend(false).updateFrom(0).updateAddToHistory(true);
 
         if (term.getCount() > -1) {
             if (adapter.isTermSelected(term)) {
@@ -45,7 +47,7 @@ public class FacetOnChildClickListener implements OnChildClickListener {
         }
 
         if ("*".equals(options.getQuery()) && options.getFacets().isEmpty()) {
-            options.setAddToHistory(false);
+            options.updateAddToHistory(false);
         }
 
         new SearchProcessor(activity, options, textId).execute();
