@@ -4,8 +4,12 @@
 -keep class fr.gstraymond.network.ElasticSearchApi { *; }
 -keep class com.magic.card.search.commons.application.** { *; }
 
--assumenosideeffects class android.util.Log { *; }
--assumenosideeffects class okhttp3.logging.HttpLoggingInterceptor.Logger { *; }
+-assumenosideeffects class android.util.Log  {
+    public static int d(...);
+    public static int v(...);
+    public static int i(...);
+    public static int e(...);
+}
 -assumenosideeffects class kotlin.jvm.internal.Intrinsics {
     static void checkParameterIsNotNull(java.lang.Object, java.lang.String);
 }

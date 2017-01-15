@@ -90,6 +90,9 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".android.CardListActivity" />
         </activity>
+
+        <!-- Decks -->
+        <!--
         <activity
             android:name=".android.DeckListActivity"
             android:parentActivityName=".android.CardListActivity"
@@ -126,6 +129,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".android.DeckDetailActivity" />
         </activity>
+        -->
 
         <meta-data
             android:name="io.fabric.ApiKey"

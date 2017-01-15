@@ -72,7 +72,7 @@ public class CardListActivity extends CustomActivity implements
     private ProgressBarUpdater progressBarUpdater;
     private List<Option> autocompleteResults = new ArrayList<>();
 
-    ChangeLog changeLog;
+    private ChangeLog changeLog;
     private SearchViewCursorAdapter suggestionsAdapter;
 
     public CardListActivity() {
@@ -136,8 +136,9 @@ public class CardListActivity extends CustomActivity implements
         actionBarSetHomeButtonEnabled(true);
 
         changeLog = new ChangeLog(this);
-        if (changeLog.firstRun())
+        if (changeLog.firstRun()) {
             changeLog.getLogDialog().show();
+        }
 
         FloatingActionButton fab_wishlist = (FloatingActionButton) findViewById(R.id.fab_wishlist);
         fab_wishlist.setOnClickListener(new View.OnClickListener() {

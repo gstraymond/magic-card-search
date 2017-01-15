@@ -1,10 +1,12 @@
 package fr.gstraymond.android
 
 import android.app.Activity
+import android.os.Build
 import android.os.Bundle
 import com.magic.card.search.commons.application.BaseApplication
 import com.magic.card.search.commons.json.MapperUtil
 import com.magic.card.search.commons.log.Log
+import fr.gstraymond.BuildConfig
 import fr.gstraymond.biz.ElasticSearchClient
 import fr.gstraymond.db.json.Decklist
 import fr.gstraymond.db.json.JsonDeck
@@ -94,7 +96,10 @@ class CustomApplication : BaseApplication() {
 
             chain.proceed(request)
         }
-        httpClient.addInterceptor(HttpLoggingInterceptor().apply { level = HttpLoggingInterceptor.Level.HEADERS })
+
+        if (BuildConfig.DEBUG) {
+            httpClient.addInterceptor(HttpLoggingInterceptor().apply { level = HttpLoggingInterceptor.Level.HEADERS })
+        }
 
         return Retrofit.Builder()
                 .addConverterFactory(MoshiConverterFactory.create(objectMapper))
