@@ -33,7 +33,7 @@ public class SplashScreenActivity extends CustomActivity {
         String resultAsString = MapperUtil.fromType(getObjectMapper(), SearchResult.class).asJsonString(result);
 
         Intent intent = new Intent(this, CardListActivity.class);
-        intent.putExtra(CardListActivity.CARD_RESULT, resultAsString);
+        intent.putExtra(CardListActivity.Companion.getCARD_RESULT(), resultAsString);
         startActivity(intent);
 
         finish();

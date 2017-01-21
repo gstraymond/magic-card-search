@@ -121,10 +121,6 @@ class SearchViewCursorAdapter private constructor(context: Context, cursor: Curs
             return SearchViewCursorAdapter(context, convert(ArrayList<Option>()), 0)
         }
 
-        fun from(context: Context, data: List<Option>): SearchViewCursorAdapter {
-            return SearchViewCursorAdapter(context, convert(data), 0)
-        }
-
         private fun convert(data: List<Option>): Cursor {
             val cursor = MatrixCursor(
                     arrayOf("_id",

@@ -12,22 +12,24 @@ import fr.gstraymond.biz.SearchProcessor
 class TextListener(val activity: CardListActivity,
                    val callbacks: Callbacks) : OnQueryTextListener {
 
+    companion object {
+        val SEP = "\u00A0"
+    }
+
     var canSearch = true
 
     private val log = Log(this)
 
-    private val WHITESPACE = "\u00A0"
-
     override fun onQueryTextChange(text: String): Boolean {
         log.d("text: %s", text)
-        if (text.isEmpty() || text.endsWith(WHITESPACE)) {
+        if (text.isEmpty() || text.endsWith(SEP)) {
             callbacks.bindAutocompleteResults(listOf())
             return false
         }
 
         val query =
-                if (!text.contains(WHITESPACE)) text
-                else text.split(WHITESPACE).last()
+                if (!text.contains(SEP)) text
+                else text.split(SEP).last()
 
         AutocompleteProcessor(activity.objectMapper, activity.customApplication.searchService, callbacks).execute(query)
         return true
