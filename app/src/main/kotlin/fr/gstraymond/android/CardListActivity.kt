@@ -7,6 +7,8 @@ import android.os.Parcelable
 import android.support.design.widget.FloatingActionButton
 import android.support.v4.widget.DrawerLayout
 import android.support.v7.app.ActionBarDrawerToggle
+import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.Toolbar
 import android.view.Menu
 import android.view.MenuItem
@@ -19,20 +21,20 @@ import com.crashlytics.android.answers.Answers
 import com.crashlytics.android.answers.ContentViewEvent
 import com.magic.card.search.commons.log.Log
 import fr.gstraymond.R
-import fr.gstraymond.android.fragment.CardListFragment
-import fr.gstraymond.android.fragment.CardParentListFragment
 import fr.gstraymond.biz.*
 import fr.gstraymond.constants.Consts.CARD
 import fr.gstraymond.models.JsonHistory
 import fr.gstraymond.models.autocomplete.response.Option
+import fr.gstraymond.models.search.response.Card
 import fr.gstraymond.ui.EndScrollListener
 import fr.gstraymond.ui.SuggestionListener
 import fr.gstraymond.ui.TextListener
+import fr.gstraymond.ui.adapter.CardArrayAdapter
 import fr.gstraymond.ui.adapter.SearchViewCursorAdapter
 import fr.gstraymond.utils.find
 import sheetrock.panda.changelog.ChangeLog
 
-class CardListActivity : CustomActivity(), CardListFragment.Callbacks, AutocompleteProcessor.Callbacks {
+class CardListActivity : CustomActivity(), CardArrayAdapter.ClickCallbacks, AutocompleteProcessor.Callbacks {
 
     companion object {
         private val CURRENT_SEARCH = "currentSearch"
@@ -49,18 +51,20 @@ class CardListActivity : CustomActivity(), CardListFragment.Callbacks, Autocompl
     private lateinit var suggestionListener: SuggestionListener
 
     lateinit var progressBarUpdater: ProgressBarUpdater
+    lateinit var endScrollListener: EndScrollListener
 
     var totalCardCount: Int = 0
     var currentSearch = SearchOptions()
     var loadingToast: Toast? = null
     val textListener = TextListener(this, this)
-    val endScrollListener = EndScrollListener(this)
 
     private var isRestored = false
     private var hasDeviceRotated = false
 
     private lateinit var changeLog: ChangeLog
     private var suggestionsAdapter = SearchViewCursorAdapter.empty(this)
+
+    val adapter by lazy { CardArrayAdapter(this, customApplication.wishlist, this) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -69,7 +73,14 @@ class CardListActivity : CustomActivity(), CardListFragment.Callbacks, Autocompl
         val toolbar = find<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
 
-        replaceFragment(CardParentListFragment(), R.id.parent_fragment)
+
+        val layoutManager = LinearLayoutManager(this)
+        endScrollListener = EndScrollListener(this, layoutManager, find<FloatingActionButton>(R.id.fab_wishlist))
+        find<RecyclerView>(R.id.recycler_view).let {
+            it.layoutManager = layoutManager
+            it.adapter = adapter
+            it.addOnScrollListener(endScrollListener)
+        }
 
         if (savedInstanceState != null) {
             val savedSearch = savedInstanceState.getParcelable<SearchOptions>(CURRENT_SEARCH)
@@ -155,23 +166,16 @@ class CardListActivity : CustomActivity(), CardListFragment.Callbacks, Autocompl
         }
     }
 
-    override fun onResume() {
-        super.onResume()
-        endScrollListener.setFab(find<FloatingActionButton>(R.id.fab_wishlist))
-    }
-
     private fun openDrawer() {
         searchView.clearFocus()
     }
 
-    /**
-     * Callback method from [CardListFragment.Callbacks] indicating that
-     * the item with the given ID was selected.
-     */
-    override fun onItemSelected(card: Parcelable) {
-        val intent = Intent(this, CardDetailActivity::class.java)
-        intent.putExtra(CARD, card)
-        startActivity(intent)
+    override fun cardClicked(card: Card) {
+        startActivity {
+            Intent(this, CardDetailActivity::class.java).apply {
+                putExtra(CARD, card)
+            }
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

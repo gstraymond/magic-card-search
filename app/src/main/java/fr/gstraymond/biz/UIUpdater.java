@@ -1,9 +1,6 @@
 package fr.gstraymond.biz;
 
-import android.app.Fragment;
-import android.app.FragmentManager;
 import android.os.AsyncTask;
-import android.os.Bundle;
 import android.widget.ExpandableListView;
 import android.widget.TextView;
 
@@ -14,14 +11,11 @@ import java.util.ArrayList;
 
 import fr.gstraymond.R;
 import fr.gstraymond.android.CardListActivity;
-import fr.gstraymond.android.fragment.CardListFragment;
 import fr.gstraymond.models.search.response.Card;
 import fr.gstraymond.models.search.response.Hit;
 import fr.gstraymond.models.search.response.SearchResult;
 import fr.gstraymond.ui.FacetOnChildClickListener;
 import fr.gstraymond.ui.adapter.FacetListAdapter;
-
-import static fr.gstraymond.constants.Consts.CARD_LIST;
 
 public class UIUpdater extends AsyncTask<Void, Void, SearchResult> {
 
@@ -72,11 +66,9 @@ public class UIUpdater extends AsyncTask<Void, Void, SearchResult> {
     private void updateUIList(int totalCardCount, ArrayList<Card> cards) {
         if (!activity.isFinishing()) {
             if (getOptions().getAppend()) {
-                getCardListFragment().appendCards(cards);
+                activity.getAdapter().appendCards(cards);
             } else {
-                Bundle bundle = new Bundle();
-                bundle.putParcelableArrayList(CARD_LIST, cards);
-                activity.replaceFragment(new CardListFragment(), R.id.card_list, bundle);
+                activity.getAdapter().setCards(cards);
 
             }
             activity.setTotalCardCount(totalCardCount);
@@ -100,15 +92,6 @@ public class UIUpdater extends AsyncTask<Void, Void, SearchResult> {
 
     private SearchOptions getOptions() {
         return activity.getCurrentSearch();
-    }
-
-    private FragmentManager getFragmentManager() {
-        return activity.getFragmentManager();
-    }
-
-    private CardListFragment getCardListFragment() {
-        Fragment fragment = getFragmentManager().findFragmentById(R.id.card_list);
-        return (CardListFragment) fragment;
     }
 
     private ExpandableListView getFacetListView() {

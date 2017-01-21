@@ -29,7 +29,7 @@ class WishListActivity : CustomActivity(), WishlistAdapter.ClickCallbacks {
             title = getString(R.string.wishlist_title)
         }
 
-        find<RecyclerView>(R.id.wishlist_recyclerview).let { it ->
+        find<RecyclerView>(R.id.wishlist_recyclerview).let {
             it.layoutManager = LinearLayoutManager(this)
             it.adapter = WishlistAdapter(this, wishlist, this)
         }
@@ -49,10 +49,11 @@ class WishListActivity : CustomActivity(), WishlistAdapter.ClickCallbacks {
     }
 
     override fun cardClicked(card: Card) {
-        val intent = Intent(this, CardDetailActivity::class.java).apply {
-            putExtra(CARD, card)
+        startActivity {
+            Intent(this, CardDetailActivity::class.java).apply {
+                putExtra(CARD, card)
+            }
         }
-        startActivity(intent)
     }
 
     override fun buildContentViewEvent() =
