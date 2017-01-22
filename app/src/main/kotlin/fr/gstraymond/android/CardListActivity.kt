@@ -22,7 +22,6 @@ import com.magic.card.search.commons.log.Log
 import fr.gstraymond.R
 import fr.gstraymond.biz.*
 import fr.gstraymond.constants.Consts.CARD
-import fr.gstraymond.models.JsonHistory
 import fr.gstraymond.models.autocomplete.response.Option
 import fr.gstraymond.models.search.response.Card
 import fr.gstraymond.ui.EndScrollListener
@@ -33,13 +32,13 @@ import fr.gstraymond.ui.adapter.SearchViewCursorAdapter
 import fr.gstraymond.utils.find
 import sheetrock.panda.changelog.ChangeLog
 
-class CardListActivity : CustomActivity(), CardArrayAdapter.ClickCallbacks, AutocompleteProcessor.Callbacks {
+class CardListActivity : CustomActivity(R.layout.activity_card_list),
+        CardArrayAdapter.ClickCallbacks, AutocompleteProcessor.Callbacks {
 
     companion object {
-        private val CURRENT_SEARCH = "currentSearch"
+        val CURRENT_SEARCH = "currentSearch"
         val CARD_RESULT = "result"
         val SEARCH_QUERY = "searchQuery"
-        val HISTORY_REQUEST_CODE = 1000
     }
 
     private val log = Log(this)
@@ -66,11 +65,9 @@ class CardListActivity : CustomActivity(), CardArrayAdapter.ClickCallbacks, Auto
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_card_list)
 
         val toolbar = find<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
-
 
         val layoutManager = LinearLayoutManager(this)
         endScrollListener = EndScrollListener(this, layoutManager, find<FloatingActionButton>(R.id.fab_wishlist))
@@ -86,21 +83,19 @@ class CardListActivity : CustomActivity(), CardArrayAdapter.ClickCallbacks, Auto
             }
         }
 
-        if (savedInstanceState != null) {
-            val savedSearch = savedInstanceState.getParcelable<SearchOptions>(CURRENT_SEARCH)
-            if (savedSearch != null) {
-                currentSearch = savedSearch
-                isRestored = true
-                log.d("Restored search : " + currentSearch)
-            }
-        }
-
         searchView = find<SearchView>(R.id.search_input).apply {
             suggestionListener = SuggestionListener(this, listOf())
 
             setOnQueryTextListener(textListener)
             setOnSuggestionListener(suggestionListener)
             suggestionsAdapter = searchViewCursorAdapter
+        }
+
+        savedInstanceState?.getParcelable<SearchOptions>(CURRENT_SEARCH)?.let { savedSearch ->
+            log.d("Restored search : " + currentSearch)
+            currentSearch = savedSearch
+            isRestored = true
+            searchView.setQuery(currentSearch.query, false)
         }
 
         drawerLayout = find<DrawerLayout>(R.id.drawer_layout)
@@ -138,7 +133,10 @@ class CardListActivity : CustomActivity(), CardArrayAdapter.ClickCallbacks, Auto
 
         if (intent.getParcelableExtra<Parcelable>(SEARCH_QUERY) != null) {
             currentSearch = intent.getParcelableExtra<SearchOptions>(SEARCH_QUERY)
-            searchView.setQuery(currentSearch.query, false)
+            currentSearch.addToHistory = false
+            if (currentSearch.query != "*") {
+                searchView.setQuery(currentSearch.query, false)
+            }
             SearchProcessor(this, currentSearch, R.string.loading_initial).execute()
         } else {
             if (isRestored) {
@@ -199,12 +197,9 @@ class CardListActivity : CustomActivity(), CardArrayAdapter.ClickCallbacks, Auto
             }
 
             R.id.history_tab -> {
-                startActivityForResult(Intent(this, HistoryActivity::class.java), HISTORY_REQUEST_CODE)
-                return true
-            }
-
-            R.id.help_tab -> {
-                startActivity(Intent(this, HelpActivity::class.java))
+                startActivity {
+                    Intent(this, HistoryActivity::class.java)
+                }
                 return true
             }
 
@@ -216,26 +211,6 @@ class CardListActivity : CustomActivity(), CardArrayAdapter.ClickCallbacks, Auto
         }
 
         return super.onOptionsItemSelected(item)
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
-        when (requestCode) {
-            HISTORY_REQUEST_CODE -> if (resultCode == RESULT_OK) {
-                val history = data.extras.getParcelable<JsonHistory>("history")
-
-                if (history!!.query != "*") {
-                    searchView.setQuery(history.query, false)
-                } else {
-                    searchView.setQuery("", false)
-                }
-
-                currentSearch = SearchOptions()
-                        .updateQuery(history.query)
-                        .updateFacets(history.facets)
-                        .updateAddToHistory(false)
-                SearchProcessor(this, currentSearch, R.string.loading_initial).execute()
-            }
-        }
     }
 
     private fun resetSearchView() {

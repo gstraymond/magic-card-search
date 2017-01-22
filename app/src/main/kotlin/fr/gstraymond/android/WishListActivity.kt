@@ -15,13 +15,13 @@ import fr.gstraymond.utils.find
 import fr.gstraymond.utils.hide
 import fr.gstraymond.utils.show
 
-class WishListActivity : CustomActivity(), WishlistAdapter.ClickCallbacks {
+class WishListActivity : CustomActivity(R.layout.activity_wishlist),
+        WishlistAdapter.ClickCallbacks {
 
     private val wishlist by lazy { customApplication.wishlist }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_wishlist)
 
         setSupportActionBar(find<Toolbar>(R.id.toolbar))
         supportActionBar?.apply {

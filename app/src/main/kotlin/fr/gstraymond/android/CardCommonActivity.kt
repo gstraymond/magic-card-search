@@ -1,15 +1,12 @@
 package fr.gstraymond.android
 
 import android.os.Bundle
-
 import com.crashlytics.android.answers.ContentViewEvent
-
+import fr.gstraymond.constants.Consts.CARD
 import fr.gstraymond.models.search.response.Card
 import fr.gstraymond.tools.LanguageUtil
 
-import fr.gstraymond.constants.Consts.CARD
-
-abstract class CardCommonActivity : CustomActivity() {
+abstract class CardCommonActivity(layoutId: Int) : CustomActivity(layoutId) {
 
     protected lateinit var card: Card
 

@@ -66,12 +66,6 @@
                 android:value=".android.CardDetailActivity" />
         </activity>
 
-        <!-- Help -->
-        <activity
-            android:name=".android.HelpActivity"
-            android:label="@string/list_menu_help"
-            android:theme="@style/AppTheme" />
-
         <!-- History -->
         <activity
             android:name=".android.HistoryActivity"

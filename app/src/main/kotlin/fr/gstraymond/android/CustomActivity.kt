@@ -10,13 +10,18 @@ import com.crashlytics.android.answers.Answers
 import com.crashlytics.android.answers.ContentViewEvent
 import com.squareup.moshi.Moshi
 
-abstract class CustomActivity : AppCompatActivity() {
+abstract class CustomActivity(private val layoutId: Int) : AppCompatActivity() {
 
     val customApplication by lazy { application as CustomApplication }
 
     val objectMapper: Moshi by lazy { customApplication.objectMapper }
 
     val jsonHistoryDataSource by lazy { customApplication.jsonHistoryDataSource }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(layoutId)
+    }
 
     open fun replaceFragment(fragment: Fragment, id: Int) {
         replaceFragment(fragment, id, null)

@@ -16,7 +16,7 @@ import fr.gstraymond.utils.find
 import fr.gstraymond.utils.hide
 import fr.gstraymond.utils.show
 
-class DeckListActivity : CustomActivity() {
+class DeckListActivity : CustomActivity(R.layout.activity_deck_list) {
 
     companion object {
         fun getIntent(context: Context) = Intent(context, DeckListActivity::class.java)
@@ -26,7 +26,6 @@ class DeckListActivity : CustomActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_deck_list)
 
         setSupportActionBar(find<Toolbar>(R.id.toolbar))
         supportActionBar?.apply {
