@@ -4,10 +4,10 @@ import android.content.Context
 import android.database.Cursor
 import android.database.MatrixCursor
 import android.support.v4.content.res.ResourcesCompat
+import android.support.v4.widget.CursorAdapter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.CursorAdapter
 import android.widget.ImageView
 import android.widget.TextView
 import fr.gstraymond.R
@@ -16,36 +16,37 @@ import fr.gstraymond.models.autocomplete.response.Option
 import fr.gstraymond.tools.CardColorUtil
 import java.util.*
 
-
-class SearchViewCursorAdapter private constructor(context: Context, cursor: Cursor, flags: Int) : CursorAdapter(context, cursor, flags) {
+class SearchViewCursorAdapter private constructor(context: Context,
+                                                  cursor: Cursor,
+                                                  flags: Int) : CursorAdapter(context, cursor, flags) {
 
     private val setImageGetter = SetImageGetter(context)
 
     override fun newView(context: Context, cursor: Cursor, parent: ViewGroup): View {
         val holder: ViewHolder
-        val v: View
+        val view: View
         val inflater = LayoutInflater.from(context)
 
         when (getType(cursor)) {
             FIELD_TYPE_EDITION -> {
-                v = inflater.inflate(R.layout.searchview_adapter_edition, parent, false)
+                view = inflater.inflate(R.layout.searchview_adapter_edition, parent, false)
                 holder = EditionViewHolder(
-                        v.findViewById(R.id.searchview_edition_text) as TextView,
-                        v.findViewById(R.id.searchview_edition_image) as ImageView)
+                        view.findViewById(R.id.searchview_edition_text) as TextView,
+                        view.findViewById(R.id.searchview_edition_image) as ImageView)
             }
             FIELD_TYPE_CARD -> {
-                v = inflater.inflate(R.layout.searchview_adapter_card, parent, false)
+                view = inflater.inflate(R.layout.searchview_adapter_card, parent, false)
                 holder = CardViewHolder(
-                        v.findViewById(R.id.searchview_card_title) as TextView,
-                        v.findViewById(R.id.searchview_card_type) as TextView)
+                        view.findViewById(R.id.searchview_card_title) as TextView,
+                        view.findViewById(R.id.searchview_card_type) as TextView)
             }
             else -> {
-                v = inflater.inflate(R.layout.searchview_adapter_token, parent, false)
-                holder = TokenViewHolder(v as TextView)
+                view = inflater.inflate(R.layout.searchview_adapter_token, parent, false)
+                holder = TokenViewHolder(view as TextView)
             }
         }
 
-        return v.apply { tag = holder }
+        return view.apply { tag = holder }
     }
 
     override fun bindView(view: View, context: Context, cursor: Cursor) {

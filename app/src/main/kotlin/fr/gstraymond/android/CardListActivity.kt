@@ -9,13 +9,12 @@ import android.support.v4.widget.DrawerLayout
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.support.v7.widget.SearchView
 import android.support.v7.widget.Toolbar
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.widget.AutoCompleteTextView
 import android.widget.ProgressBar
-import android.widget.SearchView
 import android.widget.Toast
 import com.crashlytics.android.answers.Answers
 import com.crashlytics.android.answers.ContentViewEvent
@@ -61,8 +60,7 @@ class CardListActivity : CustomActivity(), CardArrayAdapter.ClickCallbacks, Auto
     private var isRestored = false
     private var hasDeviceRotated = false
 
-    private lateinit var changeLog: ChangeLog
-    private var suggestionsAdapter = SearchViewCursorAdapter.empty(this)
+    private var searchViewCursorAdapter = SearchViewCursorAdapter.empty(this)
 
     val adapter by lazy { CardArrayAdapter(this, customApplication.wishlist, this) }
 
@@ -80,6 +78,12 @@ class CardListActivity : CustomActivity(), CardArrayAdapter.ClickCallbacks, Auto
             it.layoutManager = layoutManager
             it.adapter = adapter
             it.addOnScrollListener(endScrollListener)
+            it.setOnTouchListener { view, motionEvent ->
+                when {
+                    searchView.hasFocus() -> searchView.clearFocus()
+                }
+                false
+            }
         }
 
         if (savedInstanceState != null) {
@@ -91,16 +95,13 @@ class CardListActivity : CustomActivity(), CardArrayAdapter.ClickCallbacks, Auto
             }
         }
 
-        searchView = find<SearchView>(R.id.search_input)
-        suggestionListener = SuggestionListener(searchView, listOf())
+        searchView = find<SearchView>(R.id.search_input).apply {
+            suggestionListener = SuggestionListener(this, listOf())
 
-        searchView.setOnQueryTextListener(textListener)
-        searchView.setOnSuggestionListener(suggestionListener)
-        searchView.suggestionsAdapter = suggestionsAdapter
-
-        // -- hack for settings min size suggestion
-        val autoCompleteTextViewID = resources.getIdentifier("android:id/search_src_text", "id", packageName)
-        (searchView.find<AutoCompleteTextView>(autoCompleteTextViewID)).threshold = 1
+            setOnQueryTextListener(textListener)
+            setOnSuggestionListener(suggestionListener)
+            suggestionsAdapter = searchViewCursorAdapter
+        }
 
         drawerLayout = find<DrawerLayout>(R.id.drawer_layout)
         drawerToggle = ActionBarDrawerToggle(
@@ -111,24 +112,17 @@ class CardListActivity : CustomActivity(), CardArrayAdapter.ClickCallbacks, Auto
                 R.string.drawer_close)
 
         drawerLayout.addDrawerListener(drawerToggle)
-        drawerLayout.addDrawerListener(object : DrawerLayout.DrawerListener {
-            override fun onDrawerSlide(drawerView: View, slideOffset: Float) {}
+        drawerLayout.addDrawerListener(object : DrawerLayout.SimpleDrawerListener() {
+            override fun onDrawerOpened(drawerView: View) = searchView.clearFocus()
 
-            override fun onDrawerOpened(drawerView: View) {}
-
-            override fun onDrawerClosed(drawerView: View) {
-                searchView.clearFocus()
-            }
-
-            override fun onDrawerStateChanged(newState: Int) {}
+            override fun onDrawerClosed(drawerView: View) = searchView.clearFocus()
         })
 
         progressBarUpdater = ProgressBarUpdater(find<ProgressBar>(R.id.progress_bar))
         actionBarSetHomeButtonEnabled(true)
 
-        changeLog = ChangeLog(this)
-        if (changeLog.firstRun()) {
-            changeLog.logDialog.show()
+        ChangeLog(this).apply {
+            if (firstRun()) logDialog.show()
         }
 
         find<FloatingActionButton>(R.id.fab_wishlist).setOnClickListener { view ->
@@ -141,9 +135,6 @@ class CardListActivity : CustomActivity(), CardArrayAdapter.ClickCallbacks, Auto
 
         // Sync the toggle state after onRestoreInstanceState has occurred.
         drawerToggle.syncState()
-        if (intent.getParcelableExtra<Parcelable>(SEARCH_QUERY) == null) {
-            openDrawer()
-        }
 
         if (intent.getParcelableExtra<Parcelable>(SEARCH_QUERY) != null) {
             currentSearch = intent.getParcelableExtra<SearchOptions>(SEARCH_QUERY)
@@ -166,8 +157,9 @@ class CardListActivity : CustomActivity(), CardArrayAdapter.ClickCallbacks, Auto
         }
     }
 
-    private fun openDrawer() {
-        searchView.clearFocus()
+    override fun onResume() {
+        super.onResume()
+        find<View>(R.id.root_view).requestFocus()
     }
 
     override fun cardClicked(card: Card) {
@@ -201,9 +193,8 @@ class CardListActivity : CustomActivity(), CardArrayAdapter.ClickCallbacks, Auto
             R.id.clear_tab -> {
                 resetSearchView()
                 val options = SearchOptions().updateRandom(true).updateAddToHistory(false)
-                SearchProcessor(this, options, R.string.loading_clear)
-                        .execute()
-                openDrawer()
+                SearchProcessor(this, options, R.string.loading_clear).execute()
+                searchView.clearFocus()
                 return true
             }
 
@@ -219,7 +210,7 @@ class CardListActivity : CustomActivity(), CardArrayAdapter.ClickCallbacks, Auto
 
             R.id.changelog_tab -> {
                 Answers.getInstance().logContentView(ContentViewEvent().putContentName("Changelog"))
-                changeLog.fullLogDialog.show()
+                ChangeLog(this).fullLogDialog.show()
                 return true
             }
         }
@@ -261,6 +252,6 @@ class CardListActivity : CustomActivity(), CardArrayAdapter.ClickCallbacks, Auto
 
     override fun bindAutocompleteResults(results: List<Option>) {
         suggestionListener.autocompleteResults = results
-        suggestionsAdapter.changeCursor(results)
+        searchViewCursorAdapter.changeCursor(results)
     }
 }

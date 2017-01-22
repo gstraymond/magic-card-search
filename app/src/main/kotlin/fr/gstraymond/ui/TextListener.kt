@@ -1,6 +1,6 @@
 package fr.gstraymond.ui
 
-import android.widget.SearchView.OnQueryTextListener
+import android.support.v7.widget.SearchView
 import com.magic.card.search.commons.log.Log
 import fr.gstraymond.R
 import fr.gstraymond.android.CardListActivity
@@ -10,7 +10,7 @@ import fr.gstraymond.biz.SearchOptions
 import fr.gstraymond.biz.SearchProcessor
 
 class TextListener(val activity: CardListActivity,
-                   val callbacks: Callbacks) : OnQueryTextListener {
+                   val callbacks: Callbacks) : SearchView.OnQueryTextListener {
 
     companion object {
         val SEP = "\u00A0"
