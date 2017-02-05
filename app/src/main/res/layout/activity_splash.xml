@@ -7,11 +7,10 @@
         android:id="@+id/imgLogo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_margin="72dp"
         android:layout_centerInParent="true"
         android:contentDescription="@string/logo"
-        android:scaleX="3"
-        android:scaleY="3"
-        android:src="@drawable/ic_launcher" />
+        android:src="@drawable/logo" />
 
     <TextView
         style="@android:style/TextAppearance.Large"
