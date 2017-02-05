@@ -221,8 +221,8 @@ class CardListActivity : CustomActivity(R.layout.activity_card_list),
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
-        //super.onSaveInstanceState(outState); // FIX !!! FAILED BINDER TRANSACTION !!!  (parcel size = 705760) android.os.TransactionTooLargeException
         outState.putParcelable(CURRENT_SEARCH, currentSearch)
+        super.onSaveInstanceState(outState)
     }
 
     override fun bindAutocompleteResults(results: List<Option>) {

@@ -54,7 +54,7 @@ public class CardPagerFragment extends Fragment {
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
         outState.putInt(POSITION, position);
+        super.onSaveInstanceState(outState);
     }
 }
