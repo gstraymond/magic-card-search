@@ -44,11 +44,11 @@ public class ElasticSearchClient {
     }
 
     SearchResult process(SearchOptions options, CallBacks callbacks) {
-        callbacks.start();
+        if (callbacks != null) callbacks.start();
         log.d("options as json : %s", options);
         Request request = Request.Companion.fromOptions(options);
         String queryAsJson = mapperUtil.asJsonString(request);
-        callbacks.buildRequest();
+        if (callbacks != null) callbacks.buildRequest();
 
         if (options.getAddToHistory()) {
             log.i("add to history : " + options);
@@ -59,11 +59,11 @@ public class ElasticSearchClient {
         if (response == null) return null;
 
         SearchResult searchResult = response.getElem();
-        callbacks.getResponse();
+        if (callbacks != null) callbacks.getResponse();
 
         Answers.getInstance().logSearch(buildSearchEvent(options, searchResult.getHits().getTotal()));
 
-        callbacks.end();
+        if (callbacks != null) callbacks.end();
         return searchResult;
     }
 

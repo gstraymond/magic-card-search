@@ -5,14 +5,18 @@ import android.content.Intent
 import android.content.Intent.ACTION_SEARCH
 import android.os.Bundle
 import com.magic.card.search.commons.json.MapperUtil
+import com.magic.card.search.commons.log.Log
 import fr.gstraymond.R
 import fr.gstraymond.biz.SearchOptions
 import fr.gstraymond.biz.SplashProcessor
 import fr.gstraymond.models.search.response.SearchResult
+import java.util.*
 
 class SplashScreenActivity : CustomActivity(R.layout.activity_splash) {
 
     private val GMS_SEARCH = "com.google.android.gms.actions.SEARCH_ACTION"
+    private val started = Date()
+    private val log = Log(this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,7 +35,11 @@ class SplashScreenActivity : CustomActivity(R.layout.activity_splash) {
         SplashProcessor(this, options).execute()
     }
 
-    fun startNextActivity(result: SearchResult) {
+    fun startNextActivity(result: SearchResult?) {
+        val remainingTime = 1000 - (Date().time - started.time)
+        log.d("remaining time: $remainingTime")
+        if (remainingTime > 0) Thread.sleep(remainingTime)
+
         startActivity {
             val resultAsString = MapperUtil.fromType(objectMapper, SearchResult::class.java).asJsonString(result)
             Intent(this, CardListActivity::class.java).apply {
