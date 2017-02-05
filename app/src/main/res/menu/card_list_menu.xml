@@ -14,12 +14,6 @@
         android:title="@string/list_menu_history" />
 
     <item
-        android:id="@+id/help_tab"
-        app:showAsAction="never"
-        android:visible="false"
-        android:title="@string/list_menu_help" />
-
-    <item
         android:id="@+id/changelog_tab"
         android:icon="@drawable/ic_help_outline_white_48dp"
         app:showAsAction="ifRoom"

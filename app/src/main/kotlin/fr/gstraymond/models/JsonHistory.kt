@@ -18,9 +18,7 @@ data class JsonHistory(val query: String,
             facets = readFacets(source)
     )
 
-    override fun describeContents(): Int {
-        return 0
-    }
+    override fun describeContents() = 0
 
     override fun writeToParcel(dest: Parcel, flags: Int) {
         dest.writeString(query)

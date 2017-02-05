@@ -67,7 +67,7 @@ public class CardDetailFragment extends CustomListFragment {
                 new CardDetailAdapter.Callbacks() {
                     @Override
                     public void onImageClick(int position) {
-                        callbacks.onItemSelected(position + 1);
+                        callbacks.onItemSelected(position);
                     }
 
                     @Nullable

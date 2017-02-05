@@ -13,7 +13,7 @@ import fr.gstraymond.biz.DeckStats
 import fr.gstraymond.models.CardWithOccurrence
 import java.util.*
 
-class DeckDetailActivity : CustomActivity() {
+class DeckDetailActivity : CustomActivity(R.layout.activity_deck_detail) {
 
     companion object {
         val DECK_EXTRA = "deck"
@@ -26,7 +26,6 @@ class DeckDetailActivity : CustomActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_deck_detail)
 
         val deckId = intent.getStringExtra(DECK_EXTRA)
 

@@ -1,6 +1,5 @@
 package fr.gstraymond.biz;
 
-import android.app.FragmentManager;
 import android.os.AsyncTask;
 import android.widget.TextView;
 
@@ -9,7 +8,6 @@ import com.magic.card.search.commons.log.Log;
 import fr.gstraymond.R;
 import fr.gstraymond.android.CardListActivity;
 import fr.gstraymond.android.CustomApplication;
-import fr.gstraymond.android.fragment.CardListFragment;
 import fr.gstraymond.models.search.response.SearchResult;
 
 import static android.widget.Toast.LENGTH_SHORT;
@@ -51,13 +49,8 @@ public class SearchProcessor extends AsyncTask<Void, Void, SearchResult> {
     }
 
     private void switchSearch(boolean _switch) {
-        if (getActivity().getTextListener() != null) {
-            getActivity().getTextListener().setCanSearch(_switch);
-        }
-
-        if (getActivity().getEndScrollListener() != null) {
-            getActivity().getEndScrollListener().setCanLoadMoreItems(_switch);
-        }
+        getActivity().getTextListener().setCanSearch(_switch);
+        getActivity().getEndScrollListener().setCanLoadMoreItems(_switch);
     }
 
     private void disableSearch() {
@@ -82,17 +75,9 @@ public class SearchProcessor extends AsyncTask<Void, Void, SearchResult> {
         enableSearch();
     }
 
-    private FragmentManager getFragmentManager() {
-        return getActivity().getFragmentManager();
-    }
-
-    private CardListFragment getCardListFragment() {
-        return (CardListFragment) getFragmentManager().findFragmentById(R.id.card_list);
-    }
-
     private SearchResult launchSearch(SearchOptions options) {
         if (options.getAppend()) {
-            options.setFrom(getCardListFragment().getCardListCount());
+            options.setFrom(activity.getAdapter().getItemCount());
         }
 
         SearchResult searchResult = getApplicationContext().getElasticSearchClient().process(options, activity.getProgressBarUpdater());

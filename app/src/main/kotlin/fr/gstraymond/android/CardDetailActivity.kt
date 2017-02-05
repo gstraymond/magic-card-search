@@ -18,11 +18,11 @@ import fr.gstraymond.constants.Consts.POSITION
 import fr.gstraymond.models.search.response.Card
 import fr.gstraymond.tools.LanguageUtil
 
-class CardDetailActivity : CardCommonActivity(), CardDetailFragment.Callbacks {
+class CardDetailActivity : CardCommonActivity(R.layout.activity_card_detail),
+        CardDetailFragment.Callbacks {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_card_detail)
 
         val toolbar = findViewById(R.id.toolbar) as Toolbar
         setSupportActionBar(toolbar)

@@ -1,6 +1,5 @@
 package fr.gstraymond.android.fragment;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -14,11 +13,14 @@ import java.util.List;
 import java.util.Map;
 
 import fr.gstraymond.R;
+import fr.gstraymond.android.CardListActivity;
 import fr.gstraymond.android.CustomActivity;
-import fr.gstraymond.models.JsonHistory;
+import fr.gstraymond.biz.SearchOptions;
 import fr.gstraymond.db.json.JsonHistoryDataSource;
+import fr.gstraymond.models.JsonHistory;
 import fr.gstraymond.ui.adapter.HistoryArrayAdapter;
 
+import static fr.gstraymond.android.CardListActivity.Companion;
 import static fr.gstraymond.constants.Consts.HISTORY_LIST;
 
 public class HistoryListFragment extends CustomListFragment {
@@ -64,11 +66,16 @@ public class HistoryListFragment extends CustomListFragment {
 
         if (allHistory == null) return;
 
-        Bundle bundle = new Bundle();
-        bundle.putParcelable("history", allHistory.get(position));
-        Intent intent = new Intent();
-        intent.putExtras(bundle);
-        getActivity().setResult(Activity.RESULT_OK, intent);
+        JsonHistory history = allHistory.get(position);
+
+        SearchOptions currentSearch = new SearchOptions()
+                .updateQuery(history.getQuery())
+                .updateFacets(history.getFacets());
+
+        Intent intent = new Intent(getActivity(), CardListActivity.class);
+        intent.putExtra(Companion.getSEARCH_QUERY(), currentSearch);
+        startActivity(intent);
+
         getActivity().finish();
     }
 }

@@ -15,7 +15,7 @@ import fr.gstraymond.R
 import fr.gstraymond.impex.DeckImporterTask
 import java.net.URL
 
-class DeckImporterActivity : CustomActivity() {
+class DeckImporterActivity : CustomActivity(R.layout.activity_deck_importer) {
 
     companion object {
         fun getIntent(context: Context) = Intent(context, DeckImporterActivity::class.java)
@@ -23,7 +23,6 @@ class DeckImporterActivity : CustomActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_deck_importer)
 
         val toolbar = findViewById(R.id.toolbar) as Toolbar
         setSupportActionBar(toolbar)

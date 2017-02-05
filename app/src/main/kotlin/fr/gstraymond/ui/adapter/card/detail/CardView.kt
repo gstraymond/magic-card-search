@@ -43,7 +43,7 @@ class CardView(val context: Context,
         else typeView.text = type
 
         val images = item.publications.map { it.image }
-        val url = images.first { it != null }
+        val url = images.firstOrNull { it != null }
         val urlPosition = images.indexOfFirst { it != null }
 
         if (url != null) CardLoader(url, item, pictureView).load(context)
@@ -64,9 +64,9 @@ class CardView(val context: Context,
             altView.text = item.altTitles.joinToString("\n")
             altView.setOnClickListener {
                 Intent(context, CardListActivity::class.java).apply {
-                    val options = SearchOptions()
-                            .updateQuery(item.title)
-                            .updateFacets(mapOf(FacetConst.LAYOUT to listOf(item.layout)))
+                    val options = SearchOptions(
+                            query = item.title,
+                            facets = mapOf(FacetConst.LAYOUT to listOf(item.layout)))
                     putExtra(CardListActivity.SEARCH_QUERY, options)
                 }.run {
                     context.startActivity(this)
