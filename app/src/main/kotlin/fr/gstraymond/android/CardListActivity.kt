@@ -190,7 +190,7 @@ class CardListActivity : CustomActivity(R.layout.activity_card_list),
 
             R.id.clear_tab -> {
                 resetSearchView()
-                val options = SearchOptions().updateRandom(true).updateAddToHistory(false)
+                val options = SearchOptions(random =  true, addToHistory = false)
                 SearchProcessor(this, options, R.string.loading_clear).execute()
                 searchView.clearFocus()
                 return true

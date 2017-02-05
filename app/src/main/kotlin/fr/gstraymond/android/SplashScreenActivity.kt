@@ -19,14 +19,13 @@ class SplashScreenActivity : CustomActivity(R.layout.activity_splash) {
 
         val options = when {
             listOf(ACTION_SEARCH, GMS_SEARCH).contains(intent.action) ->
-                SearchOptions()
-                        .updateQuery(intent.getStringExtra(SearchManager.QUERY))
-                        .updateRandom(false)
-                        .updateAddToHistory(true)
+                SearchOptions(
+                        query = intent.getStringExtra(SearchManager.QUERY),
+                        random = false,
+                        addToHistory = true)
             else ->
-                SearchOptions()
-                        .updateRandom(true)
-                        .updateAddToHistory(false)
+                SearchOptions(random = true,
+                        addToHistory = false)
         }
 
         SplashProcessor(this, options).execute()

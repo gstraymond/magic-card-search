@@ -64,9 +64,9 @@ class CardView(val context: Context,
             altView.text = item.altTitles.joinToString("\n")
             altView.setOnClickListener {
                 Intent(context, CardListActivity::class.java).apply {
-                    val options = SearchOptions()
-                            .updateQuery(item.title)
-                            .updateFacets(mapOf(FacetConst.LAYOUT to listOf(item.layout)))
+                    val options = SearchOptions(
+                            query = item.title,
+                            facets = mapOf(FacetConst.LAYOUT to listOf(item.layout)))
                     putExtra(CardListActivity.SEARCH_QUERY, options)
                 }.run {
                     context.startActivity(this)

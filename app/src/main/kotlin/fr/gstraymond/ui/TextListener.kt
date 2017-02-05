@@ -38,7 +38,9 @@ class TextListener(val activity: CardListActivity,
     override fun onQueryTextSubmit(text: String): Boolean {
         if (canSearch) {
             val facets = activity.currentSearch.facets
-            val options = SearchOptions().updateQuery(text.replace(":", "")).updateFacets(facets)
+            val options = SearchOptions(
+                    query = text.replace(":", ""),
+                    facets = facets)
             SearchProcessor(activity, options, R.string.loading_initial).execute()
         }
         return true
