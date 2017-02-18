@@ -41,7 +41,7 @@ class WishListActivity : CustomActivity(R.layout.activity_wishlist),
 
     override fun onResume() {
         super.onResume()
-        if (wishlist.elems.isEmpty()) {
+        if (wishlist.all().isEmpty()) {
             show(R.id.wishlist_empty_text)
         } else {
             hide(R.id.wishlist_empty_text)
@@ -58,7 +58,7 @@ class WishListActivity : CustomActivity(R.layout.activity_wishlist),
 
     override fun buildContentViewEvent() =
             super.buildContentViewEvent()
-                    .putCustomAttribute("wishlist_size", wishlist.elems.size)
+                    .putCustomAttribute("wishlist_size", wishlist.size())
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.wishlist_menu, menu)

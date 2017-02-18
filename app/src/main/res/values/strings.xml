@@ -81,5 +81,8 @@
     <string name="decklist_title">Deck Manager</string>
     <string name="decklist_menu_import">Import</string>
     <string name="decklist_menu_delete">Delete</string>
+    <string name="decklist_menu_create">Create</string>
+
+    <string name="deckdetails_menu_add">Add</string>
     <string name="added_to_clipboard">Copied to clipboard !</string>
 </resources>

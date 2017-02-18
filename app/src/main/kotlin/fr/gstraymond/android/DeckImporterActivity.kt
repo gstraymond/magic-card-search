@@ -55,7 +55,7 @@ class DeckImporterActivity : CustomActivity(R.layout.activity_deck_importer) {
             DeckImporterTask(
                     contentResolver,
                     customApplication.deckResolver,
-                    customApplication.jsonDeck,
+                    customApplication.jsonDeckBuilder,
                     customApplication.decklist,
                     Process(log, progressBar, this)
             ).execute(url)

@@ -86,7 +86,6 @@
         </activity>
 
         <!-- Decks -->
-        <!--
         <activity
             android:name=".android.DeckListActivity"
             android:parentActivityName=".android.CardListActivity"
@@ -96,6 +95,7 @@
                 android:value=".android.CardListActivity" />
         </activity>
 
+        <!--
         <activity android:name=".android.DeckImporterActivity"
             android:parentActivityName=".android.DeckListActivity"
             android:theme="@style/AppTheme">
@@ -114,6 +114,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".android.DeckDetailActivity" />
         </activity>
+        -->
 
         <activity
             android:name=".android.DeckDetailActivity"
@@ -123,7 +124,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".android.DeckDetailActivity" />
         </activity>
-        -->
 
         <meta-data
             android:name="io.fabric.ApiKey"

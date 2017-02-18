@@ -2,9 +2,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/wishlist_decklist"
-        android:icon="@drawable/ic_bookmark_border_white_48dp"
-        android:title="@string/decklist_title"
+        android:id="@+id/deckdetails_add"
+        android:icon="@drawable/ic_star_half_white_36dp"
+        android:title="@string/deckdetails_menu_add"
         app:showAsAction="ifRoom" />
 
 </menu>

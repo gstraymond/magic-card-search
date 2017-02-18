@@ -72,8 +72,7 @@ public class HistoryListFragment extends CustomListFragment {
                 .updateQuery(history.getQuery())
                 .updateFacets(history.getFacets());
 
-        Intent intent = new Intent(getActivity(), CardListActivity.class);
-        intent.putExtra(Companion.getSEARCH_QUERY(), currentSearch);
+        Intent intent = CardListActivity.Companion.getIntent(getActivity(), currentSearch);
         startActivity(intent);
 
         getActivity().finish();

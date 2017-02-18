@@ -1,9 +1,9 @@
 package fr.gstraymond.android
 
+import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
-import android.os.Parcelable
 import android.support.design.widget.FloatingActionButton
 import android.support.v4.widget.DrawerLayout
 import android.support.v7.app.ActionBarDrawerToggle
@@ -36,9 +36,13 @@ class CardListActivity : CustomActivity(R.layout.activity_card_list),
         CardArrayAdapter.ClickCallbacks, AutocompleteProcessor.Callbacks {
 
     companion object {
-        val CURRENT_SEARCH = "currentSearch"
         val CARD_RESULT = "result"
-        val SEARCH_QUERY = "searchQuery"
+        private val SEARCH_QUERY = "searchQuery"
+
+        fun getIntent(context: Context, searchOptions: SearchOptions): Intent =
+                Intent(context, CardListActivity::class.java).apply {
+                    putExtra(Companion.SEARCH_QUERY, searchOptions)
+                }
     }
 
     private val log = Log(this)
@@ -56,18 +60,32 @@ class CardListActivity : CustomActivity(R.layout.activity_card_list),
     var loadingToast: Toast? = null
     val textListener = TextListener(this, this)
 
-    private var isRestored = false
-    private var hasDeviceRotated = false
-
     var searchViewCursorAdapter = SearchViewCursorAdapter.empty(this)
 
-    val adapter by lazy { CardArrayAdapter(this, customApplication.wishlist, this) }
+    lateinit var adapter: CardArrayAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         val toolbar = find<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
+
+        val savedSearch = savedInstanceState?.getParcelable<SearchOptions>(SEARCH_QUERY)
+                ?: intent.getParcelableExtra<SearchOptions>(SEARCH_QUERY)
+
+        savedSearch?.run {
+            currentSearch = savedSearch
+            currentSearch.addToHistory = false
+            if (currentSearch.query != "*") {
+                searchView.setQuery(currentSearch.query, false)
+            }
+        }
+
+        val (cards, cardWithOccurrences) = currentSearch.deckId?.run {
+            null to customApplication.jsonDeckBuilder.build(toInt())
+        } ?: (customApplication.wishlist to null)
+
+        adapter = CardArrayAdapter(this, cards, cardWithOccurrences, this)
 
         val layoutManager = LinearLayoutManager(this)
         endScrollListener = EndScrollListener(this, layoutManager, find<FloatingActionButton>(R.id.fab_wishlist))
@@ -91,10 +109,9 @@ class CardListActivity : CustomActivity(R.layout.activity_card_list),
             suggestionsAdapter = searchViewCursorAdapter
         }
 
-        savedInstanceState?.getParcelable<SearchOptions>(CURRENT_SEARCH)?.let { savedSearch ->
+        savedInstanceState?.getParcelable<SearchOptions>(SEARCH_QUERY)?.let { savedSearch ->
             log.d("Restored search : " + currentSearch)
             currentSearch = savedSearch
-            isRestored = true
             searchView.setQuery(currentSearch.query, false)
         }
 
@@ -131,27 +148,11 @@ class CardListActivity : CustomActivity(R.layout.activity_card_list),
         // Sync the toggle state after onRestoreInstanceState has occurred.
         drawerToggle.syncState()
 
-        if (intent.getParcelableExtra<Parcelable>(SEARCH_QUERY) != null) {
-            currentSearch = intent.getParcelableExtra<SearchOptions>(SEARCH_QUERY)
-            currentSearch.addToHistory = false
-            if (currentSearch.query != "*") {
-                searchView.setQuery(currentSearch.query, false)
-            }
-            SearchProcessor(this, currentSearch, R.string.loading_initial).execute()
+        val resultAsString = intent.getStringExtra(CARD_RESULT)
+        if (resultAsString != null) {
+            UIUpdater(this, resultAsString, objectMapper).execute()
         } else {
-            if (isRestored) {
-                currentSearch.append = false
-            }
-            if (!hasDeviceRotated) {
-                val resultAsString = intent.getStringExtra(CARD_RESULT)
-                if (resultAsString != null && !isRestored) {
-                    UIUpdater(this, resultAsString, objectMapper).execute()
-                } else {
-                    SearchProcessor(this, currentSearch, R.string.loading_initial).execute()
-                }
-            } else {
-                hasDeviceRotated = false
-            }
+            SearchProcessor(this, currentSearch, R.string.loading_initial).execute()
         }
     }
 
@@ -177,7 +178,6 @@ class CardListActivity : CustomActivity(R.layout.activity_card_list),
     override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
         drawerToggle.onConfigurationChanged(newConfig)
-        hasDeviceRotated = true
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -190,7 +190,7 @@ class CardListActivity : CustomActivity(R.layout.activity_card_list),
 
             R.id.clear_tab -> {
                 resetSearchView()
-                val options = SearchOptions(random =  true, addToHistory = false)
+                val options = SearchOptions(random = true, addToHistory = false)
                 SearchProcessor(this, options, R.string.loading_clear).execute()
                 searchView.clearFocus()
                 return true
@@ -221,7 +221,7 @@ class CardListActivity : CustomActivity(R.layout.activity_card_list),
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
-        outState.putParcelable(CURRENT_SEARCH, currentSearch)
+        outState.putParcelable(SEARCH_QUERY, currentSearch)
         super.onSaveInstanceState(outState)
     }
 

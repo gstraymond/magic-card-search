@@ -1,7 +1,6 @@
 package fr.gstraymond.android
 
 import android.app.Activity
-import android.os.Build
 import android.os.Bundle
 import com.magic.card.search.commons.application.BaseApplication
 import com.magic.card.search.commons.json.MapperUtil
@@ -9,7 +8,7 @@ import com.magic.card.search.commons.log.Log
 import fr.gstraymond.BuildConfig
 import fr.gstraymond.biz.ElasticSearchClient
 import fr.gstraymond.db.json.Decklist
-import fr.gstraymond.db.json.JsonDeck
+import fr.gstraymond.db.json.JsonDeckBuilder
 import fr.gstraymond.db.json.JsonHistoryDataSource
 import fr.gstraymond.db.json.Wishlist
 import fr.gstraymond.impex.DeckResolver
@@ -30,7 +29,7 @@ class CustomApplication : BaseApplication() {
     lateinit var jsonHistoryDataSource: JsonHistoryDataSource
     lateinit var wishlist: Wishlist
     lateinit var decklist: Decklist
-    lateinit var jsonDeck: JsonDeck
+    lateinit var jsonDeckBuilder: JsonDeckBuilder
     lateinit var deckResolver: DeckResolver
     lateinit var listsCardId: Map<String, List<String>>
 
@@ -53,7 +52,7 @@ class CustomApplication : BaseApplication() {
 
         wishlist = Wishlist(this, objectMapper)
         decklist = Decklist(this, objectMapper)
-        jsonDeck = JsonDeck(this, objectMapper)
+        jsonDeckBuilder = JsonDeckBuilder(this, objectMapper)
 
         deckResolver = DeckResolver(searchService)
 
@@ -109,13 +108,12 @@ class CustomApplication : BaseApplication() {
 
     fun refreshLists() {
         listsCardId =
-                decklist.elems
+                decklist.all()
                         .flatMap { deck ->
-                            jsonDeck
-                                    .load(deck.id.toString())
+                            jsonDeckBuilder.build(deck.id).all()
                                     .map { it.card.getId() to deck.id.toString() }
                         }
-                        .plus(wishlist.elems.map { it.getId() to "wishlist" })
+                        .plus(wishlist.all().map { it.getId() to "wishlist" })
                         .groupBy { it.first }
                         .mapValues { it.value.map { it.second } }
     }

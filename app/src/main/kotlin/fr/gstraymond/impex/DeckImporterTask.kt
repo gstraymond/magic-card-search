@@ -4,14 +4,14 @@ import android.content.ContentResolver
 import android.os.AsyncTask
 import fr.gstraymond.biz.DeckStats
 import fr.gstraymond.db.json.Decklist
-import fr.gstraymond.db.json.JsonDeck
+import fr.gstraymond.db.json.JsonDeckBuilder
 import fr.gstraymond.models.Deck
 import java.net.URL
-import java.util.Date
+import java.util.*
 
 class DeckImporterTask(val contentResolver: ContentResolver,
                        val deckResolver: DeckResolver,
-                       val jsonDeck: JsonDeck,
+                       val jsonDeckBuilder: JsonDeckBuilder,
                        val decklist: Decklist,
                        val importerProcess: ImporterProcess) : AsyncTask<URL, DeckImporterTask.Progress, Unit>() {
 
@@ -31,7 +31,7 @@ class DeckImporterTask(val contentResolver: ContentResolver,
         importedDeck?.let { deck ->
             val cards = deckResolver.resolve(deck, this)
             val deckId = decklist.getLastId() + 1
-            jsonDeck.save("$deckId", cards)
+            jsonDeckBuilder.build(deckId).save(cards)
             val deckStats = DeckStats(cards)
             decklist.addOrRemove(Deck(deckId, Date(), deck.name, deckStats.colors, deckStats.format))
         }

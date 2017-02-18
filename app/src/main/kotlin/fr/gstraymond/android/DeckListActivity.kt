@@ -11,10 +11,13 @@ import android.view.MenuItem
 import android.view.View
 import fr.gstraymond.R
 import fr.gstraymond.android.adapter.DeckListAdapter
+import fr.gstraymond.biz.DeckStats
+import fr.gstraymond.models.CardWithOccurrence
 import fr.gstraymond.models.Deck
 import fr.gstraymond.utils.find
 import fr.gstraymond.utils.hide
 import fr.gstraymond.utils.show
+import java.util.*
 
 class DeckListActivity : CustomActivity(R.layout.activity_deck_list) {
 
@@ -36,7 +39,9 @@ class DeckListActivity : CustomActivity(R.layout.activity_deck_list) {
         deckListAdapter = DeckListAdapter(this).apply {
             onClickListener = { deckId ->
                 View.OnClickListener {
-                    startActivity(DeckDetailActivity.getIntent(this@DeckListActivity, deckId))
+                    startActivity {
+                        DeckDetailActivity.getIntent(this@DeckListActivity, deckId)
+                    }
                 }
             }
         }
@@ -64,7 +69,7 @@ class DeckListActivity : CustomActivity(R.layout.activity_deck_list) {
         }
     }
 
-    private fun getDecks() = customApplication.decklist.elems
+    private fun getDecks() = customApplication.decklist.all()
 
     private fun getSortedDecks() = getDecks().sortedBy(Deck::timestamp).reversed()
 
@@ -75,17 +80,30 @@ class DeckListActivity : CustomActivity(R.layout.activity_deck_list) {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
-            R.id.decklist_import -> {
-                startActivity(DeckImporterActivity.getIntent(this))
-                return true
+            R.id.decklist_create -> {
+                // FIXME refactor
+                val cards = listOf<CardWithOccurrence>()
+                val decklist = customApplication.decklist
+                val deckId = decklist.getLastId() + 1
+                customApplication.jsonDeckBuilder.build(deckId).save(cards)
+                val deckStats = DeckStats(cards)
+                decklist.addOrRemove(Deck(deckId, Date(), "", deckStats.colors, deckStats.format))
+                startActivity {
+                    DeckDetailActivity.getIntent(this@DeckListActivity, "$deckId")
+                }
+                true
             }
+        /*R.id.decklist_import -> {
+            startActivity(DeckImporterActivity.getIntent(this))
+            true
+        }*/
             R.id.decklist_delete -> {
                 /*deckListAdapter?.apply {
                     (0..itemCount - 1).forEach {
                     }
                 }*/
                 updateDecks()
-                return true
+                true
             }
             else -> super.onOptionsItemSelected(item)
         }

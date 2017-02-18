@@ -8,15 +8,14 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.Toast
 import fr.gstraymond.R
-import fr.gstraymond.db.json.Wishlist
+import fr.gstraymond.db.json.JsonList
+import fr.gstraymond.models.CardWithOccurrence
 import fr.gstraymond.models.search.response.Card
 import fr.gstraymond.models.search.response.getLocalizedTitle
-import fr.gstraymond.tools.LanguageUtil
-import fr.gstraymond.ui.view.impl.FavoriteView
-
 
 class CardArrayAdapter(private val context: Context,
-                       wishlist: Wishlist,
+                       cards: JsonList<Card>?,
+                       cardWithOccurrences: JsonList<CardWithOccurrence>?,
                        private val clickCallbacks: ClickCallbacks) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private val cards = mutableListOf<Card>()
@@ -43,9 +42,11 @@ class CardArrayAdapter(private val context: Context,
 
     override fun getItemCount() = cards.size
 
-    private val cardViews = CardViews(context, wishlist, FavoriteViewClickCallbacks(context))
+    private val cardViews = cards?.run {
+        WishlistCardViews(context, cards, FavoriteViewClickCallbacks(context))
+    } ?: DeckCardViews(context, cardWithOccurrences!!, FavoriteViewClickCallbacks(context))
 
-    private inner class FavoriteViewClickCallbacks(val context: Context) : FavoriteView.ClickCallbacks {
+    private inner class FavoriteViewClickCallbacks(val context: Context) : CardClickCallbacks {
 
         override fun itemAdded(position: Int) {
             notifyItemChanged(position)
@@ -68,7 +69,7 @@ class CardArrayAdapter(private val context: Context,
 
     fun appendCards(newCards: List<Card>): Unit {
         cards.addAll(newCards)
-        //notifyItemRangeInserted(cards.size - 1, newCards.size)
+        //FIXME notifyItemRangeInserted(cards.size - 1, newCards.size)
         notifyDataSetChanged()
     }
 

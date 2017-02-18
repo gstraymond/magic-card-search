@@ -7,7 +7,9 @@ import fr.gstraymond.models.search.response.Card
 import fr.gstraymond.utils.getId
 
 class Wishlist(customApplication: CustomApplication, moshi: Moshi) :
-        JsonList<Card>(customApplication, MapperUtil.fromCollectionType(moshi, Card::class.java), "wishlist") {
-
-    override fun getId(elem: Card) = elem.getId()
+        JsonList<Card>(
+                customApplication,
+                MapperUtil.fromCollectionType(moshi, Card::class.java),
+                "wishlist") {
+    override fun Card.uid() = getId()
 }

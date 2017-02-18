@@ -6,10 +6,13 @@ import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.Toolbar
+import android.view.Menu
+import android.view.MenuItem
 import android.widget.TextView
 import fr.gstraymond.R
 import fr.gstraymond.android.adapter.DeckDetailAdapter
 import fr.gstraymond.biz.DeckStats
+import fr.gstraymond.biz.SearchOptions
 import fr.gstraymond.models.CardWithOccurrence
 import java.util.*
 
@@ -33,10 +36,11 @@ class DeckDetailActivity : CustomActivity(R.layout.activity_deck_detail) {
         setSupportActionBar(toolbar)
         supportActionBar?.apply {
             setDisplayHomeAsUpEnabled(true)
-            title = customApplication.decklist.get(deckId)?.name
+            title = customApplication.decklist.getByUid(deckId)?.name
         }
 
-        val cards = customApplication.jsonDeck.load(deckId)
+        val deck = customApplication.jsonDeckBuilder.build(deckId.toInt())
+        val cards = deck.all()
 
         val recyclerView = findViewById(R.id.deck_recyclerview) as RecyclerView
         recyclerView.layoutManager = LinearLayoutManager(this)
@@ -55,5 +59,20 @@ class DeckDetailActivity : CustomActivity(R.layout.activity_deck_detail) {
             cards: ${deckStats.mainDeck.map { it.occurrence }.sum()}
             sidebard: ${deckStats.sideboard.map { it.occurrence }.sum()}
         """
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.deck_details_menu, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
+        R.id.deckdetails_add -> {
+            startActivity {
+                CardListActivity.getIntent(this, SearchOptions(deckId = intent.getStringExtra(DECK_EXTRA)))
+            }
+            true
+        }
+        else -> super.onOptionsItemSelected(item)
     }
 }
