@@ -7,10 +7,10 @@ import com.magic.card.search.commons.json.MapperUtil
 import com.magic.card.search.commons.log.Log
 import fr.gstraymond.BuildConfig
 import fr.gstraymond.biz.ElasticSearchClient
-import fr.gstraymond.db.json.Decklist
-import fr.gstraymond.db.json.JsonDeckBuilder
-import fr.gstraymond.db.json.JsonHistoryDataSource
-import fr.gstraymond.db.json.Wishlist
+import fr.gstraymond.db.json.DeckList
+import fr.gstraymond.db.json.CardListBuilder
+import fr.gstraymond.db.json.HistoryList
+import fr.gstraymond.db.json.WishList
 import fr.gstraymond.impex.DeckResolver
 import fr.gstraymond.models.search.request.Request
 import fr.gstraymond.network.ElasticSearchApi
@@ -21,15 +21,16 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
+import java.util.*
 
 class CustomApplication : BaseApplication() {
 
     lateinit var elasticSearchClient: ElasticSearchClient
     lateinit var searchService: ElasticSearchService
-    lateinit var jsonHistoryDataSource: JsonHistoryDataSource
-    lateinit var wishlist: Wishlist
-    lateinit var decklist: Decklist
-    lateinit var jsonDeckBuilder: JsonDeckBuilder
+    lateinit var historyList: HistoryList
+    lateinit var wishList: WishList
+    lateinit var deckList: DeckList
+    lateinit var cardListBuilder: CardListBuilder
     lateinit var deckResolver: DeckResolver
     lateinit var listsCardId: Map<String, List<String>>
 
@@ -43,20 +44,21 @@ class CustomApplication : BaseApplication() {
         val elasticSearchApi = buildRetrofit().create(ElasticSearchApi::class.java)
         searchService = ElasticSearchService(elasticSearchApi)
 
-        jsonHistoryDataSource = JsonHistoryDataSource(this, objectMapper).apply { migrate() }
-
-        elasticSearchClient = ElasticSearchClient(
-                searchService,
-                jsonHistoryDataSource,
-                MapperUtil.fromType(objectMapper, Request::class.java))
-
-        wishlist = Wishlist(this, objectMapper)
-        decklist = Decklist(this, objectMapper)
-        jsonDeckBuilder = JsonDeckBuilder(this, objectMapper)
+        historyList = HistoryList(this, objectMapper)
+        wishList = WishList(this, objectMapper)
+        deckList = DeckList(this, objectMapper)
+        cardListBuilder = CardListBuilder(this, objectMapper)
 
         deckResolver = DeckResolver(searchService)
 
+        elasticSearchClient = ElasticSearchClient(
+                searchService,
+                historyList,
+                MapperUtil.fromType(objectMapper, Request::class.java))
+
         refreshLists()
+        historyList.migrate()
+        wishList.migrate()
 
         registerActivityLifecycleCallbacks( object : ActivityLifecycleCallbacks{
             override fun onActivityPaused(activity: Activity) =
@@ -107,14 +109,17 @@ class CustomApplication : BaseApplication() {
     }
 
     fun refreshLists() {
+        log.d("refreshLists...")
+        val now = Date().time
         listsCardId =
-                decklist.all()
-                        .flatMap { deck ->
-                            jsonDeckBuilder.build(deck.id).all()
+                deckList.flatMap { deck ->
+                            cardListBuilder
+                                    .build(deck.id)
                                     .map { it.card.getId() to deck.id.toString() }
                         }
-                        .plus(wishlist.all().map { it.getId() to "wishlist" })
+                        .plus(wishList.map { it.getId() to "wishlist" })
                         .groupBy { it.first }
                         .mapValues { it.value.map { it.second } }
+        log.d("refreshLists: ${Date().time - now}ms")
     }
 }

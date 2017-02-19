@@ -6,16 +6,17 @@ import fr.gstraymond.android.CustomApplication
 import fr.gstraymond.models.CardWithOccurrence
 import fr.gstraymond.utils.getId
 
-class JsonDeck(customApplication: CustomApplication,
+class CardList(customApplication: CustomApplication,
                moshi: Moshi,
                deckId: String) : JsonList<CardWithOccurrence>(
         customApplication,
-        MapperUtil.fromCollectionType(moshi, CardWithOccurrence::class.java),
+        MapperUtil.fromType(moshi, CardWithOccurrence::class.java),
+        "deck",
         deckId) {
     override fun CardWithOccurrence.uid() = card.getId()
 }
 
-class JsonDeckBuilder(private val customApplication: CustomApplication,
+class CardListBuilder(private val customApplication: CustomApplication,
                       private val moshi: Moshi) {
-    fun build(deckId: Int): JsonDeck = JsonDeck(customApplication, moshi, "$deckId")
+    fun build(deckId: Int): CardList = CardList(customApplication, moshi, "$deckId")
 }

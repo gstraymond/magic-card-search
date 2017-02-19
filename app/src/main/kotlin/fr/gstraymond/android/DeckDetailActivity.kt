@@ -36,10 +36,10 @@ class DeckDetailActivity : CustomActivity(R.layout.activity_deck_detail) {
         setSupportActionBar(toolbar)
         supportActionBar?.apply {
             setDisplayHomeAsUpEnabled(true)
-            title = customApplication.decklist.getByUid(deckId)?.name
+            title = customApplication.deckList.getByUid(deckId)?.name
         }
 
-        val deck = customApplication.jsonDeckBuilder.build(deckId.toInt())
+        val deck = customApplication.cardListBuilder.build(deckId.toInt())
         val cards = deck.all()
 
         val recyclerView = findViewById(R.id.deck_recyclerview) as RecyclerView

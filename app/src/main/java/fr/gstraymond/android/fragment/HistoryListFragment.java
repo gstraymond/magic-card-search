@@ -16,8 +16,8 @@ import fr.gstraymond.R;
 import fr.gstraymond.android.CardListActivity;
 import fr.gstraymond.android.CustomActivity;
 import fr.gstraymond.biz.SearchOptions;
-import fr.gstraymond.db.json.JsonHistoryDataSource;
-import fr.gstraymond.models.JsonHistory;
+import fr.gstraymond.db.json.HistoryList;
+import fr.gstraymond.models.History;
 import fr.gstraymond.ui.adapter.HistoryArrayAdapter;
 
 import static fr.gstraymond.android.CardListActivity.Companion;
@@ -28,7 +28,7 @@ public class HistoryListFragment extends CustomListFragment {
     public static final String EMPTY = "empty";
 
     private List<Map<String, String>> messages;
-    private ArrayList<JsonHistory> allHistory;
+    private ArrayList<History> allHistory;
 
     private void initEmptyMsg() {
         messages = new ArrayList<>();
@@ -50,10 +50,10 @@ public class HistoryListFragment extends CustomListFragment {
                     messages, android.R.layout.simple_list_item_1, new String[]{EMPTY},
                     new int[]{android.R.id.text1});
         } else {
-            JsonHistoryDataSource jsonHistoryDataSource = ((CustomActivity) getActivity()).getJsonHistoryDataSource();
+            HistoryList historyList = ((CustomActivity) getActivity()).getJsonHistoryDataSource();
             arrayAdapter = new HistoryArrayAdapter(getActivity(),
                     android.R.layout.simple_list_item_activated_1,
-                    android.R.id.text2, allHistory, jsonHistoryDataSource);
+                    android.R.id.text2, allHistory, historyList);
         }
 
         setListAdapter(arrayAdapter);
@@ -66,7 +66,7 @@ public class HistoryListFragment extends CustomListFragment {
 
         if (allHistory == null) return;
 
-        JsonHistory history = allHistory.get(position);
+        History history = allHistory.get(position);
 
         SearchOptions currentSearch = new SearchOptions()
                 .updateQuery(history.getQuery())

@@ -6,10 +6,10 @@ import fr.gstraymond.utils.FacetParcelableUtils.readFacets
 import fr.gstraymond.utils.FacetParcelableUtils.writeFacets
 import java.util.*
 
-data class JsonHistory(val query: String,
-                       var isFavorite: Boolean,
-                       val facets: Map<String, List<String>>,
-                       val date: Date) : Parcelable {
+data class History(val query: String,
+                   var isFavorite: Boolean,
+                   val facets: Map<String, List<String>>,
+                   val date: Date) : Parcelable {
 
     constructor(source: Parcel) : this(
             query = source.readString(),
@@ -29,10 +29,10 @@ data class JsonHistory(val query: String,
 
     companion object {
         @JvmField
-        val CREATOR = object : Parcelable.Creator<JsonHistory> {
-            override fun createFromParcel(source: Parcel) = JsonHistory(source)
+        val CREATOR = object : Parcelable.Creator<History> {
+            override fun createFromParcel(source: Parcel) = History(source)
 
-            override fun newArray(size: Int) = arrayOfNulls<JsonHistory>(size)
+            override fun newArray(size: Int) = arrayOfNulls<History>(size)
         }
     }
 }

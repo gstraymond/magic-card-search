@@ -16,7 +16,7 @@ abstract class CustomActivity(private val layoutId: Int) : AppCompatActivity() {
 
     val objectMapper: Moshi by lazy { customApplication.objectMapper }
 
-    val jsonHistoryDataSource by lazy { customApplication.jsonHistoryDataSource }
+    val jsonHistoryDataSource by lazy { customApplication.historyList }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

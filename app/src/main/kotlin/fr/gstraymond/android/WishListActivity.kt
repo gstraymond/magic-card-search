@@ -18,7 +18,7 @@ import fr.gstraymond.utils.show
 class WishListActivity : CustomActivity(R.layout.activity_wishlist),
         WishlistAdapter.ClickCallbacks {
 
-    private val wishlist by lazy { customApplication.wishlist }
+    private val wishlist by lazy { customApplication.wishList }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,7 +41,7 @@ class WishListActivity : CustomActivity(R.layout.activity_wishlist),
 
     override fun onResume() {
         super.onResume()
-        if (wishlist.all().isEmpty()) {
+        if (wishlist.isEmpty()) {
             show(R.id.wishlist_empty_text)
         } else {
             hide(R.id.wishlist_empty_text)

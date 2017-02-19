@@ -69,7 +69,7 @@ class DeckListActivity : CustomActivity(R.layout.activity_deck_list) {
         }
     }
 
-    private fun getDecks() = customApplication.decklist.all()
+    private fun getDecks() = customApplication.deckList.all()
 
     private fun getSortedDecks() = getDecks().sortedBy(Deck::timestamp).reversed()
 
@@ -83,9 +83,9 @@ class DeckListActivity : CustomActivity(R.layout.activity_deck_list) {
             R.id.decklist_create -> {
                 // FIXME refactor
                 val cards = listOf<CardWithOccurrence>()
-                val decklist = customApplication.decklist
+                val decklist = customApplication.deckList
                 val deckId = decklist.getLastId() + 1
-                customApplication.jsonDeckBuilder.build(deckId).save(cards)
+                customApplication.cardListBuilder.build(deckId).save(cards)
                 val deckStats = DeckStats(cards)
                 decklist.addOrRemove(Deck(deckId, Date(), "", deckStats.colors, deckStats.format))
                 startActivity {

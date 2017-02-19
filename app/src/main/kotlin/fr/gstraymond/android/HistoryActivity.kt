@@ -9,6 +9,7 @@ import fr.gstraymond.R
 import fr.gstraymond.android.fragment.HistoryListFragment
 import fr.gstraymond.constants.Consts.HISTORY_LIST
 import fr.gstraymond.utils.find
+import java.util.*
 
 class HistoryActivity : CustomActivity(R.layout.activity_history) {
 
@@ -47,10 +48,10 @@ class HistoryActivity : CustomActivity(R.layout.activity_history) {
             menuInflater.inflate(R.menu.card_history_menu, menu).run { true }
 
     private fun showHistory() {
-        val allHistory = jsonHistoryDataSource.allHistory
-
-        val bundle = Bundle()
-        bundle.putParcelableArrayList(HISTORY_LIST, allHistory)
+        val bundle = Bundle().apply {
+            val allHistory = ArrayList(jsonHistoryDataSource.all().sortedByDescending { it.date })
+            putParcelableArrayList(HISTORY_LIST, allHistory)
+        }
 
         replaceFragment(HistoryListFragment(), R.id.history_fragment, bundle)
     }

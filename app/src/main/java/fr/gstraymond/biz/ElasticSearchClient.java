@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import fr.gstraymond.db.json.JsonHistoryDataSource;
+import fr.gstraymond.db.json.HistoryList;
 import fr.gstraymond.models.search.request.Request;
 import fr.gstraymond.models.search.response.SearchResult;
 import fr.gstraymond.network.ElasticSearchService;
@@ -19,16 +19,16 @@ import fr.gstraymond.network.Result;
 
 public class ElasticSearchClient {
 
-    private JsonHistoryDataSource historyDataSource;
+    private HistoryList historyDataSource;
     private ElasticSearchService elasticSearchService;
     private MapperUtil<Request> mapperUtil;
 
     private Log log = new Log(this);
 
     public ElasticSearchClient(ElasticSearchService elasticSearchService,
-                               JsonHistoryDataSource jsonHistoryDataSource,
+                               HistoryList historyList,
                                MapperUtil<Request> mapperUtil) {
-        this.historyDataSource = jsonHistoryDataSource;
+        this.historyDataSource = historyList;
         this.elasticSearchService = elasticSearchService;
         this.mapperUtil = mapperUtil;
     }

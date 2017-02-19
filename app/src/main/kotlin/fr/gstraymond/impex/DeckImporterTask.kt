@@ -3,16 +3,16 @@ package fr.gstraymond.impex
 import android.content.ContentResolver
 import android.os.AsyncTask
 import fr.gstraymond.biz.DeckStats
-import fr.gstraymond.db.json.Decklist
-import fr.gstraymond.db.json.JsonDeckBuilder
+import fr.gstraymond.db.json.DeckList
+import fr.gstraymond.db.json.CardListBuilder
 import fr.gstraymond.models.Deck
 import java.net.URL
 import java.util.*
 
 class DeckImporterTask(val contentResolver: ContentResolver,
                        val deckResolver: DeckResolver,
-                       val jsonDeckBuilder: JsonDeckBuilder,
-                       val decklist: Decklist,
+                       val cardListBuilder: CardListBuilder,
+                       val deckList: DeckList,
                        val importerProcess: ImporterProcess) : AsyncTask<URL, DeckImporterTask.Progress, Unit>() {
 
     data class Progress(val task: String, val result: Int)
@@ -30,10 +30,10 @@ class DeckImporterTask(val contentResolver: ContentResolver,
         publishProgress(Progress(URL_TASK, importedDeck?.lines?.size ?: -1))
         importedDeck?.let { deck ->
             val cards = deckResolver.resolve(deck, this)
-            val deckId = decklist.getLastId() + 1
-            jsonDeckBuilder.build(deckId).save(cards)
+            val deckId = deckList.getLastId() + 1
+            cardListBuilder.build(deckId).save(cards)
             val deckStats = DeckStats(cards)
-            decklist.addOrRemove(Deck(deckId, Date(), deck.name, deckStats.colors, deckStats.format))
+            deckList.addOrRemove(Deck(deckId, Date(), deck.name, deckStats.colors, deckStats.format))
         }
     }
 

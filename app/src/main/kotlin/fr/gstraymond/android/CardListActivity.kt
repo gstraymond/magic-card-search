@@ -82,8 +82,8 @@ class CardListActivity : CustomActivity(R.layout.activity_card_list),
         }
 
         val (cards, cardWithOccurrences) = currentSearch.deckId?.run {
-            null to customApplication.jsonDeckBuilder.build(toInt())
-        } ?: (customApplication.wishlist to null)
+            null to customApplication.cardListBuilder.build(toInt())
+        } ?: (customApplication.wishList to null)
 
         adapter = CardArrayAdapter(this, cards, cardWithOccurrences, this)
 
