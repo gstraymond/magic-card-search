@@ -14,6 +14,8 @@ import fr.gstraymond.android.adapter.DeckDetailAdapter
 import fr.gstraymond.biz.DeckStats
 import fr.gstraymond.biz.SearchOptions
 import fr.gstraymond.models.CardWithOccurrence
+import fr.gstraymond.models.Deck
+import fr.gstraymond.utils.find
 import java.util.*
 
 class DeckDetailActivity : CustomActivity(R.layout.activity_deck_detail) {
@@ -27,28 +29,31 @@ class DeckDetailActivity : CustomActivity(R.layout.activity_deck_detail) {
                 }
     }
 
+    lateinit var deck: Deck
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         val deckId = intent.getStringExtra(DECK_EXTRA)
+        deck = customApplication.deckList.getByUid(deckId)!!
 
         val toolbar = findViewById(R.id.toolbar) as Toolbar
         setSupportActionBar(toolbar)
         supportActionBar?.apply {
             setDisplayHomeAsUpEnabled(true)
-            title = customApplication.deckList.getByUid(deckId)?.name
+            title = deck.name
         }
+        val cardList = customApplication.cardListBuilder.build(deckId.toInt())
+        val cards = cardList.all()
 
-        val deck = customApplication.cardListBuilder.build(deckId.toInt())
-        val cards = deck.all()
-
-        val recyclerView = findViewById(R.id.deck_recyclerview) as RecyclerView
-        recyclerView.layoutManager = LinearLayoutManager(this)
-        recyclerView.adapter = DeckDetailAdapter(cards.sortedWith(Comparator<CardWithOccurrence> { c1, c2 ->
-            val z1 = if (c1.isSideboard) 1000 else -1000
-            val z2 = if (c2.isSideboard) -1000 else 1000
-            z1 + z2 + c1.card.title.compareTo(c2.card.title)
-        }))
+        find<RecyclerView>(R.id.deck_recyclerview).apply {
+            layoutManager = LinearLayoutManager(this@DeckDetailActivity)
+            adapter = DeckDetailAdapter(cards.sortedWith(Comparator<CardWithOccurrence> { c1, c2 ->
+                val z1 = if (c1.isSideboard) 1000 else -1000
+                val z2 = if (c2.isSideboard) -1000 else 1000
+                z1 + z2 + c1.card.title.compareTo(c2.card.title)
+            }))
+        }
 
         val deckStats = DeckStats(cards)
 
@@ -71,6 +76,12 @@ class DeckDetailActivity : CustomActivity(R.layout.activity_deck_detail) {
             startActivity {
                 CardListActivity.getIntent(this, SearchOptions(deckId = intent.getStringExtra(DECK_EXTRA)))
             }
+            true
+        }
+        R.id.deckdetails_delete -> {
+            // FIXME add confirmation
+            customApplication.deckList.delete(deck)
+            finish()
             true
         }
         else -> super.onOptionsItemSelected(item)

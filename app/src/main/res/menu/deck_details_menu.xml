@@ -3,8 +3,14 @@
 
     <item
         android:id="@+id/deckdetails_add"
-        android:icon="@drawable/ic_star_half_white_36dp"
+        android:icon="@drawable/ic_add_circle_outline_white_48dp"
         android:title="@string/deckdetails_menu_add"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/deckdetails_delete"
+        android:icon="@drawable/ic_clear_white_48dp"
+        android:title="@string/decklist_menu_delete"
         app:showAsAction="ifRoom" />
 
 </menu>

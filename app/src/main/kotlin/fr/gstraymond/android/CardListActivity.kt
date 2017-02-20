@@ -14,6 +14,7 @@ import android.support.v7.widget.Toolbar
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.view.View.*
 import android.widget.ProgressBar
 import android.widget.Toast
 import com.crashlytics.android.answers.Answers
@@ -67,6 +68,7 @@ class CardListActivity : CustomActivity(R.layout.activity_card_list),
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        val fab = find<FloatingActionButton>(R.id.fab_wishlist)
         val toolbar = find<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
 
@@ -88,7 +90,7 @@ class CardListActivity : CustomActivity(R.layout.activity_card_list),
         adapter = CardArrayAdapter(this, cards, cardWithOccurrences, this)
 
         val layoutManager = LinearLayoutManager(this)
-        endScrollListener = EndScrollListener(this, layoutManager, find<FloatingActionButton>(R.id.fab_wishlist))
+        endScrollListener = EndScrollListener(this, layoutManager, fab)
         find<RecyclerView>(R.id.recycler_view).let {
             it.layoutManager = layoutManager
             it.adapter = adapter
@@ -137,8 +139,13 @@ class CardListActivity : CustomActivity(R.layout.activity_card_list),
             if (firstRun()) logDialog.show()
         }
 
-        find<FloatingActionButton>(R.id.fab_wishlist).setOnClickListener { view ->
+        fab.setOnClickListener { view ->
             startActivity(Intent(view.context, WishListActivity::class.java))
+        }
+
+        currentSearch.deckId?.apply {
+            fab.hide()
+            title = customApplication.deckList.getByUid(this)?.name
         }
     }
 
@@ -172,6 +179,10 @@ class CardListActivity : CustomActivity(R.layout.activity_card_list),
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         val inflater = menuInflater
         inflater.inflate(R.menu.card_list_menu, menu)
+        currentSearch.deckId?.apply {
+            menu.findItem(R.id.changelog_tab).isVisible = false
+            menu.findItem(R.id.deck_tab).isVisible = true
+        }
         return true
     }
 
@@ -208,6 +219,8 @@ class CardListActivity : CustomActivity(R.layout.activity_card_list),
                 ChangeLog(this).fullLogDialog.show()
                 return true
             }
+
+            R.id.deck_tab -> finish()
         }
 
         return super.onOptionsItemSelected(item)

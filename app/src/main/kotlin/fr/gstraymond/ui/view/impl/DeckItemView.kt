@@ -16,8 +16,8 @@ class DeckItemView(cards: JsonList<CardWithOccurrence>,
         clickCallbacks,
         context.resources.color(R.color.colorAccent),
         context.resources.color(R.color.colorPrimaryDark),
-        context.resources.drawable(R.drawable.ic_clear_white_48dp),
-        context.resources.drawable(R.drawable.ic_bookmark_border_white_48dp)) {
+        context.resources.drawable(R.drawable.ic_bookmark_white_18dp),
+        context.resources.drawable(R.drawable.ic_bookmark_border_white_18dp)) {
 
     override fun getElem(card: Card) = CardWithOccurrence(card, 1, false)
 }

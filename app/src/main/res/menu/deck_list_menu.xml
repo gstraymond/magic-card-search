@@ -3,7 +3,7 @@
 
     <item
         android:id="@+id/decklist_create"
-        android:icon="@drawable/ic_star_half_white_36dp"
+        android:icon="@drawable/ic_add_circle_outline_white_48dp"
         android:title="@string/decklist_menu_create"
         app:showAsAction="ifRoom" />
 
@@ -12,12 +12,6 @@
         android:icon="@drawable/ic_cloud_download_white_48dp"
         android:title="@string/decklist_menu_import"
         android:visible="false"
-        app:showAsAction="ifRoom" />
-
-    <item
-        android:id="@+id/decklist_delete"
-        android:icon="@drawable/ic_clear_white_48dp"
-        android:title="@string/decklist_menu_delete"
         app:showAsAction="ifRoom" />
 
 </menu>

@@ -21,8 +21,6 @@ class DeckListAdapter(context: Context) : RecyclerView.Adapter<RecyclerView.View
     private val imageGetter = CastingCostImageGetter.large(context)
     private val ccFormatter = CastingCostFormatter()
 
-    private val selectedItems = SparseBooleanArray()
-
     var decks: List<Deck> = listOf()
 
     var onClickListener: (String) -> View.OnClickListener? = { deckId -> null }
@@ -34,8 +32,13 @@ class DeckListAdapter(context: Context) : RecyclerView.Adapter<RecyclerView.View
         val deckFormat = holder.itemView.findViewById(R.id.array_adapter_deck_format) as TextView
         val deckName = holder.itemView.findViewById(R.id.array_adapter_deck_name) as TextView
 
-        val castingCost = deck.colors.map { Colors.mainColorsMap[it] }.sortedBy { it }.joinToString(" ")
-        deckColors.text = Html.fromHtml(ccFormatter.format(castingCost), imageGetter, null)
+        val colors = deck.colors.map { Colors.mainColorsMap[it] }.sortedBy { it }.joinToString(" ")
+        if (colors.isEmpty()) {
+            deckColors.visibility = View.GONE
+        } else {
+            deckColors.visibility = View.VISIBLE
+            deckColors.text = Html.fromHtml(ccFormatter.format(colors), imageGetter, null)
+        }
         deckFormat.text = deck.format
         deckName.text = deck.name
         holder.itemView.setOnClickListener(onClickListener(deck.id.toString()))
@@ -52,26 +55,4 @@ class DeckListAdapter(context: Context) : RecyclerView.Adapter<RecyclerView.View
     // selection
     // https://developer.android.com/guide/topics/ui/menus.html#CAB
     // http://www.grokkingandroid.com/statelistdrawables-for-recyclerview-selection/
-
-    fun toggleSelection(pos: Int) {
-        if (selectedItems.get(pos, false)) {
-            selectedItems.delete(pos)
-        } else {
-            selectedItems.put(pos, true)
-        }
-        notifyItemChanged(pos)
-    }
-
-    fun clearSelections() {
-        selectedItems.clear()
-        notifyDataSetChanged()
-    }
-
-    fun getSelectedItemCount() = selectedItems.size()
-
-    fun getSelectedItems(): List<Int> {
-        val items = ArrayList<Int>(selectedItems.size())
-        (0..selectedItems.size() - 1).mapTo(items) { selectedItems.keyAt(it) }
-        return items
-    }
 }

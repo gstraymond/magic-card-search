@@ -87,7 +87,7 @@ class DeckListActivity : CustomActivity(R.layout.activity_deck_list) {
                 val deckId = decklist.getLastId() + 1
                 customApplication.cardListBuilder.build(deckId).save(cards)
                 val deckStats = DeckStats(cards)
-                decklist.addOrRemove(Deck(deckId, Date(), "", deckStats.colors, deckStats.format))
+                decklist.addOrRemove(Deck(deckId, Date(), "Deck ${decklist.size() + 1}", deckStats.colors, deckStats.format))
                 startActivity {
                     DeckDetailActivity.getIntent(this@DeckListActivity, "$deckId")
                 }
@@ -97,14 +97,6 @@ class DeckListActivity : CustomActivity(R.layout.activity_deck_list) {
             startActivity(DeckImporterActivity.getIntent(this))
             true
         }*/
-            R.id.decklist_delete -> {
-                /*deckListAdapter?.apply {
-                    (0..itemCount - 1).forEach {
-                    }
-                }*/
-                updateDecks()
-                true
-            }
             else -> super.onOptionsItemSelected(item)
         }
     }
