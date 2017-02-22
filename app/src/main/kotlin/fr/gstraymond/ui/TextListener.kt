@@ -36,6 +36,7 @@ class TextListener(val activity: CardListActivity,
     }
 
     override fun onQueryTextSubmit(text: String): Boolean {
+        activity.searchViewCursorAdapter.changeCursor(listOf())
         if (canSearch) {
             val facets = activity.currentSearch.facets
             val options = SearchOptions(
