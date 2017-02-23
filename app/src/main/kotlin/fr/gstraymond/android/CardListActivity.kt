@@ -59,7 +59,7 @@ class CardListActivity : CustomActivity(R.layout.activity_card_list),
     private var isRestored = false
     private var hasDeviceRotated = false
 
-    private var searchViewCursorAdapter = SearchViewCursorAdapter.empty(this)
+    var searchViewCursorAdapter = SearchViewCursorAdapter.empty(this)
 
     val adapter by lazy { CardArrayAdapter(this, customApplication.wishlist, this) }
 

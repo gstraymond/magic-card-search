@@ -1,7 +1,9 @@
 package fr.gstraymond.models.search.response
 
+import android.content.Context
 import android.os.Parcel
 import android.os.Parcelable
+import fr.gstraymond.tools.LanguageUtil
 import java.util.*
 
 class Card(val title: String,
@@ -70,4 +72,14 @@ class Card(val title: String,
             override fun newArray(size: Int) = arrayOfNulls<Card>(size)
         }
     }
+}
+
+fun Card.getLocalizedTitle(context: Context): String =
+        getLocalizedTitle(context, Card::title, { c, ft -> ft })
+
+fun Card.getLocalizedTitle(context: Context,
+                           english: (Card) -> String,
+                           french: (Card, String) -> String): String = when {
+    LanguageUtil.showFrench(context) && frenchTitle != null -> french(this, this.frenchTitle)
+    else -> english(this)
 }

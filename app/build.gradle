@@ -28,8 +28,8 @@ android {
         applicationId "fr.gstraymond"
         minSdkVersion 14
         targetSdkVersion 25
-        versionCode 47
-        versionName "1.10.0"
+        versionCode 48
+        versionName "1.10.1"
     }
 
     signingConfigs {

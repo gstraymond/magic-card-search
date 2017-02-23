@@ -1,6 +1,5 @@
 package fr.gstraymond.android
 
-import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -16,7 +15,7 @@ import fr.gstraymond.android.fragment.CardDetailFragment
 import fr.gstraymond.constants.Consts.CARD
 import fr.gstraymond.constants.Consts.POSITION
 import fr.gstraymond.models.search.response.Card
-import fr.gstraymond.tools.LanguageUtil
+import fr.gstraymond.models.search.response.getLocalizedTitle
 
 class CardDetailActivity : CardCommonActivity(R.layout.activity_card_detail),
         CardDetailFragment.Callbacks {
@@ -29,7 +28,7 @@ class CardDetailActivity : CardCommonActivity(R.layout.activity_card_detail),
         actionBarSetDisplayHomeAsUpEnabled(true)
 
         val title = findViewById(R.id.toolbar_title) as TextView
-        title.text = formatTitle(this, card)
+        title.text = card.getLocalizedTitle(this, Card::title, { c, ft -> "$ft (${c.title})" })
 
         replaceFragment(CardDetailFragment(), R.id.card_detail_container, getBundle())
     }
@@ -76,14 +75,6 @@ class CardDetailActivity : CardCommonActivity(R.layout.activity_card_detail),
                 "wishlist" -> Intent(this, WishListActivity::class.java)
                 else -> DeckDetailActivity.getIntent(this, list)
             }
-        }
-    }
-
-    companion object {
-        fun formatTitle(context: Context, card: Card): String = when {
-            LanguageUtil.showFrench(context) && card.frenchTitle != null ->
-                "${card.frenchTitle} (${card.title})"
-            else -> card.title
         }
     }
 }

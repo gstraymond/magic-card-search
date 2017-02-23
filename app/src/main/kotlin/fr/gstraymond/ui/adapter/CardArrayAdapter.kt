@@ -1,5 +1,7 @@
 package fr.gstraymond.ui.adapter
 
+import android.content.ClipData
+import android.content.ClipboardManager
 import android.content.Context
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
@@ -8,13 +10,17 @@ import android.widget.Toast
 import fr.gstraymond.R
 import fr.gstraymond.db.json.Wishlist
 import fr.gstraymond.models.search.response.Card
+import fr.gstraymond.models.search.response.getLocalizedTitle
+import fr.gstraymond.tools.LanguageUtil
 import fr.gstraymond.ui.view.impl.FavoriteView
 
-class CardArrayAdapter(context: Context,
+
+class CardArrayAdapter(private val context: Context,
                        wishlist: Wishlist,
                        private val clickCallbacks: ClickCallbacks) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private val cards = mutableListOf<Card>()
+    private val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val view = LayoutInflater
@@ -27,6 +33,12 @@ class CardArrayAdapter(context: Context,
         val card = cards[position]
         cardViews.display(holder.itemView, card, position)
         holder.itemView.setOnClickListener { clickCallbacks.cardClicked(card) }
+        holder.itemView.setOnLongClickListener {
+            clipboard.primaryClip = ClipData.newPlainText("card title", card.getLocalizedTitle(context))
+            val message = context.resources.getString(R.string.added_to_clipboard)
+            Toast.makeText(context, message, Toast.LENGTH_LONG).show()
+            true
+        }
     }
 
     override fun getItemCount() = cards.size
