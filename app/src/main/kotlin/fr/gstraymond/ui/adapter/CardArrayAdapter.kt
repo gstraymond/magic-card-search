@@ -10,6 +10,8 @@ import android.widget.Toast
 import fr.gstraymond.R
 import fr.gstraymond.db.json.Wishlist
 import fr.gstraymond.models.search.response.Card
+import fr.gstraymond.models.search.response.getLocalizedTitle
+import fr.gstraymond.tools.LanguageUtil
 import fr.gstraymond.ui.view.impl.FavoriteView
 
 
@@ -32,7 +34,7 @@ class CardArrayAdapter(private val context: Context,
         cardViews.display(holder.itemView, card, position)
         holder.itemView.setOnClickListener { clickCallbacks.cardClicked(card) }
         holder.itemView.setOnLongClickListener {
-            clipboard.primaryClip = ClipData.newPlainText("card title", card.title)
+            clipboard.primaryClip = ClipData.newPlainText("card title", card.getLocalizedTitle(context))
             val message = context.resources.getString(R.string.added_to_clipboard)
             Toast.makeText(context, message, Toast.LENGTH_LONG).show()
             true
