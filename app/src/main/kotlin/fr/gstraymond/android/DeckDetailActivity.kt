@@ -52,12 +52,19 @@ class DeckDetailActivity : CustomActivity(R.layout.activity_deck_detail) {
     }
 
     private val callback = object : DeckLineCallback {
+
         override fun multChanged(deckLine: DeckLine, mult: Int) {
             log.d("multChanged: [$mult] $deckLine")
             when (mult) {
                 0 -> cardList.delete(deckLine)
                 else -> cardList.update(deckLine.copy(mult = mult))
             }
+            updateStats()
+        }
+
+        override fun sideboardChanged(deckLine: DeckLine, sideboard: Boolean) {
+            log.d("sideboardChanged: [$sideboard] $deckLine")
+            cardList.update(deckLine.copy(isSideboard = sideboard), updateDeck = false)
             updateStats()
         }
     }
