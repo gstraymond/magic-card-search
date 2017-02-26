@@ -9,18 +9,20 @@ import android.widget.CheckBox
 import android.widget.NumberPicker
 import android.widget.TextView
 import fr.gstraymond.R
+import fr.gstraymond.db.json.CardList
 import fr.gstraymond.models.DeckLine
 import fr.gstraymond.models.search.response.getLocalizedTitle
 import fr.gstraymond.utils.find
+import java.util.*
 
 
-class DeckDetailAdapter(private val cards: List<DeckLine>,
+class DeckDetailAdapter(private val cardList: CardList,
                         private val context: Context) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     var deckLineCallback: DeckLineCallback? = null
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        val deckLine = cards[position]
+        val deckLine = cardList.all().sortedWith(cardComparator)[position]
         val card = deckLine.card
 
         val mult = holder.itemView.find<TextView>(R.id.array_adapter_deck_card_mult)
@@ -30,13 +32,20 @@ class DeckDetailAdapter(private val cards: List<DeckLine>,
             val picker = view.find<NumberPicker>(R.id.array_adapter_deck_card_mult).apply {
                 minValue = 0
                 maxValue = 100
+                value = deckLine.mult
                 wrapSelectorWheel = false
             }
 
             AlertDialog.Builder(context)
                     .setView(view)
                     .setPositiveButton(android.R.string.ok, { dialog, which ->
-                        deckLineCallback?.multChanged(deckLine, picker.value)
+                        val pickerMult = picker.value
+                        deckLineCallback?.multChanged(deckLine, pickerMult)
+                        when (pickerMult) {
+                            0 -> notifyItemRemoved(position)
+                            else -> notifyItemChanged(position)
+                        }
+
                     })
                     .setNegativeButton(android.R.string.cancel, { dialog, which -> })
                     .create()
@@ -50,13 +59,20 @@ class DeckDetailAdapter(private val cards: List<DeckLine>,
         sideboard.isChecked = deckLine.isSideboard
     }
 
-    override fun getItemCount() = cards.size
+    override fun getItemCount() = cardList.size()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
             LayoutInflater
                     .from(parent.context)
                     .inflate(R.layout.array_adapter_deck_card, parent, false)
                     .run { object : RecyclerView.ViewHolder(this) {} }
+
+
+    private val cardComparator = Comparator<DeckLine> { c1, c2 ->
+        val z1 = if (c1.isSideboard) 1000 else -1000
+        val z2 = if (c2.isSideboard) -1000 else 1000
+        z1 + z2 + c1.card.title.compareTo(c2.card.title)
+    }
 }
 
 interface DeckLineCallback {

@@ -17,17 +17,17 @@ class CardList(context: Context,
         deckId) {
     override fun DeckLine.uid() = card.getId()
 
-    override fun addOrRemove(elem: DeckLine): Boolean {
-        val addOrRemove = super.addOrRemove(elem)
+    override fun addOrRemove(elem: DeckLine) = super.addOrRemove(elem).apply { updateDeck() }
 
+    override fun update(elem: DeckLine) = super.update(elem).apply { updateDeck() }
+
+    private fun updateDeck() {
         deckList.getByUid(deckId)?.apply {
             val deckStats = DeckStats(elems)
             deckList.update(
                     copy(colors = deckStats.colors, format = deckStats.format)
             )
         }
-
-        return addOrRemove
     }
 }
 
