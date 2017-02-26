@@ -8,7 +8,7 @@ interface DeckFormat {
 
     fun split(lines: List<String>): Pair<List<String>, List<String>>
 
-    fun parse(line: String, sideboard: Boolean): DeckLine
+    fun parse(line: String, sideboard: Boolean): DeckTextLine
 
     fun extractName(url: URL, lines: List<String>): String
 }

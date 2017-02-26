@@ -83,11 +83,11 @@ class CardListActivity : CustomActivity(R.layout.activity_card_list),
             }
         }
 
-        val (cards, cardWithOccurrences) = currentSearch.deckId?.run {
+        val (wishList, deck) = currentSearch.deckId?.run {
             null to customApplication.cardListBuilder.build(toInt())
         } ?: (customApplication.wishList to null)
 
-        adapter = CardArrayAdapter(this, cards, cardWithOccurrences, this)
+        adapter = CardArrayAdapter(this, wishList, deck, this)
 
         val layoutManager = LinearLayoutManager(this)
         endScrollListener = EndScrollListener(this, layoutManager, fab)

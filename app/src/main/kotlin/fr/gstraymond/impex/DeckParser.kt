@@ -30,7 +30,7 @@ class DeckParser {
         }
     }
 
-    private fun DeckFormat.parseLines(lines: List<String>): List<DeckLine> {
+    private fun DeckFormat.parseLines(lines: List<String>): List<DeckTextLine> {
         val (deck, sideboard) = split(lines)
         return deck.map { parse(it, false) } +
                 sideboard.map { parse(it, true) }

@@ -9,11 +9,13 @@ import android.support.v7.widget.Toolbar
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.TextView
+import com.magic.card.search.commons.log.Log
 import fr.gstraymond.R
+import fr.gstraymond.android.adapter.DeckLineCallback
 import fr.gstraymond.android.adapter.DeckDetailAdapter
 import fr.gstraymond.biz.DeckStats
 import fr.gstraymond.biz.SearchOptions
-import fr.gstraymond.models.CardWithOccurrence
+import fr.gstraymond.models.DeckLine
 import fr.gstraymond.models.Deck
 import fr.gstraymond.utils.find
 import java.util.*
@@ -31,6 +33,8 @@ class DeckDetailActivity : CustomActivity(R.layout.activity_deck_detail) {
 
     lateinit var deck: Deck
 
+    private val log = Log(javaClass)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -43,16 +47,33 @@ class DeckDetailActivity : CustomActivity(R.layout.activity_deck_detail) {
             setDisplayHomeAsUpEnabled(true)
             title = deck.name
         }
-        val cardList = customApplication.cardListBuilder.build(deckId.toInt())
-        val cards = cardList.all()
+    }
+
+    private val cardComparator = Comparator<DeckLine> { c1, c2 ->
+        val z1 = if (c1.isSideboard) 1000 else -1000
+        val z2 = if (c2.isSideboard) -1000 else 1000
+        z1 + z2 + c1.card.title.compareTo(c2.card.title)
+    }
+
+    private val callback = object : DeckLineCallback {
+        override fun multChanged(deckLine: DeckLine, mult: Int) {
+            log.d("multChanged: [$mult] $deckLine")
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        val deckId = intent.getStringExtra(DECK_EXTRA)
+        val cards = customApplication.cardListBuilder.build(deckId.toInt()).all()
 
         find<RecyclerView>(R.id.deck_recyclerview).apply {
             layoutManager = LinearLayoutManager(this@DeckDetailActivity)
-            adapter = DeckDetailAdapter(cards.sortedWith(Comparator<CardWithOccurrence> { c1, c2 ->
-                val z1 = if (c1.isSideboard) 1000 else -1000
-                val z2 = if (c2.isSideboard) -1000 else 1000
-                z1 + z2 + c1.card.title.compareTo(c2.card.title)
-            }))
+            adapter = DeckDetailAdapter(
+                    cards.sortedWith(cardComparator),
+                    this@DeckDetailActivity).apply {
+                deckLineCallback = callback
+            }
         }
 
         val deckStats = DeckStats(cards)
@@ -61,8 +82,8 @@ class DeckDetailActivity : CustomActivity(R.layout.activity_deck_detail) {
         textView.text = """
             colors: ${deckStats.colors.joinToString()}
             formats: ${deckStats.format}
-            cards: ${deckStats.mainDeck.map { it.occurrence }.sum()}
-            sidebard: ${deckStats.sideboard.map { it.occurrence }.sum()}
+            cards: ${deckStats.mainDeck.map { it.mult }.sum()}
+            sidebard: ${deckStats.sideboard.map { it.mult }.sum()}
         """
     }
 

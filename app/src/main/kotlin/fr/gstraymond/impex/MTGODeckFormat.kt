@@ -14,9 +14,9 @@ class MTGODeckFormat : DeckFormat {
 
     private fun isSideboard(line: String) = line.toLowerCase().contains(SIDEBOARD)
 
-    override fun parse(line: String, sideboard: Boolean): DeckLine {
+    override fun parse(line: String, sideboard: Boolean): DeckTextLine {
         val (occ, title) = line.split(Regex(" "), 2)
-        return DeckLine(occ.toInt(), title, sideboard)
+        return DeckTextLine(occ.toInt(), title, sideboard)
     }
 
     override fun split(lines: List<String>) = lines.filter(String::isNotEmpty).run {

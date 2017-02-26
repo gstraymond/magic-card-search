@@ -22,7 +22,7 @@ class MagicWorkstationDeckFormat : DeckFormat {
                 first to second.map { it.replace("  ", " ").replace(SIDEBOARD, "") }
             }
 
-    override fun parse(line: String, sideboard: Boolean): DeckLine {
+    override fun parse(line: String, sideboard: Boolean): DeckTextLine {
         val (occ, name) = when {
             line.contains("[") && line.contains("]") -> line.split(Regex(" "), 3).run {
                 get(0) to get(2)
@@ -31,7 +31,7 @@ class MagicWorkstationDeckFormat : DeckFormat {
                 get(0) to get(1)
             }
         }
-        return DeckLine(occ.toInt(), name, sideboard)
+        return DeckTextLine(occ.toInt(), name, sideboard)
     }
 
     override fun extractName(url: URL, lines: List<String>) =

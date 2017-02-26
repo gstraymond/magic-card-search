@@ -1,8 +1,8 @@
 package fr.gstraymond.biz
 
-import fr.gstraymond.models.CardWithOccurrence
+import fr.gstraymond.models.DeckLine
 
-class DeckStats(cards: List<CardWithOccurrence>) {
+class DeckStats(cards: List<DeckLine>) {
 
     val mainDeck = cards.filterNot { it.isSideboard }
     val sideboard = cards.filter { it.isSideboard }
@@ -15,7 +15,6 @@ class DeckStats(cards: List<CardWithOccurrence>) {
             }
             .maxBy { Formats.ordered.indexOf(it) }
             ?: ""
-
 }
 
 

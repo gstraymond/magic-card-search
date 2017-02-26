@@ -12,7 +12,7 @@ import android.view.View
 import fr.gstraymond.R
 import fr.gstraymond.android.adapter.DeckListAdapter
 import fr.gstraymond.biz.DeckStats
-import fr.gstraymond.models.CardWithOccurrence
+import fr.gstraymond.models.DeckLine
 import fr.gstraymond.models.Deck
 import fr.gstraymond.utils.find
 import fr.gstraymond.utils.hide
@@ -82,7 +82,7 @@ class DeckListActivity : CustomActivity(R.layout.activity_deck_list) {
         return when (item.itemId) {
             R.id.decklist_create -> {
                 // FIXME refactor
-                val cards = listOf<CardWithOccurrence>()
+                val cards = listOf<DeckLine>()
                 val decklist = customApplication.deckList
                 val deckId = decklist.getLastId() + 1
                 customApplication.cardListBuilder.build(deckId).save(cards)

@@ -9,13 +9,13 @@ import android.view.ViewGroup
 import android.widget.Toast
 import fr.gstraymond.R
 import fr.gstraymond.db.json.JsonList
-import fr.gstraymond.models.CardWithOccurrence
+import fr.gstraymond.models.DeckLine
 import fr.gstraymond.models.search.response.Card
 import fr.gstraymond.models.search.response.getLocalizedTitle
 
 class CardArrayAdapter(private val context: Context,
                        cards: JsonList<Card>?,
-                       cardWithOccurrences: JsonList<CardWithOccurrence>?,
+                       deckLines: JsonList<DeckLine>?,
                        private val clickCallbacks: ClickCallbacks) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private val cards = mutableListOf<Card>()
@@ -44,7 +44,7 @@ class CardArrayAdapter(private val context: Context,
 
     private val cardViews = cards?.run {
         WishlistCardViews(context, cards, FavoriteViewClickCallbacks(context))
-    } ?: DeckCardViews(context, cardWithOccurrences!!, FavoriteViewClickCallbacks(context))
+    } ?: DeckCardViews(context, deckLines!!, FavoriteViewClickCallbacks(context))
 
     private inner class FavoriteViewClickCallbacks(val context: Context) : CardClickCallbacks {
 

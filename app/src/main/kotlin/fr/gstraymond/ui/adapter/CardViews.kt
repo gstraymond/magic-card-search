@@ -4,7 +4,7 @@ import android.content.Context
 import android.view.View
 import fr.gstraymond.api.ui.view.DisplayableView
 import fr.gstraymond.db.json.JsonList
-import fr.gstraymond.models.CardWithOccurrence
+import fr.gstraymond.models.DeckLine
 import fr.gstraymond.models.search.response.Card
 import fr.gstraymond.ui.view.impl.*
 
@@ -29,8 +29,8 @@ class WishlistCardViews(context: Context,
                 CostView()))
 
 class DeckCardViews(context: Context,
-                        cards: JsonList<CardWithOccurrence>,
-                        clickCallbacks: CardClickCallbacks) :
+                    cards: JsonList<DeckLine>,
+                    clickCallbacks: CardClickCallbacks) :
         CardViews(listOf(
                 TitleView(context),
                 DescriptionView(context),

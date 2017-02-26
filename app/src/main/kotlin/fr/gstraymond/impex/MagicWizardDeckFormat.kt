@@ -16,9 +16,9 @@ class MagicWizardDeckFormat : DeckFormat {
                 lines.drop(emptyLine + 1).filter(String::isNotEmpty)
     }
 
-    override fun parse(line: String, sideboard: Boolean): DeckLine {
+    override fun parse(line: String, sideboard: Boolean): DeckTextLine {
         val (occ, title) = line.split(Regex(" "), 2)
-        return DeckLine(occ.toInt(), title, sideboard)
+        return DeckTextLine(occ.toInt(), title, sideboard)
     }
 
     // TODO refactor
