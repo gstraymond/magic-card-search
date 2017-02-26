@@ -54,6 +54,9 @@ class DeckDetailAdapter(private val cardList: CardList,
 
         val title = holder.itemView.find<TextView>(R.id.array_adapter_deck_card_name)
         title.text = card.getLocalizedTitle(context)
+        title.setOnClickListener {
+            deckLineCallback?.cardClick(deckLine)
+        }
 
         val sideboard = holder.itemView.find<CheckBox>(R.id.array_adapter_deck_card_sideboard)
         sideboard.isChecked = deckLine.isSideboard
@@ -83,4 +86,5 @@ interface DeckLineCallback {
 
     fun multChanged(deckLine: DeckLine, mult: Int)
     fun sideboardChanged(deckLine: DeckLine, sideboard: Boolean)
+    fun cardClick(deckLine: DeckLine)
 }

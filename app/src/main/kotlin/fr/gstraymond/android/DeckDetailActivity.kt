@@ -15,6 +15,7 @@ import fr.gstraymond.android.adapter.DeckDetailAdapter
 import fr.gstraymond.android.adapter.DeckLineCallback
 import fr.gstraymond.biz.DeckStats
 import fr.gstraymond.biz.SearchOptions
+import fr.gstraymond.constants.Consts
 import fr.gstraymond.db.json.CardList
 import fr.gstraymond.models.Deck
 import fr.gstraymond.models.DeckLine
@@ -52,7 +53,6 @@ class DeckDetailActivity : CustomActivity(R.layout.activity_deck_detail) {
     }
 
     private val callback = object : DeckLineCallback {
-
         override fun multChanged(deckLine: DeckLine, mult: Int) {
             log.d("multChanged: [$mult] $deckLine")
             when (mult) {
@@ -66,6 +66,14 @@ class DeckDetailActivity : CustomActivity(R.layout.activity_deck_detail) {
             log.d("sideboardChanged: [$sideboard] $deckLine")
             cardList.update(deckLine.copy(isSideboard = sideboard), updateDeck = false)
             updateStats()
+        }
+
+        override fun cardClick(deckLine: DeckLine) {
+            startActivity {
+                Intent(this@DeckDetailActivity, CardDetailActivity::class.java).apply {
+                    putExtra(Consts.CARD, deckLine.card)
+                }
+            }
         }
     }
 
