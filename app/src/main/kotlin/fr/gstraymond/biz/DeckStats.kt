@@ -1,6 +1,7 @@
 package fr.gstraymond.biz
 
 import fr.gstraymond.models.DeckLine
+import java.math.BigDecimal
 
 class DeckStats(cards: List<DeckLine>) {
 
@@ -15,6 +16,11 @@ class DeckStats(cards: List<DeckLine>) {
             }
             .maxBy { Formats.ordered.indexOf(it) }
             ?: ""
+
+    val totalPrice = cards.fold(BigDecimal(0)) { acc, it ->
+        val minPrice = BigDecimal((it.card.publications.map { it.price }.filter { it > 0 }.min() ?: 0.0))
+        acc + minPrice * BigDecimal(it.mult)
+    }.toDouble()
 }
 
 

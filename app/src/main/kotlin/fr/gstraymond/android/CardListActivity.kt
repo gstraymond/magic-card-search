@@ -14,7 +14,6 @@ import android.support.v7.widget.Toolbar
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.view.View.*
 import android.widget.ProgressBar
 import android.widget.Toast
 import com.crashlytics.android.answers.Answers

@@ -43,6 +43,8 @@ abstract class JsonList<A>(private val context: Context,
 
     override fun delete(elem: A) = super.delete(elem).apply { writeAll() }
 
+    override fun update(elem: A) = super.update(elem).apply { writeAll() }
+
     override fun append(elem: A) = super.append(elem).apply {
         write(MODE_APPEND) { it.write(elem) }
     }

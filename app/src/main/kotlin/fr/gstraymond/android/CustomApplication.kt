@@ -47,7 +47,7 @@ class CustomApplication : BaseApplication() {
         historyList = HistoryList(this, objectMapper)
         wishList = WishList(this, objectMapper)
         deckList = DeckList(this, objectMapper)
-        cardListBuilder = CardListBuilder(this, objectMapper)
+        cardListBuilder = CardListBuilder(this, objectMapper, deckList)
 
         deckResolver = DeckResolver(searchService)
 

@@ -48,6 +48,17 @@ abstract class MemoryUidList<A> : UidList<A> {
         log.d("delete $elem")
     }
 
+    override fun update(elem: A) {
+        val contains = contains(elem)
+        log.d("update $elem ? $contains")
+        if (contains) {
+            val uid = elem.uid()
+            elems.remove(getByUid(uid))
+            elems.add(elem)
+            index.put(uid, elem)
+        }
+    }
+
     override fun save(elements: List<A>) {
         val clone = ArrayList(elements) // be sure to have another instance
         log.d("save $clone")

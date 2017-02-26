@@ -79,12 +79,11 @@ class DeckDetailActivity : CustomActivity(R.layout.activity_deck_detail) {
         val deckStats = DeckStats(cards)
 
         val textView = findViewById(R.id.deck_stats) as TextView
-        textView.text = """
-            colors: ${deckStats.colors.joinToString()}
-            formats: ${deckStats.format}
-            cards: ${deckStats.mainDeck.map { it.mult }.sum()}
-            sidebard: ${deckStats.sideboard.map { it.mult }.sum()}
-        """
+        textView.text = """colors: ${deckStats.colors.joinToString()}
+formats: ${deckStats.format}
+cards: ${deckStats.mainDeck.map { it.mult }.sum()}
+sidebard: ${deckStats.sideboard.map { it.mult }.sum()}
+price: ${deckStats.totalPrice}"""
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

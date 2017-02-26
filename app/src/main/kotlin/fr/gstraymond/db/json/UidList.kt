@@ -22,6 +22,8 @@ interface UidList<A> {
 
     fun delete(elem: A)
 
+    fun update(elem: A)
+
     fun save(elements: List<A>)
 
     fun <B> map(f: (A) -> B): List<B>
