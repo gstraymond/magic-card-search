@@ -26,7 +26,7 @@ class DeckDetailAdapter(private val cardList: CardList,
         val card = deckLine.card
 
         val mult = holder.itemView.find<TextView>(R.id.array_adapter_deck_card_mult)
-        mult.text = deckLine.mult.toString()
+        mult.text = "${deckLine.mult} x"
         mult.setOnClickListener {
             val view = LayoutInflater.from(context).inflate(R.layout.array_adapter_deck_card_mult, null)
             val picker = view.find<NumberPicker>(R.id.array_adapter_deck_card_mult).apply {

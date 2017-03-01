@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    android:padding="8dp">
+    android:padding="16dp">
 
     <TextView
         android:id="@+id/array_adapter_deck_card_mult"
@@ -17,6 +16,7 @@
         android:id="@+id/array_adapter_deck_card_sideboard"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
         android:focusable="false"
         android:focusableInTouchMode="false"
         android:padding="4dp"
@@ -28,8 +28,10 @@
         style="@android:style/TextAppearance.Large"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_toLeftOf="@id/array_adapter_deck_card_sideboard"
+        android:layout_toRightOf="@id/array_adapter_deck_card_mult"
         android:ellipsize="end"
         android:maxLines="1"
         tools:text="deck" />
 
-</LinearLayout>
+</RelativeLayout>
