@@ -72,7 +72,7 @@ class CardDetailActivity : CardCommonActivity(R.layout.activity_card_detail),
     override fun onListSelected(list: String) {
         startActivity {
             when (list) {
-                "wishlist" -> Intent(this, WishListActivity::class.java)
+                "wishlist" -> Intent(this, ListsActivity::class.java)
                 else -> DeckDetailActivity.getIntent(this, list)
             }
         }

@@ -83,8 +83,8 @@ class CardListActivity : CustomActivity(R.layout.activity_card_list),
         }
 
         val (wishList, deck) = currentSearch.deckId?.run {
-            null to customApplication.cardListBuilder.build(toInt())
-        } ?: (customApplication.wishList to null)
+            null to app.cardListBuilder.build(toInt())
+        } ?: (app.wishList to null)
 
         adapter = CardArrayAdapter(this, wishList, deck, this)
 
@@ -139,12 +139,12 @@ class CardListActivity : CustomActivity(R.layout.activity_card_list),
         }
 
         fab.setOnClickListener { view ->
-            startActivity(Intent(view.context, WishListActivity::class.java))
+            startActivity(Intent(view.context, ListsActivity::class.java))
         }
 
         currentSearch.deckId?.apply {
             fab.hide()
-            title = customApplication.deckList.getByUid(this)?.name
+            title = app.deckList.getByUid(this)?.name
         }
     }
 

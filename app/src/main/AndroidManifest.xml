@@ -77,7 +77,7 @@
                 android:value=".android.CardListActivity" />
         </activity>
         <activity
-            android:name=".android.WishListActivity"
+            android:name=".android.ListsActivity"
             android:parentActivityName=".android.CardListActivity"
             android:theme="@style/AppTheme">
             <meta-data
@@ -86,15 +86,6 @@
         </activity>
 
         <!-- Decks -->
-        <activity
-            android:name=".android.DeckListActivity"
-            android:parentActivityName=".android.CardListActivity"
-            android:theme="@style/AppTheme">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".android.CardListActivity" />
-        </activity>
-
         <!--
         <activity android:name=".android.DeckImporterActivity"
             android:parentActivityName=".android.DeckListActivity"
@@ -118,7 +109,7 @@
 
         <activity
             android:name=".android.DeckDetailActivity"
-            android:parentActivityName=".android.DeckListActivity"
+            android:parentActivityName=".android.ListsActivity"
             android:theme="@style/AppTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

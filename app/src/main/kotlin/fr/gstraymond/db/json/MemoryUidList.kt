@@ -70,6 +70,12 @@ abstract class MemoryUidList<A> : UidList<A> {
         }
     }
 
+    override fun clear() {
+        log.d("clear")
+        elems.clear()
+        index.clear()
+    }
+
     override fun <B> map(f: (A) -> B): List<B> = elems.map(f)
 
     override fun <B> flatMap(f: (A) -> List<B>): List<B> = elems.flatMap(f)

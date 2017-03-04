@@ -54,9 +54,9 @@ class DeckImporterActivity : CustomActivity(R.layout.activity_deck_importer) {
             log.text = "Importing $url"
             DeckImporterTask(
                     contentResolver,
-                    customApplication.deckResolver,
-                    customApplication.cardListBuilder,
-                    customApplication.deckList,
+                    app.deckResolver,
+                    app.cardListBuilder,
+                    app.deckList,
                     Process(log, progressBar, this)
             ).execute(url)
         }

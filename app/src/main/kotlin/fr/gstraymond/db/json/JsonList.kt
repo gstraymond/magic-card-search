@@ -45,6 +45,14 @@ abstract class JsonList<A>(private val context: Context,
 
     override fun update(elem: A) = super.update(elem).apply { writeAll() }
 
+    override fun clear() = super.clear().apply {
+        try {
+            context.deleteFile(listName)
+        } catch (e: Exception) {
+            log.e("clear: $listName", e)
+        }
+    }
+
     override fun append(elem: A) = super.append(elem).apply {
         write(MODE_APPEND) { it.write(elem) }
     }

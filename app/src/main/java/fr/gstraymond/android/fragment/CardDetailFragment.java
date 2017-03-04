@@ -49,7 +49,7 @@ public class CardDetailFragment extends CustomListFragment {
         Card card = getArguments().getParcelable(CARD);
 
         CustomActivity activity = (CustomActivity) getActivity();
-        final CustomApplication customApplication = activity.getCustomApplication();
+        final CustomApplication customApplication = activity.getApp();
 
         String id = CardIdUtilsKt.getId(card);
         List<String> listIds = customApplication.getListsCardId().get(id);

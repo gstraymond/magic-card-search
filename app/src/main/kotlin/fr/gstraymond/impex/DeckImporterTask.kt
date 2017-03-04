@@ -2,6 +2,7 @@ package fr.gstraymond.impex
 
 import android.content.ContentResolver
 import android.os.AsyncTask
+import fr.gstraymond.biz.DeckManager
 import fr.gstraymond.biz.DeckStats
 import fr.gstraymond.db.json.DeckList
 import fr.gstraymond.db.json.CardListBuilder
@@ -25,15 +26,14 @@ class DeckImporterTask(val contentResolver: ContentResolver,
 
     private val URL_TASK = "url_task"
 
+    private val deckManager = DeckManager(deckList, cardListBuilder)
+
     override fun doInBackground(vararg urls: URL) {
         val importedDeck = DeckImporter(contentResolver).importFromUri(urls.first())
         publishProgress(Progress(URL_TASK, importedDeck?.lines?.size ?: -1))
         importedDeck?.let { deck ->
             val cards = deckResolver.resolve(deck, this)
-            val deckId = deckList.getLastId() + 1
-            cardListBuilder.build(deckId).save(cards)
-            val deckStats = DeckStats(cards)
-            deckList.addOrRemove(Deck(deckId, Date(), deck.name, deckStats.colors, deckStats.format))
+            deckManager.createDeck(deck.name, cards)
         }
     }
 

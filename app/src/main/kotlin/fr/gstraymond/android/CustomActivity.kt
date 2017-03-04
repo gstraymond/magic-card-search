@@ -12,11 +12,11 @@ import com.squareup.moshi.Moshi
 
 abstract class CustomActivity(private val layoutId: Int) : AppCompatActivity() {
 
-    val customApplication by lazy { application as CustomApplication }
+    val app by lazy { application as CustomApplication }
 
-    val objectMapper: Moshi by lazy { customApplication.objectMapper }
+    val objectMapper: Moshi by lazy { app.objectMapper }
 
-    val jsonHistoryDataSource by lazy { customApplication.historyList }
+    val jsonHistoryDataSource by lazy { app.historyList }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

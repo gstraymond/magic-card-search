@@ -26,6 +26,8 @@ interface UidList<A> {
 
     fun save(elements: List<A>)
 
+    fun clear()
+
     fun <B> map(f: (A) -> B): List<B>
 
     fun <B> flatMap(f: (A) -> List<B>): List<B>

@@ -13,6 +13,7 @@ import com.magic.card.search.commons.log.Log
 import fr.gstraymond.R
 import fr.gstraymond.android.adapter.DeckDetailAdapter
 import fr.gstraymond.android.adapter.DeckLineCallback
+import fr.gstraymond.biz.DeckManager
 import fr.gstraymond.biz.DeckStats
 import fr.gstraymond.biz.SearchOptions
 import fr.gstraymond.constants.Consts
@@ -34,6 +35,7 @@ class DeckDetailActivity : CustomActivity(R.layout.activity_deck_detail) {
 
     private lateinit var deck: Deck
     private lateinit var cardList: CardList
+    private val deckManager = DeckManager(app.deckList, app.cardListBuilder)
 
     private val log = Log(javaClass)
 
@@ -41,8 +43,8 @@ class DeckDetailActivity : CustomActivity(R.layout.activity_deck_detail) {
         super.onCreate(savedInstanceState)
 
         val deckId = intent.getStringExtra(DECK_EXTRA)
-        deck = customApplication.deckList.getByUid(deckId)!!
-        cardList = customApplication.cardListBuilder.build(deckId.toInt())
+        deck = app.deckList.getByUid(deckId)!!
+        cardList = app.cardListBuilder.build(deckId.toInt())
 
         val toolbar = findViewById(R.id.toolbar) as Toolbar
         setSupportActionBar(toolbar)
@@ -113,7 +115,7 @@ class DeckDetailActivity : CustomActivity(R.layout.activity_deck_detail) {
         }
         R.id.deckdetails_delete -> {
             // FIXME add confirmation
-            customApplication.deckList.delete(deck)
+            deckManager.delete(deck)
             finish()
             true
         }

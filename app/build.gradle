@@ -71,16 +71,23 @@ android {
     }
 }
 
+ext {
+    glideVersion = '3.+'
+    supportLibVersion = '25.+'
+    retrofitVersion = '2.1+'
+    retrofitLoggingVersion = '3.3+'
+}
+
 dependencies {
     compile project(':commons')
-    compile 'com.github.bumptech.glide:glide:3.+'
-    compile 'com.android.support:support-v13:25.+'
-    compile 'com.android.support:appcompat-v7:25.+'
-    compile 'com.android.support:design:25.+'
+    compile "com.github.bumptech.glide:glide:$glideVersion"
+    compile "com.android.support:support-v13:$supportLibVersion"
+    compile "com.android.support:appcompat-v7:$supportLibVersion"
+    compile "com.android.support:design:$supportLibVersion"
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-    compile 'com.squareup.retrofit2:retrofit:2.1+'
-    compile 'com.squareup.retrofit2:converter-moshi:2.1+'
-    compile 'com.squareup.okhttp3:logging-interceptor:3.3+'
+    compile "com.squareup.retrofit2:retrofit:$retrofitVersion"
+    compile "com.squareup.retrofit2:converter-moshi:$retrofitVersion"
+    compile "com.squareup.okhttp3:logging-interceptor:$retrofitLoggingVersion"
 
     testCompile 'junit:junit:4.12'
 }

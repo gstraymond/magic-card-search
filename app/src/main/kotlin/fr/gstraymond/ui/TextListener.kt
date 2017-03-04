@@ -31,7 +31,7 @@ class TextListener(val activity: CardListActivity,
                 if (!text.contains(SEP)) text
                 else text.split(SEP).last()
 
-        AutocompleteProcessor(activity.objectMapper, activity.customApplication.searchService, callbacks).execute(query)
+        AutocompleteProcessor(activity.objectMapper, activity.app.searchService, callbacks).execute(query)
         return true
     }
 
