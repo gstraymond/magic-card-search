@@ -29,6 +29,7 @@ import fr.gstraymond.ui.SuggestionListener
 import fr.gstraymond.ui.TextListener
 import fr.gstraymond.ui.adapter.CardArrayAdapter
 import fr.gstraymond.ui.adapter.SearchViewCursorAdapter
+import fr.gstraymond.utils.app
 import fr.gstraymond.utils.find
 import sheetrock.panda.changelog.ChangeLog
 
@@ -83,8 +84,8 @@ class CardListActivity : CustomActivity(R.layout.activity_card_list),
         }
 
         val (wishList, deck) = currentSearch.deckId?.run {
-            null to app.cardListBuilder.build(toInt())
-        } ?: (app.wishList to null)
+            null to app().cardListBuilder.build(toInt())
+        } ?: (app().wishList to null)
 
         adapter = CardArrayAdapter(this, wishList, deck, this)
 
@@ -94,7 +95,7 @@ class CardListActivity : CustomActivity(R.layout.activity_card_list),
             it.layoutManager = layoutManager
             it.adapter = adapter
             it.addOnScrollListener(endScrollListener)
-            it.setOnTouchListener { view, motionEvent ->
+            it.setOnTouchListener { _, _ ->
                 when {
                     searchView.hasFocus() -> searchView.clearFocus()
                 }
@@ -144,7 +145,7 @@ class CardListActivity : CustomActivity(R.layout.activity_card_list),
 
         currentSearch.deckId?.apply {
             fab.hide()
-            title = app.deckList.getByUid(this)?.name
+            title = app().deckList.getByUid(this)?.name
         }
     }
 

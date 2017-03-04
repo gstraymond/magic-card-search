@@ -32,11 +32,11 @@ class HistoryActivity : CustomActivity(R.layout.activity_history) {
             AlertDialog.Builder(this)
                     .setTitle(getString(R.string.history_alert_title))
                     .setMessage(getString(R.string.history_alert_description))
-                    .setPositiveButton(getString(R.string.history_alert_ok)) { dialog, whichButton ->
+                    .setPositiveButton(getString(R.string.history_alert_ok)) { _, _ ->
                         jsonHistoryDataSource.clearNonFavoriteHistory()
                         showHistory()
                     }
-                    .setNegativeButton(getString(R.string.history_alert_cancel)) { dialog, whichButton -> }
+                    .setNegativeButton(getString(R.string.history_alert_cancel)) { _, _ -> }
                     .show()
             true
         }

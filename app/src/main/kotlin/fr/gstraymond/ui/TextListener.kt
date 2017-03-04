@@ -8,6 +8,7 @@ import fr.gstraymond.biz.AutocompleteProcessor
 import fr.gstraymond.biz.AutocompleteProcessor.Callbacks
 import fr.gstraymond.biz.SearchOptions
 import fr.gstraymond.biz.SearchProcessor
+import fr.gstraymond.utils.app
 
 class TextListener(val activity: CardListActivity,
                    val callbacks: Callbacks) : SearchView.OnQueryTextListener {
@@ -31,7 +32,7 @@ class TextListener(val activity: CardListActivity,
                 if (!text.contains(SEP)) text
                 else text.split(SEP).last()
 
-        AutocompleteProcessor(activity.objectMapper, activity.app.searchService, callbacks).execute(query)
+        AutocompleteProcessor(activity.objectMapper, activity.app().searchService, callbacks).execute(query)
         return true
     }
 

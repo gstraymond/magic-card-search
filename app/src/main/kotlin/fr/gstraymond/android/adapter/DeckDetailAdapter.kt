@@ -38,7 +38,7 @@ class DeckDetailAdapter(private val cardList: CardList,
 
             AlertDialog.Builder(context)
                     .setView(view)
-                    .setPositiveButton(android.R.string.ok, { dialog, which ->
+                    .setPositiveButton(android.R.string.ok, { _, _ ->
                         val pickerMult = picker.value
                         deckLineCallback?.multChanged(deckLine, pickerMult)
                         when (pickerMult) {
@@ -47,7 +47,7 @@ class DeckDetailAdapter(private val cardList: CardList,
                         }
 
                     })
-                    .setNegativeButton(android.R.string.cancel, { dialog, which -> })
+                    .setNegativeButton(android.R.string.cancel, { _, _ -> })
                     .create()
                     .show()
         }

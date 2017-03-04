@@ -8,7 +8,6 @@ import fr.gstraymond.R
 import fr.gstraymond.android.adapter.ListsFragmentPagerAdapter
 import fr.gstraymond.utils.find
 
-
 class ListsActivity : CustomActivity(R.layout.activity_lists) {
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -18,12 +17,7 @@ class ListsActivity : CustomActivity(R.layout.activity_lists) {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         val viewPager = find<ViewPager>(R.id.viewpager)
-        viewPager.adapter = ListsFragmentPagerAdapter(
-                supportFragmentManager,
-                this,
-                app.wishList,
-                app.deckList,
-                app.cardListBuilder)
+        viewPager.adapter = ListsFragmentPagerAdapter(supportFragmentManager, this)
 
         find<TabLayout>(R.id.sliding_tabs).setupWithViewPager(viewPager)
     }

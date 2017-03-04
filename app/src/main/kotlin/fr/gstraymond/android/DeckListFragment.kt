@@ -12,18 +12,18 @@ import android.view.ViewGroup
 import fr.gstraymond.R
 import fr.gstraymond.android.adapter.DeckListAdapter
 import fr.gstraymond.biz.DeckManager
-import fr.gstraymond.db.json.CardListBuilder
-import fr.gstraymond.db.json.DeckList
 import fr.gstraymond.models.Deck
+import fr.gstraymond.utils.app
 import fr.gstraymond.utils.find
 import fr.gstraymond.utils.hide
 import fr.gstraymond.utils.show
 
-class DeckListFragment(private val deckList: DeckList,
-                       cardListBuilder: CardListBuilder) : Fragment() {
+class DeckListFragment : Fragment() {
 
     private lateinit var deckListAdapter: DeckListAdapter
-    private val deckManager = DeckManager(deckList, cardListBuilder)
+    private val deckList by lazy { app().deckList }
+    private val cardListBuilder by lazy { app().cardListBuilder }
+    private val deckManager by lazy { DeckManager(deckList, cardListBuilder) }
 
     override fun onCreateView(inflater: LayoutInflater,
                               container: ViewGroup?,

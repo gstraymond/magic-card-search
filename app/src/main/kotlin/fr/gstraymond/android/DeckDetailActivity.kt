@@ -20,6 +20,7 @@ import fr.gstraymond.constants.Consts
 import fr.gstraymond.db.json.CardList
 import fr.gstraymond.models.Deck
 import fr.gstraymond.models.DeckLine
+import fr.gstraymond.utils.app
 import fr.gstraymond.utils.find
 
 class DeckDetailActivity : CustomActivity(R.layout.activity_deck_detail) {
@@ -35,7 +36,7 @@ class DeckDetailActivity : CustomActivity(R.layout.activity_deck_detail) {
 
     private lateinit var deck: Deck
     private lateinit var cardList: CardList
-    private val deckManager = DeckManager(app.deckList, app.cardListBuilder)
+    private val deckManager by lazy { DeckManager(app().deckList, app().cardListBuilder) }
 
     private val log = Log(javaClass)
 
@@ -43,8 +44,8 @@ class DeckDetailActivity : CustomActivity(R.layout.activity_deck_detail) {
         super.onCreate(savedInstanceState)
 
         val deckId = intent.getStringExtra(DECK_EXTRA)
-        deck = app.deckList.getByUid(deckId)!!
-        cardList = app.cardListBuilder.build(deckId.toInt())
+        deck = app().deckList.getByUid(deckId)!!
+        cardList = app().cardListBuilder.build(deckId.toInt())
 
         val toolbar = findViewById(R.id.toolbar) as Toolbar
         setSupportActionBar(toolbar)

@@ -3,7 +3,6 @@ package fr.gstraymond.android.adapter
 import android.content.Context
 import android.support.v7.widget.RecyclerView
 import android.text.Html
-import android.util.SparseBooleanArray
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,8 +12,6 @@ import fr.gstraymond.biz.CastingCostImageGetter
 import fr.gstraymond.biz.Colors
 import fr.gstraymond.models.Deck
 import fr.gstraymond.tools.CastingCostFormatter
-import java.util.*
-
 
 class DeckListAdapter(context: Context) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
@@ -23,7 +20,7 @@ class DeckListAdapter(context: Context) : RecyclerView.Adapter<RecyclerView.View
 
     var decks: List<Deck> = listOf()
 
-    var onClickListener: (String) -> View.OnClickListener? = { deckId -> null }
+    var onClickListener: (String) -> View.OnClickListener? = { _ -> null }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val deck = decks[position]
@@ -51,8 +48,4 @@ class DeckListAdapter(context: Context) : RecyclerView.Adapter<RecyclerView.View
                     .from(parent.context)
                     .inflate(R.layout.array_adapter_deck, parent, false)
                     .run { object : RecyclerView.ViewHolder(this) {} }
-
-    // selection
-    // https://developer.android.com/guide/topics/ui/menus.html#CAB
-    // http://www.grokkingandroid.com/statelistdrawables-for-recyclerview-selection/
 }

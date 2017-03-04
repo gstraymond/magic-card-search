@@ -9,14 +9,13 @@ import android.view.MenuItem
 import com.crashlytics.android.answers.Answers
 import com.crashlytics.android.answers.ContentViewEvent
 import com.squareup.moshi.Moshi
+import fr.gstraymond.utils.app
 
 abstract class CustomActivity(private val layoutId: Int) : AppCompatActivity() {
 
-    val app by lazy { application as CustomApplication }
+    val objectMapper: Moshi by lazy { app().objectMapper }
 
-    val objectMapper: Moshi by lazy { app.objectMapper }
-
-    val jsonHistoryDataSource by lazy { app.historyList }
+    val jsonHistoryDataSource by lazy { app().historyList }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,9 +27,7 @@ abstract class CustomActivity(private val layoutId: Int) : AppCompatActivity() {
     }
 
     fun replaceFragment(fragment: Fragment, id: Int, bundle: Bundle?) {
-        if (bundle != null) {
-            fragment.arguments = bundle
-        }
+        bundle?.apply { fragment.arguments = this }
         fragmentManager.beginTransaction().replace(id, fragment).commitAllowingStateLoss()
     }
 
