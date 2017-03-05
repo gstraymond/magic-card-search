@@ -26,5 +26,5 @@
         android:layout_gravity="bottom|end"
         android:layout_margin="16dp"
         android:visibility="gone"
-        android:src="@drawable/ic_add_circle_outline_white_48dp" />
+        android:src="@drawable/ic_add_white_48dp" />
 </FrameLayout>
