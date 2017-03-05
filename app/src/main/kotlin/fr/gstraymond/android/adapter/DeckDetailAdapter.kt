@@ -16,8 +16,9 @@ import fr.gstraymond.utils.find
 import java.util.*
 
 
-class DeckDetailAdapter(private val cardList: CardList,
-                        private val context: Context) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class DeckDetailAdapter(private val context: Context) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+
+    lateinit var cardList: CardList
 
     var deckLineCallback: DeckLineCallback? = null
 

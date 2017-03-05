@@ -45,13 +45,17 @@ class DeckDetailActivity : CustomActivity(R.layout.activity_deck_detail) {
 
         val deckId = intent.getStringExtra(DECK_EXTRA)
         deck = app().deckList.getByUid(deckId)!!
-        cardList = app().cardListBuilder.build(deckId.toInt())
 
         val toolbar = findViewById(R.id.toolbar) as Toolbar
         setSupportActionBar(toolbar)
         supportActionBar?.apply {
             setDisplayHomeAsUpEnabled(true)
             title = deck.name
+        }
+
+        find<RecyclerView>(R.id.deck_recyclerview).apply {
+            layoutManager = LinearLayoutManager(this@DeckDetailActivity)
+            adapter = deckDetailAdapter
         }
     }
 
@@ -80,14 +84,18 @@ class DeckDetailActivity : CustomActivity(R.layout.activity_deck_detail) {
         }
     }
 
+    private val deckDetailAdapter = DeckDetailAdapter(this@DeckDetailActivity).apply {
+        deckLineCallback = callback
+    }
+
     override fun onResume() {
         super.onResume()
 
-        find<RecyclerView>(R.id.deck_recyclerview).apply {
-            layoutManager = LinearLayoutManager(this@DeckDetailActivity)
-            adapter = DeckDetailAdapter(cardList, this@DeckDetailActivity).apply {
-                deckLineCallback = callback
-            }
+        val deckId = intent.getStringExtra(DECK_EXTRA)
+        cardList = app().cardListBuilder.build(deckId.toInt())
+        deckDetailAdapter.let {
+            it.cardList = cardList
+            it.notifyDataSetChanged()
         }
 
         updateStats()

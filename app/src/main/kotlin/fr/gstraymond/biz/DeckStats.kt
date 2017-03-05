@@ -2,6 +2,7 @@ package fr.gstraymond.biz
 
 import fr.gstraymond.models.DeckLine
 import java.math.BigDecimal
+import java.math.RoundingMode
 
 class DeckStats(cards: List<DeckLine>) {
 
@@ -20,7 +21,7 @@ class DeckStats(cards: List<DeckLine>) {
     val totalPrice = cards.fold(BigDecimal(0)) { acc, it ->
         val minPrice = BigDecimal((it.card.publications.map { it.price }.filter { it > 0 }.min() ?: 0.0))
         acc + minPrice * BigDecimal(it.mult)
-    }.toDouble()
+    }.setScale(2, RoundingMode.CEILING).toDouble()
 
     val deckSize = deck.sumBy { it.mult }
     val sideboardSize = sideboard.sumBy { it.mult }
