@@ -16,7 +16,14 @@ class DeckManager(private val deckList: DeckList,
         val deckId = deckList.getLastId() + 1
         cardListBuilder.build(deckId).save(cards)
         val deckStats = DeckStats(cards)
-        deckList.addOrRemove(Deck(deckId, Date(), deckName, deckStats.colors, deckStats.format))
+        deckList.addOrRemove(Deck(
+                deckId,
+                Date(),
+                deckName,
+                deckStats.colors,
+                deckStats.format,
+                deckStats.deck.size,
+                deckStats.sideboard.size))
         return deckId
     }
 

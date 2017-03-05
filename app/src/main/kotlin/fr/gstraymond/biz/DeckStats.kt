@@ -5,7 +5,7 @@ import java.math.BigDecimal
 
 class DeckStats(cards: List<DeckLine>) {
 
-    val mainDeck = cards.filterNot { it.isSideboard }
+    val deck = cards.filterNot { it.isSideboard }
     val sideboard = cards.filter { it.isSideboard }
     val colors = cards.flatMap { it.card.colors }.distinct().filter { Colors.mainColors.contains(it) }
     val format = cards
@@ -21,6 +21,9 @@ class DeckStats(cards: List<DeckLine>) {
         val minPrice = BigDecimal((it.card.publications.map { it.price }.filter { it > 0 }.min() ?: 0.0))
         acc + minPrice * BigDecimal(it.mult)
     }.toDouble()
+
+    val deckSize = deck.sumBy { it.mult }
+    val sideboardSize = sideboard.sumBy { it.mult }
 }
 
 

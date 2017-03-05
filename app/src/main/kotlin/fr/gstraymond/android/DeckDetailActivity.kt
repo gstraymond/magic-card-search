@@ -67,7 +67,7 @@ class DeckDetailActivity : CustomActivity(R.layout.activity_deck_detail) {
 
         override fun sideboardChanged(deckLine: DeckLine, sideboard: Boolean) {
             log.d("sideboardChanged: [$sideboard] $deckLine")
-            cardList.update(deckLine.copy(isSideboard = sideboard), updateDeck = false)
+            cardList.update(deckLine.copy(isSideboard = sideboard))
             updateStats()
         }
 
@@ -97,8 +97,8 @@ class DeckDetailActivity : CustomActivity(R.layout.activity_deck_detail) {
         val deckStats = DeckStats(cardList.all())
         find<TextView>(R.id.deck_colors).text = "colors: ${deckStats.colors.joinToString()}"
         find<TextView>(R.id.deck_formats).text = "formats: ${deckStats.format}"
-        find<TextView>(R.id.deck_cards).text = "cards: ${deckStats.mainDeck.map { it.mult }.sum()}"
-        find<TextView>(R.id.deck_sideboard).text = "sidebard: ${deckStats.sideboard.map { it.mult }.sum()}"
+        find<TextView>(R.id.deck_cards).text = "cards: ${deckStats.deckSize}"
+        find<TextView>(R.id.deck_sideboard).text = "sidebard: ${deckStats.sideboardSize}"
         find<TextView>(R.id.deck_price).text = "price: ${deckStats.totalPrice}"
     }
 

@@ -12,6 +12,7 @@ import fr.gstraymond.biz.CastingCostImageGetter
 import fr.gstraymond.biz.Colors
 import fr.gstraymond.models.Deck
 import fr.gstraymond.tools.CastingCostFormatter
+import fr.gstraymond.utils.find
 
 class DeckListAdapter(context: Context) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
@@ -24,10 +25,12 @@ class DeckListAdapter(context: Context) : RecyclerView.Adapter<RecyclerView.View
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val deck = decks[position]
+        val view = holder.itemView
 
-        val deckColors = holder.itemView.findViewById(R.id.array_adapter_deck_colors) as TextView
-        val deckFormat = holder.itemView.findViewById(R.id.array_adapter_deck_format) as TextView
-        val deckName = holder.itemView.findViewById(R.id.array_adapter_deck_name) as TextView
+        val deckColors = view.find<TextView>(R.id.array_adapter_deck_colors)
+        val deckFormat = view.find<TextView>(R.id.array_adapter_deck_format)
+        val deckName = view.find<TextView>(R.id.array_adapter_deck_name)
+        val deckSize = view.find<TextView>(R.id.array_adapter_deck_size)
 
         val colors = deck.colors.map { Colors.mainColorsMap[it] }.sortedBy { it }.joinToString(" ")
         if (colors.isEmpty()) {
@@ -38,7 +41,9 @@ class DeckListAdapter(context: Context) : RecyclerView.Adapter<RecyclerView.View
         }
         deckFormat.text = deck.format
         deckName.text = deck.name
-        holder.itemView.setOnClickListener(onClickListener(deck.id.toString()))
+        deckSize.text = "${deck.deckSize} / ${deck.sideboardSize}"
+
+        view.setOnClickListener(onClickListener(deck.id.toString()))
     }
 
     override fun getItemCount() = decks.size

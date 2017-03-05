@@ -6,4 +6,6 @@ data class Deck(val id: Int = 0,
                 val timestamp: Date,
                 val name: String,
                 val colors: List<String>,
-                val format: String)
+                val format: String,
+                val deckSize: Int,
+                val sideboardSize: Int)

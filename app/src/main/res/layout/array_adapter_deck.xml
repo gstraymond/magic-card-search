@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:orientation="vertical"
     android:padding="8dp">
 
     <TextView
@@ -16,8 +17,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="24dp"
-        android:layout_below="@id/array_adapter_deck_name">
+        android:layout_height="24dp">
 
         <TextView
             android:id="@+id/array_adapter_deck_colors"
@@ -34,9 +34,18 @@
             style="@android:style/TextAppearance.Medium"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:paddingRight="8dp"
             android:textColor="@android:color/darker_gray"
             tools:text="deck" />
 
+        <TextView
+            android:id="@+id/array_adapter_deck_size"
+            style="@android:style/TextAppearance.Medium"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/darker_gray"
+            tools:text="60 / 15" />
+
     </LinearLayout>
 
-</RelativeLayout>
+</LinearLayout>

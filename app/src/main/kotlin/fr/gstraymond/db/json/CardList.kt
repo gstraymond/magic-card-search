@@ -21,14 +21,14 @@ class CardList(context: Context,
 
     override fun update(elem: DeckLine) = super.update(elem).apply { updateDeck() }
 
-    fun update(elem: DeckLine,
-               updateDeck: Boolean) = super.update(elem).apply { if (updateDeck) updateDeck() }
-
     private fun updateDeck() {
         deckList.getByUid(deckId)?.apply {
             val deckStats = DeckStats(elems)
-            deckList.update(
-                    copy(colors = deckStats.colors, format = deckStats.format)
+            deckList.update(copy(
+                    colors = deckStats.colors,
+                    format = deckStats.format,
+                    deckSize = deckStats.deckSize,
+                    sideboardSize = deckStats.sideboardSize)
             )
         }
     }
