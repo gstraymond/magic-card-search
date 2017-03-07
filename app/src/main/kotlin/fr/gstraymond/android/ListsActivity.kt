@@ -10,15 +10,44 @@ import fr.gstraymond.utils.find
 
 class ListsActivity : CustomActivity(R.layout.activity_lists) {
 
+    private val titles = listOf(
+            R.string.wishlist_title,
+            R.string.decks_title)
+
+    private val icons = listOf(
+            R.drawable.ic_star_white_18dp,
+            R.drawable.ic_bookmark_white_18dp)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         setSupportActionBar(find<Toolbar>(R.id.toolbar))
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        setTitle(titles[0])
 
         val viewPager = find<ViewPager>(R.id.viewpager)
-        viewPager.adapter = ListsFragmentPagerAdapter(supportFragmentManager, this)
+        viewPager.adapter = ListsFragmentPagerAdapter(supportFragmentManager)
+        viewPager.addOnPageChangeListener(object : SimpleOnPageChangeListener() {
 
-        find<TabLayout>(R.id.sliding_tabs).setupWithViewPager(viewPager)
+            override fun onPageSelected(position: Int) {
+                setTitle(titles[position])
+            }
+        })
+
+        find<TabLayout>(R.id.sliding_tabs).apply {
+            setupWithViewPager(viewPager)
+            (0..tabCount - 1).forEach {
+                getTabAt(it)?.setIcon(icons[it])
+            }
+        }
+    }
+
+    open class SimpleOnPageChangeListener : ViewPager.OnPageChangeListener {
+        override fun onPageScrollStateChanged(state: Int) {}
+
+        override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {}
+
+        override fun onPageSelected(position: Int) {}
+
     }
 }
