@@ -6,7 +6,6 @@ import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import fr.gstraymond.R
 import fr.gstraymond.android.adapter.WishlistAdapter
@@ -23,14 +22,13 @@ class WishListFragment : Fragment(), WishlistAdapter.ClickCallbacks {
 
     override fun onCreateView(inflater: LayoutInflater,
                               container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_lists, container, false).apply {
-            find<RecyclerView>(R.id.lists_recyclerview).let {
-                it.layoutManager = LinearLayoutManager(context)
-                it.adapter = WishlistAdapter(context, wishList, this@WishListFragment)
+                              savedInstanceState: Bundle?) =
+            inflater.inflate(R.layout.fragment_lists, container, false).apply {
+                find<RecyclerView>(R.id.lists_recyclerview).let {
+                    it.layoutManager = LinearLayoutManager(context)
+                    it.adapter = WishlistAdapter(context, wishList, this@WishListFragment)
+                }
             }
-        }
-    }
 
     override fun onResume() {
         super.onResume()
