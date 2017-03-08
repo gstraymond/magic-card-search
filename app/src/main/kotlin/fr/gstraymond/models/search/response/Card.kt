@@ -18,7 +18,8 @@ class Card(val title: String,
            val colors: List<String>,
            val layout: String,
            val loyalty: String?,
-           val altTitles: List<String>) : Parcelable {
+           val altTitles: List<String>,
+           val convertedManaCost: Int) : Parcelable {
 
     constructor(source: Parcel) : this(
             title = source.readString(),
@@ -41,7 +42,8 @@ class Card(val title: String,
             loyalty = source.readString(),
             altTitles = ArrayList<String>().apply {
                 source.readList(this, String::class.java.classLoader)
-            }
+            },
+            convertedManaCost = source.readInt() ?: 0
     )
 
     override fun describeContents() = 0
@@ -60,6 +62,7 @@ class Card(val title: String,
         dest.writeString(layout)
         dest.writeString(loyalty)
         dest.writeList(altTitles)
+        dest.writeInt(convertedManaCost ?: 0)
     }
 
     override fun toString() = title

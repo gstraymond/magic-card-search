@@ -108,6 +108,7 @@ class DeckDetailActivity : CustomActivity(R.layout.activity_deck_detail) {
         find<TextView>(R.id.deck_cards).text = "cards: ${deckStats.deckSize}"
         find<TextView>(R.id.deck_sideboard).text = "sidebard: ${deckStats.sideboardSize}"
         find<TextView>(R.id.deck_price).text = "price: ${deckStats.totalPrice}"
+        find<TextView>(R.id.mana_curve).text = "mana curve: ${deckStats.manaCurve}"
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
