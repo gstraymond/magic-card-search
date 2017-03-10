@@ -1,13 +1,18 @@
 package fr.gstraymond.android
 
+import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.TabLayout
 import android.support.v4.view.ViewPager
 import android.support.v7.widget.Toolbar
+import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.EditText
+import android.widget.TextView
+import android.widget.TextView.BufferType.*
 import fr.gstraymond.R
 import fr.gstraymond.android.adapter.DeckDetailFragmentPagerAdapter
 import fr.gstraymond.biz.DeckManager
@@ -28,6 +33,7 @@ class DeckDetailActivity : CustomActivity(R.layout.activity_deck_detail) {
     }
 
     private lateinit var deck: Deck
+    private lateinit var deckTitle: TextView
     private val deckManager by lazy { DeckManager(app().deckList, app().cardListBuilder) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -40,13 +46,37 @@ class DeckDetailActivity : CustomActivity(R.layout.activity_deck_detail) {
         setSupportActionBar(toolbar)
         supportActionBar?.apply {
             setDisplayHomeAsUpEnabled(true)
-            title = deck.name
+            title = ""
+        }
+
+        find<TextView>(R.id.toolbar_text).apply {
+            deckTitle = this
+            text = deck.name
+            setOnClickListener {
+                val view = LayoutInflater.from(context).inflate(R.layout.activity_deck_detail_title, null)
+                val editText = view.find<EditText>(R.id.deck_detail_title)
+                editText.setText(deck.name, EDITABLE)
+                AlertDialog.Builder(context)
+                        .setView(view)
+                        .setPositiveButton(android.R.string.ok, { _, _ ->
+                            updateDeckName(editText.text.toString())
+                        })
+                        .setNegativeButton(android.R.string.cancel, { _, _ -> })
+                        .create()
+                        .show()
+            }
         }
 
         val viewPager = find<ViewPager>(R.id.viewpager)
         viewPager.adapter = DeckDetailFragmentPagerAdapter(supportFragmentManager)
 
         find<TabLayout>(R.id.sliding_tabs).setupWithViewPager(viewPager)
+    }
+
+    private fun updateDeckName(deckName: String) {
+        deck = deck.copy(name = deckName)
+        app().deckList.update(deck)
+        deckTitle.text = deckName
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
