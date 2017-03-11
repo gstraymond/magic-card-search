@@ -2,4 +2,5 @@
 <resources>
     <dimen name="castingCostSize">20dp</dimen>
     <dimen name="largeCastingCostSize">24dp</dimen>
+    <dimen name="chartLabelSize">4dp</dimen>
 </resources>

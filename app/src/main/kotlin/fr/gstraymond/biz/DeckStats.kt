@@ -31,9 +31,10 @@ class DeckStats(cards: List<DeckLine>) {
     val sideboardSize by lazy { sideboard.sumBy { it.mult } }
 
     val manaCurve by lazy {
-        deck.groupBy { it.card.convertedManaCost }.mapValues {
-            it.value.sumBy { it.mult }
-        }
+        deck
+                .filterNot { it.card.type.run { startsWith("Land") || contains(" Land") } }
+                .groupBy { it.card.convertedManaCost }
+                .mapValues { it.value.sumBy { it.mult } }
     }
 }
 

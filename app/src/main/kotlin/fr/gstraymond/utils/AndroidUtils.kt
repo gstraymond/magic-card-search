@@ -34,6 +34,8 @@ fun Activity.app(): CustomApplication = application as CustomApplication
 
 fun Resources.drawable(id: Int): Drawable = ResourcesCompat.getDrawable(this, id, null)!!
 
-fun Resources.color(id: Int): ColorStateList = ResourcesCompat.getColorStateList(this, id, null)!!
+fun Resources.colorStateList(id: Int): ColorStateList = ResourcesCompat.getColorStateList(this, id, null)!!
+
+fun Resources.color(id: Int): Int = ResourcesCompat.getColor(this, id, null)
 
 fun Fragment.app(): CustomApplication = activity.app()

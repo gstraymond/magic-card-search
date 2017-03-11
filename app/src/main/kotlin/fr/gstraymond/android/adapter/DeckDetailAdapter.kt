@@ -79,7 +79,12 @@ class DeckDetailAdapter(private val context: Context) : RecyclerView.Adapter<Rec
     private val cardComparator = Comparator<DeckLine> { c1, c2 ->
         val z1 = if (c1.isSideboard) 1000 else -1000
         val z2 = if (c2.isSideboard) -1000 else 1000
-        z1 + z2 + c1.card.title.compareTo(c2.card.title)
+        val cmcCompare = c1.card.convertedManaCost.compareTo(c2.card.convertedManaCost)
+        val compare = when(cmcCompare) {
+            0 -> c1.card.title.compareTo(c2.card.title)
+            else -> cmcCompare
+        }
+        z1 + z2 + compare
     }
 }
 
