@@ -9,7 +9,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.magic.card.search.commons.log.Log
 import fr.gstraymond.R
-import fr.gstraymond.android.adapter.DeckDetailAdapter
+import fr.gstraymond.android.adapter.DeckDetailCardsAdapter
 import fr.gstraymond.android.adapter.DeckLineCallback
 import fr.gstraymond.constants.Consts
 import fr.gstraymond.db.json.CardList
@@ -26,7 +26,7 @@ class DeckDetailCardsFragment : Fragment(), DeckLineCallback {
     var deckLineCallback: DeckLineCallback? = null
 
     private val deckDetailAdapter by lazy {
-        DeckDetailAdapter(activity).apply {
+        DeckDetailCardsAdapter(activity).apply {
             deckLineCallback = this@DeckDetailCardsFragment
         }
     }

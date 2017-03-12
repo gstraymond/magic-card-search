@@ -36,6 +36,29 @@ class DeckStats(cards: List<DeckLine>) {
                 .groupBy { it.card.convertedManaCost }
                 .mapValues { it.value.sumBy { it.mult } }
     }
+
+    val colorDistribution by lazy {
+        deck
+                .flatMap { line -> line.card.colors.filter { Colors.mainColors.contains(it) }.map { it to line } }
+                .groupBy { it.first }
+                .mapValues { it.value.map { it.second }.distinctBy { it.card }.sumBy { it.mult } }
+    }
+
+    val typeDistribution by lazy {
+        deck
+                .map { line ->
+                    line.card.type.split(" ").run {
+                        when {
+                            contains("Creature") -> "Creature"
+                            contains("Land") -> "Land"
+                            else -> "Other"
+                        }
+                    } to line
+                }
+                .groupBy { it.first }
+                .mapValues { it.value.map { it.second }.sumBy { it.mult } }
+
+    }
 }
 
 
