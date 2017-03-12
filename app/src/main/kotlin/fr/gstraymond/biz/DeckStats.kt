@@ -8,7 +8,7 @@ class DeckStats(cards: List<DeckLine>) {
 
     val deck by lazy { cards.filterNot { it.isSideboard } }
     val sideboard by lazy { cards.filter { it.isSideboard } }
-    val colors by lazy { cards.flatMap { it.card.colors }.distinct().filter { Colors.mainColors.contains(it) } }
+    val colors by lazy { deck.flatMap { it.card.colors }.distinct().filter { Colors.mainColors.contains(it) } }
     val format by lazy {
         cards
                 .map { it.card.formats }
