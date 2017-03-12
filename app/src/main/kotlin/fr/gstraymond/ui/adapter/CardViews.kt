@@ -21,7 +21,7 @@ class WishlistCardViews(context: Context,
                         cards: JsonList<Card>,
                         clickCallbacks: CardClickCallbacks) :
         CardViews(listOf(
-                TitleView(context),
+                TitleView(),
                 DescriptionView(context),
                 CastingCostView(context),
                 TypePTView(),
@@ -32,13 +32,16 @@ class DeckCardViews(context: Context,
                     cards: JsonList<DeckLine>,
                     clickCallbacks: CardClickCallbacks) :
         CardViews(listOf(
-                TitleView(context),
+                TitleView(),
                 DescriptionView(context),
                 CastingCostView(context),
                 TypePTView(),
                 DeckItemView(cards, clickCallbacks, context),
                 CostView()))
 
+class DeckDetailCardViews(context: Context) : CardViews(listOf(
+        TitleView(),
+        CastingCostView(context)))
 
 interface CardClickCallbacks {
     fun itemAdded(position: Int)

@@ -5,6 +5,7 @@ import android.content.Context
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.CheckBox
 import android.widget.NumberPicker
 import android.widget.TextView
@@ -12,6 +13,7 @@ import fr.gstraymond.R
 import fr.gstraymond.db.json.CardList
 import fr.gstraymond.models.DeckLine
 import fr.gstraymond.models.search.response.getLocalizedTitle
+import fr.gstraymond.ui.adapter.DeckDetailCardViews
 import fr.gstraymond.utils.find
 import java.util.*
 
@@ -22,12 +24,15 @@ class DeckDetailCardsAdapter(private val context: Context) : RecyclerView.Adapte
 
     var deckLineCallback: DeckLineCallback? = null
 
+    private val cardViews = DeckDetailCardViews(context)
+
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val deckLine = cardList.all().sortedWith(cardComparator)[position]
         val card = deckLine.card
+        cardViews.display(holder.itemView, card, position)
 
-        val mult = holder.itemView.find<TextView>(R.id.array_adapter_deck_card_mult)
-        mult.text = "${deckLine.mult} x"
+        val mult = holder.itemView.find<Button>(R.id.array_adapter_deck_card_mult)
+        mult.text = "${deckLine.mult}"
         mult.setOnClickListener {
             val view = LayoutInflater.from(context).inflate(R.layout.array_adapter_deck_card_mult, null)
             val picker = view.find<NumberPicker>(R.id.array_adapter_deck_card_mult).apply {
@@ -53,9 +58,7 @@ class DeckDetailCardsAdapter(private val context: Context) : RecyclerView.Adapte
                     .show()
         }
 
-        val title = holder.itemView.find<TextView>(R.id.array_adapter_deck_card_name)
-        title.text = card.getLocalizedTitle(context)
-        title.setOnClickListener {
+        holder.itemView.find<TextView>(R.id.array_adapter_text).setOnClickListener {
             deckLineCallback?.cardClick(deckLine)
         }
 

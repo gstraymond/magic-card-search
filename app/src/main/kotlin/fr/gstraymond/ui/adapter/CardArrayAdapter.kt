@@ -50,12 +50,14 @@ class CardArrayAdapter(private val context: Context,
 
         override fun itemAdded(position: Int) {
             notifyItemChanged(position)
+            // FIXME : change message if DECK
             val message = String.format(context.resources.getString(R.string.added_to_wishlist), cards[position].title)
             Toast.makeText(context, message, Toast.LENGTH_LONG).show()
         }
 
         override fun itemRemoved(position: Int) {
             notifyItemChanged(position)
+            // FIXME : change message if DECK
             val message = String.format(context.resources.getString(R.string.removed_from_wishlist), cards[position].title)
             Toast.makeText(context, message, Toast.LENGTH_LONG).show()
         }

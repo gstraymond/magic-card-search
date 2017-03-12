@@ -86,4 +86,6 @@
     <string name="deckdetails_menu_add">Add</string>
     <string name="added_to_clipboard">Copied to clipboard !</string>
     <string name="decks_title">Decks</string>
+    <string name="quantity">Quantity</string>
+    <string name="sideboard">Sideboard</string>
 </resources>
