@@ -13,7 +13,6 @@ import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.BarData
 import com.github.mikephil.charting.data.BarDataSet
 import com.github.mikephil.charting.data.BarEntry
-import com.magic.card.search.commons.log.Log
 import fr.gstraymond.R
 import fr.gstraymond.android.adapter.DeckDetailStatsAdapter.ItemTypes.CHART
 import fr.gstraymond.android.adapter.DeckDetailStatsAdapter.ItemTypes.TEXT
@@ -58,7 +57,7 @@ class DeckDetailStatsAdapter(context: Context) : RecyclerView.Adapter<RecyclerVi
                             styleDataSet(this)
                             setValueFormatter { fl, _, _, _ -> "${fl.toInt()}" }
                         })
-                        styleChart(barChart) { fl, _ -> keys[fl.toInt()] }
+                        styleChart(barChart) { fl, _ -> keys[Math.min(fl.toInt(), keys.size - 1)] }
                     }
                     is IntChart -> {
                         val entries = chart.data.map { (k, v) -> BarEntry(k.toFloat(), v.toFloat()) }
@@ -66,7 +65,12 @@ class DeckDetailStatsAdapter(context: Context) : RecyclerView.Adapter<RecyclerVi
                             styleDataSet(this)
                             setValueFormatter { fl, _, _, _ -> "${fl.toInt()}" }
                         })
-                        styleChart(barChart) { fl, _ -> "${fl.toInt()}" }
+                        styleChart(barChart) { fl, _ ->
+                            fl.toInt().run {
+                                if (this < 7) "$this"
+                                else "$this+"
+                            }
+                        }
                     }
                 }
                 barChart.invalidate()
@@ -92,6 +96,9 @@ class DeckDetailStatsAdapter(context: Context) : RecyclerView.Adapter<RecyclerVi
 
     private fun styleChart(chart: BarChart, f: (Float, AxisBase) -> String) {
         chart.description = null
+        chart.isDoubleTapToZoomEnabled = false
+        chart.setPinchZoom(false)
+        chart.setScaleEnabled(false)
         chart.legend.textColor = resources.color(android.R.color.white)
         chart.legend.textSize = resources.getDimension(R.dimen.chartLabelSize)
         chart.xAxis.apply {

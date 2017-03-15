@@ -42,7 +42,7 @@ class DeckStats(cards: List<DeckLine>) {
     val manaCurve by lazy {
         deck
                 .filterNot { it.card.type.run { startsWith("Land") || contains(" Land") } }
-                .groupBy { it.card.convertedManaCost }
+                .groupBy { Math.min(it.card.convertedManaCost, 7) }
                 .mapValues { it.value.sumBy { it.mult } }
     }
 

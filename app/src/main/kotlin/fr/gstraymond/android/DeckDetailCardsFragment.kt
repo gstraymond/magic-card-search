@@ -7,10 +7,12 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.TextView
 import com.magic.card.search.commons.log.Log
 import fr.gstraymond.R
 import fr.gstraymond.android.adapter.DeckDetailCardsAdapter
 import fr.gstraymond.android.adapter.DeckLineCallback
+import fr.gstraymond.biz.DeckStats
 import fr.gstraymond.constants.Consts
 import fr.gstraymond.db.json.CardList
 import fr.gstraymond.models.DeckLine
@@ -22,6 +24,7 @@ class DeckDetailCardsFragment : Fragment(), DeckLineCallback {
     private val log = Log(javaClass)
 
     private lateinit var cardList: CardList
+    private lateinit var cardTotal: TextView
 
     var deckLineCallback: DeckLineCallback? = null
 
@@ -39,6 +42,7 @@ class DeckDetailCardsFragment : Fragment(), DeckLineCallback {
                     layoutManager = LinearLayoutManager(context)
                     adapter = deckDetailAdapter
                 }
+                cardTotal = find<TextView>(R.id.deck_detail_cards_total)
             }
 
     override fun onResume() {
@@ -49,6 +53,12 @@ class DeckDetailCardsFragment : Fragment(), DeckLineCallback {
             it.cardList = cardList
             it.notifyDataSetChanged()
         }
+        updateTotal()
+    }
+
+    private fun updateTotal() {
+        val deckStats = DeckStats(cardList.all())
+        cardTotal.text = "${deckStats.deckSize} cards / sideboard: ${deckStats.sideboardSize}"
     }
 
     override fun multChanged(deckLine: DeckLine, mult: Int) {
@@ -57,12 +67,14 @@ class DeckDetailCardsFragment : Fragment(), DeckLineCallback {
             0 -> cardList.delete(deckLine)
             else -> cardList.update(deckLine.copy(mult = mult))
         }
+        updateTotal()
         deckLineCallback?.multChanged(deckLine, mult)
     }
 
     override fun sideboardChanged(deckLine: DeckLine, sideboard: Boolean) {
         log.d("sideboardChanged: [$sideboard] $deckLine")
         cardList.update(deckLine.copy(isSideboard = sideboard))
+        updateTotal()
         deckLineCallback?.sideboardChanged(deckLine, sideboard)
     }
 
