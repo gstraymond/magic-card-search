@@ -10,6 +10,7 @@ import android.widget.TextView
 import fr.gstraymond.R
 import fr.gstraymond.biz.CastingCostImageGetter
 import fr.gstraymond.biz.Colors
+import fr.gstraymond.biz.DeckStats
 import fr.gstraymond.models.Deck
 import fr.gstraymond.tools.CastingCostFormatter
 import fr.gstraymond.utils.find
@@ -32,7 +33,7 @@ class DeckListAdapter(context: Context) : RecyclerView.Adapter<RecyclerView.View
         val deckName = view.find<TextView>(R.id.array_adapter_deck_name)
         val deckSize = view.find<TextView>(R.id.array_adapter_deck_size)
 
-        val colors = deck.colors.map { Colors.mainColorsMap[it] }.sortedBy { it }.joinToString(" ")
+        val colors = DeckStats.colorSymbols(deck.colors)
         if (colors.isEmpty()) {
             deckColors.visibility = View.GONE
         } else {

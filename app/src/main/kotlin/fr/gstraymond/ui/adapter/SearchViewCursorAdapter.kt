@@ -5,7 +5,6 @@ import android.database.Cursor
 import android.database.MatrixCursor
 import android.support.v4.content.res.ResourcesCompat
 import android.support.v4.widget.CursorAdapter
-import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
@@ -14,6 +13,7 @@ import fr.gstraymond.R
 import fr.gstraymond.biz.SetImageGetter
 import fr.gstraymond.models.autocomplete.response.Option
 import fr.gstraymond.tools.CardColorUtil
+import fr.gstraymond.utils.inflate
 import java.util.*
 
 class SearchViewCursorAdapter private constructor(context: Context,
@@ -25,23 +25,22 @@ class SearchViewCursorAdapter private constructor(context: Context,
     override fun newView(context: Context, cursor: Cursor, parent: ViewGroup): View {
         val holder: ViewHolder
         val view: View
-        val inflater = LayoutInflater.from(context)
 
         when (getType(cursor)) {
             FIELD_TYPE_EDITION -> {
-                view = inflater.inflate(R.layout.searchview_adapter_edition, parent, false)
+                view = context.inflate(R.layout.searchview_adapter_edition, parent)
                 holder = EditionViewHolder(
                         view.findViewById(R.id.searchview_edition_text) as TextView,
                         view.findViewById(R.id.searchview_edition_image) as ImageView)
             }
             FIELD_TYPE_CARD -> {
-                view = inflater.inflate(R.layout.searchview_adapter_card, parent, false)
+                view = context.inflate(R.layout.searchview_adapter_card, parent)
                 holder = CardViewHolder(
                         view.findViewById(R.id.searchview_card_title) as TextView,
                         view.findViewById(R.id.searchview_card_type) as TextView)
             }
             else -> {
-                view = inflater.inflate(R.layout.searchview_adapter_token, parent, false)
+                view = context.inflate(R.layout.searchview_adapter_token, parent)
                 holder = TokenViewHolder(view as TextView)
             }
         }

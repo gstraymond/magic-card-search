@@ -6,9 +6,18 @@ import java.math.RoundingMode
 
 class DeckStats(cards: List<DeckLine>) {
 
+    companion object {
+        fun colorSymbols(colors: List<String>) = colors.map { Colors.mainColorsMap[it] }.sortedBy { it }.joinToString(" ")
+    }
+
     val deck by lazy { cards.filterNot { it.isSideboard } }
+
     val sideboard by lazy { cards.filter { it.isSideboard } }
+
     val colors by lazy { deck.flatMap { it.card.colors }.distinct().filter { Colors.mainColors.contains(it) } }
+
+    val colorSymbols by lazy { DeckStats.colorSymbols(colors) }
+
     val format by lazy {
         cards
                 .map { it.card.formats }

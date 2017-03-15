@@ -2,6 +2,7 @@ package fr.gstraymond.android.adapter
 
 import android.content.Context
 import android.support.v7.widget.RecyclerView
+import android.text.Spanned
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,10 +13,12 @@ import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.BarData
 import com.github.mikephil.charting.data.BarDataSet
 import com.github.mikephil.charting.data.BarEntry
+import com.magic.card.search.commons.log.Log
 import fr.gstraymond.R
 import fr.gstraymond.android.adapter.DeckDetailStatsAdapter.ItemTypes.CHART
 import fr.gstraymond.android.adapter.DeckDetailStatsAdapter.ItemTypes.TEXT
 import fr.gstraymond.utils.color
+import fr.gstraymond.utils.find
 
 class DeckDetailStatsAdapter(context: Context) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
@@ -29,16 +32,24 @@ class DeckDetailStatsAdapter(context: Context) : RecyclerView.Adapter<RecyclerVi
 
     override fun getItemViewType(position: Int) = when (elements[position]) {
         is StringChart, is IntChart -> CHART
-        is String -> TEXT
+        is String, is Spanned -> TEXT
         else -> throw RuntimeException("getItemViewType: ${elements[position]}")
     }.ordinal
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        val element = elements[position]
         when (holder) {
-            is TextViewHolder -> (holder.itemView as TextView).text = elements[position] as String
+            is TextViewHolder -> holder.itemView
+                    .find<TextView>(R.id.array_adapter_deck_stat_text)
+                    .apply {
+                        when (element) {
+                            is String -> text = element
+                            is Spanned -> text = element
+                        }
+                    }
             is ChartViewHolder -> {
                 val barChart = holder.itemView as BarChart
-                val chart = elements[position]
+                val chart = element
                 when (chart) {
                     is StringChart -> {
                         val keys = chart.data.keys.toList()

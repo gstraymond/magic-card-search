@@ -7,12 +7,11 @@ import android.os.Bundle
 import android.support.design.widget.TabLayout
 import android.support.v4.view.ViewPager
 import android.support.v7.widget.Toolbar
-import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.EditText
 import android.widget.TextView
-import android.widget.TextView.BufferType.*
+import android.widget.TextView.BufferType.EDITABLE
 import fr.gstraymond.R
 import fr.gstraymond.android.adapter.DeckDetailFragmentPagerAdapter
 import fr.gstraymond.biz.DeckManager
@@ -20,6 +19,7 @@ import fr.gstraymond.biz.SearchOptions
 import fr.gstraymond.models.Deck
 import fr.gstraymond.utils.app
 import fr.gstraymond.utils.find
+import fr.gstraymond.utils.inflate
 
 class DeckDetailActivity : CustomActivity(R.layout.activity_deck_detail) {
 
@@ -53,7 +53,7 @@ class DeckDetailActivity : CustomActivity(R.layout.activity_deck_detail) {
             deckTitle = this
             text = deck.name
             setOnClickListener {
-                val view = LayoutInflater.from(context).inflate(R.layout.activity_deck_detail_title, null)
+                val view = context.inflate(R.layout.activity_deck_detail_title)
                 val editText = view.find<EditText>(R.id.deck_detail_title)
                 editText.setText(deck.name, EDITABLE)
                 AlertDialog.Builder(context)

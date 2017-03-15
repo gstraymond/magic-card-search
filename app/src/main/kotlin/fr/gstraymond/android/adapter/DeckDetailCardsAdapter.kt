@@ -12,9 +12,9 @@ import android.widget.TextView
 import fr.gstraymond.R
 import fr.gstraymond.db.json.CardList
 import fr.gstraymond.models.DeckLine
-import fr.gstraymond.models.search.response.getLocalizedTitle
 import fr.gstraymond.ui.adapter.DeckDetailCardViews
 import fr.gstraymond.utils.find
+import fr.gstraymond.utils.inflate
 import java.util.*
 
 
@@ -34,7 +34,7 @@ class DeckDetailCardsAdapter(private val context: Context) : RecyclerView.Adapte
         val mult = holder.itemView.find<Button>(R.id.array_adapter_deck_card_mult)
         mult.text = "${deckLine.mult}"
         mult.setOnClickListener {
-            val view = LayoutInflater.from(context).inflate(R.layout.array_adapter_deck_card_mult, null)
+            val view = context.inflate(R.layout.array_adapter_deck_card_mult)
             val picker = view.find<NumberPicker>(R.id.array_adapter_deck_card_mult).apply {
                 minValue = 0
                 maxValue = 100
@@ -83,7 +83,7 @@ class DeckDetailCardsAdapter(private val context: Context) : RecyclerView.Adapte
         val z1 = if (c1.isSideboard) 1000 else -1000
         val z2 = if (c2.isSideboard) -1000 else 1000
         val cmcCompare = c1.card.convertedManaCost.compareTo(c2.card.convertedManaCost)
-        val compare = when(cmcCompare) {
+        val compare = when (cmcCompare) {
             0 -> c1.card.title.compareTo(c2.card.title)
             else -> cmcCompare
         }
