@@ -57,7 +57,7 @@ class DeckDetailStatsAdapter(context: Context) : RecyclerView.Adapter<RecyclerVi
                             styleDataSet(this)
                             setValueFormatter { fl, _, _, _ -> "${fl.toInt()}" }
                         })
-                        styleChart(barChart) { fl, _ -> keys[Math.min(fl.toInt(), keys.size - 1)] }
+                        styleChart(barChart) { fl, _ -> keys.elementAtOrNull(fl.toInt()) ?: "" }
                     }
                     is IntChart -> {
                         val entries = chart.data.map { (k, v) -> BarEntry(k.toFloat(), v.toFloat()) }
