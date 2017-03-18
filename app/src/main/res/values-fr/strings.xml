@@ -73,7 +73,7 @@
 
     <string name="wishlist_title">Wishlist</string>
     <string name="wishlist_empty_text">Votre wishlist est vide.\n\nAjoutez des cartes avec le bouton STAR dans les résultats de recherche.</string>
-    <string name="deck_list_empty_text">Votre liste de getDecks est vide.\n\nImportez des getDecks ou créer en un.</string>
+    <string name="deck_list_empty_text">Votre liste de deck est vide.\n\nImportez un deck à partir d\'un fichier texte ou créez en un.</string>
 
     <string name="decklist_title">Deck Manager</string>
     <string name="decklist_menu_import">Importer</string>

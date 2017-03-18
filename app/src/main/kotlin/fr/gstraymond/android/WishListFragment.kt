@@ -7,6 +7,7 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.TextView
 import fr.gstraymond.R
 import fr.gstraymond.android.adapter.WishlistAdapter
 import fr.gstraymond.constants.Consts.CARD
@@ -28,6 +29,8 @@ class WishListFragment : Fragment(), WishlistAdapter.ClickCallbacks {
                     it.layoutManager = LinearLayoutManager(context)
                     it.adapter = WishlistAdapter(context, wishList, this@WishListFragment)
                 }
+
+                find<TextView>(R.id.lists_empty_text).setText(R.string.wishlist_empty_text)
             }
 
     override fun onResume() {

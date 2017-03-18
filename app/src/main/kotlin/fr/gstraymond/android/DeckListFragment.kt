@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.View.VISIBLE
 import android.view.ViewGroup
+import android.widget.TextView
 import fr.gstraymond.R
 import fr.gstraymond.android.adapter.DeckListAdapter
 import fr.gstraymond.biz.DeckManager
@@ -50,6 +51,8 @@ class DeckListFragment : Fragment() {
                 it.layoutManager = LinearLayoutManager(context)
                 it.adapter = deckListAdapter
             }
+
+            find<TextView>(R.id.lists_empty_text).setText(R.string.deck_list_empty_text)
         }
     }
 

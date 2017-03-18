@@ -16,8 +16,7 @@
         android:layout_gravity="center"
         android:gravity="center"
         android:paddingLeft="32dp"
-        android:paddingRight="32dp"
-        android:text="@string/wishlist_empty_text" />
+        android:paddingRight="32dp" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/lists_fab"
