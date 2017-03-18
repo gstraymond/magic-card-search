@@ -1,6 +1,8 @@
 package fr.gstraymond.android
 
 import android.app.AlertDialog
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.support.v7.widget.Toolbar
 import android.view.Menu
@@ -12,6 +14,11 @@ import fr.gstraymond.utils.find
 import java.util.*
 
 class HistoryActivity : CustomActivity(R.layout.activity_history) {
+
+    companion object {
+        fun getIntent(context: Context) =
+                Intent(context, HistoryActivity::class.java)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

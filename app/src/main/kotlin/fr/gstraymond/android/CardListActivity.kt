@@ -21,7 +21,6 @@ import com.crashlytics.android.answers.ContentViewEvent
 import com.magic.card.search.commons.log.Log
 import fr.gstraymond.R
 import fr.gstraymond.biz.*
-import fr.gstraymond.constants.Consts.CARD
 import fr.gstraymond.models.autocomplete.response.Option
 import fr.gstraymond.models.search.response.Card
 import fr.gstraymond.ui.EndScrollListener
@@ -31,18 +30,24 @@ import fr.gstraymond.ui.adapter.CardArrayAdapter
 import fr.gstraymond.ui.adapter.SearchViewCursorAdapter
 import fr.gstraymond.utils.app
 import fr.gstraymond.utils.find
+import fr.gstraymond.utils.startActivity
 import sheetrock.panda.changelog.ChangeLog
 
 class CardListActivity : CustomActivity(R.layout.activity_card_list),
         CardArrayAdapter.ClickCallbacks, AutocompleteProcessor.Callbacks {
 
     companion object {
-        val CARD_RESULT = "result"
+        private val CARD_RESULT = "result"
         private val SEARCH_QUERY = "searchQuery"
 
         fun getIntent(context: Context, searchOptions: SearchOptions): Intent =
                 Intent(context, CardListActivity::class.java).apply {
-                    putExtra(Companion.SEARCH_QUERY, searchOptions)
+                    putExtra(SEARCH_QUERY, searchOptions)
+                }
+
+        fun getIntent(context: Context, result: String): Intent =
+                Intent(context, CardListActivity::class.java).apply {
+                    putExtra(CARD_RESULT, result)
                 }
     }
 
@@ -139,8 +144,10 @@ class CardListActivity : CustomActivity(R.layout.activity_card_list),
             if (firstRun()) logDialog.show()
         }
 
-        fab.setOnClickListener { view ->
-            startActivity(Intent(view.context, ListsActivity::class.java))
+        fab.setOnClickListener { _ ->
+            startActivity {
+                ListsActivity.getIntent(this)
+            }
         }
 
         currentSearch.deckId?.apply {
@@ -168,12 +175,8 @@ class CardListActivity : CustomActivity(R.layout.activity_card_list),
         find<View>(R.id.root_view).requestFocus()
     }
 
-    override fun cardClicked(card: Card) {
-        startActivity {
-            Intent(this, CardDetailActivity::class.java).apply {
-                putExtra(CARD, card)
-            }
-        }
+    override fun cardClicked(card: Card) = startActivity {
+        CardDetailActivity.getIntent(this, card)
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -207,12 +210,9 @@ class CardListActivity : CustomActivity(R.layout.activity_card_list),
                 return true
             }
 
-            R.id.history_tab -> {
-                startActivity {
-                    Intent(this, HistoryActivity::class.java)
-                }
-                return true
-            }
+            R.id.history_tab ->
+                startActivity { HistoryActivity.getIntent(this) }
+                        .run { true }
 
             R.id.changelog_tab -> {
                 Answers.getInstance().logContentView(ContentViewEvent().putContentName("Changelog"))

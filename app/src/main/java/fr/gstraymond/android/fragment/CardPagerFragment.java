@@ -8,20 +8,23 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import fr.gstraymond.R;
+import fr.gstraymond.android.CardCommonActivity;
+import fr.gstraymond.android.CardPagerActivity;
 import fr.gstraymond.models.search.response.Card;
 import fr.gstraymond.ui.CardViewPager;
 import fr.gstraymond.ui.adapter.CardPagerAdapter;
-
-import static fr.gstraymond.constants.Consts.CARD;
-import static fr.gstraymond.constants.Consts.POSITION;
 
 public class CardPagerFragment extends Fragment {
 
     private int position = 0;
 
+    private String CARD = CardCommonActivity.Companion.getCARD_EXTRA();
+    private String POSITION = CardPagerActivity.Companion.getPOSITION_EXTRA();
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
         Card card = getArguments().getParcelable(CARD);
 
         if (savedInstanceState != null && savedInstanceState.containsKey(POSITION)) {

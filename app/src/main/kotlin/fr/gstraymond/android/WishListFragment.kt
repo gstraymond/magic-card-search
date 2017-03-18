@@ -1,6 +1,5 @@
 package fr.gstraymond.android
 
-import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
@@ -10,12 +9,8 @@ import android.view.ViewGroup
 import android.widget.TextView
 import fr.gstraymond.R
 import fr.gstraymond.android.adapter.WishlistAdapter
-import fr.gstraymond.constants.Consts.CARD
 import fr.gstraymond.models.search.response.Card
-import fr.gstraymond.utils.app
-import fr.gstraymond.utils.find
-import fr.gstraymond.utils.hide
-import fr.gstraymond.utils.show
+import fr.gstraymond.utils.*
 
 class WishListFragment : Fragment(), WishlistAdapter.ClickCallbacks {
 
@@ -46,10 +41,7 @@ class WishListFragment : Fragment(), WishlistAdapter.ClickCallbacks {
         view?.show(R.id.lists_empty_text)
     }
 
-    override fun cardClicked(card: Card) {
-        val intent = Intent(context, CardDetailActivity::class.java).apply {
-            putExtra(CARD, card)
-        }
-        context.startActivity(intent)
+    override fun cardClicked(card: Card) = startActivity {
+        CardDetailActivity.getIntent(context, card)
     }
 }

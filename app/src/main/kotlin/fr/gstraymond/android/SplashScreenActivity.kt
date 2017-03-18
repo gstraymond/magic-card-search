@@ -1,7 +1,6 @@
 package fr.gstraymond.android
 
 import android.app.SearchManager
-import android.content.Intent
 import android.content.Intent.ACTION_SEARCH
 import android.os.Bundle
 import com.magic.card.search.commons.json.MapperUtil
@@ -10,6 +9,7 @@ import fr.gstraymond.R
 import fr.gstraymond.biz.SearchOptions
 import fr.gstraymond.biz.SplashProcessor
 import fr.gstraymond.models.search.response.SearchResult
+import fr.gstraymond.utils.startActivity
 import java.util.*
 
 class SplashScreenActivity : CustomActivity(R.layout.activity_splash) {
@@ -42,9 +42,7 @@ class SplashScreenActivity : CustomActivity(R.layout.activity_splash) {
 
         startActivity {
             val resultAsString = MapperUtil.fromType(objectMapper, SearchResult::class.java).asJsonString(result)
-            Intent(this, CardListActivity::class.java).apply {
-                putExtra(CardListActivity.CARD_RESULT, resultAsString)
-            }
+            CardListActivity.getIntent(this, resultAsString)
         }
         finish()
     }

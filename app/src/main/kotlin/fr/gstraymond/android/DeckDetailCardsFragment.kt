@@ -1,6 +1,5 @@
 package fr.gstraymond.android
 
-import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
@@ -13,11 +12,11 @@ import fr.gstraymond.R
 import fr.gstraymond.android.adapter.DeckDetailCardsAdapter
 import fr.gstraymond.android.adapter.DeckLineCallback
 import fr.gstraymond.biz.DeckStats
-import fr.gstraymond.constants.Consts
 import fr.gstraymond.db.json.CardList
 import fr.gstraymond.models.DeckLine
 import fr.gstraymond.utils.app
 import fr.gstraymond.utils.find
+import fr.gstraymond.utils.startActivity
 
 class DeckDetailCardsFragment : Fragment(), DeckLineCallback {
 
@@ -79,10 +78,9 @@ class DeckDetailCardsFragment : Fragment(), DeckLineCallback {
     }
 
     override fun cardClick(deckLine: DeckLine) {
-        val intent = Intent(activity, CardDetailActivity::class.java).apply {
-            putExtra(Consts.CARD, deckLine.card)
+        startActivity {
+            CardDetailActivity.getIntent(context, deckLine.card)
         }
-        activity.startActivity(intent)
         deckLineCallback?.cardClick(deckLine)
     }
 }

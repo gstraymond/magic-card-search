@@ -14,10 +14,7 @@ import fr.gstraymond.R
 import fr.gstraymond.android.adapter.DeckListAdapter
 import fr.gstraymond.biz.DeckManager
 import fr.gstraymond.models.Deck
-import fr.gstraymond.utils.app
-import fr.gstraymond.utils.find
-import fr.gstraymond.utils.hide
-import fr.gstraymond.utils.show
+import fr.gstraymond.utils.*
 
 class DeckListFragment : Fragment() {
 
@@ -32,8 +29,9 @@ class DeckListFragment : Fragment() {
         deckListAdapter = DeckListAdapter(context).apply {
             onClickListener = { deckId ->
                 View.OnClickListener {
-                    val intent = DeckDetailActivity.getIntent(context, deckId)
-                    startActivity(intent)
+                    startActivity {
+                        DeckDetailActivity.getIntent(context, deckId)
+                    }
                 }
             }
         }
@@ -41,9 +39,10 @@ class DeckListFragment : Fragment() {
             find<FloatingActionButton>(R.id.lists_fab).let {
                 it.visibility = VISIBLE
                 it.setOnClickListener {
-                    val deckId = deckManager.createEmptyDeck()
-                    val intent = DeckDetailActivity.getIntent(activity, "$deckId")
-                    startActivity(intent)
+                    startActivity {
+                        val deckId = deckManager.createEmptyDeck()
+                        DeckDetailActivity.getIntent(activity, "$deckId")
+                    }
                 }
             }
 

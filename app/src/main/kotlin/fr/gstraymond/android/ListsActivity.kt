@@ -1,5 +1,7 @@
 package fr.gstraymond.android
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.TabLayout
 import android.support.v4.view.ViewPager
@@ -9,6 +11,11 @@ import fr.gstraymond.android.adapter.ListsFragmentPagerAdapter
 import fr.gstraymond.utils.find
 
 class ListsActivity : CustomActivity(R.layout.activity_lists) {
+
+    companion object {
+        fun getIntent(context: Context) =
+                Intent(context, ListsActivity::class.java)
+    }
 
     private val titles = listOf(
             R.string.wishlist_title,

@@ -67,8 +67,4 @@ abstract class CustomActivity(private val layoutId: Int) : AppCompatActivity() {
         }
         return super.onOptionsItemSelected(item)
     }
-
-    protected fun startActivity(buildIntent: () -> Intent) {
-        startActivity(buildIntent())
-    }
 }

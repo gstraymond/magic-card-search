@@ -14,6 +14,7 @@ import fr.gstraymond.constants.FacetConst
 import fr.gstraymond.glide.CardLoader
 import fr.gstraymond.models.search.response.Card
 import fr.gstraymond.tools.*
+import fr.gstraymond.utils.startActivity
 
 class CardView(val context: Context,
                val callbacks: CardDetailAdapter.Callbacks) : View<Card>(context, R.layout.card_detail) {
@@ -62,11 +63,12 @@ class CardView(val context: Context,
         } else {
             altView.text = item.altTitles.joinToString("\n")
             altView.setOnClickListener {
-                val searchOptions = SearchOptions(
-                        query = item.title,
-                        facets = mapOf(FacetConst.LAYOUT to listOf(item.layout)))
-                val intent = CardListActivity.getIntent(context, searchOptions)
-                context.startActivity(intent)
+                context.startActivity {
+                    val searchOptions = SearchOptions(
+                            query = item.title,
+                            facets = mapOf(FacetConst.LAYOUT to listOf(item.layout)))
+                    CardListActivity.getIntent(context, searchOptions)
+                }
             }
         }
 
