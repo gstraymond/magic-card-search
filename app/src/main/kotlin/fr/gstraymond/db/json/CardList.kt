@@ -21,6 +21,8 @@ class CardList(context: Context,
 
     override fun update(elem: DeckLine) = super.update(elem).apply { updateDeck() }
 
+    override fun delete(elem: DeckLine) = super.delete(elem).apply { updateDeck() }
+
     private fun updateDeck() {
         deckList.getByUid(deckId)?.apply {
             val deckStats = DeckStats(elems)
