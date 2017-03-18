@@ -92,9 +92,14 @@ class DeckDetailActivity : CustomActivity(R.layout.activity_deck_detail) {
             true
         }
         R.id.deckdetails_delete -> {
-            // FIXME add confirmation
-            deckManager.delete(deck)
-            finish()
+            AlertDialog.Builder(this)
+                    .setTitle(getString(R.string.deckdetails_delete_title))
+                    .setPositiveButton(getString(R.string.deckdetails_delete_ok)) { _, _ ->
+                        deckManager.delete(deck)
+                        finish()
+                    }
+                    .setNegativeButton(getString(R.string.deckdetails_delete_cancel)) { _, _ -> }
+                    .show()
             true
         }
         else -> super.onOptionsItemSelected(item)

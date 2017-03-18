@@ -88,4 +88,8 @@
     <string name="decks_title">Decks</string>
     <string name="quantity">Quantity</string>
     <string name="sideboard">Sideboard</string>
+
+    <string name="deckdetails_delete_title">Delete deck?</string>
+    <string name="deckdetails_delete_ok">Delete</string>
+    <string name="deckdetails_delete_cancel">Cancel</string>
 </resources>

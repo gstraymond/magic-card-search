@@ -85,4 +85,8 @@
     <string name="decks_title">Decks</string>
     <string name="quantity">Quantité</string>
     <string name="sideboard">Sideboard</string>
+
+    <string name="deckdetails_delete_title">Supprimer le deck ?</string>
+    <string name="deckdetails_delete_ok">Supprimer</string>
+    <string name="deckdetails_delete_cancel">Annuler</string>
 </resources>
