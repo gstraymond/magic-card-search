@@ -19,12 +19,20 @@ inline fun <reified A : View> View.find(id: Int): A = findViewById(id) as A
 
 inline fun <reified A : View> Activity.find(id: Int): A = findViewById(id) as A
 
+fun View.hide(): Unit {
+    visibility = GONE
+}
+
 fun View.hide(id: Int): Unit {
-    findViewById(id).visibility = GONE
+    findViewById(id).hide()
+}
+
+fun View.show(): Unit {
+    visibility = VISIBLE
 }
 
 fun View.show(id: Int): Unit {
-    findViewById(id).visibility = VISIBLE
+    findViewById(id).show()
 }
 
 fun Activity.hide(id: Int): Unit {

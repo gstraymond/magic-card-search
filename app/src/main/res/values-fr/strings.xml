@@ -74,12 +74,12 @@
     <string name="decklist_menu_delete">Supprimer</string>
     <string name="decklist_menu_create">Créer</string>
 
-    <string name="deckdetails_menu_add">Ajouter</string>
     <string name="added_to_clipboard">Copié !</string>
     <string name="decks_title">Decks</string>
     <string name="quantity">Quantité</string>
     <string name="sideboard">Sideboard</string>
 
+    <string name="deckdetails_menu_add">Ajouter</string>
     <string name="deckdetails_delete_title">Supprimer le deck ?</string>
     <string name="deckdetails_delete_ok">Supprimer</string>
     <string name="deckdetails_delete_cancel">Annuler</string>

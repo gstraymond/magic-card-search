@@ -5,6 +5,7 @@ import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import com.magic.card.search.commons.log.Log
@@ -14,9 +15,7 @@ import fr.gstraymond.android.adapter.DeckLineCallback
 import fr.gstraymond.biz.DeckStats
 import fr.gstraymond.db.json.CardList
 import fr.gstraymond.models.DeckLine
-import fr.gstraymond.utils.app
-import fr.gstraymond.utils.find
-import fr.gstraymond.utils.startActivity
+import fr.gstraymond.utils.*
 
 class DeckDetailCardsFragment : Fragment(), DeckLineCallback {
 
@@ -24,6 +23,8 @@ class DeckDetailCardsFragment : Fragment(), DeckLineCallback {
 
     private lateinit var cardList: CardList
     private lateinit var cardTotal: TextView
+    private lateinit var frame: View
+    private lateinit var emptyText: TextView
 
     var deckLineCallback: DeckLineCallback? = null
 
@@ -42,22 +43,32 @@ class DeckDetailCardsFragment : Fragment(), DeckLineCallback {
                     adapter = deckDetailAdapter
                 }
                 cardTotal = find<TextView>(R.id.deck_detail_cards_total)
+                frame = find<View>(R.id.deck_detail_cards_frame)
+                emptyText = find<TextView>(R.id.deck_detail_cards_empty)
             }
 
     override fun onResume() {
         super.onResume()
         val deckId = activity.intent.getStringExtra(DeckDetailActivity.DECK_EXTRA)
         cardList = activity.app().cardListBuilder.build(deckId.toInt())
+        updateTotal()
         deckDetailAdapter.let {
             it.cardList = cardList
             it.notifyDataSetChanged()
         }
-        updateTotal()
     }
 
     private fun updateTotal() {
-        val deckStats = DeckStats(cardList.all())
-        cardTotal.text = "${deckStats.deckSize} cards / sideboard: ${deckStats.sideboardSize}"
+        if (cardList.isEmpty()) {
+            frame.hide()
+            emptyText.show()
+        } else {
+            frame.show()
+            emptyText.hide()
+            val deckStats = DeckStats(cardList.all())
+            // FIXME translate
+            cardTotal.text = "${deckStats.deckSize} cards / sideboard: ${deckStats.sideboardSize}"
+        }
     }
 
     override fun multChanged(deckLine: DeckLine, mult: Int) {
