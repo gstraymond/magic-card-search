@@ -6,13 +6,13 @@ import android.support.v7.widget.AppCompatButton
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.CheckBox
 import android.widget.NumberPicker
 import android.widget.TextView
 import fr.gstraymond.R
 import fr.gstraymond.db.json.CardList
 import fr.gstraymond.models.DeckLine
+import fr.gstraymond.models.search.response.getLocalizedTitle
 import fr.gstraymond.ui.adapter.DeckDetailCardViews
 import fr.gstraymond.utils.colorStateList
 import fr.gstraymond.utils.find
@@ -83,14 +83,19 @@ class DeckDetailCardsAdapter(private val context: Context) : RecyclerView.Adapte
 
 
     private val cardComparator = Comparator<DeckLine> { c1, c2 ->
-        val z1 = if (c1.isSideboard) 1000 else -1000
-        val z2 = if (c2.isSideboard) -1000 else 1000
-        val cmcCompare = c1.card.convertedManaCost.compareTo(c2.card.convertedManaCost)
-        val compare = when (cmcCompare) {
-            0 -> c1.card.title.compareTo(c2.card.title)
-            else -> cmcCompare
+        compare({ c1.isSideboard.compareTo(c2.isSideboard) }, {
+            compare({ c1.card.convertedManaCost.compareTo(c2.card.convertedManaCost) },
+                    { c1.card.getLocalizedTitle(context).compareTo(c2.card.getLocalizedTitle(context)) })
+        })
+    }
+
+    private fun compare(f: () -> Int,
+                        f2: () -> Int): Int {
+        val comparison = f()
+        return when (comparison) {
+            0 -> f2()
+            else -> comparison
         }
-        z1 + z2 + compare
     }
 }
 

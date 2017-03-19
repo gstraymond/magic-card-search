@@ -26,7 +26,7 @@ class DeckStats(cards: List<DeckLine>) {
                     else acc.intersect(formats)
                 }
                 .maxBy { Formats.ordered.indexOf(it) }
-                ?: ""
+                ?: "Invalid"
     }
 
     val totalPrice by lazy {

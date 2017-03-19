@@ -36,15 +36,26 @@
         tools:text="UUU" />
 
     <TextView
+        android:id="@+id/array_adapter_card_format"
+        style="@android:style/TextAppearance.Medium"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="8dp"
+        android:layout_toLeftOf="@id/array_adapter_deck_card_sideboard"
+        android:textColor="@android:color/darker_gray"
+        tools:text="Standard" />
+
+    <TextView
         android:id="@+id/array_adapter_text"
         style="@android:style/TextAppearance.Medium"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:layout_toLeftOf="@id/array_adapter_deck_card_sideboard"
+        android:layout_toLeftOf="@id/array_adapter_card_format"
         android:layout_toRightOf="@id/array_adapter_card_casting_cost"
         android:ellipsize="end"
         android:maxLines="2"
-        tools:text="deck" />
+        tools:text="Black lotus" />
 
 </RelativeLayout>
