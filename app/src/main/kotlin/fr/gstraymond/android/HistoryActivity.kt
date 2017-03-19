@@ -16,8 +16,12 @@ import java.util.*
 class HistoryActivity : CustomActivity(R.layout.activity_history) {
 
     companion object {
-        fun getIntent(context: Context) =
-                Intent(context, HistoryActivity::class.java)
+        val DECK_ID_EXTRA = "deck_id"
+
+        fun getIntent(context: Context, deckId: String? = null) =
+                Intent(context, HistoryActivity::class.java).apply {
+                    putExtra(DECK_ID_EXTRA, deckId)
+                }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -58,6 +62,7 @@ class HistoryActivity : CustomActivity(R.layout.activity_history) {
         val bundle = Bundle().apply {
             val allHistory = ArrayList(jsonHistoryDataSource.all().sortedByDescending { it.date })
             putParcelableArrayList(HISTORY_LIST, allHistory)
+            putString(DECK_ID_EXTRA, intent.getStringExtra(DECK_ID_EXTRA))
         }
 
         replaceFragment(HistoryListFragment(), R.id.history_fragment, bundle)

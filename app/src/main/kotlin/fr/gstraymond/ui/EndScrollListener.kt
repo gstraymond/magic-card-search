@@ -8,10 +8,10 @@ import fr.gstraymond.android.CardListActivity
 import fr.gstraymond.biz.SearchProcessor
 
 class EndScrollListener(private val activity: CardListActivity,
-                        private val layoutManager: LinearLayoutManager,
-                        private val fab: FloatingActionButton) : RecyclerView.OnScrollListener() {
+                        private val layoutManager: LinearLayoutManager) : RecyclerView.OnScrollListener() {
 
     var canLoadMoreItems = true
+    var fab: FloatingActionButton? = null
 
     private val log = Log(this)
 
@@ -22,10 +22,10 @@ class EndScrollListener(private val activity: CardListActivity,
                 val options = activity.currentSearch.updateAppend(true).updateAddToHistory(false)
                 SearchProcessor(activity, options).execute()
             } else {
-                fab.hide()
+                fab?.hide()
             }
         } else {
-            fab.show()
+            fab?.show()
         }
     }
 

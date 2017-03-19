@@ -15,12 +15,12 @@ import java.util.Map;
 import fr.gstraymond.R;
 import fr.gstraymond.android.CardListActivity;
 import fr.gstraymond.android.CustomActivity;
+import fr.gstraymond.android.HistoryActivity;
 import fr.gstraymond.biz.SearchOptions;
 import fr.gstraymond.db.json.HistoryList;
 import fr.gstraymond.models.History;
 import fr.gstraymond.ui.adapter.HistoryArrayAdapter;
 
-import static fr.gstraymond.android.CardListActivity.Companion;
 import static fr.gstraymond.constants.Consts.HISTORY_LIST;
 
 public class HistoryListFragment extends CustomListFragment {
@@ -71,6 +71,11 @@ public class HistoryListFragment extends CustomListFragment {
         SearchOptions currentSearch = new SearchOptions()
                 .updateQuery(history.getQuery())
                 .updateFacets(history.getFacets());
+
+        String deckId = getArguments().getString(HistoryActivity.Companion.getDECK_ID_EXTRA());
+        if (deckId != null) {
+            currentSearch.setDeckId(deckId);
+        }
 
         Intent intent = CardListActivity.Companion.getIntent(getActivity(), currentSearch);
         startActivity(intent);

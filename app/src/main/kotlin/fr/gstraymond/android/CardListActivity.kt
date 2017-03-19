@@ -103,7 +103,8 @@ class CardListActivity : CustomActivity(R.layout.activity_card_list),
         adapter = CardArrayAdapter(rootView(), data, this, loadingSnackbar)
 
         val layoutManager = LinearLayoutManager(this)
-        endScrollListener = EndScrollListener(this, layoutManager, fab)
+        endScrollListener = EndScrollListener(this, layoutManager)
+        endScrollListener.fab = fab
         find<RecyclerView>(R.id.recycler_view).let {
             it.layoutManager = layoutManager
             it.adapter = adapter
@@ -160,6 +161,7 @@ class CardListActivity : CustomActivity(R.layout.activity_card_list),
         currentSearch.deckId?.apply {
             fab.hide()
             title = app().deckList.getByUid(this)?.name
+            endScrollListener.fab = null
         }
     }
 
@@ -217,9 +219,13 @@ class CardListActivity : CustomActivity(R.layout.activity_card_list),
                 return true
             }
 
-            R.id.history_tab ->
-                startActivity { HistoryActivity.getIntent(this) }
-                        .run { true }
+            R.id.history_tab -> startActivity {
+                HistoryActivity.getIntent(this, currentSearch.deckId)
+            }.run {
+                // FIXME when going back from history without search
+                currentSearch.deckId?.apply { finish() }
+                true
+            }
 
             R.id.changelog_tab -> {
                 Answers.getInstance().logContentView(ContentViewEvent().putContentName("Changelog"))
