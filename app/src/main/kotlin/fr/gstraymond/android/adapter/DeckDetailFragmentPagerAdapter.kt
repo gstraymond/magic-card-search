@@ -22,8 +22,9 @@ class DeckDetailFragmentPagerAdapter(fragmentManager: FragmentManager) :
         }
     }
 
+    // FIXME translate
     private val pageTitles = listOf("Cards", "Stats")
-    private val deckDetailCardsFragment = DeckDetailCardsFragment().apply { this.deckLineCallback = callbacks }
+    private val deckDetailCardsFragment = DeckDetailCardsFragment().apply { deckLineCallback = callbacks }
     private val deckDetailStatsFragment = DeckDetailStatsFragment()
     private val fragments = listOf(deckDetailCardsFragment, deckDetailStatsFragment)
 

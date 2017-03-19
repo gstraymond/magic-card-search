@@ -89,8 +89,7 @@ class DeckDetailCardsAdapter(private val context: Context) : RecyclerView.Adapte
         })
     }
 
-    private fun compare(f: () -> Int,
-                        f2: () -> Int): Int {
+    private fun compare(f: () -> Int, f2: () -> Int): Int {
         val comparison = f()
         return when (comparison) {
             0 -> f2()
