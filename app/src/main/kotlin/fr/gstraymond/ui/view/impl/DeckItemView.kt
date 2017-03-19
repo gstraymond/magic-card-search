@@ -1,6 +1,6 @@
 package fr.gstraymond.ui.view.impl
 
-import android.content.Context
+import android.content.res.Resources
 import fr.gstraymond.R
 import fr.gstraymond.db.json.JsonList
 import fr.gstraymond.models.DeckLine
@@ -12,13 +12,13 @@ import java.util.*
 
 class DeckItemView(cards: JsonList<DeckLine>,
                    clickCallbacks: CardClickCallbacks,
-                   context: Context) : CardListView<DeckLine>(
+                   resources: Resources) : CardListView<DeckLine>(
         cards,
         clickCallbacks,
-        context.resources.colorStateList(R.color.colorAccent),
-        context.resources.colorStateList(R.color.colorPrimaryDark),
-        context.resources.drawable(R.drawable.ic_bookmark_white_18dp),
-        context.resources.drawable(R.drawable.ic_bookmark_border_white_18dp)) {
+        resources.colorStateList(R.color.colorAccent),
+        resources.colorStateList(R.color.colorPrimaryDark),
+        resources.drawable(R.drawable.ic_bookmark_white_18dp),
+        resources.drawable(R.drawable.ic_bookmark_border_white_18dp)) {
 
     override fun getElem(card: Card) = DeckLine(card, Date().time, 1, false)
 }

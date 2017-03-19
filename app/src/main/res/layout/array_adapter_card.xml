@@ -7,7 +7,7 @@
     android:foreground="?android:attr/selectableItemBackground"
     android:padding="8dp">
 
-    <Button
+    <android.support.v7.widget.AppCompatButton
         android:id="@+id/card_favorite"
         android:layout_width="42dp"
         android:layout_height="wrap_content"

@@ -25,11 +25,9 @@ class DeckDetailStatsFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater,
                               container: ViewGroup?,
                               savedInstanceState: Bundle?) =
-            inflater.inflate(R.layout.fragment_deck_detail_stats, container, false).apply {
-                (this as RecyclerView).apply {
-                    layoutManager = LinearLayoutManager(context)
-                    adapter = deckDetailStatsAdapter
-                }
+            (inflater.inflate(R.layout.fragment_deck_detail_stats, container, false) as RecyclerView).apply {
+                layoutManager = LinearLayoutManager(context)
+                adapter = deckDetailStatsAdapter
             }
 
     override fun onResume() {

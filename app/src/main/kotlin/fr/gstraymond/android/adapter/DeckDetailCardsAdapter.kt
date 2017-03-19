@@ -2,6 +2,7 @@ package fr.gstraymond.android.adapter
 
 import android.app.AlertDialog
 import android.content.Context
+import android.support.v7.widget.AppCompatButton
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -13,6 +14,7 @@ import fr.gstraymond.R
 import fr.gstraymond.db.json.CardList
 import fr.gstraymond.models.DeckLine
 import fr.gstraymond.ui.adapter.DeckDetailCardViews
+import fr.gstraymond.utils.colorStateList
 import fr.gstraymond.utils.find
 import fr.gstraymond.utils.inflate
 import java.util.*
@@ -31,7 +33,8 @@ class DeckDetailCardsAdapter(private val context: Context) : RecyclerView.Adapte
         val card = deckLine.card
         cardViews.display(holder.itemView, card, position)
 
-        val mult = holder.itemView.find<Button>(R.id.array_adapter_deck_card_mult)
+        val mult = holder.itemView.find<AppCompatButton>(R.id.array_adapter_deck_card_mult)
+        mult.supportBackgroundTintList = context.resources.colorStateList(R.color.colorPrimaryDark)
         mult.text = "${deckLine.mult}"
         mult.setOnClickListener {
             val view = context.inflate(R.layout.array_adapter_deck_card_mult)
