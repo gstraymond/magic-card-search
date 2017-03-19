@@ -83,6 +83,7 @@
     <string name="deckdetails_delete_title">Supprimer le deck ?</string>
     <string name="deckdetails_delete_ok">Supprimer</string>
     <string name="deckdetails_delete_cancel">Annuler</string>
+    <string name="deckdetails_cards_empty">Votre deck est vide.\n\nAjoutez des cartes avec le bouton DECK dans les résultats de recherche.</string>
 
     <string name="stats_format_colors">Format \"%1$s\", couleurs principales: %2$s</string>
     <string name="stats_total_cards">%1$s cartes (%2$s cartes au sideboard)</string>
