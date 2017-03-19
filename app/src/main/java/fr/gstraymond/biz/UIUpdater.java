@@ -16,7 +16,6 @@ import fr.gstraymond.models.search.response.Hit;
 import fr.gstraymond.models.search.response.SearchResult;
 import fr.gstraymond.ui.FacetOnChildClickListener;
 import fr.gstraymond.ui.adapter.FacetListAdapter;
-import fr.gstraymond.utils.AndroidUtilsKt;
 
 import static android.support.design.widget.Snackbar.LENGTH_LONG;
 
@@ -70,7 +69,7 @@ public class UIUpdater extends AsyncTask<Void, Void, SearchResult> {
         if (activity.getLoadingSnackbar() != null) {
             activity.getLoadingSnackbar().dismiss();
         }
-        Snackbar snackbar = Snackbar.make(AndroidUtilsKt.rootView(activity), message, LENGTH_LONG);
+        Snackbar snackbar = Snackbar.make(activity.findViewById(R.id.coordinator_layout), message, LENGTH_LONG);
         activity.setLoadingSnackbar(snackbar);
         snackbar.show();
     }

@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
+import android.support.design.widget.CoordinatorLayout
 import android.support.design.widget.FloatingActionButton
 import android.support.design.widget.Snackbar
 import android.support.v4.widget.DrawerLayout
@@ -33,7 +34,6 @@ import fr.gstraymond.ui.adapter.CardArrayData
 import fr.gstraymond.ui.adapter.SearchViewCursorAdapter
 import fr.gstraymond.utils.app
 import fr.gstraymond.utils.find
-import fr.gstraymond.utils.rootView
 import fr.gstraymond.utils.startActivity
 import sheetrock.panda.changelog.ChangeLog
 
@@ -100,7 +100,7 @@ class CardListActivity : CustomActivity(R.layout.activity_card_list),
                 cards = app().wishList,
                 deck = null)
 
-        adapter = CardArrayAdapter(rootView(), data, this, loadingSnackbar)
+        adapter = CardArrayAdapter(findViewById(R.id.coordinator_layout), data, this, loadingSnackbar)
 
         val layoutManager = LinearLayoutManager(this)
         endScrollListener = EndScrollListener(this, layoutManager)
