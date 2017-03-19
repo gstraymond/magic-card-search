@@ -83,4 +83,11 @@
     <string name="deckdetails_delete_title">Supprimer le deck ?</string>
     <string name="deckdetails_delete_ok">Supprimer</string>
     <string name="deckdetails_delete_cancel">Annuler</string>
+
+    <string name="stats_format_colors">Format \"%1$s\", couleurs principales: %2$s</string>
+    <string name="stats_total_cards">%1$s cartes (%2$s cartes au sideboard)</string>
+    <string name="stats_total_price">Prix total %1$s $</string>
+    <string name="stats_mana_curve">Courbe de mana</string>
+    <string name="stats_color_distribution">Répartition des couleurs</string>
+    <string name="stats_type_distribution">Répartition des types</string>
 </resources>

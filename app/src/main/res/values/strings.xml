@@ -86,4 +86,11 @@
     <string name="deckdetails_delete_title">Delete deck?</string>
     <string name="deckdetails_delete_ok">Delete</string>
     <string name="deckdetails_delete_cancel">Cancel</string>
+
+    <string name="stats_format_colors">Format \"%1$s\" with main colors: %2$s</string>
+    <string name="stats_total_cards">%1$s cards (%2$s cards in sideboard)</string>
+    <string name="stats_total_price">Total price $%1$s</string>
+    <string name="stats_mana_curve">Mana Curve</string>
+    <string name="stats_color_distribution">Color distribution</string>
+    <string name="stats_type_distribution">Type distribution</string>
 </resources>

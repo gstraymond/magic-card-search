@@ -8,6 +8,7 @@ import android.text.Html
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import fr.gstraymond.R
+import fr.gstraymond.android.DeckDetailActivity.Companion.DECK_EXTRA
 import fr.gstraymond.android.adapter.DeckDetailStatsAdapter
 import fr.gstraymond.android.adapter.IntChart
 import fr.gstraymond.android.adapter.StringChart
@@ -36,19 +37,23 @@ class DeckDetailStatsFragment : Fragment() {
     }
 
     fun updateStats() {
-        val deckId = activity.intent.getStringExtra(DeckDetailActivity.DECK_EXTRA)
+        val deckId = activity.intent.getStringExtra(DECK_EXTRA)
         val cardList = activity.app().cardListBuilder.build(deckId.toInt())
         val deckStats = DeckStats(cardList.all())
         deckDetailStatsAdapter.apply {
+            val formatColor = getText(R.string.stats_format_colors, deckStats.format, ccFormatter.format(deckStats.colorSymbols))
             elements = listOf(
-                    Html.fromHtml("${ccFormatter.format(deckStats.colorSymbols)} in ${deckStats.format}", imageGetter, null),
-                    "${deckStats.deckSize} cards / sideboard: ${deckStats.sideboardSize}",
-                    "Total price: ${deckStats.totalPrice}$",
-                    IntChart("Mana Curve", deckStats.manaCurve),
-                    StringChart("Color Distribution", deckStats.colorDistribution),
-                    StringChart("Type Distribution", deckStats.typeDistribution)
+                    Html.fromHtml(formatColor, imageGetter, null),
+                    getText(R.string.stats_total_cards, "${deckStats.deckSize}", "${deckStats.sideboardSize}"),
+                    getText(R.string.stats_total_price, "${deckStats.totalPrice}"),
+                    IntChart(resources.getString(R.string.stats_mana_curve), deckStats.manaCurve),
+                    StringChart(resources.getString(R.string.stats_color_distribution), deckStats.colorDistribution),
+                    StringChart(resources.getString(R.string.stats_type_distribution), deckStats.typeDistribution)
             )
             notifyDataSetChanged()
         }
     }
+
+    private fun getText(textId: Int, vararg args: String) =
+            String.format(resources.getString(textId), *args)
 }
