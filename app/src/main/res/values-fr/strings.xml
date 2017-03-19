@@ -11,6 +11,7 @@
     <string name="list_menu_search">Recherche</string>
     <string name="list_menu_help">A l\'aide !</string>
     <string name="list_menu_history">Recherches récentes</string>
+    <string name="list_menu_deck">Retour au deck</string>
     <string name="added_to_wishlist">%1$s ajouté à votre wishlist</string>
     <string name="removed_from_wishlist">%1$s supprimé de votre wishlist</string>
     <string name="added_to_deck">%1$s ajouté au deck \'%2$s\'</string>

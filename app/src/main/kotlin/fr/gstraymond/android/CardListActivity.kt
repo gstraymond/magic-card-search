@@ -189,8 +189,7 @@ class CardListActivity : CustomActivity(R.layout.activity_card_list),
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        val inflater = menuInflater
-        inflater.inflate(R.menu.card_list_menu, menu)
+        menuInflater.inflate(R.menu.card_list_menu, menu)
         currentSearch.deckId?.apply {
             menu.findItem(R.id.changelog_tab).isVisible = false
             menu.findItem(R.id.deck_tab).isVisible = true
