@@ -57,8 +57,9 @@ class DeckDetailStatsFragment : Fragment() {
             emptyText.hide()
             val deckStats = DeckStats(cardList.all())
             deckDetailStatsAdapter.apply {
-                val formatColor = getText(R.string.stats_format_colors, deckStats.format, ccFormatter.format(deckStats.colorSymbols))
+                val formatColor = getText(R.string.stats_colors, ccFormatter.format(deckStats.colorSymbols))
                 elements = listOf(
+                        getText(R.string.stats_format, deckStats.format),
                         Html.fromHtml(formatColor, imageGetter, null),
                         getText(R.string.stats_total_cards, "${deckStats.deckSize}", "${deckStats.sideboardSize}"),
                         getText(R.string.stats_total_price, "${deckStats.totalPrice}"),

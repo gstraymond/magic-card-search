@@ -94,19 +94,21 @@ class DeckDetailStatsAdapter(context: Context) : RecyclerView.Adapter<RecyclerVi
         }
     }
 
+    private val CHART_TEXT_SIZE = 16f
+
     private fun styleChart(chart: BarChart, f: (Float, AxisBase) -> String) {
         chart.description = null
         chart.isDoubleTapToZoomEnabled = false
         chart.setPinchZoom(false)
         chart.setScaleEnabled(false)
         chart.legend.textColor = resources.color(android.R.color.white)
-        chart.legend.textSize = resources.getDimension(R.dimen.chartLabelSize)
+        chart.legend.textSize = CHART_TEXT_SIZE
         chart.xAxis.apply {
             setDrawGridLines(false)
             granularity = 1.0f
             isGranularityEnabled = true
             textColor = resources.color(android.R.color.white)
-            textSize = resources.getDimension(R.dimen.chartLabelSize)
+            textSize = CHART_TEXT_SIZE
             position = XAxis.XAxisPosition.BOTTOM
             setValueFormatter(f)
         }
@@ -125,7 +127,7 @@ class DeckDetailStatsAdapter(context: Context) : RecyclerView.Adapter<RecyclerVi
     private fun styleDataSet(dataSet: BarDataSet) {
         dataSet.color = resources.color(R.color.gold)
         dataSet.valueTextColor = resources.color(android.R.color.white)
-        dataSet.valueTextSize = resources.getDimension(R.dimen.chartLabelSize)
+        dataSet.valueTextSize = CHART_TEXT_SIZE
     }
 }
 

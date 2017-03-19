@@ -89,7 +89,8 @@
     <string name="deckdetails_delete_cancel">Cancel</string>
     <string name="deckdetails_cards_empty">Deck is empty.\n\nAdd any card with the DECK button on search results.</string>
 
-    <string name="stats_format_colors">Format \"%1$s\" with main colors: %2$s</string>
+    <string name="stats_format">Format \"%1$s\"</string>
+    <string name="stats_colors">Colors %1$s</string>
     <string name="stats_total_cards">%1$s cards (%2$s cards in sideboard)</string>
     <string name="stats_total_price">Total price $%1$s</string>
     <string name="stats_mana_curve">Mana Curve</string>

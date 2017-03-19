@@ -86,7 +86,8 @@
     <string name="deckdetails_delete_cancel">Annuler</string>
     <string name="deckdetails_cards_empty">Votre deck est vide.\n\nAjoutez des cartes avec le bouton DECK dans les résultats de recherche.</string>
 
-    <string name="stats_format_colors">Format \"%1$s\", couleurs principales: %2$s</string>
+    <string name="stats_format">Format \"%1$s\"</string>
+    <string name="stats_colors">Couleurs %1$s</string>
     <string name="stats_total_cards">%1$s cartes (%2$s cartes au sideboard)</string>
     <string name="stats_total_price">Prix total %1$s $</string>
     <string name="stats_mana_curve">Courbe de mana</string>
