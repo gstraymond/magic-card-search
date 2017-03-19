@@ -13,6 +13,8 @@
     <string name="list_menu_history">Recherches récentes</string>
     <string name="added_to_wishlist">%1$s ajouté à votre wishlist</string>
     <string name="removed_from_wishlist">%1$s supprimé de votre wishlist</string>
+    <string name="added_to_deck">%1$s ajouté au deck \'%2$s\'</string>
+    <string name="removed_from_deck">%1$s supprimé du deck \'%2$s\'</string>
 
     <string name="detail_menu_oracle">Texte</string>
     <string name="detail_menu_pictures">Images</string>
@@ -40,8 +42,6 @@
     <string name="drawer_open">Rechercher</string>
     <string name="drawer_close">Revenir aux cartes</string>
 
-    <string name="toasting_loading_finished">Terminé !</string>
-
     <string name="facet_ability">Capacité</string>
     <string name="facet_artist">Artiste</string>
     <string name="facet_color">Couleur</string>
@@ -59,12 +59,6 @@
     <string name="block_set">Bloc</string>
     <string name="facet_special">Special</string>
     <string name="layout_type">Disposition</string>
-
-    <string name="loading_initial">recherche…</string>
-    <string name="loading_more">plus de résultats…</string>
-    <string name="loading_clear">suppression de la recherche …</string>
-    <string name="loading_facet">filtrage de la recherche…</string>
-    <string name="loading_more_facet">ajout de filtres…</string>
 
     <string name="changelog_full_title">Quoi de neuf ?</string>
     <string name="changelog_title">Historique des versions</string>

@@ -5,6 +5,7 @@ import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
 import android.support.design.widget.FloatingActionButton
+import android.support.design.widget.Snackbar
 import android.support.v4.widget.DrawerLayout
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.widget.LinearLayoutManager
@@ -14,22 +15,25 @@ import android.support.v7.widget.Toolbar
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.widget.ProgressBar
-import android.widget.Toast
 import com.crashlytics.android.answers.Answers
 import com.crashlytics.android.answers.ContentViewEvent
 import com.magic.card.search.commons.log.Log
 import fr.gstraymond.R
-import fr.gstraymond.biz.*
+import fr.gstraymond.biz.AutocompleteProcessor
+import fr.gstraymond.biz.SearchOptions
+import fr.gstraymond.biz.SearchProcessor
+import fr.gstraymond.biz.UIUpdater
 import fr.gstraymond.models.autocomplete.response.Option
 import fr.gstraymond.models.search.response.Card
 import fr.gstraymond.ui.EndScrollListener
 import fr.gstraymond.ui.SuggestionListener
 import fr.gstraymond.ui.TextListener
 import fr.gstraymond.ui.adapter.CardArrayAdapter
+import fr.gstraymond.ui.adapter.CardArrayData
 import fr.gstraymond.ui.adapter.SearchViewCursorAdapter
 import fr.gstraymond.utils.app
 import fr.gstraymond.utils.find
+import fr.gstraymond.utils.rootView
 import fr.gstraymond.utils.startActivity
 import sheetrock.panda.changelog.ChangeLog
 
@@ -58,12 +62,11 @@ class CardListActivity : CustomActivity(R.layout.activity_card_list),
     private lateinit var drawerLayout: DrawerLayout
     private lateinit var suggestionListener: SuggestionListener
 
-    lateinit var progressBarUpdater: ProgressBarUpdater
     lateinit var endScrollListener: EndScrollListener
 
     var totalCardCount: Int = 0
     var currentSearch = SearchOptions()
-    var loadingToast: Toast? = null
+    var loadingSnackbar: Snackbar? = null
     val textListener = TextListener(this, this)
 
     var searchViewCursorAdapter = SearchViewCursorAdapter.empty(this)
@@ -88,11 +91,16 @@ class CardListActivity : CustomActivity(R.layout.activity_card_list),
             }
         }
 
-        val (wishList, deck) = currentSearch.deckId?.run {
-            null to app().cardListBuilder.build(toInt())
-        } ?: (app().wishList to null)
+        val data = currentSearch.deckId?.run {
+            val deck = app().deckList.getByUid(this)
+            CardArrayData(
+                    cards = null,
+                    deck = deck!! to app().cardListBuilder.build(toInt()))
+        } ?: CardArrayData(
+                cards = app().wishList,
+                deck = null)
 
-        adapter = CardArrayAdapter(this, wishList, deck, this)
+        adapter = CardArrayAdapter(rootView(), data, this, loadingSnackbar)
 
         val layoutManager = LinearLayoutManager(this)
         endScrollListener = EndScrollListener(this, layoutManager, fab)
@@ -137,7 +145,6 @@ class CardListActivity : CustomActivity(R.layout.activity_card_list),
             override fun onDrawerClosed(drawerView: View) = searchView.clearFocus()
         })
 
-        progressBarUpdater = ProgressBarUpdater(find<ProgressBar>(R.id.progress_bar))
         actionBarSetHomeButtonEnabled(true)
 
         ChangeLog(this).apply {
@@ -166,7 +173,7 @@ class CardListActivity : CustomActivity(R.layout.activity_card_list),
         if (resultAsString != null) {
             UIUpdater(this, resultAsString, objectMapper).execute()
         } else {
-            SearchProcessor(this, currentSearch, R.string.loading_initial).execute()
+            SearchProcessor(this, currentSearch).execute()
         }
     }
 
@@ -205,7 +212,7 @@ class CardListActivity : CustomActivity(R.layout.activity_card_list),
             R.id.clear_tab -> {
                 resetSearchView()
                 val options = SearchOptions(random = true, addToHistory = false)
-                SearchProcessor(this, options, R.string.loading_clear).execute()
+                SearchProcessor(this, options).execute()
                 searchView.clearFocus()
                 return true
             }

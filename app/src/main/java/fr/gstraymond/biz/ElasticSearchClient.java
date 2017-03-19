@@ -33,22 +33,10 @@ public class ElasticSearchClient {
         this.mapperUtil = mapperUtil;
     }
 
-    interface CallBacks {
-        void start();
-
-        void buildRequest();
-
-        void getResponse();
-
-        void end();
-    }
-
-    SearchResult process(SearchOptions options, CallBacks callbacks) {
-        if (callbacks != null) callbacks.start();
+    SearchResult process(SearchOptions options) {
         log.d("options as json : %s", options);
         Request request = Request.Companion.fromOptions(options);
         String queryAsJson = mapperUtil.asJsonString(request);
-        if (callbacks != null) callbacks.buildRequest();
 
         if (options.getAddToHistory()) {
             log.i("add to history : " + options);
@@ -59,11 +47,9 @@ public class ElasticSearchClient {
         if (response == null) return null;
 
         SearchResult searchResult = response.getElem();
-        if (callbacks != null) callbacks.getResponse();
 
         Answers.getInstance().logSearch(buildSearchEvent(options, searchResult.getHits().getTotal()));
 
-        if (callbacks != null) callbacks.end();
         return searchResult;
     }
 

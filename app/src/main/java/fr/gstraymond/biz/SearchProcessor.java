@@ -1,17 +1,12 @@
 package fr.gstraymond.biz;
 
 import android.os.AsyncTask;
-import android.widget.TextView;
 
 import com.magic.card.search.commons.log.Log;
 
-import fr.gstraymond.R;
 import fr.gstraymond.android.CardListActivity;
 import fr.gstraymond.android.CustomApplication;
 import fr.gstraymond.models.search.response.SearchResult;
-
-import static android.widget.Toast.LENGTH_SHORT;
-import static android.widget.Toast.makeText;
 
 public class SearchProcessor extends AsyncTask<Void, Void, SearchResult> {
 
@@ -20,24 +15,17 @@ public class SearchProcessor extends AsyncTask<Void, Void, SearchResult> {
     private SearchOptions options;
     private Log log = new Log(this);
 
-    public SearchProcessor(CardListActivity activity, SearchOptions options, int loadingText) {
+    public SearchProcessor(CardListActivity activity, SearchOptions options) {
         super();
         this.activity = activity;
         this.options = options;
 
         disableSearch();
         storeCurrentSearch(options);
-
-        TextView welcomeTextView = getWelcomeTextView();
-        welcomeTextView.setText(activity.getString(loadingText));
     }
 
     private void storeCurrentSearch(SearchOptions options) {
         activity.setCurrentSearch(options);
-    }
-
-    private TextView getWelcomeTextView() {
-        return (TextView) activity.findViewById(R.id.welcome_text_view);
     }
 
     @Override
@@ -63,14 +51,6 @@ public class SearchProcessor extends AsyncTask<Void, Void, SearchResult> {
 
     @Override
     protected void onPostExecute(SearchResult searchResult) {
-
-        if (options.getAppend()) {
-            if (activity.getLoadingToast() != null) {
-                activity.getLoadingToast().cancel();
-            }
-            makeText(activity, R.string.toasting_loading_finished, LENGTH_SHORT).show();
-        }
-
         new UIUpdater(activity).onPostExecute(searchResult);
         enableSearch();
     }
@@ -80,7 +60,7 @@ public class SearchProcessor extends AsyncTask<Void, Void, SearchResult> {
             options.setFrom(activity.getAdapter().getItemCount());
         }
 
-        SearchResult searchResult = getApplicationContext().getElasticSearchClient().process(options, activity.getProgressBarUpdater());
+        SearchResult searchResult = getApplicationContext().getElasticSearchClient().process(options);
 
         if (searchResult != null) {
             log.i(searchResult.getHits().getTotal() + " cards found in " + searchResult.getTook() + " ms");

@@ -41,6 +41,8 @@ fun Activity.startActivity(buildIntent: () -> Intent) {
 
 fun Activity.app(): CustomApplication = application as CustomApplication
 
+fun Activity.rootView(): View = findViewById(android.R.id.content)
+
 fun Resources.drawable(id: Int): Drawable = ResourcesCompat.getDrawable(this, id, null)!!
 
 fun Resources.colorStateList(id: Int): ColorStateList = ResourcesCompat.getColorStateList(this, id, null)!!

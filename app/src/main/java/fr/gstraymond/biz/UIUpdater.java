@@ -1,8 +1,8 @@
 package fr.gstraymond.biz;
 
 import android.os.AsyncTask;
+import android.support.design.widget.Snackbar;
 import android.widget.ExpandableListView;
-import android.widget.TextView;
 
 import com.magic.card.search.commons.json.MapperUtil;
 import com.squareup.moshi.Moshi;
@@ -16,6 +16,9 @@ import fr.gstraymond.models.search.response.Hit;
 import fr.gstraymond.models.search.response.SearchResult;
 import fr.gstraymond.ui.FacetOnChildClickListener;
 import fr.gstraymond.ui.adapter.FacetListAdapter;
+import fr.gstraymond.utils.AndroidUtilsKt;
+
+import static android.support.design.widget.Snackbar.LENGTH_LONG;
 
 public class UIUpdater extends AsyncTask<Void, Void, SearchResult> {
 
@@ -41,7 +44,7 @@ public class UIUpdater extends AsyncTask<Void, Void, SearchResult> {
     @Override
     protected void onPostExecute(SearchResult result) {
         if (result == null) {
-            getWelcomeTextView().setText(R.string.failed_search);
+            showText(activity.getString(R.string.failed_search));
             return;
         }
 
@@ -56,11 +59,20 @@ public class UIUpdater extends AsyncTask<Void, Void, SearchResult> {
             textId = R.string.progress_card_found;
         }
 
-        String text = String.format("%s %s", totalCardCount, activity.getString(textId));
-        getWelcomeTextView().setText(text);
-
         updateUIList(totalCardCount, cards);
         updateUIFacets(result);
+
+        String text = String.format("%s/%s %s", activity.adapter.getItemCount(), totalCardCount, activity.getString(textId));
+        showText(text);
+    }
+
+    private void showText(String message) {
+        if (activity.getLoadingSnackbar() != null) {
+            activity.getLoadingSnackbar().dismiss();
+        }
+        Snackbar snackbar = Snackbar.make(AndroidUtilsKt.rootView(activity), message, LENGTH_LONG);
+        activity.setLoadingSnackbar(snackbar);
+        snackbar.show();
     }
 
     private void updateUIList(int totalCardCount, ArrayList<Card> cards) {
@@ -84,10 +96,6 @@ public class UIUpdater extends AsyncTask<Void, Void, SearchResult> {
             FacetOnChildClickListener listener = new FacetOnChildClickListener(adapter, getOptions(), activity);
             getFacetListView().setOnChildClickListener(listener);
         }
-    }
-
-    private TextView getWelcomeTextView() {
-        return (TextView) activity.findViewById(R.id.welcome_text_view);
     }
 
     private SearchOptions getOptions() {

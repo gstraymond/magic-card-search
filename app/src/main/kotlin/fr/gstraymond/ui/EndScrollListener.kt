@@ -1,22 +1,11 @@
 package fr.gstraymond.ui
 
 import android.support.design.widget.FloatingActionButton
-import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.widget.AbsListView
-import android.widget.AbsListView.OnScrollListener
-import android.widget.Toast
-
 import com.magic.card.search.commons.log.Log
-
-import fr.gstraymond.R
 import fr.gstraymond.android.CardListActivity
-import fr.gstraymond.biz.SearchOptions
 import fr.gstraymond.biz.SearchProcessor
-
-import android.widget.Toast.LENGTH_SHORT
-import android.widget.Toast.makeText
 
 class EndScrollListener(private val activity: CardListActivity,
                         private val layoutManager: LinearLayoutManager,
@@ -31,8 +20,7 @@ class EndScrollListener(private val activity: CardListActivity,
             if (layoutManager.itemCount != activity.totalCardCount) {
                 log.i("onScroll - endReached")
                 val options = activity.currentSearch.updateAppend(true).updateAddToHistory(false)
-                showLoadingToast()
-                SearchProcessor(activity, options, R.string.loading_more).execute()
+                SearchProcessor(activity, options).execute()
             } else {
                 fab.hide()
             }
@@ -43,10 +31,4 @@ class EndScrollListener(private val activity: CardListActivity,
 
     private fun hasEndReached(layoutManager: LinearLayoutManager) =
             (layoutManager.findFirstVisibleItemPosition() + layoutManager.childCount) >= layoutManager.itemCount
-
-    private fun showLoadingToast() {
-        val loadingToast = makeText(activity, R.string.loading_more, LENGTH_SHORT)
-        activity.loadingToast = loadingToast
-        loadingToast.show()
-    }
 }

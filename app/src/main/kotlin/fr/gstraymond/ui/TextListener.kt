@@ -2,7 +2,6 @@ package fr.gstraymond.ui
 
 import android.support.v7.widget.SearchView
 import com.magic.card.search.commons.log.Log
-import fr.gstraymond.R
 import fr.gstraymond.android.CardListActivity
 import fr.gstraymond.biz.AutocompleteProcessor
 import fr.gstraymond.biz.AutocompleteProcessor.Callbacks
@@ -43,7 +42,7 @@ class TextListener(val activity: CardListActivity,
             val options = SearchOptions(
                     query = text.replace(":", ""),
                     facets = facets)
-            SearchProcessor(activity, options, R.string.loading_initial).execute()
+            SearchProcessor(activity, options).execute()
         }
         return true
     }

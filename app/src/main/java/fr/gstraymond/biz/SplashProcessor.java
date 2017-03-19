@@ -21,7 +21,7 @@ public class SplashProcessor extends AsyncTask<Void, Integer, SearchResult> {
 
     @Override
     protected SearchResult doInBackground(Void... params) {
-        return elasticSearchClient.process(options, null);
+        return elasticSearchClient.process(options);
     }
 
     private CustomApplication getCustomApplication() {

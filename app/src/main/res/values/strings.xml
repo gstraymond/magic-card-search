@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="progress_card_found">card found</string>
-    <string name="progress_cards_found">cards found</string>
+    <string name="progress_card_found">card loaded</string>
+    <string name="progress_cards_found">cards loaded</string>
     <string name="website_url">mtg-search.com</string>
     <string name="logo">logo</string>
     <string name="list_menu_cards">Show card list</string>
@@ -13,6 +13,8 @@
     <string name="list_menu_history">Recent search</string>
     <string name="added_to_wishlist">%1$s added to your wishlist</string>
     <string name="removed_from_wishlist">%1$s removed from wishlist</string>
+    <string name="added_to_deck">%1$s added to \'%2$s\' deck</string>
+    <string name="removed_from_deck">%1$s removed from \'%2$s\' deck</string>
 
     <string name="detail_menu_oracle">Text</string>
     <string name="detail_menu_pictures">Pictures</string>
@@ -40,8 +42,6 @@
     <string name="drawer_open">Go to search</string>
     <string name="drawer_close">Back to list</string>
 
-    <string name="toasting_loading_finished">Done !</string>
-
     <string name="facet_ability">Ability</string>
     <string name="facet_artist">Artist</string>
     <string name="facet_color">Color</string>
@@ -59,12 +59,6 @@
     <string name="block_set">Block</string>
     <string name="facet_special">Special</string>
     <string name="layout_type">Layout</string>
-
-    <string name="loading_initial">searching…</string>
-    <string name="loading_more">loading more…</string>
-    <string name="loading_clear">clearing…</string>
-    <string name="loading_facet">filtering search…</string>
-    <string name="loading_more_facet">adding filters…</string>
 
     <!--suppress MissingTranslation -->
 
