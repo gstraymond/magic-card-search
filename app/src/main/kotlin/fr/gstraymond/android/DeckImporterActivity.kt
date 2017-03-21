@@ -1,20 +1,25 @@
 package fr.gstraymond.android
 
+import android.Manifest
+import android.Manifest.permission.*
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Bundle
+import android.os.storage.StorageManager
+import android.support.v4.app.ActivityCompat
+import android.support.v4.content.ContextCompat
 import android.support.v7.widget.Toolbar
-import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ProgressBar
 import android.widget.TextView
 import com.magic.card.search.commons.log.Log
+import com.nbsp.materialfilepicker.ui.FilePickerActivity
 import fr.gstraymond.R
 import fr.gstraymond.impex.DeckImporterTask
-import fr.gstraymond.utils.app
-import java.net.URL
+
 
 class DeckImporterActivity : CustomActivity(R.layout.activity_deck_importer) {
 
@@ -49,8 +54,8 @@ class DeckImporterActivity : CustomActivity(R.layout.activity_deck_importer) {
         }
 
         button.setOnClickListener { _ ->
-            form.visibility = View.GONE
-            process.visibility = View.VISIBLE
+            /*form.hide()
+            process.show()
             val url = URL(editText.text.toString())
             log.text = "Importing $url"
             DeckImporterTask(
@@ -60,6 +65,14 @@ class DeckImporterActivity : CustomActivity(R.layout.activity_deck_importer) {
                     app().deckList,
                     Process(log, progressBar, this)
             ).execute(url)
+            */
+            if (ContextCompat.checkSelfPermission(this, READ_EXTERNAL_STORAGE)
+                    != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this, arrayOf(READ_EXTERNAL_STORAGE), 2)
+            }
+
+            val intent = Intent(this, FilePickerActivity::class.java)
+            startActivityForResult(intent, 1)
         }
     }
 }
