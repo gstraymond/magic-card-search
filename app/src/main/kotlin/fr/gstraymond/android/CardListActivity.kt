@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
-import android.support.design.widget.CoordinatorLayout
 import android.support.design.widget.FloatingActionButton
 import android.support.design.widget.Snackbar
 import android.support.v4.widget.DrawerLayout
@@ -80,16 +79,25 @@ class CardListActivity : CustomActivity(R.layout.activity_card_list),
         val toolbar = find<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
 
+        searchView = find<SearchView>(R.id.search_input).apply {
+            suggestionListener = SuggestionListener(this, listOf())
+
+            setOnQueryTextListener(textListener)
+            setOnSuggestionListener(suggestionListener)
+            suggestionsAdapter = searchViewCursorAdapter
+        }
+
         val savedSearch = savedInstanceState?.getParcelable<SearchOptions>(SEARCH_QUERY)
                 ?: intent.getParcelableExtra<SearchOptions>(SEARCH_QUERY)
 
-        savedSearch?.run {
+        val restoredSearch = savedSearch?.run {
             currentSearch = savedSearch
             currentSearch.addToHistory = false
             if (currentSearch.query != "*") {
                 searchView.setQuery(currentSearch.query, false)
             }
-        }
+            true
+        } ?: false
 
         val data = currentSearch.deckId?.run {
             val deck = app().deckList.getByUid(this)
@@ -117,20 +125,6 @@ class CardListActivity : CustomActivity(R.layout.activity_card_list),
             }
         }
 
-        searchView = find<SearchView>(R.id.search_input).apply {
-            suggestionListener = SuggestionListener(this, listOf())
-
-            setOnQueryTextListener(textListener)
-            setOnSuggestionListener(suggestionListener)
-            suggestionsAdapter = searchViewCursorAdapter
-        }
-
-        savedInstanceState?.getParcelable<SearchOptions>(SEARCH_QUERY)?.let { savedSearch ->
-            log.d("Restored search : " + currentSearch)
-            currentSearch = savedSearch
-            searchView.setQuery(currentSearch.query, false)
-        }
-
         drawerLayout = find<DrawerLayout>(R.id.drawer_layout)
         drawerToggle = ActionBarDrawerToggle(
                 this,
@@ -153,15 +147,22 @@ class CardListActivity : CustomActivity(R.layout.activity_card_list),
         }
 
         fab.setOnClickListener { _ ->
-            startActivity {
-                ListsActivity.getIntent(this)
-            }
+            startActivity { ListsActivity.getIntent(this) }
         }
 
         currentSearch.deckId?.apply {
             fab.hide()
             title = app().deckList.getByUid(this)?.name
             endScrollListener.fab = null
+        }
+
+        val resultAsString = intent.getStringExtra(CARD_RESULT)
+        if (!restoredSearch && resultAsString != null) {
+            log.d("onPostCreate: resultAsString $resultAsString")
+            UIUpdater(this, resultAsString, objectMapper).execute()
+        } else {
+            log.d("onPostCreate: currentSearch $currentSearch")
+            SearchProcessor(this, currentSearch).execute()
         }
     }
 
@@ -170,13 +171,6 @@ class CardListActivity : CustomActivity(R.layout.activity_card_list),
 
         // Sync the toggle state after onRestoreInstanceState has occurred.
         drawerToggle.syncState()
-
-        val resultAsString = intent.getStringExtra(CARD_RESULT)
-        if (resultAsString != null) {
-            UIUpdater(this, resultAsString, objectMapper).execute()
-        } else {
-            SearchProcessor(this, currentSearch).execute()
-        }
     }
 
     override fun onResume() {
@@ -246,7 +240,9 @@ class CardListActivity : CustomActivity(R.layout.activity_card_list),
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
-        outState.putParcelable(SEARCH_QUERY, currentSearch)
+        if (currentSearch != SearchOptions()) {
+            outState.putParcelable(SEARCH_QUERY, currentSearch)
+        }
         super.onSaveInstanceState(outState)
     }
 
