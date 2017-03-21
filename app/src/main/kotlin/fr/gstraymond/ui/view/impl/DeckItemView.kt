@@ -18,7 +18,8 @@ class DeckItemView(cards: JsonList<DeckLine>,
         resources.colorStateList(R.color.colorAccent),
         resources.colorStateList(R.color.colorPrimaryDark),
         resources.drawable(R.drawable.ic_bookmark_white_18dp),
-        resources.drawable(R.drawable.ic_bookmark_border_white_18dp)) {
+        resources.drawable(R.drawable.ic_bookmark_border_white_18dp),
+        "deck") {
 
     override fun getElem(card: Card) = DeckLine(card, Date().time, 1, false)
 }

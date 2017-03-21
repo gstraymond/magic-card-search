@@ -13,6 +13,7 @@ import android.widget.EditText
 import android.widget.TextView
 import android.widget.TextView.BufferType.EDITABLE
 import fr.gstraymond.R
+import fr.gstraymond.analytics.Tracker
 import fr.gstraymond.android.adapter.DeckDetailFragmentPagerAdapter
 import fr.gstraymond.biz.DeckManager
 import fr.gstraymond.biz.SearchOptions
@@ -97,6 +98,7 @@ class DeckDetailActivity : CustomActivity(R.layout.activity_deck_detail) {
                     .setTitle(getString(R.string.deckdetails_delete_title))
                     .setPositiveButton(getString(R.string.deckdetails_delete_ok)) { _, _ ->
                         deckManager.delete(deck)
+                        Tracker.addRemoveDeck(added = false)
                         finish()
                     }
                     .setNegativeButton(getString(R.string.deckdetails_delete_cancel)) { _, _ -> }

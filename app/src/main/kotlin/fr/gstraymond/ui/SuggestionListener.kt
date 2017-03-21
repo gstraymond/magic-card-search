@@ -1,6 +1,7 @@
 package fr.gstraymond.ui
 
 import android.support.v7.widget.SearchView
+import fr.gstraymond.analytics.Tracker
 import fr.gstraymond.models.autocomplete.response.Option
 import fr.gstraymond.ui.TextListener.Companion.SEP
 
@@ -20,6 +21,7 @@ class SuggestionListener(val searchView: SearchView,
                 }
             }
 
+            Tracker.autocompleteClick(result)
             searchView.setQuery(query + SEP, true)
             return true
         }

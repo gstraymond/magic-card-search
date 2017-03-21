@@ -11,6 +11,7 @@ import android.view.View.VISIBLE
 import android.view.ViewGroup
 import android.widget.TextView
 import fr.gstraymond.R
+import fr.gstraymond.analytics.Tracker
 import fr.gstraymond.android.adapter.DeckListAdapter
 import fr.gstraymond.biz.DeckManager
 import fr.gstraymond.models.Deck
@@ -40,6 +41,7 @@ class DeckListFragment : Fragment() {
                 it.visibility = VISIBLE
                 it.setOnClickListener {
                     startActivity {
+                        Tracker.addRemoveDeck(added = true)
                         val deckId = deckManager.createEmptyDeck()
                         DeckDetailActivity.getIntent(activity, "$deckId")
                     }

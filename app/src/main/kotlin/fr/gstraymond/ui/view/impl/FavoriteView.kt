@@ -16,7 +16,8 @@ class FavoriteView(cards: JsonList<Card>,
         resources.colorStateList(R.color.colorAccent),
         resources.colorStateList(R.color.colorPrimaryDark),
         resources.drawable(R.drawable.ic_star_white_18dp),
-        resources.drawable(R.drawable.ic_star_border_white_18dp)) {
+        resources.drawable(R.drawable.ic_star_border_white_18dp),
+        "wishlist") {
 
     override fun getElem(card: Card) = card
 }

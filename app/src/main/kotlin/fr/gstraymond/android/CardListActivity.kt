@@ -15,10 +15,9 @@ import android.support.v7.widget.Toolbar
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import com.crashlytics.android.answers.Answers
-import com.crashlytics.android.answers.ContentViewEvent
 import com.magic.card.search.commons.log.Log
 import fr.gstraymond.R
+import fr.gstraymond.analytics.Tracker
 import fr.gstraymond.biz.AutocompleteProcessor
 import fr.gstraymond.biz.SearchOptions
 import fr.gstraymond.biz.SearchProcessor
@@ -220,8 +219,8 @@ class CardListActivity : CustomActivity(R.layout.activity_card_list),
             }
 
             R.id.changelog_tab -> {
-                Answers.getInstance().logContentView(ContentViewEvent().putContentName("Changelog"))
                 ChangeLog(this).fullLogDialog.show()
+                Tracker.changelog()
                 return true
             }
 

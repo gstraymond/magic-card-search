@@ -1,14 +1,13 @@
 package fr.gstraymond.android
 
 import android.app.Fragment
-import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.MenuItem
-import com.crashlytics.android.answers.Answers
 import com.crashlytics.android.answers.ContentViewEvent
 import com.squareup.moshi.Moshi
+import fr.gstraymond.analytics.Tracker
 import fr.gstraymond.utils.app
 
 abstract class CustomActivity(private val layoutId: Int) : AppCompatActivity() {
@@ -47,6 +46,7 @@ abstract class CustomActivity(private val layoutId: Int) : AppCompatActivity() {
             ContentViewEvent()
                     .putContentName(javaClass.simpleName)
                     .putCustomAttribute("isTablet", isTablet.toString() + "")
+                    .putCustomAttribute("wishlist_size", app().wishList.size())
 
     private val isTablet by lazy {
         resources.configuration.screenLayout and
@@ -55,7 +55,7 @@ abstract class CustomActivity(private val layoutId: Int) : AppCompatActivity() {
 
     override fun onPostCreate(savedInstanceState: Bundle?) {
         super.onPostCreate(savedInstanceState)
-        Answers.getInstance().logContentView(buildContentViewEvent())
+        Tracker.track(buildContentViewEvent())
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
