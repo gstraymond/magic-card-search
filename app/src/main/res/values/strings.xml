@@ -71,7 +71,7 @@
 
     <string name="wishlist_title">Wishlist</string>
     <string name="wishlist_empty_text">Your wishlist is empty.\n\nAdd any card with the STAR button on search results.</string>
-    <string name="deck_list_empty_text">Your deck list is empty.\n\nImport a deck from text file or create one.</string>
+    <string name="deck_list_empty_text">Your deck list is empty.</string>
 
     <string name="decklist_title">Deck Manager</string>
     <string name="decklist_menu_import">Import</string>
