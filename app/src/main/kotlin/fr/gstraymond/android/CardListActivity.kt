@@ -96,8 +96,7 @@ class CardListActivity : CustomActivity(R.layout.activity_card_list),
             if (currentSearch.query != "*") {
                 searchView.setQuery(currentSearch.query, false)
             }
-            true
-        } ?: false
+        } != null
 
         val data = currentSearch.deckId?.run {
             val deck = app().deckList.getByUid(this)
