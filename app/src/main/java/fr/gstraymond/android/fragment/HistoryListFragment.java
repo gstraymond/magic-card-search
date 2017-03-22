@@ -13,14 +13,15 @@ import java.util.List;
 import java.util.Map;
 
 import fr.gstraymond.R;
+import fr.gstraymond.analytics.Tracker;
 import fr.gstraymond.android.CardListActivity;
 import fr.gstraymond.android.CustomActivity;
+import fr.gstraymond.android.HistoryActivity;
 import fr.gstraymond.biz.SearchOptions;
-import fr.gstraymond.db.json.JsonHistoryDataSource;
-import fr.gstraymond.models.JsonHistory;
+import fr.gstraymond.db.json.HistoryList;
+import fr.gstraymond.models.History;
 import fr.gstraymond.ui.adapter.HistoryArrayAdapter;
 
-import static fr.gstraymond.android.CardListActivity.Companion;
 import static fr.gstraymond.constants.Consts.HISTORY_LIST;
 
 public class HistoryListFragment extends CustomListFragment {
@@ -28,7 +29,7 @@ public class HistoryListFragment extends CustomListFragment {
     public static final String EMPTY = "empty";
 
     private List<Map<String, String>> messages;
-    private ArrayList<JsonHistory> allHistory;
+    private ArrayList<History> allHistory;
 
     private void initEmptyMsg() {
         messages = new ArrayList<>();
@@ -50,10 +51,10 @@ public class HistoryListFragment extends CustomListFragment {
                     messages, android.R.layout.simple_list_item_1, new String[]{EMPTY},
                     new int[]{android.R.id.text1});
         } else {
-            JsonHistoryDataSource jsonHistoryDataSource = ((CustomActivity) getActivity()).getJsonHistoryDataSource();
+            HistoryList historyList = ((CustomActivity) getActivity()).getJsonHistoryDataSource();
             arrayAdapter = new HistoryArrayAdapter(getActivity(),
                     android.R.layout.simple_list_item_activated_1,
-                    android.R.id.text2, allHistory, jsonHistoryDataSource);
+                    android.R.id.text2, allHistory, historyList);
         }
 
         setListAdapter(arrayAdapter);
@@ -66,16 +67,20 @@ public class HistoryListFragment extends CustomListFragment {
 
         if (allHistory == null) return;
 
-        JsonHistory history = allHistory.get(position);
+        History history = allHistory.get(position);
 
         SearchOptions currentSearch = new SearchOptions()
                 .updateQuery(history.getQuery())
                 .updateFacets(history.getFacets());
 
-        Intent intent = new Intent(getActivity(), CardListActivity.class);
-        intent.putExtra(Companion.getSEARCH_QUERY(), currentSearch);
-        startActivity(intent);
+        String deckId = getArguments().getString(HistoryActivity.Companion.getDECK_ID_EXTRA());
+        if (deckId != null) {
+            currentSearch.setDeckId(deckId);
+        }
 
+        Intent intent = CardListActivity.Companion.getIntent(getActivity(), currentSearch);
+        startActivity(intent);
+        Tracker.INSTANCE.historySearch(history);
         getActivity().finish();
     }
 }

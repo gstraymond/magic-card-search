@@ -1,0 +1,16 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/deckdetails_add"
+        android:icon="@drawable/ic_add_white_48dp"
+        android:title="@string/deckdetails_menu_add"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/deckdetails_delete"
+        android:icon="@drawable/ic_clear_white_48dp"
+        android:title="@string/decklist_menu_delete"
+        app:showAsAction="ifRoom" />
+
+</menu>

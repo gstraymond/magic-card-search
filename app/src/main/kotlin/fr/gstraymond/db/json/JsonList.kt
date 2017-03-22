@@ -1,70 +1,78 @@
 package fr.gstraymond.db.json
 
 import android.content.Context
+import android.content.Context.MODE_APPEND
+import android.content.Context.MODE_PRIVATE
 import com.magic.card.search.commons.json.MapperUtil
-import com.magic.card.search.commons.log.Log
-import fr.gstraymond.android.CustomApplication
 import java.io.FileNotFoundException
+import java.io.FileOutputStream
 
-abstract class JsonList<A>(private val customApplication: CustomApplication,
-                           private val mapperUtil: MapperUtil<List<A>>,
-                           listName: String) {
+abstract class JsonList<A>(private val context: Context,
+                           private val mapperUtil: MapperUtil<A>,
+                           listPrefix: String = "list",
+                           listName: String) : MemoryUidList<A>() {
 
-    private val log = Log(this)
-    private val listName = "lists_" + listName
+    private val listName = "${listPrefix}_$listName"
 
-    val elems: MutableList<A> = load()
-    private var index: Map<String, A> = loadIndex()
+    override val elems = load()
+    override val index = loadIndex()
 
-    abstract fun getId(elem: A): String
-
-    private fun loadIndex() = elems.map { getId(it) to it }.toMap()
+    private fun loadIndex() =
+            mutableMapOf(*(elems.map { it.uid() to it }.toTypedArray()))
 
     private fun load(): MutableList<A> {
         try {
-            val inputStream = customApplication.openFileInput(listName)
-            val result = mapperUtil.read(inputStream)
-            return when (result) {
-                null -> {
-                    save(listOf())
-                    mutableListOf()
+            return mutableListOf<A>().apply {
+                context.openFileInput(listName).bufferedReader().useLines {
+                    it.forEach {
+                        mapperUtil.read(it)?.let { add(it) }
+                    }
                 }
-                else -> result.toMutableList()
             }
         } catch (e: FileNotFoundException) {
             log.w("get: %s", e)
-            save(listOf())
+            //save(listOf())
             return mutableListOf()
         }
     }
 
-    private fun save(elems: List<A>) {
+    override fun save(elements: List<A>) {
+        super.save(elements)
+        writeAll()
+    }
+
+    override fun delete(elem: A) = super.delete(elem).apply { writeAll() }
+
+    override fun update(elem: A) = super.update(elem).apply { writeAll() }
+
+    override fun clear() = super.clear().apply {
         try {
-            customApplication.openFileOutput(listName, Context.MODE_PRIVATE).apply {
-                write(mapperUtil.asJsonString(elems).toByteArray())
-                close()
-            }
-            customApplication.refreshLists()
+            context.deleteFile(listName)
+        } catch (e: Exception) {
+            log.e("clear: $listName", e)
+        }
+    }
+
+    override fun append(elem: A) = super.append(elem).apply {
+        write(MODE_APPEND) { it.write(elem) }
+    }
+
+    private fun write(mode: Int, f: (FileOutputStream) -> Unit) {
+        try {
+            context.openFileOutput(listName, mode).use { f(it) }
         } catch (e: Exception) {
             log.e("save", e)
         }
     }
 
-    fun addOrRemove(elem: A): Boolean {
-        val contain = contains(elem)
-        if (!contain) {
-            elems.add(elem)
-            index += (getId(elem) to elem)
-        } else {
-            elems.remove(elem)
-            index = index.filterKeys { it != getId(elem) }
+    private fun writeAll() {
+        write(MODE_PRIVATE) { stream ->
+            elems.map { stream.write(it) }
         }
-        save(elems)
-        log.d("addOrRemove %s -> removed? %s", elem, contain)
-        return !contain
     }
 
-    fun contains(elem: A): Boolean = index.contains(getId(elem))
-
-    fun get(id: String): A? = index[id]
+    private fun FileOutputStream.write(elem: A) {
+        log.d("write $elem")
+        write("${mapperUtil.asJsonString(elem)}\n".toByteArray())
+    }
 }

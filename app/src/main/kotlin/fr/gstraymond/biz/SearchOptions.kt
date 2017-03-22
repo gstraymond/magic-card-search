@@ -13,7 +13,8 @@ data class SearchOptions(var query: String = QUERY_ALL,
                          var from: Int = 0,
                          var size: Int = 30,
                          var facets: Map<String, List<String>> = hashMapOf(),
-                         var facetSize: Map<String, Int> = hashMapOf()) : Parcelable {
+                         var facetSize: Map<String, Int> = hashMapOf(),
+                         var deckId: String? = null) : Parcelable {
 
     constructor(source: Parcel) : this(
             query = source.readString(),
@@ -21,7 +22,8 @@ data class SearchOptions(var query: String = QUERY_ALL,
             random = source.readInt() == 0,
             from = source.readInt(),
             size = source.readInt(),
-            facets = readFacets(source)
+            facets = readFacets(source),
+            deckId = source.readString()
             // facetSize : pas de persistence de la taille des facettes
             // addToHistory : pas de persistence de l'ajout à l'historique
             // fromOkGoogle : pas de persistence
@@ -36,6 +38,7 @@ data class SearchOptions(var query: String = QUERY_ALL,
         dest.writeInt(from)
         dest.writeInt(size)
         writeFacets(dest, facets)
+        dest.writeString(deckId)
         // facetSize : pas de persistence de la taille des facettes
         // addToHistory : pas de persistence de l'ajout à l'historique
         // fromOkGoogle : pas de persistence
@@ -50,10 +53,6 @@ data class SearchOptions(var query: String = QUERY_ALL,
 
     fun updateAppend(append: Boolean) = apply {
         this.append = append
-    }
-
-    fun updateRandom(random: Boolean) = apply {
-        this.random = random
     }
 
     fun updateFrom(from: Int) = apply {

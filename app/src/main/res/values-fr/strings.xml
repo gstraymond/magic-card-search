@@ -11,8 +11,11 @@
     <string name="list_menu_search">Recherche</string>
     <string name="list_menu_help">A l\'aide !</string>
     <string name="list_menu_history">Recherches récentes</string>
+    <string name="list_menu_deck">Retour au deck</string>
     <string name="added_to_wishlist">%1$s ajouté à votre wishlist</string>
     <string name="removed_from_wishlist">%1$s supprimé de votre wishlist</string>
+    <string name="added_to_deck">%1$s ajouté au deck \'%2$s\'</string>
+    <string name="removed_from_deck">%1$s supprimé du deck \'%2$s\'</string>
 
     <string name="detail_menu_oracle">Texte</string>
     <string name="detail_menu_pictures">Images</string>
@@ -40,8 +43,6 @@
     <string name="drawer_open">Rechercher</string>
     <string name="drawer_close">Revenir aux cartes</string>
 
-    <string name="toasting_loading_finished">Terminé !</string>
-
     <string name="facet_ability">Capacité</string>
     <string name="facet_artist">Artiste</string>
     <string name="facet_color">Couleur</string>
@@ -60,12 +61,6 @@
     <string name="facet_special">Special</string>
     <string name="layout_type">Disposition</string>
 
-    <string name="loading_initial">recherche…</string>
-    <string name="loading_more">plus de résultats…</string>
-    <string name="loading_clear">suppression de la recherche …</string>
-    <string name="loading_facet">filtrage de la recherche…</string>
-    <string name="loading_more_facet">ajout de filtres…</string>
-
     <string name="changelog_full_title">Quoi de neuf ?</string>
     <string name="changelog_title">Historique des versions</string>
     <string name="changelog_ok_button">OK</string>
@@ -73,10 +68,29 @@
 
     <string name="wishlist_title">Wishlist</string>
     <string name="wishlist_empty_text">Votre wishlist est vide.\n\nAjoutez des cartes avec le bouton STAR dans les résultats de recherche.</string>
-    <string name="deck_list_empty_text">Votre liste de getDecks est vide.\n\nImportez des getDecks ou créer en un.</string>
+    <string name="deck_list_empty_text">Votre liste de deck est vide.</string>
 
     <string name="decklist_title">Deck Manager</string>
     <string name="decklist_menu_import">Importer</string>
     <string name="decklist_menu_delete">Supprimer</string>
+    <string name="decklist_menu_create">Créer</string>
+
     <string name="added_to_clipboard">Copié !</string>
+    <string name="decks_title">Decks</string>
+    <string name="quantity">Quantité</string>
+    <string name="sideboard">Sideboard</string>
+
+    <string name="deckdetails_menu_add">Ajouter</string>
+    <string name="deckdetails_delete_title">Supprimer le deck ?</string>
+    <string name="deckdetails_delete_ok">Supprimer</string>
+    <string name="deckdetails_delete_cancel">Annuler</string>
+    <string name="deckdetails_cards_empty">Votre deck est vide.\n\nAjoutez des cartes avec le bouton DECK dans les résultats de recherche.</string>
+
+    <string name="stats_format">Format \"%1$s\"</string>
+    <string name="stats_colors">Couleurs %1$s</string>
+    <string name="stats_total_cards">%1$s cartes (%2$s cartes au sideboard)</string>
+    <string name="stats_total_price">Prix total %1$s $</string>
+    <string name="stats_mana_curve">Courbe de mana</string>
+    <string name="stats_color_distribution">Répartition des couleurs</string>
+    <string name="stats_type_distribution">Répartition des types</string>
 </resources>

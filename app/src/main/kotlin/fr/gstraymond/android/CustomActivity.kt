@@ -1,22 +1,20 @@
 package fr.gstraymond.android
 
 import android.app.Fragment
-import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.MenuItem
-import com.crashlytics.android.answers.Answers
 import com.crashlytics.android.answers.ContentViewEvent
 import com.squareup.moshi.Moshi
+import fr.gstraymond.analytics.Tracker
+import fr.gstraymond.utils.app
 
 abstract class CustomActivity(private val layoutId: Int) : AppCompatActivity() {
 
-    val customApplication by lazy { application as CustomApplication }
+    val objectMapper: Moshi by lazy { app().objectMapper }
 
-    val objectMapper: Moshi by lazy { customApplication.objectMapper }
-
-    val jsonHistoryDataSource by lazy { customApplication.jsonHistoryDataSource }
+    val jsonHistoryDataSource by lazy { app().historyList }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,9 +26,7 @@ abstract class CustomActivity(private val layoutId: Int) : AppCompatActivity() {
     }
 
     fun replaceFragment(fragment: Fragment, id: Int, bundle: Bundle?) {
-        if (bundle != null) {
-            fragment.arguments = bundle
-        }
+        bundle?.apply { fragment.arguments = this }
         fragmentManager.beginTransaction().replace(id, fragment).commitAllowingStateLoss()
     }
 
@@ -50,6 +46,7 @@ abstract class CustomActivity(private val layoutId: Int) : AppCompatActivity() {
             ContentViewEvent()
                     .putContentName(javaClass.simpleName)
                     .putCustomAttribute("isTablet", isTablet.toString() + "")
+                    .putCustomAttribute("wishlist_size", app().wishList.size())
 
     private val isTablet by lazy {
         resources.configuration.screenLayout and
@@ -58,7 +55,7 @@ abstract class CustomActivity(private val layoutId: Int) : AppCompatActivity() {
 
     override fun onPostCreate(savedInstanceState: Bundle?) {
         super.onPostCreate(savedInstanceState)
-        Answers.getInstance().logContentView(buildContentViewEvent())
+        Tracker.track(buildContentViewEvent())
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -69,9 +66,5 @@ abstract class CustomActivity(private val layoutId: Int) : AppCompatActivity() {
             }
         }
         return super.onOptionsItemSelected(item)
-    }
-
-    protected fun startActivity(buildIntent: () -> Intent) {
-        startActivity(buildIntent())
     }
 }

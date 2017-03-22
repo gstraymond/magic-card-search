@@ -1,18 +1,14 @@
 package fr.gstraymond.biz
 
 import android.os.AsyncTask
-
-import com.crashlytics.android.answers.Answers
-import com.crashlytics.android.answers.CustomEvent
 import com.magic.card.search.commons.json.MapperUtil
 import com.magic.card.search.commons.log.Log
 import com.squareup.moshi.Moshi
-
+import fr.gstraymond.analytics.Tracker
 import fr.gstraymond.models.autocomplete.request.AutocompleteRequest
 import fr.gstraymond.models.autocomplete.response.AutocompleteResult
 import fr.gstraymond.models.autocomplete.response.Option
 import fr.gstraymond.network.ElasticSearchService
-import fr.gstraymond.network.Result
 
 class AutocompleteProcessor(moshi: Moshi,
                             val searchService: ElasticSearchService,
@@ -26,16 +22,8 @@ class AutocompleteProcessor(moshi: Moshi,
         val query = strings[0]
         val q = mapperUtil.asJsonString(AutocompleteRequest.withQuery(query))
         val result = searchService.autocomplete(q) ?: return AutocompleteResult.empty()
-        track(query, result)
+        Tracker.autocompleteSearch(query, result)
         return result.elem
-    }
-
-    private fun track(query: String, result: Result<AutocompleteResult>) {
-        val event = CustomEvent("autocomplete")
-                .putCustomAttribute("results", result.elem.getResults().size)
-                .putCustomAttribute("http duration", result.httpDuration)
-        if (query.length > 2) event.putCustomAttribute("query", query)
-        Answers.getInstance().logCustom(event)
     }
 
     override fun onPostExecute(autocompleteResult: AutocompleteResult) {

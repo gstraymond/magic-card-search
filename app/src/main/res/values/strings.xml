@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="progress_card_found">card found</string>
-    <string name="progress_cards_found">cards found</string>
+    <string name="progress_card_found">card loaded</string>
+    <string name="progress_cards_found">cards loaded</string>
     <string name="website_url">mtg-search.com</string>
     <string name="logo">logo</string>
     <string name="list_menu_cards">Show card list</string>
@@ -11,8 +11,11 @@
     <string name="list_menu_search">Search</string>
     <string name="list_menu_help">Help !</string>
     <string name="list_menu_history">Recent search</string>
+    <string name="list_menu_deck">Go back to deck</string>
     <string name="added_to_wishlist">%1$s added to your wishlist</string>
     <string name="removed_from_wishlist">%1$s removed from wishlist</string>
+    <string name="added_to_deck">%1$s added to \'%2$s\' deck</string>
+    <string name="removed_from_deck">%1$s removed from \'%2$s\' deck</string>
 
     <string name="detail_menu_oracle">Text</string>
     <string name="detail_menu_pictures">Pictures</string>
@@ -40,8 +43,6 @@
     <string name="drawer_open">Go to search</string>
     <string name="drawer_close">Back to list</string>
 
-    <string name="toasting_loading_finished">Done !</string>
-
     <string name="facet_ability">Ability</string>
     <string name="facet_artist">Artist</string>
     <string name="facet_color">Color</string>
@@ -60,12 +61,6 @@
     <string name="facet_special">Special</string>
     <string name="layout_type">Layout</string>
 
-    <string name="loading_initial">searching…</string>
-    <string name="loading_more">loading more…</string>
-    <string name="loading_clear">clearing…</string>
-    <string name="loading_facet">filtering search…</string>
-    <string name="loading_more_facet">adding filters…</string>
-
     <!--suppress MissingTranslation -->
 
     <string name="background_color" translatable="false">black</string>
@@ -76,10 +71,29 @@
 
     <string name="wishlist_title">Wishlist</string>
     <string name="wishlist_empty_text">Your wishlist is empty.\n\nAdd any card with the STAR button on search results.</string>
-    <string name="deck_list_empty_text">Your deck list is empty.\n\nImport getDecks or create one.</string>
+    <string name="deck_list_empty_text">Your deck list is empty.</string>
 
     <string name="decklist_title">Deck Manager</string>
     <string name="decklist_menu_import">Import</string>
     <string name="decklist_menu_delete">Delete</string>
+    <string name="decklist_menu_create">Create</string>
+
     <string name="added_to_clipboard">Copied to clipboard !</string>
+    <string name="decks_title">Decks</string>
+    <string name="quantity">Quantity</string>
+    <string name="sideboard">Sideboard</string>
+
+    <string name="deckdetails_menu_add">Add</string>
+    <string name="deckdetails_delete_title">Delete deck?</string>
+    <string name="deckdetails_delete_ok">Delete</string>
+    <string name="deckdetails_delete_cancel">Cancel</string>
+    <string name="deckdetails_cards_empty">Deck is empty.\n\nAdd any card with the DECK button on search results.</string>
+
+    <string name="stats_format">Format \"%1$s\"</string>
+    <string name="stats_colors">Colors %1$s</string>
+    <string name="stats_total_cards">%1$s cards (%2$s cards in sideboard)</string>
+    <string name="stats_total_price">Total price $%1$s</string>
+    <string name="stats_mana_curve">Mana Curve</string>
+    <string name="stats_color_distribution">Color distribution</string>
+    <string name="stats_type_distribution">Type distribution</string>
 </resources>

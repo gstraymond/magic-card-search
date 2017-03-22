@@ -3,7 +3,6 @@ package fr.gstraymond.android.adapter
 import android.content.Context
 import android.support.v7.widget.RecyclerView
 import android.text.Html
-import android.util.SparseBooleanArray
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,34 +10,41 @@ import android.widget.TextView
 import fr.gstraymond.R
 import fr.gstraymond.biz.CastingCostImageGetter
 import fr.gstraymond.biz.Colors
+import fr.gstraymond.biz.DeckStats
 import fr.gstraymond.models.Deck
 import fr.gstraymond.tools.CastingCostFormatter
-import java.util.*
-
+import fr.gstraymond.utils.find
 
 class DeckListAdapter(context: Context) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private val imageGetter = CastingCostImageGetter.large(context)
     private val ccFormatter = CastingCostFormatter()
 
-    private val selectedItems = SparseBooleanArray()
-
     var decks: List<Deck> = listOf()
 
-    var onClickListener: (String) -> View.OnClickListener? = { deckId -> null }
+    var onClickListener: (String) -> View.OnClickListener? = { _ -> null }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val deck = decks[position]
+        val view = holder.itemView
 
-        val deckColors = holder.itemView.findViewById(R.id.array_adapter_deck_colors) as TextView
-        val deckFormat = holder.itemView.findViewById(R.id.array_adapter_deck_format) as TextView
-        val deckName = holder.itemView.findViewById(R.id.array_adapter_deck_name) as TextView
+        val deckColors = view.find<TextView>(R.id.array_adapter_deck_colors)
+        val deckFormat = view.find<TextView>(R.id.array_adapter_deck_format)
+        val deckName = view.find<TextView>(R.id.array_adapter_deck_name)
+        val deckSize = view.find<TextView>(R.id.array_adapter_deck_size)
 
-        val castingCost = deck.colors.map { Colors.mainColorsMap[it] }.sortedBy { it }.joinToString(" ")
-        deckColors.text = Html.fromHtml(ccFormatter.format(castingCost), imageGetter, null)
+        val colors = DeckStats.colorSymbols(deck.colors)
+        if (colors.isEmpty()) {
+            deckColors.visibility = View.GONE
+        } else {
+            deckColors.visibility = View.VISIBLE
+            deckColors.text = Html.fromHtml(ccFormatter.format(colors), imageGetter, null)
+        }
         deckFormat.text = deck.format
         deckName.text = deck.name
-        holder.itemView.setOnClickListener(onClickListener(deck.id.toString()))
+        deckSize.text = "${deck.deckSize} / ${deck.sideboardSize}"
+
+        view.setOnClickListener(onClickListener(deck.id.toString()))
     }
 
     override fun getItemCount() = decks.size
@@ -48,30 +54,4 @@ class DeckListAdapter(context: Context) : RecyclerView.Adapter<RecyclerView.View
                     .from(parent.context)
                     .inflate(R.layout.array_adapter_deck, parent, false)
                     .run { object : RecyclerView.ViewHolder(this) {} }
-
-    // selection
-    // https://developer.android.com/guide/topics/ui/menus.html#CAB
-    // http://www.grokkingandroid.com/statelistdrawables-for-recyclerview-selection/
-
-    fun toggleSelection(pos: Int) {
-        if (selectedItems.get(pos, false)) {
-            selectedItems.delete(pos)
-        } else {
-            selectedItems.put(pos, true)
-        }
-        notifyItemChanged(pos)
-    }
-
-    fun clearSelections() {
-        selectedItems.clear()
-        notifyDataSetChanged()
-    }
-
-    fun getSelectedItemCount() = selectedItems.size()
-
-    fun getSelectedItems(): List<Int> {
-        val items = ArrayList<Int>(selectedItems.size())
-        (0..selectedItems.size() - 1).mapTo(items) { selectedItems.keyAt(it) }
-        return items
-    }
 }

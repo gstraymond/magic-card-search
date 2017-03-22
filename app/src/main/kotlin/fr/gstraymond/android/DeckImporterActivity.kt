@@ -13,6 +13,7 @@ import android.widget.TextView
 import com.magic.card.search.commons.log.Log
 import fr.gstraymond.R
 import fr.gstraymond.impex.DeckImporterTask
+import fr.gstraymond.utils.app
 import java.net.URL
 
 class DeckImporterActivity : CustomActivity(R.layout.activity_deck_importer) {
@@ -47,16 +48,16 @@ class DeckImporterActivity : CustomActivity(R.layout.activity_deck_importer) {
             editText.setText(intent.dataString, TextView.BufferType.EDITABLE)
         }
 
-        button.setOnClickListener { view ->
+        button.setOnClickListener { _ ->
             form.visibility = View.GONE
             process.visibility = View.VISIBLE
             val url = URL(editText.text.toString())
             log.text = "Importing $url"
             DeckImporterTask(
                     contentResolver,
-                    customApplication.deckResolver,
-                    customApplication.jsonDeck,
-                    customApplication.decklist,
+                    app().deckResolver,
+                    app().cardListBuilder,
+                    app().deckList,
                     Process(log, progressBar, this)
             ).execute(url)
         }

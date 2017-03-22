@@ -136,8 +136,8 @@ SB: 4 Transgress the Mind"""
     private fun testDeck(deck: String, url: URL, expectedName: String, deckSize: Int = 60, sideboardSize: Int = 15) {
         println("testDeck deck\n$deck")
         DeckParser().parse(deck, url)?.run {
-            assertEquals(deckSize, lines.filterNot { it.isSideboard }.map { it.occurrence }.sum())
-            assertEquals(sideboardSize, lines.filter { it.isSideboard }.map { it.occurrence }.sum())
+            assertEquals(deckSize, lines.filterNot { it.isSideboard }.map { it.mult }.sum())
+            assertEquals(sideboardSize, lines.filter { it.isSideboard }.map { it.mult }.sum())
             assertEquals(expectedName, name)
         } ?: fail()
     }

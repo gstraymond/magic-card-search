@@ -12,6 +12,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
+import fr.gstraymond.android.CardCommonActivity;
 import fr.gstraymond.android.CustomActivity;
 import fr.gstraymond.android.CustomApplication;
 import fr.gstraymond.models.Deck;
@@ -19,12 +20,11 @@ import fr.gstraymond.models.search.response.Card;
 import fr.gstraymond.ui.adapter.card.detail.CardDetailAdapter;
 import fr.gstraymond.utils.CardIdUtilsKt;
 
-import static fr.gstraymond.constants.Consts.CARD;
-
 public class CardDetailFragment extends CustomListFragment {
 
     private Callbacks callbacks = dummyCallbacks;
     private List<Object> objects;
+    private String CARD = CardCommonActivity.Companion.getCARD_EXTRA();
 
     public interface Callbacks {
         void onItemSelected(int id);
@@ -49,7 +49,7 @@ public class CardDetailFragment extends CustomListFragment {
         Card card = getArguments().getParcelable(CARD);
 
         CustomActivity activity = (CustomActivity) getActivity();
-        final CustomApplication customApplication = activity.getCustomApplication();
+        final CustomApplication customApplication = (CustomApplication) activity.getApplication();
 
         String id = CardIdUtilsKt.getId(card);
         List<String> listIds = customApplication.getListsCardId().get(id);
@@ -73,7 +73,7 @@ public class CardDetailFragment extends CustomListFragment {
                     @Nullable
                     @Override
                     public Deck getDeck(@NotNull String deckId) {
-                        return customApplication.decklist.get(deckId);
+                        return customApplication.deckList.getByUid(deckId);
                     }
                 });
         setListAdapter(arrayAdapter);

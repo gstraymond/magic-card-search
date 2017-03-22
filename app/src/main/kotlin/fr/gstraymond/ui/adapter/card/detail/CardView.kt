@@ -1,7 +1,6 @@
 package fr.gstraymond.ui.adapter.card.detail
 
 import android.content.Context
-import android.content.Intent
 import android.text.Html
 import android.text.Spanned
 import android.widget.Button
@@ -15,6 +14,7 @@ import fr.gstraymond.constants.FacetConst
 import fr.gstraymond.glide.CardLoader
 import fr.gstraymond.models.search.response.Card
 import fr.gstraymond.tools.*
+import fr.gstraymond.utils.startActivity
 
 class CardView(val context: Context,
                val callbacks: CardDetailAdapter.Callbacks) : View<Card>(context, R.layout.card_detail) {
@@ -63,13 +63,11 @@ class CardView(val context: Context,
         } else {
             altView.text = item.altTitles.joinToString("\n")
             altView.setOnClickListener {
-                Intent(context, CardListActivity::class.java).apply {
-                    val options = SearchOptions(
+                context.startActivity {
+                    val searchOptions = SearchOptions(
                             query = item.title,
                             facets = mapOf(FacetConst.LAYOUT to listOf(item.layout)))
-                    putExtra(CardListActivity.SEARCH_QUERY, options)
-                }.run {
-                    context.startActivity(this)
+                    CardListActivity.getIntent(context, searchOptions)
                 }
             }
         }

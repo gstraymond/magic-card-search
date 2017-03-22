@@ -8,9 +8,9 @@ import java.io.IOException
 import java.net.HttpURLConnection
 import java.net.URL
 
-data class ImportedDeck(val name: String, val lines: List<DeckLine>)
+data class ImportedDeck(val name: String, val lines: List<DeckTextLine>)
 
-data class DeckLine(val occurrence: Int, val title: String, val isSideboard: Boolean)
+data class DeckTextLine(val mult: Int, val title: String, val isSideboard: Boolean)
 
 class DeckImporter(private val contentResolver: ContentResolver) {
 

@@ -18,6 +18,7 @@ apply plugin: 'kotlin-android'
 
 repositories {
     maven { url 'https://maven.fabric.io/public' }
+    maven { url "https://jitpack.io" }
 }
 
 android {
@@ -28,8 +29,8 @@ android {
         applicationId "fr.gstraymond"
         minSdkVersion 14
         targetSdkVersion 25
-        versionCode 48
-        versionName "1.10.1"
+        versionCode 49
+        versionName "2.0.0"
     }
 
     signingConfigs {
@@ -69,18 +70,30 @@ android {
     testOptions {
         unitTests.returnDefaultValues = true
     }
+    lintOptions {
+       disable 'MissingTranslation'
+    }
+}
+
+ext {
+    glideVersion = '3.+'
+    supportLibVersion = '25.+'
+    retrofitVersion = '2.1+'
+    retrofitLoggingVersion = '3.3+'
+    androidChartVersion = 'v3.+'
 }
 
 dependencies {
     compile project(':commons')
-    compile 'com.github.bumptech.glide:glide:3.+'
-    compile 'com.android.support:support-v13:25.+'
-    compile 'com.android.support:appcompat-v7:25.+'
-    compile 'com.android.support:design:25.+'
+    compile "com.github.bumptech.glide:glide:$glideVersion"
+    compile "com.android.support:support-v13:$supportLibVersion"
+    compile "com.android.support:appcompat-v7:$supportLibVersion"
+    compile "com.android.support:design:$supportLibVersion"
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-    compile 'com.squareup.retrofit2:retrofit:2.1+'
-    compile 'com.squareup.retrofit2:converter-moshi:2.1+'
-    compile 'com.squareup.okhttp3:logging-interceptor:3.3+'
+    compile "com.squareup.retrofit2:retrofit:$retrofitVersion"
+    compile "com.squareup.retrofit2:converter-moshi:$retrofitVersion"
+    compile "com.squareup.okhttp3:logging-interceptor:$retrofitLoggingVersion"
+    compile "com.github.PhilJay:MPAndroidChart:$androidChartVersion"
 
     testCompile 'junit:junit:4.12'
 }

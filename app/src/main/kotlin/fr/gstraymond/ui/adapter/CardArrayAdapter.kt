@@ -2,32 +2,33 @@ package fr.gstraymond.ui.adapter
 
 import android.content.ClipData
 import android.content.ClipboardManager
-import android.content.Context
+import android.content.Context.CLIPBOARD_SERVICE
+import android.support.design.widget.Snackbar
+import android.support.design.widget.Snackbar.LENGTH_LONG
 import android.support.v7.widget.RecyclerView
-import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import fr.gstraymond.R
-import fr.gstraymond.db.json.Wishlist
+import fr.gstraymond.db.json.JsonList
+import fr.gstraymond.models.Deck
+import fr.gstraymond.models.DeckLine
 import fr.gstraymond.models.search.response.Card
 import fr.gstraymond.models.search.response.getLocalizedTitle
-import fr.gstraymond.tools.LanguageUtil
-import fr.gstraymond.ui.view.impl.FavoriteView
+import fr.gstraymond.utils.inflate
 
+class CardArrayAdapter(private val view: View,
+                       private val data: CardArrayData,
+                       private val clickCallbacks: ClickCallbacks,
+                       private var snackbar: Snackbar?) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-class CardArrayAdapter(private val context: Context,
-                       wishlist: Wishlist,
-                       private val clickCallbacks: ClickCallbacks) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+    private val context = view.context
 
     private val cards = mutableListOf<Card>()
-    private val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+    private val clipboard = context.getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        val view = LayoutInflater
-                .from(parent.context)
-                .inflate(R.layout.array_adapter_card, parent, false)
-        return object : RecyclerView.ViewHolder(view) {}
-    }
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = context
+            .inflate(R.layout.array_adapter_card, parent)
+            .run { object : RecyclerView.ViewHolder(this) {} }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val card = cards[position]
@@ -35,30 +36,38 @@ class CardArrayAdapter(private val context: Context,
         holder.itemView.setOnClickListener { clickCallbacks.cardClicked(card) }
         holder.itemView.setOnLongClickListener {
             clipboard.primaryClip = ClipData.newPlainText("card title", card.getLocalizedTitle(context))
-            val message = context.resources.getString(R.string.added_to_clipboard)
-            Toast.makeText(context, message, Toast.LENGTH_LONG).show()
+            showMessage(context.resources.getString(R.string.added_to_clipboard))
             true
         }
     }
 
     override fun getItemCount() = cards.size
 
-    private val cardViews = CardViews(context, wishlist, FavoriteViewClickCallbacks(context))
+    private val cardViews = data.cards?.run {
+        WishlistCardViews(context, this, FavoriteViewClickCallbacks())
+    } ?: DeckCardViews(context, data.deck!!.second, FavoriteViewClickCallbacks())
 
-    private inner class FavoriteViewClickCallbacks(val context: Context) : FavoriteView.ClickCallbacks {
+    private inner class FavoriteViewClickCallbacks : CardClickCallbacks {
 
         override fun itemAdded(position: Int) {
             notifyItemChanged(position)
-            val message = String.format(context.resources.getString(R.string.added_to_wishlist), cards[position].title)
-            Toast.makeText(context, message, Toast.LENGTH_LONG).show()
+            val message = getMessage(add = true, cardName = cards[position].getLocalizedTitle(context))
+            showMessage(message)
         }
 
         override fun itemRemoved(position: Int) {
             notifyItemChanged(position)
-            val message = String.format(context.resources.getString(R.string.removed_from_wishlist), cards[position].title)
-            Toast.makeText(context, message, Toast.LENGTH_LONG).show()
+            val message = getMessage(add = false, cardName = cards[position].getLocalizedTitle(context))
+            showMessage(message)
         }
     }
+
+    private fun showMessage(message: String) {
+        snackbar?.dismiss()
+        snackbar = Snackbar.make(view, message, LENGTH_LONG)
+        snackbar?.show()
+    }
+
 
     fun setCards(newCards: List<Card>): Unit {
         cards.clear()
@@ -68,7 +77,7 @@ class CardArrayAdapter(private val context: Context,
 
     fun appendCards(newCards: List<Card>): Unit {
         cards.addAll(newCards)
-        //notifyItemRangeInserted(cards.size - 1, newCards.size)
+        //FIXME notifyItemRangeInserted(cards.size - 1, newCards.size)
         notifyDataSetChanged()
     }
 
@@ -76,4 +85,15 @@ class CardArrayAdapter(private val context: Context,
 
         fun cardClicked(card: Card)
     }
+
+    private fun getMessage(add: Boolean, cardName: String): String = if (data.deck != null) {
+        if (add) String.format(context.resources.getString(R.string.added_to_deck), cardName, data.deck.first.name)
+        else String.format(context.resources.getString(R.string.removed_from_deck), cardName, data.deck.first.name)
+    } else {
+        if (add) String.format(context.resources.getString(R.string.added_to_wishlist), cardName)
+        else String.format(context.resources.getString(R.string.removed_from_wishlist), cardName)
+    }
 }
+
+data class CardArrayData(val cards: JsonList<Card>?,
+                         val deck: Pair<Deck, JsonList<DeckLine>>?)
