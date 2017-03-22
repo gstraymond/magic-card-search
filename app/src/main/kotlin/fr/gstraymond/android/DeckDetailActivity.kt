@@ -51,21 +51,10 @@ class DeckDetailActivity : CustomActivity(R.layout.activity_deck_detail) {
             title = ""
         }
 
-        find<TextView>(R.id.toolbar_text).apply {
-            deckTitle = this
+        deckTitle = find<TextView>(R.id.toolbar_text).apply {
             text = deck.name
             setOnClickListener {
-                val view = context.inflate(R.layout.activity_deck_detail_title)
-                val editText = view.find<EditText>(R.id.deck_detail_title)
-                editText.setText(deck.name, EDITABLE)
-                AlertDialog.Builder(context)
-                        .setView(view)
-                        .setPositiveButton(android.R.string.ok, { _, _ ->
-                            updateDeckName(editText.text.toString())
-                        })
-                        .setNegativeButton(android.R.string.cancel, { _, _ -> })
-                        .create()
-                        .show()
+                createDialog(context)
             }
         }
 
@@ -73,6 +62,20 @@ class DeckDetailActivity : CustomActivity(R.layout.activity_deck_detail) {
         viewPager.adapter = DeckDetailFragmentPagerAdapter(supportFragmentManager)
 
         find<TabLayout>(R.id.sliding_tabs).setupWithViewPager(viewPager)
+    }
+
+    private fun createDialog(context: Context) {
+      val view = context.inflate(R.layout.activity_deck_detail_title)
+      val editText = view.find<EditText>(R.id.deck_detail_title)
+      editText.setText(deck.name, EDITABLE)
+      AlertDialog.Builder(context)
+              .setView(view)
+              .setPositiveButton(android.R.string.ok, { _, _ ->
+                  updateDeckName(editText.text.toString())
+              })
+              .setNegativeButton(android.R.string.cancel, { _, _ -> })
+              .create()
+              .show()
     }
 
     private fun updateDeckName(deckName: String) {

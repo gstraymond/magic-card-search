@@ -70,6 +70,9 @@ android {
     testOptions {
         unitTests.returnDefaultValues = true
     }
+    lintOptions {
+       disable 'MissingTranslation'
+    }
 }
 
 ext {
