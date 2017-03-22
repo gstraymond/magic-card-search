@@ -65,17 +65,17 @@ class DeckDetailActivity : CustomActivity(R.layout.activity_deck_detail) {
     }
 
     private fun createDialog(context: Context) {
-      val view = context.inflate(R.layout.activity_deck_detail_title)
-      val editText = view.find<EditText>(R.id.deck_detail_title)
-      editText.setText(deck.name, EDITABLE)
-      AlertDialog.Builder(context)
-              .setView(view)
-              .setPositiveButton(android.R.string.ok, { _, _ ->
-                  updateDeckName(editText.text.toString())
-              })
-              .setNegativeButton(android.R.string.cancel, { _, _ -> })
-              .create()
-              .show()
+        val view = context.inflate(R.layout.activity_deck_detail_title)
+        val editText = view.find<EditText>(R.id.deck_detail_title)
+        editText.setText(deck.name, EDITABLE)
+        AlertDialog.Builder(context)
+                .setView(view)
+                .setPositiveButton(android.R.string.ok, { _, _ ->
+                    updateDeckName(editText.text.toString())
+                })
+                .setNegativeButton(android.R.string.cancel, { _, _ -> })
+                .create()
+                .show()
     }
 
     private fun updateDeckName(deckName: String) {
