@@ -44,7 +44,8 @@ class DeckCardViews(context: Context,
 class DeckDetailCardViews(context: Context) : CardViews(listOf(
         TitleView(),
         CastingCostView(context),
-        FormatView()
+        FormatView(),
+        TypePTView()
 ))
 
 interface CardClickCallbacks {
