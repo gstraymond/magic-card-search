@@ -47,7 +47,7 @@ class CardListActivity : CustomActivity(R.layout.activity_card_list),
                     putExtra(SEARCH_QUERY, searchOptions)
                 }
 
-        fun getIntent(context: Context, result: String): Intent =
+        fun getIntent(context: Context, result: String?): Intent =
                 Intent(context, CardListActivity::class.java).apply {
                     putExtra(CARD_RESULT, result)
                 }
