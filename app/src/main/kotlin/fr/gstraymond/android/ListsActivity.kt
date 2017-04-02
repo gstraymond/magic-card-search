@@ -30,7 +30,7 @@ class ListsActivity : CustomActivity(R.layout.activity_lists) {
 
         setSupportActionBar(find<Toolbar>(R.id.toolbar))
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        setTitle(titles[0])
+        setTitle(titles.first())
 
         val viewPager = find<ViewPager>(R.id.viewpager)
         viewPager.adapter = ListsFragmentPagerAdapter(supportFragmentManager)

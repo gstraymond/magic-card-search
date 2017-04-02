@@ -28,7 +28,7 @@ class SplashScreenActivity : CustomActivity(R.layout.activity_splash) {
                         random = false,
                         addToHistory = true)
             else ->
-                SearchOptions(random = true,
+                SearchOptions(size = 0,
                         addToHistory = false)
         }
 

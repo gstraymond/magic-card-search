@@ -6,11 +6,12 @@ import android.widget.ExpandableListView.OnChildClickListener
 import fr.gstraymond.android.CardListActivity
 import fr.gstraymond.biz.SearchOptions
 import fr.gstraymond.biz.SearchProcessor
+import fr.gstraymond.biz.SearchProcessorBuilder
 import fr.gstraymond.ui.adapter.FacetListAdapter
 
 class FacetOnChildClickListener(private val adapter: FacetListAdapter,
                                 private val options: SearchOptions,
-                                private val activity: CardListActivity) : OnChildClickListener {
+                                private val searchProcessorBuilder: SearchProcessorBuilder) : OnChildClickListener {
 
     override fun onChildClick(parent: ExpandableListView,
                               view: View,
@@ -36,7 +37,7 @@ class FacetOnChildClickListener(private val adapter: FacetListAdapter,
             options.updateAddToHistory(false)
         }
 
-        SearchProcessor(activity, options).execute()
+        searchProcessorBuilder.build().execute(options)
         return true
     }
 
