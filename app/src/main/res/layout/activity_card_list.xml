@@ -31,29 +31,68 @@
                     android:background="?attr/colorPrimary"
                     app:popupTheme="@style/AppTheme.PopupOverlay">
 
-                    <android.support.design.widget.TabLayout
-                        android:id="@+id/sliding_tabs"
+                    <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        app:tabMode="fixed" />
+                        android:paddingRight="16dp">
+
+                        <TextView
+                            android:id="@+id/toolbar_filter"
+                            style="@android:style/TextAppearance.Medium"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:text="FILTER"
+                            android:textColor="@android:color/white"
+                            android:textStyle="bold" />
+                    </RelativeLayout>
                 </android.support.v7.widget.Toolbar>
 
             </android.support.design.widget.AppBarLayout>
 
-            <android.support.v4.view.ViewPager
-                android:id="@+id/viewpager"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <android.support.v7.widget.SearchView
+                    android:id="@+id/search_input"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:iconifiedByDefault="false"
+                    app:queryHint="@string/search_hint" />
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/search_recyclerview"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+            </LinearLayout>
 
         </LinearLayout>
     </android.support.design.widget.CoordinatorLayout>
 
     <android.support.design.widget.NavigationView
-        android:id="@+id/nav_view"
+        android:id="@+id/left_drawer"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:fitsSystemWindows="true"
         app:headerLayout="@layout/nav_header_main"
         app:menu="@menu/activity_main_drawer" />
+
+    <android.support.design.widget.NavigationView
+        android:id="@+id/right_drawer"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="end"
+        android:paddingTop="48dp">
+
+        <ExpandableListView
+            android:id="@+id/right_drawer_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:childDivider="#00000000"
+            android:divider="#00000000" />
+    </android.support.design.widget.NavigationView>
 </android.support.v4.widget.DrawerLayout>

@@ -21,7 +21,10 @@ class FacetOnChildClickListener(private val adapter: FacetListAdapter,
         val term = adapter.getTerm(groupPosition, childPosition)
         val facet = adapter.getFacet(groupPosition)
 
-        options.updateAppend(false).updateFrom(0).updateAddToHistory(true)
+        options.updateAppend(false)
+                .updateFrom(0)
+                .updateAddToHistory(true)
+                .updateSize(30)
 
         if (term.count > -1) {
             if (adapter.isTermSelected(term)) {

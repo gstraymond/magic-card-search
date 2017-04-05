@@ -115,14 +115,18 @@ class FacetListAdapter(facetMap: Map<String, Facet>,
         val view = convertView ?: parent.context.inflate(R.layout.drawer_group)
 
         val facet = facetList[groupPosition]
+        val groupTextView = view.find<TextView>(R.id.drawer_group_textview)
+        groupTextView.text = FacetConst.getFacetName(facet, parent.context)
 
-        if (selectedFacets.contains(facet) || options.facetSize.containsKey(facet)) {
-            val expandableListView = parent as ExpandableListView
-            expandableListView.expandGroup(groupPosition)
+        val selectedTextView = view.find<TextView>(R.id.drawer_group_selected_textview)
+        if (selectedFacets.contains(facet)) {
+            val children = getChildren(groupPosition).filter { selectedTerms.contains(it) }
+            selectedTextView.text = children.map(Term::term).joinToString()
+            selectedTextView.show()
+        } else {
+            selectedTextView.hide()
         }
 
-        val textView = view.find<TextView>(R.id.drawer_group_textview)
-        textView.text = FacetConst.getFacetName(facet, parent.context)
         return view
     }
 

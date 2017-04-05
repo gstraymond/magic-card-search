@@ -85,6 +85,10 @@ data class SearchOptions(var query: String = QUERY_ALL,
         this.addToHistory = addToHistory
     }
 
+    fun updateSize(size: Int) = apply {
+        this.size = size
+    }
+
     companion object {
         val QUERY_ALL = "*"
 
