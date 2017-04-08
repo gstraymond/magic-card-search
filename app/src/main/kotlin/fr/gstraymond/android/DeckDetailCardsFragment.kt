@@ -1,6 +1,7 @@
 package fr.gstraymond.android
 
 import android.os.Bundle
+import android.support.design.widget.FloatingActionButton
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
@@ -13,6 +14,7 @@ import fr.gstraymond.R
 import fr.gstraymond.android.adapter.DeckDetailCardsAdapter
 import fr.gstraymond.android.adapter.DeckLineCallback
 import fr.gstraymond.biz.DeckStats
+import fr.gstraymond.biz.SearchOptions
 import fr.gstraymond.db.json.CardList
 import fr.gstraymond.models.DeckLine
 import fr.gstraymond.utils.*
@@ -25,6 +27,7 @@ class DeckDetailCardsFragment : Fragment(), DeckLineCallback {
     private lateinit var cardTotal: TextView
     private lateinit var frame: View
     private lateinit var emptyText: TextView
+    private lateinit var fabAdd: FloatingActionButton
 
     var deckLineCallback: DeckLineCallback? = null
 
@@ -45,7 +48,18 @@ class DeckDetailCardsFragment : Fragment(), DeckLineCallback {
                 cardTotal = find<TextView>(R.id.deck_detail_cards_total)
                 frame = find<View>(R.id.deck_detail_cards_frame)
                 emptyText = find<TextView>(R.id.deck_detail_cards_empty)
+                fabAdd = find<FloatingActionButton>(R.id.deck_detail_cards_add)
             }
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        val deckId = activity.intent.getStringExtra(DeckDetailActivity.DECK_EXTRA)
+        fabAdd.setOnClickListener {
+            startActivity {
+                CardListActivity.getIntent(activity, SearchOptions(deckId = deckId, size = 0))
+            }
+        }
+    }
 
     override fun onResume() {
         super.onResume()

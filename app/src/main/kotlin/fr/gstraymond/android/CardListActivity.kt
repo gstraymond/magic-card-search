@@ -190,7 +190,7 @@ class CardListActivity : CustomActivity(R.layout.activity_card_list),
         super.onPostCreate(savedInstanceState)
 
         log.d("onCreateView: getCurrentSearch ${presenter.getCurrentSearch()}")
-        searchProcessor.build().execute(presenter.getCurrentSearch())
+        searchProcessor.build().execute(presenter.getCurrentSearch().updateAddToHistory(false))
 
         // Sync the toggle state after onRestoreInstanceState has occurred.
         drawerToggle.syncState()
