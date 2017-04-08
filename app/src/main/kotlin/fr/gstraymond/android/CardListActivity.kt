@@ -61,6 +61,7 @@ class CardListActivity : CustomActivity(R.layout.activity_card_list),
     private lateinit var arrayAdapter: CardArrayAdapter
     private lateinit var filterTextView: TextView
     private lateinit var resetTextView: TextView
+    private lateinit var emptyTextView: TextView
 
     private val presenter = CardListPresenter(this)
     private val log = Log(javaClass)
@@ -73,6 +74,7 @@ class CardListActivity : CustomActivity(R.layout.activity_card_list),
         recyclerView = find(R.id.search_recyclerview)
         filterTextView = find(R.id.toolbar_filter)
         resetTextView = find(R.id.toolbar_reset)
+        emptyTextView = find(R.id.search_empty_text)
         val rootView = findViewById(android.R.id.content)
         val toolbar = find<Toolbar>(R.id.toolbar)
 
@@ -104,6 +106,7 @@ class CardListActivity : CustomActivity(R.layout.activity_card_list),
             it.searchProcessor = searchProcessor
             it.filterTextView = filterTextView
             it.resetTextView = resetTextView
+            it.emptyTextView = emptyTextView
         }
 
         val linearLayoutManager = LinearLayoutManager(this)

@@ -15,6 +15,7 @@ import fr.gstraymond.ui.FacetOnChildClickListener
 import fr.gstraymond.ui.adapter.CardArrayAdapter
 import fr.gstraymond.ui.adapter.FacetListAdapter
 import fr.gstraymond.ui.adapter.SearchViewCursorAdapter
+import fr.gstraymond.utils.hide
 import fr.gstraymond.utils.show
 
 class CardListPresenter(private val context: Context) : DataUpdater {
@@ -30,6 +31,7 @@ class CardListPresenter(private val context: Context) : DataUpdater {
     lateinit var searchProcessor: SearchProcessorBuilder
     lateinit var filterTextView: TextView
     lateinit var resetTextView: TextView
+    lateinit var emptyTextView: TextView
 
     override fun updateCards(totalCardCount: Int, cards: List<Card>) {
         setTotalItemCount(totalCardCount)
@@ -46,6 +48,9 @@ class CardListPresenter(private val context: Context) : DataUpdater {
         if (!getCurrentSearch().append) {
             if (result.hits.hits.isNotEmpty()) {
                 resetTextView.show()
+                emptyTextView.hide()
+            } else {
+                emptyTextView.show()
             }
             filterTextView.text = getCurrentSearch().facets.size.run {
                 when (this) {

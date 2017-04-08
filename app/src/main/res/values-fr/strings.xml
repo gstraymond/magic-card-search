@@ -97,4 +97,5 @@
     <string name="filter">Filtrer</string>
     <string name="organize_your_cards">Organisez vos cartes</string>
     <string name="reset">Réinitialiser</string>
+    <string name="search_empty_text">Recherchez des cartes en tapant des mots-clés et en sélectionnant des filtres.</string>
 </resources>
