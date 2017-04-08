@@ -3,6 +3,25 @@
 
     <group android:checkableBehavior="single">
         <item
+            android:id="@+id/menu_lists"
+            android:icon="@drawable/ic_format_list_bulleted_white_24dp"
+            android:title="Lists" />
+        <item
+            android:id="@+id/menu_wishlist"
+            android:icon="@drawable/ic_star_white_18dp"
+            android:title="@string/wishlist_title" />
+        <item
+            android:id="@+id/menu_searches"
+            android:icon="@drawable/ic_history_white_48dp"
+            android:title="Recent searches" />
+        <item
+            android:id="@+id/menu_changelog"
+            android:icon="@drawable/ic_help_outline_white_48dp"
+            android:title="@string/changelog_title" />
+    </group>
+    <!--
+    <group android:checkableBehavior="single">
+        <item
             android:id="@+id/nav_camera"
             android:icon="@drawable/ic_add_circle_outline_white_48dp"
             android:title="Import" />
@@ -24,4 +43,5 @@
                 android:title="Send" />
         </menu>
     </item>
+    -->
 </menu>

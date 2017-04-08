@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
+import android.support.design.widget.NavigationView
 import android.support.design.widget.Snackbar
 import android.support.v4.view.GravityCompat
 import android.support.v4.widget.DrawerLayout
@@ -108,6 +109,13 @@ class CardListActivity : CustomActivity(R.layout.activity_card_list),
             layoutManager = linearLayoutManager
             adapter = arrayAdapter
             addOnScrollListener(EndScrollListener(searchProcessor, presenter, linearLayoutManager))
+            setOnTouchListener { _, _ ->
+                when {
+                    searchView.hasFocus() -> searchView.clearFocus()
+                }
+                false
+            }
+
         }
 
         val textListener = TextListener(presenter, this, searchProcessor, autocompleteProcessor)
@@ -135,6 +143,26 @@ class CardListActivity : CustomActivity(R.layout.activity_card_list),
 
         ChangeLog(this).apply {
             if (firstRun()) logDialog.show()
+        }
+
+        find<NavigationView>(R.id.left_drawer).setNavigationItemSelectedListener { item ->
+            log.d(("setNavigationItemSelectedListener $item"))
+            when (item.itemId) {
+                R.id.menu_wishlist -> startActivity {
+                    WishListActivity.getIntent(this)
+                }
+                R.id.menu_lists -> startActivity {
+                    ListsActivity.getIntent(this)
+                }
+                R.id.menu_searches -> startActivity {
+                    HistoryActivity.getIntent(this)
+                }
+                R.id.menu_changelog -> {
+                    drawerLayout.closeDrawers()
+                    ChangeLog(this).fullLogDialog.show()
+                }
+            }
+            true
         }
     }
 
@@ -170,61 +198,8 @@ class CardListActivity : CustomActivity(R.layout.activity_card_list),
 
     override fun onResume() {
         super.onResume()
-        findViewById(android.R.id.content).requestFocus()
+        findViewById(R.id.root_view).requestFocus()
     }
-
-/*override fun onCreateOptionsMenu(menu: Menu): Boolean {
-    menuInflater.inflate(R.menu.card_list_menu, menu)
-    getCurrentSearch.deckId?.apply {
-        menu.findItem(R.id.changelog_tab).isVisible = false
-        menu.findItem(R.id.deck_tab).isVisible = true
-    }
-    return true
-}
-
-override fun onOptionsItemSelected(item: MenuItem): Boolean {
-
-    if (drawerToggle.onOptionsItemSelected(item)) {
-        return true
-    }
-
-    when (item.itemId) {
-
-        R.id.clear_tab -> {
-            resetSearchView()
-            val options = SearchOptions(random = true, addToHistory = false)
-            SearchProcessor(this, options).execute()
-            searchView.clearFocus()
-            return true
-        }
-
-        R.id.history_tab -> startActivity {
-            HistoryActivity.getIntent(this, getCurrentSearch.deckId)
-        }.run {
-            // FIXME when going back from history without search
-            getCurrentSearch.deckId?.apply { finish() }
-            true
-        }
-
-        R.id.changelog_tab -> {
-            ChangeLog(this).fullLogDialog.show()
-            Tracker.changelog()
-            return true
-        }
-
-        R.id.deck_tab -> finish()
-    }
-
-    return super.onOptionsItemSelected(item)
-}
-
-private fun resetSearchView() {
-    searchView.apply {
-        isIconified = true
-        setQuery("", false)
-    }
-}
-*/
 }
 
 interface DataUpdater {

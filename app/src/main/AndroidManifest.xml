@@ -84,6 +84,14 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".android.CardListActivity" />
         </activity>
+        <activity
+            android:name=".android.WishListActivity"
+            android:parentActivityName=".android.CardListActivity"
+            android:theme="@style/AppTheme">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".android.CardListActivity" />
+        </activity>
 
         <!-- Decks -->
         <!--

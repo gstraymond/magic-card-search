@@ -15,8 +15,10 @@
         tools:context=".android.CardListActivity">
 
         <LinearLayout
+            android:id="@+id/root_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:focusableInTouchMode="true"
             android:orientation="vertical">
 
             <android.support.design.widget.AppBarLayout
@@ -59,6 +61,7 @@
                     android:id="@+id/search_input"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:background="@color/colorPrimaryDark"
                     app:iconifiedByDefault="false"
                     app:queryHint="@string/search_hint" />
 
