@@ -96,6 +96,8 @@
     <string name="stats_mana_curve">Mana Curve</string>
     <string name="stats_color_distribution">Color distribution</string>
     <string name="stats_type_distribution">Type distribution</string>
-    <string name="filter">FILTER</string>
+
+    <string name="filter">Filter</string>
     <string name="organize_your_cards">Organize your cards</string>
+    <string name="reset">Reset</string>
 </resources>

@@ -45,8 +45,22 @@
                             android:layout_height="wrap_content"
                             android:layout_alignParentRight="true"
                             android:text="@string/filter"
+                            android:textAllCaps="true"
                             android:textColor="@android:color/white"
                             android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/toolbar_reset"
+                            style="@android:style/TextAppearance.Medium"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginRight="16dp"
+                            android:layout_toLeftOf="@id/toolbar_filter"
+                            android:text="@string/reset"
+                            android:textAllCaps="true"
+                            android:textColor="@android:color/white"
+                            android:textStyle="bold"
+                            android:visibility="gone" />
                     </RelativeLayout>
                 </android.support.v7.widget.Toolbar>
 

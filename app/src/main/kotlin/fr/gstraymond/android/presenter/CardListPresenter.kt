@@ -4,6 +4,7 @@ import android.content.Context
 import android.support.design.widget.Snackbar
 import android.widget.ExpandableListView
 import android.widget.TextView
+import fr.gstraymond.R
 import fr.gstraymond.android.DataUpdater
 import fr.gstraymond.biz.SearchOptions
 import fr.gstraymond.biz.SearchProcessorBuilder
@@ -14,6 +15,7 @@ import fr.gstraymond.ui.FacetOnChildClickListener
 import fr.gstraymond.ui.adapter.CardArrayAdapter
 import fr.gstraymond.ui.adapter.FacetListAdapter
 import fr.gstraymond.ui.adapter.SearchViewCursorAdapter
+import fr.gstraymond.utils.show
 
 class CardListPresenter(private val context: Context) : DataUpdater {
 
@@ -27,6 +29,7 @@ class CardListPresenter(private val context: Context) : DataUpdater {
     lateinit var facetListView: ExpandableListView
     lateinit var searchProcessor: SearchProcessorBuilder
     lateinit var filterTextView: TextView
+    lateinit var resetTextView: TextView
 
     override fun updateCards(totalCardCount: Int, cards: List<Card>) {
         setTotalItemCount(totalCardCount)
@@ -37,12 +40,17 @@ class CardListPresenter(private val context: Context) : DataUpdater {
         }
     }
 
+    private val filterText by lazy { context.getString(R.string.filter) }
+
     override fun updateFacets(result: SearchResult) {
         if (!getCurrentSearch().append) {
+            if (result.hits.hits.isNotEmpty()) {
+                resetTextView.show()
+            }
             filterTextView.text = getCurrentSearch().facets.size.run {
                 when (this) {
-                    0 -> "FILTER"
-                    else -> "FILTER ($this)"
+                    0 -> filterText
+                    else -> "$filterText ($this)"
                 }
             }
 

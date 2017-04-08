@@ -18,10 +18,7 @@ import android.widget.TextView
 import com.magic.card.search.commons.log.Log
 import fr.gstraymond.R
 import fr.gstraymond.android.presenter.CardListPresenter
-import fr.gstraymond.biz.AutocompleteProcessor
-import fr.gstraymond.biz.AutocompleteProcessorBuilder
-import fr.gstraymond.biz.SearchOptions
-import fr.gstraymond.biz.SearchProcessorBuilder
+import fr.gstraymond.biz.*
 import fr.gstraymond.models.autocomplete.response.Option
 import fr.gstraymond.models.search.response.Card
 import fr.gstraymond.models.search.response.SearchResult
@@ -34,6 +31,7 @@ import fr.gstraymond.ui.adapter.CardArrayData
 import fr.gstraymond.ui.adapter.SearchViewCursorAdapter
 import fr.gstraymond.utils.app
 import fr.gstraymond.utils.find
+import fr.gstraymond.utils.hide
 import fr.gstraymond.utils.startActivity
 import sheetrock.panda.changelog.ChangeLog
 
@@ -62,6 +60,7 @@ class CardListActivity : CustomActivity(R.layout.activity_card_list),
     private lateinit var recyclerView: RecyclerView
     private lateinit var arrayAdapter: CardArrayAdapter
     private lateinit var filterTextView: TextView
+    private lateinit var resetTextView: TextView
 
     private val presenter = CardListPresenter(this)
     private val log = Log(javaClass)
@@ -73,6 +72,7 @@ class CardListActivity : CustomActivity(R.layout.activity_card_list),
         searchView = find(R.id.search_input)
         recyclerView = find(R.id.search_recyclerview)
         filterTextView = find(R.id.toolbar_filter)
+        resetTextView = find(R.id.toolbar_reset)
         val rootView = findViewById(android.R.id.content)
         val toolbar = find<Toolbar>(R.id.toolbar)
 
@@ -103,6 +103,7 @@ class CardListActivity : CustomActivity(R.layout.activity_card_list),
             it.facetListView = facetListView
             it.searchProcessor = searchProcessor
             it.filterTextView = filterTextView
+            it.resetTextView = resetTextView
         }
 
         val linearLayoutManager = LinearLayoutManager(this)
@@ -138,6 +139,16 @@ class CardListActivity : CustomActivity(R.layout.activity_card_list),
 
         filterTextView.setOnClickListener {
             drawerLayout.openDrawer(GravityCompat.END)
+        }
+
+        resetTextView.setOnClickListener {
+            val options = SearchOptions(size = 0, addToHistory = false)
+            searchProcessor.build().execute(options)
+            searchView.apply {
+                clearFocus()
+                setQuery("", false)
+            }
+           resetTextView.hide()
         }
 
         actionBarSetHomeButtonEnabled(true)

@@ -94,6 +94,7 @@
     <string name="stats_color_distribution">Répartition des couleurs</string>
     <string name="stats_type_distribution">Répartition des types</string>
 
-    <string name="filter">FILTRER</string>
+    <string name="filter">Filtrer</string>
     <string name="organize_your_cards">Organisez vos cartes</string>
+    <string name="reset">Réinitialiser</string>
 </resources>
