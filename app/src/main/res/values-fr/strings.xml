@@ -93,4 +93,7 @@
     <string name="stats_mana_curve">Courbe de mana</string>
     <string name="stats_color_distribution">Répartition des couleurs</string>
     <string name="stats_type_distribution">Répartition des types</string>
+
+    <string name="filter">FILTRER</string>
+    <string name="organize_your_cards">Organisez vos cartes</string>
 </resources>
