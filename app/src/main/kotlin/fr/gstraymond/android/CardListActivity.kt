@@ -18,7 +18,10 @@ import android.widget.TextView
 import com.magic.card.search.commons.log.Log
 import fr.gstraymond.R
 import fr.gstraymond.android.presenter.CardListPresenter
-import fr.gstraymond.biz.*
+import fr.gstraymond.biz.AutocompleteProcessor
+import fr.gstraymond.biz.AutocompleteProcessorBuilder
+import fr.gstraymond.biz.SearchOptions
+import fr.gstraymond.biz.SearchProcessorBuilder
 import fr.gstraymond.models.autocomplete.response.Option
 import fr.gstraymond.models.search.response.Card
 import fr.gstraymond.models.search.response.SearchResult
@@ -47,7 +50,7 @@ class CardListActivity : CustomActivity(R.layout.activity_card_list),
                 }
     }
 
-    private lateinit var drawerToggle: ActionBarDrawerToggle
+    private var drawerToggle: ActionBarDrawerToggle? = null
     private lateinit var drawerLayout: DrawerLayout
 
     private val autocompleteProcessor by lazy { AutocompleteProcessorBuilder(app().objectMapper, app().searchService, this) }
@@ -130,16 +133,8 @@ class CardListActivity : CustomActivity(R.layout.activity_card_list),
             suggestionsAdapter = searchViewCursorAdapter
         }
 
+
         drawerLayout = find<DrawerLayout>(R.id.drawer_layout)
-        drawerToggle = ActionBarDrawerToggle(
-                this,
-                drawerLayout,
-                toolbar,
-                R.string.drawer_open,
-                R.string.drawer_close)
-
-        drawerLayout.addDrawerListener(drawerToggle)
-
         filterTextView.setOnClickListener {
             drawerLayout.openDrawer(GravityCompat.END)
         }
@@ -151,7 +146,7 @@ class CardListActivity : CustomActivity(R.layout.activity_card_list),
                 clearFocus()
                 setQuery("", false)
             }
-           resetTextView.hide()
+            resetTextView.hide()
         }
 
         actionBarSetHomeButtonEnabled(true)
@@ -160,29 +155,42 @@ class CardListActivity : CustomActivity(R.layout.activity_card_list),
             if (firstRun()) logDialog.show()
         }
 
-        find<NavigationView>(R.id.left_drawer).let {
-            val headerView = it.getHeaderView(0)
-            headerView.find<TextView>(R.id.nav_header_app_name).text = VersionUtils.getAppName(this)
-            headerView.find<TextView>(R.id.nav_header_app_version).text = VersionUtils.getAppVersion()
-            it.setNavigationItemSelectedListener { item ->
-                drawerLayout.closeDrawer(it, false)
-                when (item.itemId) {
-                    R.id.menu_decks -> startActivity {
-                        DecksActivity.getIntent(this)
+        if (presenter.getCurrentSearch().deckId == null) {
+            val actionBarDrawerToggle = ActionBarDrawerToggle(
+                    this,
+                    drawerLayout,
+                    toolbar,
+                    R.string.drawer_open,
+                    R.string.drawer_close)
+            drawerToggle = actionBarDrawerToggle
+            drawerLayout.addDrawerListener(actionBarDrawerToggle)
+
+            find<NavigationView>(R.id.left_drawer).let {
+                val headerView = it.getHeaderView(0)
+                headerView.find<TextView>(R.id.nav_header_app_name).text = VersionUtils.getAppName(this)
+                headerView.find<TextView>(R.id.nav_header_app_version).text = VersionUtils.getAppVersion()
+                it.setNavigationItemSelectedListener { item ->
+                    drawerLayout.closeDrawer(it, false)
+                    when (item.itemId) {
+                        R.id.menu_decks -> startActivity {
+                            DecksActivity.getIntent(this)
+                        }
+                        R.id.menu_wishlist -> startActivity {
+                            WishListActivity.getIntent(this)
+                        }
+                        R.id.menu_searches -> startActivity {
+                            HistoryActivity.getIntent(this)
+                        }
+                        R.id.menu_changelog -> {
+                            drawerLayout.closeDrawers()
+                            ChangeLog(this).fullLogDialog.show()
+                        }
                     }
-                    R.id.menu_wishlist -> startActivity {
-                        WishListActivity.getIntent(this)
-                    }
-                    R.id.menu_searches -> startActivity {
-                        HistoryActivity.getIntent(this)
-                    }
-                    R.id.menu_changelog -> {
-                        drawerLayout.closeDrawers()
-                        ChangeLog(this).fullLogDialog.show()
-                    }
+                    true
                 }
-                true
             }
+        } else {
+            supportActionBar?.setDisplayHomeAsUpEnabled(true)
         }
     }
 
@@ -193,12 +201,12 @@ class CardListActivity : CustomActivity(R.layout.activity_card_list),
         searchProcessor.build().execute(presenter.getCurrentSearch().updateAddToHistory(false))
 
         // Sync the toggle state after onRestoreInstanceState has occurred.
-        drawerToggle.syncState()
+        drawerToggle?.syncState()
     }
 
     override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
-        drawerToggle.onConfigurationChanged(newConfig)
+        drawerToggle?.onConfigurationChanged(newConfig)
     }
 
     override fun bindAutocompleteResults(results: List<Option>) {

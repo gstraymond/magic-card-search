@@ -28,6 +28,7 @@ class DeckDetailCardsFragment : Fragment(), DeckLineCallback {
     private lateinit var frame: View
     private lateinit var emptyText: TextView
     private lateinit var fabAdd: FloatingActionButton
+    private lateinit var fabHistory: FloatingActionButton
 
     var deckLineCallback: DeckLineCallback? = null
 
@@ -49,6 +50,7 @@ class DeckDetailCardsFragment : Fragment(), DeckLineCallback {
                 frame = find<View>(R.id.deck_detail_cards_frame)
                 emptyText = find<TextView>(R.id.deck_detail_cards_empty)
                 fabAdd = find<FloatingActionButton>(R.id.deck_detail_cards_add)
+                fabHistory = find<FloatingActionButton>(R.id.deck_detail_cards_add_history)
             }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -57,6 +59,11 @@ class DeckDetailCardsFragment : Fragment(), DeckLineCallback {
         fabAdd.setOnClickListener {
             startActivity {
                 CardListActivity.getIntent(activity, SearchOptions(deckId = deckId, size = 0))
+            }
+        }
+        fabHistory.setOnClickListener {
+            startActivity {
+                HistoryActivity.getIntent(activity, deckId)
             }
         }
     }
