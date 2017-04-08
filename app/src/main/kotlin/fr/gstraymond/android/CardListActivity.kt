@@ -25,6 +25,7 @@ import fr.gstraymond.biz.SearchProcessorBuilder
 import fr.gstraymond.models.autocomplete.response.Option
 import fr.gstraymond.models.search.response.Card
 import fr.gstraymond.models.search.response.SearchResult
+import fr.gstraymond.tools.VersionUtils
 import fr.gstraymond.ui.EndScrollListener
 import fr.gstraymond.ui.SuggestionListener
 import fr.gstraymond.ui.TextListener
@@ -145,24 +146,29 @@ class CardListActivity : CustomActivity(R.layout.activity_card_list),
             if (firstRun()) logDialog.show()
         }
 
-        find<NavigationView>(R.id.left_drawer).setNavigationItemSelectedListener { item ->
-            log.d(("setNavigationItemSelectedListener $item"))
-            when (item.itemId) {
-                R.id.menu_wishlist -> startActivity {
-                    WishListActivity.getIntent(this)
+        find<NavigationView>(R.id.left_drawer).let {
+            val headerView = it.getHeaderView(0)
+            headerView.find<TextView>(R.id.nav_header_app_name).text = VersionUtils.getAppName(this)
+            headerView.find<TextView>(R.id.nav_header_app_version).text = VersionUtils.getAppVersion()
+            it.setNavigationItemSelectedListener { item ->
+                drawerLayout.closeDrawer(it, false)
+                when (item.itemId) {
+                    R.id.menu_decks -> startActivity {
+                        DecksActivity.getIntent(this)
+                    }
+                    R.id.menu_wishlist -> startActivity {
+                        WishListActivity.getIntent(this)
+                    }
+                    R.id.menu_searches -> startActivity {
+                        HistoryActivity.getIntent(this)
+                    }
+                    R.id.menu_changelog -> {
+                        drawerLayout.closeDrawers()
+                        ChangeLog(this).fullLogDialog.show()
+                    }
                 }
-                R.id.menu_lists -> startActivity {
-                    ListsActivity.getIntent(this)
-                }
-                R.id.menu_searches -> startActivity {
-                    HistoryActivity.getIntent(this)
-                }
-                R.id.menu_changelog -> {
-                    drawerLayout.closeDrawers()
-                    ChangeLog(this).fullLogDialog.show()
-                }
+                true
             }
-            true
         }
     }
 

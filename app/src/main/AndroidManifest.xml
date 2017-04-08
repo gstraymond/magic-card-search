@@ -77,7 +77,7 @@
                 android:value=".android.CardListActivity" />
         </activity>
         <activity
-            android:name=".android.ListsActivity"
+            android:name=".android.WishListActivity"
             android:parentActivityName=".android.CardListActivity"
             android:theme="@style/AppTheme">
             <meta-data
@@ -85,7 +85,7 @@
                 android:value=".android.CardListActivity" />
         </activity>
         <activity
-            android:name=".android.WishListActivity"
+            android:name=".android.DecksActivity"
             android:parentActivityName=".android.CardListActivity"
             android:theme="@style/AppTheme">
             <meta-data

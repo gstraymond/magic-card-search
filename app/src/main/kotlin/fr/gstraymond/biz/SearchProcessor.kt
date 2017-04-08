@@ -50,8 +50,10 @@ class SearchProcessor(private val dataUpdater: DataUpdater,
         dataUpdater.updateCards(totalCardCount, cards)
         dataUpdater.updateFacets(result)
 
-        val text = String.format("%s/%s %s", dataUpdater.adapterItemCount(), totalCardCount, context.getString(textId))
-        showText(text, dataUpdater, rootView)
+        if (dataUpdater.adapterItemCount() > 0) {
+            val text = String.format("%s/%s %s", dataUpdater.adapterItemCount(), totalCardCount, context.getString(textId))
+            showText(text, dataUpdater, rootView)
+        }
     }
 
     private fun showText(message: String,
