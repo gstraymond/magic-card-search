@@ -6,6 +6,7 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.text.Html
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import fr.gstraymond.R
@@ -33,13 +34,16 @@ class DeckDetailStatsFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater,
                               container: ViewGroup?,
                               savedInstanceState: Bundle?) =
-            inflater.inflate(R.layout.fragment_deck_detail_stats, container, false).apply {
-                recyclerView = find<RecyclerView>(R.id.deck_detail_stats_recyclerview).apply {
-                    layoutManager = LinearLayoutManager(context)
-                    adapter = deckDetailStatsAdapter
-                }
-                emptyText = find<TextView>(R.id.deck_detail_stats_empty)
-            }
+            inflater.inflate(R.layout.fragment_deck_detail_stats, container, false)
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        recyclerView = view.find<RecyclerView>(R.id.deck_detail_stats_recyclerview).apply {
+            layoutManager = LinearLayoutManager(context)
+            adapter = deckDetailStatsAdapter
+        }
+        emptyText = view.find<TextView>(R.id.deck_detail_stats_empty)
+    }
 
     override fun onResume() {
         super.onResume()

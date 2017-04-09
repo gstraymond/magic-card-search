@@ -116,11 +116,13 @@ class DeckDetailStatsAdapter(context: Context) : RecyclerView.Adapter<RecyclerVi
             setDrawLabels(false)
             setDrawGridLines(false)
             setDrawAxisLine(false)
+            axisMinimum = 0f
         }
         chart.axisRight.apply {
             setDrawLabels(false)
             setDrawGridLines(false)
             setDrawAxisLine(false)
+            axisMinimum = 0f
         }
     }
 
