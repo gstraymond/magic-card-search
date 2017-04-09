@@ -41,17 +41,20 @@ class DeckDetailCardsFragment : Fragment(), DeckLineCallback {
     override fun onCreateView(inflater: LayoutInflater,
                               container: ViewGroup?,
                               savedInstanceState: Bundle?) =
-            inflater.inflate(R.layout.fragment_deck_detail_cards, container, false).apply {
-                find<RecyclerView>(R.id.deck_detail_cards_recyclerview).apply {
-                    layoutManager = LinearLayoutManager(context)
-                    adapter = deckDetailAdapter
-                }
-                cardTotal = find<TextView>(R.id.deck_detail_cards_total)
-                frame = find<View>(R.id.deck_detail_cards_frame)
-                emptyText = find<TextView>(R.id.deck_detail_cards_empty)
-                fabAdd = find<FloatingActionButton>(R.id.deck_detail_cards_add)
-                fabHistory = find<FloatingActionButton>(R.id.deck_detail_cards_add_history)
-            }
+            inflater.inflate(R.layout.fragment_deck_detail_cards, container, false)
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        view.find<RecyclerView>(R.id.deck_detail_cards_recyclerview).apply {
+            layoutManager = LinearLayoutManager(context)
+            adapter = deckDetailAdapter
+        }
+        cardTotal = view.find(R.id.deck_detail_cards_total)
+        frame = view.find(R.id.deck_detail_cards_frame)
+        emptyText = view.find(R.id.deck_detail_cards_empty)
+        fabAdd = view.find(R.id.deck_detail_cards_add)
+        fabHistory = view.find(R.id.deck_detail_cards_add_history)
+    }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)

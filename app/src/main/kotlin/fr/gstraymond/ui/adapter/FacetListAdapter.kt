@@ -4,7 +4,6 @@ import android.content.Context
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseExpandableListAdapter
-import android.widget.ExpandableListView
 import android.widget.TextView
 import fr.gstraymond.R
 import fr.gstraymond.biz.SearchOptions
@@ -46,7 +45,7 @@ class FacetListAdapter(facetMap: Map<String, Facet>,
             }
         }
 
-        mutableFacetMap.forEach { facetAsString, facet ->
+        for ((facetAsString, facet) in mutableFacetMap) {
             if (showLoadMore(facet, facetAsString)) {
                 val loadMoreTerm = Term(context.getString(R.string.facet_more), -1)
                 facet.terms.add(loadMoreTerm)
