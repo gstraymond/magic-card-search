@@ -82,7 +82,7 @@ class DeckDetailCardsAdapter(private val context: Context) : RecyclerView.Adapte
         }
     }
 
-    private val FAB_TOTAL_SIZE = 2
+    private val FAB_TOTAL_SIZE = 1
 
     override fun getItemCount() = cardList.size() + FAB_TOTAL_SIZE
 

@@ -81,6 +81,7 @@ ext {
     retrofitVersion = '2.1+'
     retrofitLoggingVersion = '3.3+'
     androidChartVersion = 'v3.+'
+    floatingactionbuttonVersion = '1.6.4'
 }
 
 dependencies {
@@ -94,6 +95,7 @@ dependencies {
     compile "com.squareup.retrofit2:converter-moshi:$retrofitVersion"
     compile "com.squareup.okhttp3:logging-interceptor:$retrofitLoggingVersion"
     compile "com.github.PhilJay:MPAndroidChart:$androidChartVersion"
+    compile "com.github.clans:fab:$floatingactionbuttonVersion"
 
     testCompile 'junit:junit:4.12'
 }
