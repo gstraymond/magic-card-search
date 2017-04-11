@@ -8,11 +8,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import com.github.clans.fab.FloatingActionButton
+import com.github.clans.fab.FloatingActionMenu
 import com.magic.card.search.commons.log.Log
 import fr.gstraymond.R
 import fr.gstraymond.android.adapter.DeckDetailCardsAdapter
 import fr.gstraymond.android.adapter.DeckLineCallback
 import fr.gstraymond.biz.DeckStats
+import fr.gstraymond.biz.SearchOptions
 import fr.gstraymond.db.json.CardList
 import fr.gstraymond.models.DeckLine
 import fr.gstraymond.utils.*
@@ -25,6 +28,9 @@ class DeckDetailCardsFragment : Fragment(), DeckLineCallback {
     private lateinit var cardTotal: TextView
     private lateinit var frame: View
     private lateinit var emptyText: TextView
+    private lateinit var fabMenu: FloatingActionMenu
+    private lateinit var fabAdd: FloatingActionButton
+    private lateinit var fabHistory: FloatingActionButton
 
     var deckLineCallback: DeckLineCallback? = null
 
@@ -37,15 +43,55 @@ class DeckDetailCardsFragment : Fragment(), DeckLineCallback {
     override fun onCreateView(inflater: LayoutInflater,
                               container: ViewGroup?,
                               savedInstanceState: Bundle?) =
-            inflater.inflate(R.layout.fragment_deck_detail_cards, container, false).apply {
-                find<RecyclerView>(R.id.deck_detail_cards_recyclerview).apply {
-                    layoutManager = LinearLayoutManager(context)
-                    adapter = deckDetailAdapter
+            inflater.inflate(R.layout.fragment_deck_detail_cards, container, false)
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        view.find<RecyclerView>(R.id.deck_detail_cards_recyclerview).apply {
+            layoutManager = LinearLayoutManager(context)
+            adapter = deckDetailAdapter
+        }
+        cardTotal = view.find(R.id.deck_detail_cards_total)
+        frame = view.find(R.id.deck_detail_cards_frame)
+        emptyText = view.find(R.id.deck_detail_cards_empty)
+        fabMenu = view.find(R.id.deck_detail_cards_menu)
+        fabAdd = view.find(R.id.deck_detail_cards_add)
+        fabHistory = view.find(R.id.deck_detail_cards_add_history)
+    }
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        val deckId = activity.intent.getStringExtra(DeckDetailActivity.DECK_EXTRA)
+
+        fabMenu.apply {
+            setMenuButtonColorNormalResId(R.color.colorAccent)
+            setMenuButtonColorPressedResId(R.color.colorAccent)
+        }
+
+        fabAdd.apply {
+            setColorNormalResId(R.color.colorPrimary)
+            setColorPressedResId(R.color.colorPrimary)
+            // FIXME labels
+            labelText = "Add card using search"
+            setOnClickListener {
+                startActivity {
+                    CardListActivity.getIntent(activity, SearchOptions(deckId = deckId, size = 0))
                 }
-                cardTotal = find<TextView>(R.id.deck_detail_cards_total)
-                frame = find<View>(R.id.deck_detail_cards_frame)
-                emptyText = find<TextView>(R.id.deck_detail_cards_empty)
             }
+        }
+
+        fabHistory.apply {
+            setColorNormalResId(R.color.colorPrimary)
+            setColorPressedResId(R.color.colorPrimary)
+            // FIXME labels
+            labelText = "Add card using history"
+            setOnClickListener {
+                startActivity {
+                    HistoryActivity.getIntent(activity, deckId)
+                }
+            }
+        }
+    }
 
     override fun onResume() {
         super.onResume()

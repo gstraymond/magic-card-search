@@ -73,7 +73,7 @@ public class CardDetailFragment extends CustomListFragment {
                     @Nullable
                     @Override
                     public Deck getDeck(@NotNull String deckId) {
-                        return customApplication.deckList.getByUid(deckId);
+                        return customApplication.getDeckList().getByUid(deckId);
                     }
                 });
         setListAdapter(arrayAdapter);

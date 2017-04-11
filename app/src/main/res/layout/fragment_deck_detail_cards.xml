@@ -55,7 +55,29 @@
         style="@android:style/TextAppearance.Large"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:gravity="center"
         android:layout_centerInParent="true"
+        android:gravity="center"
         android:text="@string/deckdetails_cards_empty" />
+
+    <com.github.clans.fab.FloatingActionMenu
+        android:id="@+id/deck_detail_cards_menu"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_margin="10dp">
+
+        <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/deck_detail_cards_add"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_search_white_24dp" />
+
+        <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/deck_detail_cards_add_history"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_history_white_24dp" />
+
+    </com.github.clans.fab.FloatingActionMenu>
 </RelativeLayout>

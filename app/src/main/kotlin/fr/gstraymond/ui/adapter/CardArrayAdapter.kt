@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.view.ViewGroup
 import fr.gstraymond.R
+import fr.gstraymond.android.DataUpdater
 import fr.gstraymond.db.json.JsonList
 import fr.gstraymond.models.Deck
 import fr.gstraymond.models.DeckLine
@@ -19,7 +20,7 @@ import fr.gstraymond.utils.inflate
 class CardArrayAdapter(private val view: View,
                        private val data: CardArrayData,
                        private val clickCallbacks: ClickCallbacks,
-                       private var snackbar: Snackbar?) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+                       private val dataUpdater: DataUpdater) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private val context = view.context
 
@@ -63,9 +64,10 @@ class CardArrayAdapter(private val view: View,
     }
 
     private fun showMessage(message: String) {
-        snackbar?.dismiss()
-        snackbar = Snackbar.make(view, message, LENGTH_LONG)
-        snackbar?.show()
+        dataUpdater.getLoadingSnackbar()?.dismiss()
+        val snackbar = Snackbar.make(view, message, LENGTH_LONG)
+        snackbar.show()
+        dataUpdater.setLoadingSnackbar(snackbar)
     }
 
 

@@ -9,7 +9,7 @@ data class Hits(val total: Int,
 
 data class Hit(val _source: Card)
 
-data class Facet(val terms: List<Term>)
+data class Facet(val terms: MutableList<Term>)
 
 data class Term(val term: String,
                 val count: Int)

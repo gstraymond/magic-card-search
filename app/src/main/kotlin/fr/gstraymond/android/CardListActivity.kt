@@ -4,26 +4,28 @@ import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
-import android.support.design.widget.FloatingActionButton
+import android.support.design.widget.NavigationView
 import android.support.design.widget.Snackbar
+import android.support.v4.view.GravityCompat
 import android.support.v4.widget.DrawerLayout
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.SearchView
 import android.support.v7.widget.Toolbar
-import android.view.Menu
-import android.view.MenuItem
-import android.view.View
+import android.widget.ExpandableListView
+import android.widget.TextView
 import com.magic.card.search.commons.log.Log
 import fr.gstraymond.R
-import fr.gstraymond.analytics.Tracker
+import fr.gstraymond.android.presenter.CardListPresenter
 import fr.gstraymond.biz.AutocompleteProcessor
+import fr.gstraymond.biz.AutocompleteProcessorBuilder
 import fr.gstraymond.biz.SearchOptions
-import fr.gstraymond.biz.SearchProcessor
-import fr.gstraymond.biz.UIUpdater
+import fr.gstraymond.biz.SearchProcessorBuilder
 import fr.gstraymond.models.autocomplete.response.Option
 import fr.gstraymond.models.search.response.Card
+import fr.gstraymond.models.search.response.SearchResult
+import fr.gstraymond.tools.VersionUtils
 import fr.gstraymond.ui.EndScrollListener
 import fr.gstraymond.ui.SuggestionListener
 import fr.gstraymond.ui.TextListener
@@ -32,72 +34,64 @@ import fr.gstraymond.ui.adapter.CardArrayData
 import fr.gstraymond.ui.adapter.SearchViewCursorAdapter
 import fr.gstraymond.utils.app
 import fr.gstraymond.utils.find
+import fr.gstraymond.utils.hide
 import fr.gstraymond.utils.startActivity
 import sheetrock.panda.changelog.ChangeLog
 
 class CardListActivity : CustomActivity(R.layout.activity_card_list),
-        CardArrayAdapter.ClickCallbacks, AutocompleteProcessor.Callbacks {
+        AutocompleteProcessor.Callbacks, CardArrayAdapter.ClickCallbacks {
 
     companion object {
-        private val CARD_RESULT = "result"
-        private val SEARCH_QUERY = "searchQuery"
+        val SEARCH_QUERY = "searchQuery"
 
         fun getIntent(context: Context, searchOptions: SearchOptions): Intent =
                 Intent(context, CardListActivity::class.java).apply {
                     putExtra(SEARCH_QUERY, searchOptions)
                 }
-
-        fun getIntent(context: Context, result: String): Intent =
-                Intent(context, CardListActivity::class.java).apply {
-                    putExtra(CARD_RESULT, result)
-                }
     }
 
-    private val log = Log(this)
-
-    private lateinit var searchView: SearchView
-    private lateinit var drawerToggle: ActionBarDrawerToggle
+    private var drawerToggle: ActionBarDrawerToggle? = null
     private lateinit var drawerLayout: DrawerLayout
-    private lateinit var suggestionListener: SuggestionListener
 
-    lateinit var endScrollListener: EndScrollListener
+    private val autocompleteProcessor by lazy { AutocompleteProcessorBuilder(app().objectMapper, app().searchService, this) }
+    private val searchProcessor by lazy { SearchProcessorBuilder(presenter, app().elasticSearchClient, this, findViewById(android.R.id.content)) }
+    private val suggestionListener by lazy { SuggestionListener(searchView, listOf()) }
+    private val searchViewCursorAdapter by lazy { SearchViewCursorAdapter.empty(this) }
 
-    var totalCardCount: Int = 0
-    var currentSearch = SearchOptions()
-    var loadingSnackbar: Snackbar? = null
-    val textListener = TextListener(this, this)
+    private lateinit var facetListView: ExpandableListView
+    private lateinit var searchView: SearchView
+    private lateinit var recyclerView: RecyclerView
+    private lateinit var arrayAdapter: CardArrayAdapter
+    private lateinit var filterTextView: TextView
+    private lateinit var resetTextView: TextView
+    private lateinit var emptyTextView: TextView
 
-    var searchViewCursorAdapter = SearchViewCursorAdapter.empty(this)
-
-    lateinit var adapter: CardArrayAdapter
+    private val presenter = CardListPresenter(this)
+    private val log = Log(javaClass)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val fab = find<FloatingActionButton>(R.id.fab_wishlist)
+        facetListView = find(R.id.right_drawer_list)
+        searchView = find(R.id.search_input)
+        recyclerView = find(R.id.search_recyclerview)
+        filterTextView = find(R.id.toolbar_filter)
+        resetTextView = find(R.id.toolbar_reset)
+        emptyTextView = find(R.id.search_empty_text)
+        val rootView = findViewById(android.R.id.content)
         val toolbar = find<Toolbar>(R.id.toolbar)
+
         setSupportActionBar(toolbar)
-
-        searchView = find<SearchView>(R.id.search_input).apply {
-            suggestionListener = SuggestionListener(this, listOf())
-
-            setOnQueryTextListener(textListener)
-            setOnSuggestionListener(suggestionListener)
-            suggestionsAdapter = searchViewCursorAdapter
-        }
+        supportActionBar?.title = ""
 
         val savedSearch = savedInstanceState?.getParcelable<SearchOptions>(SEARCH_QUERY)
                 ?: intent.getParcelableExtra<SearchOptions>(SEARCH_QUERY)
 
-        val restoredSearch = savedSearch?.run {
-            currentSearch = savedSearch
-            currentSearch.addToHistory = false
-            if (currentSearch.query != "*") {
-                searchView.setQuery(currentSearch.query, false)
-            }
-        } != null
+        savedSearch?.apply {
+            presenter.setCurrentSearch(this)
+        }
 
-        val data = currentSearch.deckId?.run {
+        val data = presenter.getCurrentSearch().deckId?.run {
             val deck = app().deckList.getByUid(this)
             CardArrayData(
                     cards = null,
@@ -106,37 +100,54 @@ class CardListActivity : CustomActivity(R.layout.activity_card_list),
                 cards = app().wishList,
                 deck = null)
 
-        adapter = CardArrayAdapter(findViewById(R.id.coordinator_layout), data, this, loadingSnackbar)
+        arrayAdapter = CardArrayAdapter(rootView, data, this, presenter)
 
-        val layoutManager = LinearLayoutManager(this)
-        endScrollListener = EndScrollListener(this, layoutManager)
-        endScrollListener.fab = fab
-        find<RecyclerView>(R.id.recycler_view).let {
-            it.layoutManager = layoutManager
-            it.adapter = adapter
-            it.addOnScrollListener(endScrollListener)
-            it.setOnTouchListener { _, _ ->
+        presenter.let {
+            it.searchViewCursorAdapter = searchViewCursorAdapter
+            it.arrayAdapter = arrayAdapter
+            it.facetListView = facetListView
+            it.searchProcessor = searchProcessor
+            it.filterTextView = filterTextView
+            it.resetTextView = resetTextView
+            it.emptyTextView = emptyTextView
+        }
+
+        val linearLayoutManager = LinearLayoutManager(this)
+        recyclerView.apply {
+            layoutManager = linearLayoutManager
+            adapter = arrayAdapter
+            addOnScrollListener(EndScrollListener(searchProcessor, presenter, linearLayoutManager))
+            setOnTouchListener { _, _ ->
                 when {
                     searchView.hasFocus() -> searchView.clearFocus()
                 }
                 false
             }
+
         }
 
+        val textListener = TextListener(presenter, this, searchProcessor, autocompleteProcessor)
+        searchView.apply {
+            setOnQueryTextListener(textListener)
+            setOnSuggestionListener(suggestionListener)
+            suggestionsAdapter = searchViewCursorAdapter
+        }
+
+
         drawerLayout = find<DrawerLayout>(R.id.drawer_layout)
-        drawerToggle = ActionBarDrawerToggle(
-                this,
-                drawerLayout,
-                toolbar,
-                R.string.drawer_open,
-                R.string.drawer_close)
+        filterTextView.setOnClickListener {
+            drawerLayout.openDrawer(GravityCompat.END)
+        }
 
-        drawerLayout.addDrawerListener(drawerToggle)
-        drawerLayout.addDrawerListener(object : DrawerLayout.SimpleDrawerListener() {
-            override fun onDrawerOpened(drawerView: View) = searchView.clearFocus()
-
-            override fun onDrawerClosed(drawerView: View) = searchView.clearFocus()
-        })
+        resetTextView.setOnClickListener {
+            val options = SearchOptions(size = 0, addToHistory = false)
+            searchProcessor.build().execute(options)
+            searchView.apply {
+                clearFocus()
+                setQuery("", false)
+            }
+            resetTextView.hide()
+        }
 
         actionBarSetHomeButtonEnabled(true)
 
@@ -144,108 +155,98 @@ class CardListActivity : CustomActivity(R.layout.activity_card_list),
             if (firstRun()) logDialog.show()
         }
 
-        fab.setOnClickListener { _ ->
-            startActivity { ListsActivity.getIntent(this) }
-        }
+        if (presenter.getCurrentSearch().deckId == null) {
+            val actionBarDrawerToggle = ActionBarDrawerToggle(
+                    this,
+                    drawerLayout,
+                    toolbar,
+                    R.string.drawer_open,
+                    R.string.drawer_close)
+            drawerToggle = actionBarDrawerToggle
+            drawerLayout.addDrawerListener(actionBarDrawerToggle)
 
-        currentSearch.deckId?.apply {
-            fab.hide()
-            title = app().deckList.getByUid(this)?.name
-            endScrollListener.fab = null
-        }
-
-        val resultAsString = intent.getStringExtra(CARD_RESULT)
-        if (!restoredSearch && resultAsString != null) {
-            log.d("onPostCreate: resultAsString $resultAsString")
-            UIUpdater(this, resultAsString, objectMapper).execute()
+            find<NavigationView>(R.id.left_drawer).let {
+                val headerView = it.getHeaderView(0)
+                headerView.find<TextView>(R.id.nav_header_app_name).text = VersionUtils.getAppName(this)
+                headerView.find<TextView>(R.id.nav_header_app_version).text = VersionUtils.getAppVersion()
+                it.setNavigationItemSelectedListener { item ->
+                    drawerLayout.closeDrawer(it, false)
+                    when (item.itemId) {
+                        R.id.menu_decks -> startActivity {
+                            DecksActivity.getIntent(this)
+                        }
+                        R.id.menu_wishlist -> startActivity {
+                            WishListActivity.getIntent(this)
+                        }
+                        R.id.menu_searches -> startActivity {
+                            HistoryActivity.getIntent(this)
+                        }
+                        R.id.menu_changelog -> {
+                            drawerLayout.closeDrawers()
+                            ChangeLog(this).fullLogDialog.show()
+                        }
+                    }
+                    true
+                }
+            }
         } else {
-            log.d("onPostCreate: currentSearch $currentSearch")
-            SearchProcessor(this, currentSearch).execute()
+            supportActionBar?.setDisplayHomeAsUpEnabled(true)
         }
     }
 
     override fun onPostCreate(savedInstanceState: Bundle?) {
         super.onPostCreate(savedInstanceState)
 
+        log.d("onCreateView: getCurrentSearch ${presenter.getCurrentSearch()}")
+        searchProcessor.build().execute(presenter.getCurrentSearch().updateAddToHistory(false))
+
         // Sync the toggle state after onRestoreInstanceState has occurred.
-        drawerToggle.syncState()
+        drawerToggle?.syncState()
     }
 
-    override fun onResume() {
-        super.onResume()
-        find<View>(R.id.root_view).requestFocus()
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        drawerToggle?.onConfigurationChanged(newConfig)
+    }
+
+    override fun bindAutocompleteResults(results: List<Option>) {
+        suggestionListener.autocompleteResults = results
+        presenter.setSearchViewData(results)
     }
 
     override fun cardClicked(card: Card) = startActivity {
         CardDetailActivity.getIntent(this, card)
     }
 
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        menuInflater.inflate(R.menu.card_list_menu, menu)
-        currentSearch.deckId?.apply {
-            menu.findItem(R.id.changelog_tab).isVisible = false
-            menu.findItem(R.id.deck_tab).isVisible = true
-        }
-        return true
-    }
-
-    override fun onConfigurationChanged(newConfig: Configuration) {
-        super.onConfigurationChanged(newConfig)
-        drawerToggle.onConfigurationChanged(newConfig)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-
-        if (drawerToggle.onOptionsItemSelected(item)) {
-            return true
-        }
-
-        when (item.itemId) {
-
-            R.id.clear_tab -> {
-                resetSearchView()
-                val options = SearchOptions(random = true, addToHistory = false)
-                SearchProcessor(this, options).execute()
-                searchView.clearFocus()
-                return true
-            }
-
-            R.id.history_tab -> startActivity {
-                HistoryActivity.getIntent(this, currentSearch.deckId)
-            }.run {
-                // FIXME when going back from history without search
-                currentSearch.deckId?.apply { finish() }
-                true
-            }
-
-            R.id.changelog_tab -> {
-                ChangeLog(this).fullLogDialog.show()
-                Tracker.changelog()
-                return true
-            }
-
-            R.id.deck_tab -> finish()
-        }
-
-        return super.onOptionsItemSelected(item)
-    }
-
-    private fun resetSearchView() {
-        searchView.apply {
-            isIconified = true
-            setQuery("", false)
-        }
-    }
 
     override fun onSaveInstanceState(outState: Bundle) {
-        if (currentSearch != SearchOptions()) {
-            outState.putParcelable(SEARCH_QUERY, currentSearch)
-        }
+        outState.putParcelable(SEARCH_QUERY, presenter.getCurrentSearch())
         super.onSaveInstanceState(outState)
     }
 
-    override fun bindAutocompleteResults(results: List<Option>) {
-        suggestionListener.autocompleteResults = results
-        searchViewCursorAdapter.changeCursor(results)
+    override fun onResume() {
+        super.onResume()
+        findViewById(R.id.root_view).requestFocus()
     }
+}
+
+interface DataUpdater {
+    fun updateCards(totalCardCount: Int, cards: List<Card>)
+    fun updateFacets(result: SearchResult)
+
+    fun getCurrentSearch(): SearchOptions
+    fun setCurrentSearch(searchOptions: SearchOptions)
+
+    fun adapterItemCount(): Int
+
+    fun getTotalItemCount(): Int
+    fun setTotalItemCount(total: Int)
+
+    fun getLoadingSnackbar(): Snackbar?
+    fun setLoadingSnackbar(snackbar: Snackbar)
+
+    fun setSearchViewData(options: List<Option>)
+
+    fun isSearchAvailable(): Boolean
+    fun setSearchAvailable(searchAvailable: Boolean)
 }

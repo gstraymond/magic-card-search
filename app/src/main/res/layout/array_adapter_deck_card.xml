@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/array_adapter_deck_card_root"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingLeft="8dp"
-    android:paddingRight="8dp">
+    android:padding="8dp">
 
     <android.support.v7.widget.AppCompatButton
         android:id="@+id/array_adapter_deck_card_mult"
@@ -30,32 +30,41 @@
         android:id="@+id/array_adapter_card_casting_cost"
         android:layout_width="wrap_content"
         android:layout_height="@dimen/castingCostSize"
-        android:layout_centerVertical="true"
         android:layout_marginRight="8dp"
+        android:layout_marginTop="2dp"
         android:layout_toRightOf="@id/array_adapter_deck_card_mult"
         tools:text="UUU" />
-
-    <TextView
-        android:id="@+id/array_adapter_card_format"
-        style="@android:style/TextAppearance.Medium"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_marginRight="8dp"
-        android:layout_toLeftOf="@id/array_adapter_deck_card_sideboard"
-        android:textColor="@android:color/darker_gray"
-        tools:text="Standard" />
 
     <TextView
         android:id="@+id/array_adapter_text"
         style="@android:style/TextAppearance.Medium"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_toLeftOf="@id/array_adapter_card_format"
         android:layout_toRightOf="@id/array_adapter_card_casting_cost"
         android:ellipsize="end"
         android:maxLines="2"
         tools:text="Black lotus" />
+
+    <TextView
+        android:id="@+id/array_adapter_card_format"
+        style="@android:style/TextAppearance.Medium"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/array_adapter_text"
+        android:layout_marginRight="8dp"
+        android:layout_toRightOf="@id/array_adapter_deck_card_mult"
+        android:textColor="@android:color/darker_gray"
+        tools:text="Standard" />
+
+    <TextView
+        android:id="@+id/array_adapter_card_type_pt"
+        style="@android:style/TextAppearance.Medium"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toLeftOf="@id/array_adapter_deck_card_sideboard"
+        android:layout_toRightOf="@id/array_adapter_text"
+        android:ellipsize="end"
+        android:maxLines="1"
+        tools:text=" - Sorcery" />
 
 </RelativeLayout>

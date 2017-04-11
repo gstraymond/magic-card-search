@@ -60,13 +60,12 @@ class DeckStats(cards: List<DeckLine>) {
                         when {
                             contains("Creature") -> "Creature"
                             contains("Land") -> "Land"
-                            else -> "Other"
+                            else -> "Spell"
                         }
                     } to line
                 }
                 .groupBy { it.first }
                 .mapValues { it.value.map { it.second }.sumBy { it.mult } }
-
     }
 }
 

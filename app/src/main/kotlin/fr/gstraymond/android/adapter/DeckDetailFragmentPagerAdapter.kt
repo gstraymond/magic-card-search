@@ -26,6 +26,8 @@ class DeckDetailFragmentPagerAdapter(fragmentManager: FragmentManager) :
     private val pageTitles = listOf("Cards", "Stats")
     private val deckDetailCardsFragment = DeckDetailCardsFragment().apply { deckLineCallback = callbacks }
     private val deckDetailStatsFragment = DeckDetailStatsFragment()
+
+    // FIXME todo data structure for fragment and title
     private val fragments = listOf(deckDetailCardsFragment, deckDetailStatsFragment)
 
     override fun getCount() = fragments.size

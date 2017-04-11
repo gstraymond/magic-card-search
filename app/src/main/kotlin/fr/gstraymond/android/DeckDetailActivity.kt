@@ -16,12 +16,10 @@ import fr.gstraymond.R
 import fr.gstraymond.analytics.Tracker
 import fr.gstraymond.android.adapter.DeckDetailFragmentPagerAdapter
 import fr.gstraymond.biz.DeckManager
-import fr.gstraymond.biz.SearchOptions
 import fr.gstraymond.models.Deck
 import fr.gstraymond.utils.app
 import fr.gstraymond.utils.find
 import fr.gstraymond.utils.inflate
-import fr.gstraymond.utils.startActivity
 
 class DeckDetailActivity : CustomActivity(R.layout.activity_deck_detail) {
 
@@ -90,12 +88,6 @@ class DeckDetailActivity : CustomActivity(R.layout.activity_deck_detail) {
     }
 
     override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
-        R.id.deckdetails_add -> startActivity {
-            CardListActivity.getIntent(this, SearchOptions(deckId = intent.getStringExtra(DECK_EXTRA)))
-        }.run {
-            true
-        }
-
         R.id.deckdetails_delete -> {
             AlertDialog.Builder(this)
                     .setTitle(getString(R.string.deckdetails_delete_title))

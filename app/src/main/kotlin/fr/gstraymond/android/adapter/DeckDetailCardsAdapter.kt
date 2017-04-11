@@ -5,6 +5,7 @@ import android.content.Context
 import android.support.v7.widget.AppCompatButton
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
+import android.view.View.INVISIBLE
 import android.view.ViewGroup
 import android.widget.CheckBox
 import android.widget.NumberPicker
@@ -17,6 +18,7 @@ import fr.gstraymond.ui.adapter.DeckDetailCardViews
 import fr.gstraymond.utils.colorStateList
 import fr.gstraymond.utils.find
 import fr.gstraymond.utils.inflate
+import fr.gstraymond.utils.show
 import java.util.*
 
 
@@ -29,6 +31,13 @@ class DeckDetailCardsAdapter(private val context: Context) : RecyclerView.Adapte
     private val cardViews = DeckDetailCardViews(context)
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        val root = holder.itemView.findViewById(R.id.array_adapter_deck_card_root)
+        if (position >= cardList.size()) {
+            root.visibility = INVISIBLE
+            return
+        }
+
+        root.show()
         val deckLine = cardList.all().sortedWith(cardComparator)[position]
         val card = deckLine.card
         cardViews.display(holder.itemView, card, position)
@@ -73,7 +82,9 @@ class DeckDetailCardsAdapter(private val context: Context) : RecyclerView.Adapte
         }
     }
 
-    override fun getItemCount() = cardList.size()
+    private val FAB_TOTAL_SIZE = 1
+
+    override fun getItemCount() = cardList.size() + FAB_TOTAL_SIZE
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
             LayoutInflater

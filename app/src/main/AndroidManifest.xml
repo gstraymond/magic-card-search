@@ -14,7 +14,7 @@
         <activity
             android:name=".android.SplashScreenActivity"
             android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -77,7 +77,15 @@
                 android:value=".android.CardListActivity" />
         </activity>
         <activity
-            android:name=".android.ListsActivity"
+            android:name=".android.WishListActivity"
+            android:parentActivityName=".android.CardListActivity"
+            android:theme="@style/AppTheme">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".android.CardListActivity" />
+        </activity>
+        <activity
+            android:name=".android.DecksActivity"
             android:parentActivityName=".android.CardListActivity"
             android:theme="@style/AppTheme">
             <meta-data

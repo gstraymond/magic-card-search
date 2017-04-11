@@ -10,11 +10,9 @@ import fr.gstraymond.models.autocomplete.response.AutocompleteResult
 import fr.gstraymond.models.autocomplete.response.Option
 import fr.gstraymond.network.ElasticSearchService
 
-class AutocompleteProcessor(moshi: Moshi,
-                            val searchService: ElasticSearchService,
-                            val callbacks: AutocompleteProcessor.Callbacks) : AsyncTask<String, String, AutocompleteResult>() {
-
-    private val mapperUtil = MapperUtil.fromType(moshi, AutocompleteRequest::class.java)
+class AutocompleteProcessor(private val mapperUtil: MapperUtil<AutocompleteRequest>,
+                            private val searchService: ElasticSearchService,
+                            private val callbacks: AutocompleteProcessor.Callbacks) : AsyncTask<String, String, AutocompleteResult>() {
 
     private val log = Log(this)
 
@@ -35,4 +33,13 @@ class AutocompleteProcessor(moshi: Moshi,
     interface Callbacks {
         fun bindAutocompleteResults(results: List<Option>)
     }
+}
+
+class AutocompleteProcessorBuilder(moshi: Moshi,
+                                   private val searchService: ElasticSearchService,
+                                   private val callbacks: AutocompleteProcessor.Callbacks) {
+
+    private val mapperUtil: MapperUtil<AutocompleteRequest> = MapperUtil.fromType(moshi, AutocompleteRequest::class.java)
+
+    fun build() = AutocompleteProcessor(mapperUtil, searchService, callbacks)
 }
