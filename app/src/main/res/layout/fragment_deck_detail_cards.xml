@@ -68,7 +68,8 @@
         android:layout_margin="10dp"
         fab:menu_colorNormal="@color/colorAccent"
         fab:menu_colorPressed="@color/colorAccent"
-        fab:menu_labels_colorNormal="@color/colorPrimary">
+        fab:menu_labels_colorNormal="@color/colorPrimary"
+        fab:menu_labels_colorPressed="@color/colorPrimary">
 
         <com.github.clans.fab.FloatingActionButton
             android:id="@+id/deck_detail_cards_add"

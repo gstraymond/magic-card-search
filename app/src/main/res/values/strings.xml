@@ -104,4 +104,6 @@
     <string name="search_empty_text">Search cards by typing keywords and by selecting filters.</string>
     <string name="deck_detail_cards_add">Add card using search</string>
     <string name="deck_detail_cards_add_history">Add card using history</string>
+    <string name="decks_add">Create empty deck</string>
+    <string name="decks_import">Import deck from file</string>
 </resources>

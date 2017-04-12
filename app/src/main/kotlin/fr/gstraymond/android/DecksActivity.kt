@@ -3,7 +3,6 @@ package fr.gstraymond.android
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.support.design.widget.FloatingActionButton
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.Toolbar
@@ -43,12 +42,20 @@ class DecksActivity : CustomActivity(R.layout.activity_decks) {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         setTitle(R.string.decks_title)
 
-        find<FloatingActionButton>(R.id.decks_fab).let {
+        findViewById(R.id.decks_fab_add).let {
             it.setOnClickListener {
                 startActivity {
                     Tracker.addRemoveDeck(added = true)
                     val deckId = deckManager.createEmptyDeck()
                     DeckDetailActivity.getIntent(this, "$deckId")
+                }
+            }
+        }
+
+        findViewById(R.id.decks_fab_import).let {
+            it.setOnClickListener {
+                startActivity {
+                    DeckImporterActivity.getIntent(this)
                 }
             }
         }

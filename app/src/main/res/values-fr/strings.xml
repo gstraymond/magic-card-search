@@ -100,4 +100,6 @@
     <string name="search_empty_text">Recherchez des cartes en tapant des mots-clés et en sélectionnant des filtres.</string>
     <string name="deck_detail_cards_add">Ajouter une carte via la recherche</string>
     <string name="deck_detail_cards_add_history">Ajouter une carte via l\'historique</string>
+    <string name="decks_add">Créer un deck vide</string>
+    <string name="decks_import">Importer un deck depuis un fichier</string>
 </resources>
