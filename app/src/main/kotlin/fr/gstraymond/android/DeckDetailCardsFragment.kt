@@ -9,7 +9,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import com.github.clans.fab.FloatingActionButton
-import com.github.clans.fab.FloatingActionMenu
 import com.magic.card.search.commons.log.Log
 import fr.gstraymond.R
 import fr.gstraymond.android.adapter.DeckDetailCardsAdapter
@@ -28,7 +27,6 @@ class DeckDetailCardsFragment : Fragment(), DeckLineCallback {
     private lateinit var cardTotal: TextView
     private lateinit var frame: View
     private lateinit var emptyText: TextView
-    private lateinit var fabMenu: FloatingActionMenu
     private lateinit var fabAdd: FloatingActionButton
     private lateinit var fabHistory: FloatingActionButton
 
@@ -54,7 +52,6 @@ class DeckDetailCardsFragment : Fragment(), DeckLineCallback {
         cardTotal = view.find(R.id.deck_detail_cards_total)
         frame = view.find(R.id.deck_detail_cards_frame)
         emptyText = view.find(R.id.deck_detail_cards_empty)
-        fabMenu = view.find(R.id.deck_detail_cards_menu)
         fabAdd = view.find(R.id.deck_detail_cards_add)
         fabHistory = view.find(R.id.deck_detail_cards_add_history)
     }
@@ -63,16 +60,7 @@ class DeckDetailCardsFragment : Fragment(), DeckLineCallback {
         super.onActivityCreated(savedInstanceState)
         val deckId = activity.intent.getStringExtra(DeckDetailActivity.DECK_EXTRA)
 
-        fabMenu.apply {
-            setMenuButtonColorNormalResId(R.color.colorAccent)
-            setMenuButtonColorPressedResId(R.color.colorAccent)
-        }
-
         fabAdd.apply {
-            setColorNormalResId(R.color.colorPrimary)
-            setColorPressedResId(R.color.colorPrimary)
-            // FIXME labels
-            labelText = "Add card using search"
             setOnClickListener {
                 startActivity {
                     CardListActivity.getIntent(activity, SearchOptions(deckId = deckId, size = 0))
@@ -81,10 +69,6 @@ class DeckDetailCardsFragment : Fragment(), DeckLineCallback {
         }
 
         fabHistory.apply {
-            setColorNormalResId(R.color.colorPrimary)
-            setColorPressedResId(R.color.colorPrimary)
-            // FIXME labels
-            labelText = "Add card using history"
             setOnClickListener {
                 startActivity {
                     HistoryActivity.getIntent(activity, deckId)
