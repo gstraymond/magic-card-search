@@ -12,7 +12,7 @@ import java.util.*
 
 class DeckImporterTask(val contentResolver: ContentResolver,
                        val deckResolver: DeckResolver,
-                       val cardListBuilder: CardListBuilder,
+                       cardListBuilder: CardListBuilder,
                        val deckList: DeckList,
                        val importerProcess: ImporterProcess) : AsyncTask<URL, DeckImporterTask.Progress, Unit>() {
 

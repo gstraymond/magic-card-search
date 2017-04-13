@@ -99,29 +99,16 @@
         <!-- Decks -->
         <activity
             android:name=".android.DeckImporterActivity"
-            android:parentActivityName=".android.ListsActivity"
+            android:parentActivityName=".android.CardListActivity"
             android:theme="@style/AppTheme">
-            <!--
-            <intent-filter>
-                <action android:name="android.intent.action.SEND" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-                <data android:mimeType="text/plain" />
-            </intent-filter>
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW"/>
-                <category android:name="android.intent.category.DEFAULT"/>
-                <data android:mimeType="text/plain"/>
-            </intent-filter>
-            -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".android.ListsActivity" />
+                android:value=".android.CardListActivity" />
         </activity>
 
         <activity
             android:name=".android.DeckDetailActivity"
-            android:parentActivityName=".android.ListsActivity"
+            android:parentActivityName=".android.DecksActivity"
             android:theme="@style/AppTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

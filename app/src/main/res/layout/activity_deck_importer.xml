@@ -33,22 +33,13 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Import with URL" />
-
-        <EditText
-            android:id="@+id/deck_importer_url"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="URL"
-            android:inputType="textUri"
-            android:minLines="3"
-            android:scrollHorizontally="false" />
+            android:text="Choose file" />
 
         <Button
             android:id="@+id/deck_importer_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="GO" />
+            android:text="Select" />
 
     </LinearLayout>
 

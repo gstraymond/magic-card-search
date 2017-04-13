@@ -22,8 +22,8 @@ class DeckManager(private val deckList: DeckList,
                 deckName,
                 deckStats.colors,
                 deckStats.format,
-                deckStats.deck.size,
-                deckStats.sideboard.size))
+                deckStats.deck.sumBy { it.mult },
+                deckStats.sideboard.sumBy { it.mult }))
         return deckId
     }
 
