@@ -35,7 +35,7 @@ class CardListPresenter(private val context: Context) : DataUpdater {
 
     override fun updateCards(totalCardCount: Int, cards: List<Card>) {
         setTotalItemCount(totalCardCount)
-        if (getCurrentSearch().append) {
+        if (searchOptions.append) {
             arrayAdapter.appendCards(cards)
         } else {
             arrayAdapter.setCards(cards)
@@ -45,24 +45,24 @@ class CardListPresenter(private val context: Context) : DataUpdater {
     private val filterText by lazy { context.getString(R.string.filter) }
 
     override fun updateFacets(result: SearchResult) {
-        if (!getCurrentSearch().append) {
-            if (result.hits.hits.isNotEmpty()) {
+        if (!searchOptions.append) {
+            if (searchOptions.query != "*" || searchOptions.facets.isNotEmpty()) {
                 resetTextView.show()
                 emptyTextView.hide()
             } else {
                 emptyTextView.show()
             }
-            filterTextView.text = getCurrentSearch().facets.size.run {
+            filterTextView.text = searchOptions.facets.size.run {
                 when (this) {
                     0 -> filterText
                     else -> "$filterText ($this)"
                 }
             }
 
-            val adapter = FacetListAdapter(result.facets, getCurrentSearch(), context)
+            val adapter = FacetListAdapter(result.facets, searchOptions, context)
             facetListView.setAdapter(adapter)
 
-            val listener = FacetOnChildClickListener(adapter, getCurrentSearch(), searchProcessor)
+            val listener = FacetOnChildClickListener(adapter, searchOptions, searchProcessor)
             facetListView.setOnChildClickListener(listener)
         }
     }

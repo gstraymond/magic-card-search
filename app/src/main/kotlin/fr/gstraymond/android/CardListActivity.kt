@@ -58,13 +58,14 @@ class CardListActivity : CustomActivity(R.layout.activity_card_list),
     private val suggestionListener by lazy { SuggestionListener(searchView, listOf()) }
     private val searchViewCursorAdapter by lazy { SearchViewCursorAdapter.empty(this) }
 
-    private lateinit var facetListView: ExpandableListView
-    private lateinit var searchView: SearchView
-    private lateinit var recyclerView: RecyclerView
+    private val facetListView by lazy { find<ExpandableListView>(R.id.right_drawer_list) }
+    private val searchView by lazy { find<SearchView>(R.id.search_input) }
+    private val recyclerView by lazy { find<RecyclerView>(R.id.search_recyclerview) }
+    private val filterTextView by lazy { find<TextView>(R.id.toolbar_filter) }
+    private val resetTextView by lazy { find<TextView>(R.id.toolbar_reset) }
+    private val emptyTextView by lazy { find<TextView>(R.id.search_empty_text) }
+
     private lateinit var arrayAdapter: CardArrayAdapter
-    private lateinit var filterTextView: TextView
-    private lateinit var resetTextView: TextView
-    private lateinit var emptyTextView: TextView
 
     private val presenter = CardListPresenter(this)
     private val log = Log(javaClass)
@@ -72,12 +73,6 @@ class CardListActivity : CustomActivity(R.layout.activity_card_list),
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        facetListView = find(R.id.right_drawer_list)
-        searchView = find(R.id.search_input)
-        recyclerView = find(R.id.search_recyclerview)
-        filterTextView = find(R.id.toolbar_filter)
-        resetTextView = find(R.id.toolbar_reset)
-        emptyTextView = find(R.id.search_empty_text)
         val rootView = findViewById(android.R.id.content)
         val toolbar = find<Toolbar>(R.id.toolbar)
 
@@ -89,6 +84,9 @@ class CardListActivity : CustomActivity(R.layout.activity_card_list),
 
         savedSearch?.apply {
             presenter.setCurrentSearch(this)
+            if (query != "*") {
+                searchView.setQuery(query, false)
+            }
         }
 
         val data = presenter.getCurrentSearch().deckId?.run {
