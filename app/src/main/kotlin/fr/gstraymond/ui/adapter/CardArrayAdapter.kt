@@ -79,8 +79,7 @@ class CardArrayAdapter(private val view: View,
 
     fun appendCards(newCards: List<Card>): Unit {
         cards.addAll(newCards)
-        //FIXME notifyItemRangeInserted(cards.size - 1, newCards.size)
-        notifyDataSetChanged()
+        notifyItemRangeInserted(cards.size - 1, newCards.size)
     }
 
     interface ClickCallbacks {

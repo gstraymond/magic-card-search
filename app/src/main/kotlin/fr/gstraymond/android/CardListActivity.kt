@@ -219,7 +219,7 @@ class CardListActivity : CustomActivity(R.layout.activity_card_list),
 
 
     override fun onSaveInstanceState(outState: Bundle) {
-        outState.putParcelable(SEARCH_QUERY, presenter.getCurrentSearch())
+        outState.putParcelable(SEARCH_QUERY, presenter.getCurrentSearch().updateAppend(false))
         super.onSaveInstanceState(outState)
     }
 
