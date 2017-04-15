@@ -114,6 +114,7 @@ class CardListActivity : CustomActivity(R.layout.activity_card_list),
 
         val linearLayoutManager = LinearLayoutManager(this)
         recyclerView.apply {
+            setHasFixedSize(true)
             layoutManager = linearLayoutManager
             adapter = arrayAdapter
             addOnScrollListener(EndScrollListener(searchProcessor, presenter, linearLayoutManager))

@@ -46,6 +46,7 @@ class DeckDetailCardsFragment : Fragment(), DeckLineCallback {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         view.find<RecyclerView>(R.id.deck_detail_cards_recyclerview).apply {
+            setHasFixedSize(true)
             layoutManager = LinearLayoutManager(context)
             adapter = deckDetailAdapter
         }

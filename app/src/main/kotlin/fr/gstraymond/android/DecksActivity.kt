@@ -61,6 +61,7 @@ class DecksActivity : CustomActivity(R.layout.activity_decks) {
         }
 
         find<RecyclerView>(R.id.decks_recyclerview).let {
+            it.setHasFixedSize(true)
             it.layoutManager = LinearLayoutManager(this)
             it.adapter = deckListAdapter
         }

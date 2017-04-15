@@ -39,6 +39,7 @@ class DeckDetailStatsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         recyclerView = view.find<RecyclerView>(R.id.deck_detail_stats_recyclerview).apply {
+            setHasFixedSize(true)
             layoutManager = LinearLayoutManager(context)
             adapter = deckDetailStatsAdapter
         }
