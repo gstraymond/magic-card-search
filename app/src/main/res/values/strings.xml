@@ -106,4 +106,11 @@
     <string name="deck_detail_cards_add_history">Add card using history</string>
     <string name="decks_add">Create empty deck</string>
     <string name="decks_import">Import deck from file</string>
+    <string name="import_deck">Import deck</string>
+    <string name="select_file">Select a file</string>
+    <string name="deck_importer_text_why">You can import a deck from a file on your device.\n\nOtherwise, you can download one deck from one of theses website:</string>
+    <string name="go_to_deck">Go to deck</string>
+    <string name="downloading">Downloading…</string>
+    <string name="go_back">Go back</string>
+    <string name="bad_format">Unable to parse deck: unrecognized format</string>
 </resources>

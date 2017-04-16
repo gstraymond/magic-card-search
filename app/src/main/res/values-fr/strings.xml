@@ -102,4 +102,11 @@
     <string name="deck_detail_cards_add_history">Ajouter une carte via l\'historique</string>
     <string name="decks_add">Créer un deck vide</string>
     <string name="decks_import">Importer un deck depuis un fichier</string>
+    <string name="import_deck">Importer un deck</string>
+    <string name="select_file">Selectionner un ficher</string>
+    <string name="deck_importer_text_why">Vous pouvez importer un deck depuis un fichier sur votre appareil.\n\nSinon, vous pouvez télécharger un deck depuis un de ces sites :</string>
+    <string name="go_to_deck">Go to deck</string>
+    <string name="downloading">downloading</string>
+    <string name="go_back">Go back</string>
+    <string name="bad_format">Unable to parse deck: unrecognized format</string>
 </resources>

@@ -3,35 +3,32 @@ package fr.gstraymond.impex
 import android.content.ContentResolver
 import android.os.AsyncTask
 import fr.gstraymond.biz.DeckManager
-import fr.gstraymond.biz.DeckStats
-import fr.gstraymond.db.json.DeckList
 import fr.gstraymond.db.json.CardListBuilder
-import fr.gstraymond.models.Deck
+import fr.gstraymond.db.json.DeckList
 import java.net.URL
-import java.util.*
 
 class DeckImporterTask(val contentResolver: ContentResolver,
                        val deckResolver: DeckResolver,
                        cardListBuilder: CardListBuilder,
                        val deckList: DeckList,
-                       val importerProcess: ImporterProcess) : AsyncTask<URL, DeckImporterTask.Progress, Unit>() {
+                       val importerProcess: ImporterProcess) : AsyncTask<URL, DeckImporterTask.Progress, Int>() {
 
     data class Progress(val task: String, val result: Int)
 
     interface ImporterProcess {
         fun readUrl(nbCards: Int, result: Boolean)
         fun cardImported(card: String, result: Boolean)
-        fun finished()
+        fun finished(deckId: Int)
     }
 
     private val URL_TASK = "url_task"
 
     private val deckManager = DeckManager(deckList, cardListBuilder)
 
-    override fun doInBackground(vararg urls: URL) {
+    override fun doInBackground(vararg urls: URL): Int? {
         val importedDeck = DeckImporter(contentResolver).importFromUri(urls.first())
         publishProgress(Progress(URL_TASK, importedDeck?.lines?.size ?: -1))
-        importedDeck?.let { deck ->
+        return importedDeck?.let { deck ->
             val cards = deckResolver.resolve(deck, this)
             deckManager.createDeck(deck.name, cards)
         }
@@ -47,9 +44,12 @@ class DeckImporterTask(val contentResolver: ContentResolver,
         }
     }
 
-    override fun onPostExecute(result: Unit?) {
+    override fun onPostExecute(result: Int?) {
         super.onPostExecute(result)
-        importerProcess.finished()
+        result?.apply {
+            importerProcess.finished(this)
+        }
+
     }
 
     fun publishProgress(task: String, result: Boolean) {

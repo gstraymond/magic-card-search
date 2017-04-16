@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="fr.gstraymond.android.DeckImporterActivity">
+    tools:context=".android.DeckImporterActivity">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
@@ -28,45 +28,55 @@
         android:layout_height="match_parent"
         android:layout_gravity="center"
         android:orientation="vertical"
-        android:padding="8dp">
+        android:padding="16dp">
 
         <TextView
+            style="@android:style/TextAppearance.Medium"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Choose file" />
+            android:layout_marginBottom="16dp"
+            android:text="@string/deck_importer_text_why" />
+
+        <TextView
+            style="@android:style/TextAppearance.Medium"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:autoLink="web"
+            android:ellipsize="end"
+            android:lines="1"
+            android:text="- http://mtgtop8.com" />
+
+        <TextView
+            style="@android:style/TextAppearance.Medium"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:autoLink="web"
+            android:ellipsize="end"
+            android:lines="1"
+            android:text="- https://www.mtggoldfish.com/metagame" />
+
+        <TextView
+            style="@android:style/TextAppearance.Medium"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:autoLink="web"
+            android:ellipsize="end"
+            android:lines="1"
+            android:text="- https://mtgdecks.net" />
 
         <Button
             android:id="@+id/deck_importer_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Select" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/deck_importer_process"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:orientation="vertical"
-        android:padding="8dp"
-        android:visibility="gone">
-
-        <TextView
-            android:id="@+id/deck_importer_log"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:ellipsize="end"
-            android:maxLines="1" />
-
-        <ProgressBar
-            android:id="@+id/deck_importer_progress_bar"
-            style="@android:style/Widget.ProgressBar.Horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="2dp"
-            android:indeterminate="true"
-            android:progress="0"
-            android:progressDrawable="@drawable/progress_drawable" />
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="32dp"
+            android:background="@color/colorAccent"
+            android:drawableLeft="@drawable/ic_note_add_white_24dp"
+            android:padding="16dp"
+            android:text="@string/select_file" />
 
     </LinearLayout>
 

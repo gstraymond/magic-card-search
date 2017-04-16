@@ -9,20 +9,12 @@ import android.os.Bundle
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.Toolbar
-import android.view.View
 import android.widget.Button
-import android.widget.ProgressBar
-import android.widget.TextView
-import com.magic.card.search.commons.log.Log
 import com.nbsp.materialfilepicker.ui.FilePickerActivity
 import com.nbsp.materialfilepicker.ui.FilePickerActivity.RESULT_FILE_PATH
 import fr.gstraymond.R
-import fr.gstraymond.impex.DeckImporterTask
-import fr.gstraymond.utils.app
 import fr.gstraymond.utils.find
-import fr.gstraymond.utils.hide
-import fr.gstraymond.utils.show
-import java.net.URL
+import fr.gstraymond.utils.startActivity
 
 
 class DeckImporterActivity : CustomActivity(R.layout.activity_deck_importer) {
@@ -34,13 +26,7 @@ class DeckImporterActivity : CustomActivity(R.layout.activity_deck_importer) {
         private val FILE_PICKER_CODE = 1001
     }
 
-    private val form by lazy { find<View>(R.id.deck_importer_form) }
-    private val process by lazy { find<View>(R.id.deck_importer_process) }
     private val button by lazy { find<Button>(R.id.deck_importer_button) }
-    private val logView by lazy { find<TextView>(R.id.deck_importer_log) }
-    private val progressBar by lazy { find<ProgressBar>(R.id.deck_importer_progress_bar) }
-
-    private val log = Log(this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,7 +35,7 @@ class DeckImporterActivity : CustomActivity(R.layout.activity_deck_importer) {
         setSupportActionBar(toolbar)
         supportActionBar?.apply {
             setDisplayHomeAsUpEnabled(true)
-            title = "Deck importer" // FIXME getString(R.string.wishlist_title)
+            title = getString(R.string.import_deck)
         }
 
         button.setOnClickListener { _ ->
@@ -81,46 +67,11 @@ class DeckImporterActivity : CustomActivity(R.layout.activity_deck_importer) {
 
         when (requestCode) {
             FILE_PICKER_CODE -> if (resultCode == Activity.RESULT_OK) {
-                form.hide()
-                process.show()
-                val url = "file://${data.getStringExtra(RESULT_FILE_PATH)}"
-                log.d("onActivityResult: $url")
-                logView.text = "Importing $url"
-                DeckImporterTask(
-                        contentResolver,
-                        app().deckResolver,
-                        app().cardListBuilder,
-                        app().deckList,
-                        Process(logView, progressBar, this)
-                ).execute(URL(url))
+                startActivity {
+                    val path = "file://${data.getStringExtra(RESULT_FILE_PATH)}"
+                    DeckImportProgressActivity.getIntent(this, path)
+                }
             }
         }
-    }
-}
-
-class Process(val textView: TextView,
-              val progressBar: ProgressBar,
-              val activity: Activity) : DeckImporterTask.ImporterProcess {
-
-    private val log = Log(this)
-
-    var nbCards = -1
-    var progress = 0
-
-    override fun readUrl(nbCards: Int, result: Boolean) {
-        textView.text = "READ URL ${if (result) "OK" else "KO"}"
-        progressBar.isIndeterminate = false
-        this.nbCards = nbCards
-    }
-
-    override fun cardImported(card: String, result: Boolean) {
-        textView.text = "card $card ${if (result) "imported" else "not imported"}"
-        if (!result) log.w("Not imported: $card")
-        progressBar.progress = 100 * ++progress / nbCards
-    }
-
-    override fun finished() {
-        textView.text = "finished"
-        activity.finish()
     }
 }

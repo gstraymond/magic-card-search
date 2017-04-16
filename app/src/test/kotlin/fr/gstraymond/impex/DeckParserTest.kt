@@ -16,7 +16,7 @@ class DeckParserTest {
 
     @Test
     fun should_import_mtgo_format_decks_2() {
-        testUrl("http://www.mtgdecks.net/decks/view/660419/txt",
+        testUrl("https://www.mtgdecks.net/decks/view/660419/txt",
                 "txt")
     }
 
@@ -36,8 +36,8 @@ class DeckParserTest {
 
     @Test
     fun should_import_magic_workstation_format_decks_2() {
-        testUrl("http://www.mtgdecks.net/decks/view/660419/dec",
-                "Azorius Flash a Standard MTG deck played by Misplacedginger in Competitive Standard Constructed League - MTGDECKS.NET ")
+        testUrl("https://www.mtgdecks.net/decks/view/660419/dec",
+                "Azorius Flash a Standard deck by Misplacedginger")
     }
 
     @Test

@@ -107,6 +107,15 @@
         </activity>
 
         <activity
+            android:name=".android.DeckImportProgressActivity"
+            android:parentActivityName=".android.DeckImporterActivity"
+            android:theme="@style/AppTheme">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".android.DeckImporterActivity" />
+        </activity>
+
+        <activity
             android:name=".android.DeckDetailActivity"
             android:parentActivityName=".android.DecksActivity"
             android:theme="@style/AppTheme">
