@@ -24,8 +24,21 @@ class DeckParserTest {
     fun should_import_mtgo_format_decks_3() {
         testUrl("https://www.mtggoldfish.com/deck/download/542503",
                 "542503",
-                100,
-                0)
+                deckSize = 100,
+                sideboardSize = 0)
+    }
+
+    @Test
+    fun should_import_mtgo_format_decks_4() {
+        testUrl("https://mtgdecks.net/archetypes/analysis/3584/all/txt",
+                "txt",
+                sideboardSize = 17)
+    }
+
+    @Test
+    fun should_import_mtgo_format_decks_5() {
+        testUrl("https://www.mtggoldfish.com/deck/download/615706",
+                "615706")
     }
 
     @Test

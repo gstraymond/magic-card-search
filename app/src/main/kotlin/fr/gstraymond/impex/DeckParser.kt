@@ -18,12 +18,14 @@ class DeckParser {
         val lines = deckList.split("\n")
                 .map { it.replace("\r", "") }
                 .map { it.dropWhile { it == ' ' } }
+                .dropLastWhile(String::isEmpty)
 
         return when {
             lines.isEmpty() || lines.all(String::isEmpty) -> null
             else -> formats
                     .find { it.detectFormat(lines) }
                     ?.run {
+                        log.d("Formatter found:$this")
                         ImportedDeck(name = extractName(resolvedURL, lines),
                                      lines = parseLines(lines))
                     }
