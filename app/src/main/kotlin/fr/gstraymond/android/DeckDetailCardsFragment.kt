@@ -97,8 +97,7 @@ class DeckDetailCardsFragment : Fragment(), DeckLineCallback {
             frame.show()
             emptyText.hide()
             val deckStats = DeckStats(cardList.all())
-            // FIXME translate
-            cardTotal.text = "${deckStats.deckSize} cards / sideboard: ${deckStats.sideboardSize}"
+            cardTotal.text = "${deckStats.deckSize} / ${deckStats.sideboardSize}"
         }
     }
 

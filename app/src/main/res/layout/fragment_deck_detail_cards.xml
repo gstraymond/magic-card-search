@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:fab="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -13,7 +14,17 @@
             android:id="@+id/deck_detail_cards_block"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="8dp">
+            android:paddingBottom="16dp"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+            android:paddingTop="16dp">
+
+            <TextView
+                android:id="@+id/deck_detail_cards_quantity"
+                style="@android:style/TextAppearance.Medium"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/quantity" />
 
             <TextView
                 android:id="@+id/deck_detail_cards_total"
@@ -21,16 +32,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
-                android:paddingBottom="8dp" />
-
-            <TextView
-                android:id="@+id/deck_detail_cards_quantity"
-                style="@android:style/TextAppearance.Medium"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/deck_detail_cards_total"
-                android:paddingBottom="8dp"
-                android:text="@string/quantity" />
+                tools:text="60 / 15" />
 
             <TextView
                 android:id="@+id/deck_detail_cards_sideboard"
@@ -38,8 +40,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
-                android:layout_below="@id/deck_detail_cards_total"
-                android:layout_toLeftOf="@id/deck_detail_cards_quantity"
                 android:text="@string/sideboard" />
 
         </RelativeLayout>

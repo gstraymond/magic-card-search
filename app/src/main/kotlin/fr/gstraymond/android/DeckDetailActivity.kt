@@ -7,8 +7,6 @@ import android.os.Bundle
 import android.support.design.widget.TabLayout
 import android.support.v4.view.ViewPager
 import android.support.v7.widget.Toolbar
-import android.view.Menu
-import android.view.MenuItem
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.TextView.BufferType.EDITABLE
@@ -33,7 +31,8 @@ class DeckDetailActivity : CustomActivity(R.layout.activity_deck_detail) {
     }
 
     private lateinit var deck: Deck
-    private lateinit var deckTitle: TextView
+    private val deckTitle by lazy { find<TextView>(R.id.toolbar_text) }
+    private val delete by lazy { find<TextView>(R.id.toolbar_delete) }
     private val deckManager by lazy { DeckManager(app().deckList, app().cardListBuilder) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -49,7 +48,7 @@ class DeckDetailActivity : CustomActivity(R.layout.activity_deck_detail) {
             title = ""
         }
 
-        deckTitle = find<TextView>(R.id.toolbar_text).apply {
+        deckTitle.apply {
             text = deck.name
             setOnClickListener {
                 createDialog(context)
@@ -60,6 +59,18 @@ class DeckDetailActivity : CustomActivity(R.layout.activity_deck_detail) {
         viewPager.adapter = DeckDetailFragmentPagerAdapter(supportFragmentManager)
 
         find<TabLayout>(R.id.sliding_tabs).setupWithViewPager(viewPager)
+
+        delete.setOnClickListener {
+            AlertDialog.Builder(this)
+                    .setTitle(getString(R.string.deckdetails_delete_title))
+                    .setPositiveButton(getString(R.string.deckdetails_delete_ok)) { _, _ ->
+                        deckManager.delete(deck)
+                        Tracker.addRemoveDeck(added = false)
+                        finish()
+                    }
+                    .setNegativeButton(getString(R.string.deckdetails_delete_cancel)) { _, _ -> }
+                    .show()
+        }
     }
 
     private fun createDialog(context: Context) {
@@ -80,26 +91,5 @@ class DeckDetailActivity : CustomActivity(R.layout.activity_deck_detail) {
         deck = deck.copy(name = deckName)
         app().deckList.update(deck)
         deckTitle.text = deckName
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        menuInflater.inflate(R.menu.deck_details_menu, menu)
-        return true
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
-        R.id.deckdetails_delete -> {
-            AlertDialog.Builder(this)
-                    .setTitle(getString(R.string.deckdetails_delete_title))
-                    .setPositiveButton(getString(R.string.deckdetails_delete_ok)) { _, _ ->
-                        deckManager.delete(deck)
-                        Tracker.addRemoveDeck(added = false)
-                        finish()
-                    }
-                    .setNegativeButton(getString(R.string.deckdetails_delete_cancel)) { _, _ -> }
-                    .show()
-            true
-        }
-        else -> super.onOptionsItemSelected(item)
     }
 }
