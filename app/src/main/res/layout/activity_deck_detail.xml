@@ -34,6 +34,18 @@
                     android:textAllCaps="true"
                     android:textColor="@android:color/white"
                     android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/toolbar_export"
+                    style="@android:style/TextAppearance.Medium"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="16dp"
+                    android:layout_toLeftOf="@id/toolbar_delete"
+                    android:text="@string/decklist_menu_export"
+                    android:textAllCaps="true"
+                    android:textColor="@android:color/white"
+                    android:textStyle="bold" />
             </RelativeLayout>
 
         </android.support.v7.widget.Toolbar>
@@ -48,8 +60,8 @@
         android:background="@color/colorPrimaryDark"
         android:drawableLeft="@drawable/ic_mode_edit_white_24dp"
         android:drawablePadding="16dp"
-        android:gravity="center"
         android:ellipsize="end"
+        android:gravity="center"
         android:maxLines="2"
         android:padding="16dp"
         tools:text="deck deck deck" />

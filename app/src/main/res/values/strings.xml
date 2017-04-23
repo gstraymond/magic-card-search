@@ -113,4 +113,5 @@
     <string name="downloading">Downloading…</string>
     <string name="go_back">Go back</string>
     <string name="bad_format">Unable to parse deck: unrecognized format</string>
+    <string name="decklist_menu_export">Exporter</string>
 </resources>

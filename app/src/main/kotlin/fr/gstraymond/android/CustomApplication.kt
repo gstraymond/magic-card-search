@@ -3,6 +3,7 @@ package fr.gstraymond.android
 import com.magic.card.search.commons.application.BaseApplication
 import com.magic.card.search.commons.json.MapperUtil
 import com.magic.card.search.commons.log.Log
+import fr.gstraymond.biz.DeckManager
 import fr.gstraymond.biz.ElasticSearchClient
 import fr.gstraymond.db.json.CardListBuilder
 import fr.gstraymond.db.json.DeckList
@@ -33,6 +34,7 @@ class CustomApplication : BaseApplication() {
     val deckList by lazy { DeckList(this, objectMapper) }
     val cardListBuilder by lazy { CardListBuilder(this, objectMapper, deckList) }
     val deckResolver by lazy { DeckResolver(searchService) }
+    val deckManager by lazy { DeckManager(deckList, cardListBuilder) }
 
     var listsCardId: Map<String, List<String>> = mapOf()
 

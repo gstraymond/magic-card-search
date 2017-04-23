@@ -53,8 +53,7 @@ class DeckImportProgressActivity : CustomActivity(R.layout.activity_deck_import_
         DeckImporterTask(
                 contentResolver,
                 app().deckResolver,
-                app().cardListBuilder,
-                app().deckList,
+                app().deckManager,
                 process
         ).execute(URL(url))
     }

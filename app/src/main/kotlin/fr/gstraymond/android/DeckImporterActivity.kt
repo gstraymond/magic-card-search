@@ -1,19 +1,18 @@
 package fr.gstraymond.android
 
 import android.Manifest.permission.READ_EXTERNAL_STORAGE
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
-import android.support.v4.app.ActivityCompat
-import android.support.v4.content.ContextCompat
 import android.support.v7.widget.Toolbar
 import android.widget.Button
-import com.nbsp.materialfilepicker.ui.FilePickerActivity
+import com.nbsp.materialfilepicker.MaterialFilePicker
 import com.nbsp.materialfilepicker.ui.FilePickerActivity.RESULT_FILE_PATH
 import fr.gstraymond.R
 import fr.gstraymond.utils.find
+import fr.gstraymond.utils.hasPerms
+import fr.gstraymond.utils.requestPerms
 import fr.gstraymond.utils.startActivity
 
 
@@ -39,9 +38,8 @@ class DeckImporterActivity : CustomActivity(R.layout.activity_deck_importer) {
         }
 
         button.setOnClickListener { _ ->
-            if (ContextCompat.checkSelfPermission(this, READ_EXTERNAL_STORAGE)
-                    != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(this, arrayOf(READ_EXTERNAL_STORAGE), REQUEST_STORAGE_CODE)
+            if (!hasPerms(READ_EXTERNAL_STORAGE)) {
+                requestPerms(REQUEST_STORAGE_CODE, READ_EXTERNAL_STORAGE)
             } else {
                 openFilePicker()
             }
@@ -49,26 +47,28 @@ class DeckImporterActivity : CustomActivity(R.layout.activity_deck_importer) {
     }
 
     private fun openFilePicker() {
-        val intent = Intent(this, FilePickerActivity::class.java)
-        startActivityForResult(intent, FILE_PICKER_CODE)
+        MaterialFilePicker()
+                .withActivity(this)
+                .withRequestCode(FILE_PICKER_CODE)
+                .start()
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         when (requestCode) {
-            REQUEST_STORAGE_CODE -> if (grantResults.first() == PackageManager.PERMISSION_GRANTED) {
+            REQUEST_STORAGE_CODE -> if (grantResults.all { it == PackageManager.PERMISSION_GRANTED }) {
                 openFilePicker()
             }
 
         }
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
         when (requestCode) {
-            FILE_PICKER_CODE -> if (resultCode == Activity.RESULT_OK) {
-                startActivity {
-                    val path = "file://${data.getStringExtra(RESULT_FILE_PATH)}"
+            FILE_PICKER_CODE -> when (resultCode) {
+                RESULT_OK -> startActivity {
+                    val path = "file://${data!!.getStringExtra(RESULT_FILE_PATH)}"
                     DeckImportProgressActivity.getIntent(this, path)
                 }
             }

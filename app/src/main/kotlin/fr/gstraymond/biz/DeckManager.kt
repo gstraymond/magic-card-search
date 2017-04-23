@@ -4,6 +4,7 @@ import fr.gstraymond.db.json.CardListBuilder
 import fr.gstraymond.db.json.DeckList
 import fr.gstraymond.models.Deck
 import fr.gstraymond.models.DeckLine
+import java.io.File
 import java.util.*
 
 class DeckManager(private val deckList: DeckList,
@@ -31,4 +32,15 @@ class DeckManager(private val deckList: DeckList,
         cardListBuilder.build(deck.id).clear()
         deckList.delete(deck)
     }
+
+    fun export(deck: Deck, path: String) {
+        val cardList = cardListBuilder.build(deck.id)
+        File("$path/${normalizeName(deck)}").printWriter().use {
+            cardList.map { (card, _, mult) ->
+                it.write("$mult ${card.title}\n")
+            }
+        }
+    }
+
+    private fun normalizeName(deck: Deck) = deck.name
 }

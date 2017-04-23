@@ -3,15 +3,12 @@ package fr.gstraymond.impex
 import android.content.ContentResolver
 import android.os.AsyncTask
 import fr.gstraymond.biz.DeckManager
-import fr.gstraymond.db.json.CardListBuilder
-import fr.gstraymond.db.json.DeckList
 import java.net.URL
 
-class DeckImporterTask(val contentResolver: ContentResolver,
-                       val deckResolver: DeckResolver,
-                       cardListBuilder: CardListBuilder,
-                       val deckList: DeckList,
-                       val importerProcess: ImporterProcess) : AsyncTask<URL, DeckImporterTask.Progress, Int>() {
+class DeckImporterTask(private val contentResolver: ContentResolver,
+                       private val deckResolver: DeckResolver,
+                       private val deckManager: DeckManager,
+                       private val importerProcess: ImporterProcess) : AsyncTask<URL, DeckImporterTask.Progress, Int>() {
 
     data class Progress(val task: String, val result: Int)
 
@@ -22,8 +19,6 @@ class DeckImporterTask(val contentResolver: ContentResolver,
     }
 
     private val URL_TASK = "url_task"
-
-    private val deckManager = DeckManager(deckList, cardListBuilder)
 
     override fun doInBackground(vararg urls: URL): Int? {
         val importedDeck = DeckImporter(contentResolver).importFromUri(urls.first())
