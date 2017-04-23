@@ -5,6 +5,7 @@ import fr.gstraymond.db.json.DeckList
 import fr.gstraymond.models.Deck
 import fr.gstraymond.models.DeckLine
 import java.io.File
+import java.text.Normalizer
 import java.util.*
 
 class DeckManager(private val deckList: DeckList,
@@ -35,12 +36,22 @@ class DeckManager(private val deckList: DeckList,
 
     fun export(deck: Deck, path: String) {
         val cardList = cardListBuilder.build(deck.id)
-        File("$path/${normalizeName(deck)}").printWriter().use {
-            cardList.map { (card, _, mult) ->
-                it.write("$mult ${card.title}\n")
+        File("$path/${normalizeName(deck)}.mwdeck").printWriter().use {
+            it.write("// NAME : ${deck.name}\n")
+            it.write("// FORMAT : ${deck.format}\n")
+            cardList.map { (card, _, mult, isSideboard) ->
+                val line = "$mult [] ${card.title}\n"
+                if (isSideboard) it.write("SB:  $line")
+                else it.write("        $line")
             }
         }
     }
 
-    private fun normalizeName(deck: Deck) = deck.name
+    // FIXME name already exists ?
+    private fun normalizeName(deck: Deck) =
+            Normalizer
+                    .normalize(deck.name.toLowerCase(), Normalizer.Form.NFD)
+                    .replace(" ", "_")
+                    .replace("-", "_")
+                    .replace("[^A-Za-z0-9_]".toRegex(), "")
 }

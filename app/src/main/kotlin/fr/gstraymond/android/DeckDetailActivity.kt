@@ -136,6 +136,7 @@ class DeckDetailActivity : CustomActivity(R.layout.activity_deck_detail) {
             DIR_PICKER_CODE -> when (resultCode) {
                 RESULT_CODE_DIR_SELECTED ->
                     app().deckManager.export(deck, data!!.getStringExtra(RESULT_SELECTED_DIR))
+                    // TODO add snackbar
             }
         }
     }
