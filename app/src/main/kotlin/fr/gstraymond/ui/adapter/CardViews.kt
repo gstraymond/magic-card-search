@@ -26,7 +26,7 @@ class WishlistCardViews(context: Context,
                 CastingCostView(context),
                 TypePTView(),
                 FavoriteView(cards, clickCallbacks, context.resources),
-                CostView()
+                CostView(context)
         ))
 
 class DeckCardViews(context: Context,
@@ -38,7 +38,7 @@ class DeckCardViews(context: Context,
                 CastingCostView(context),
                 TypePTView(),
                 DeckItemView(cards, clickCallbacks, context.resources),
-                CostView()
+                CostView(context)
         ))
 
 class DeckDetailCardViews(context: Context) : CardViews(listOf(
