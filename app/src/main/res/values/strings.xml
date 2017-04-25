@@ -114,4 +114,5 @@
     <string name="go_back">Go back</string>
     <string name="bad_format">Unable to parse deck: unrecognized format</string>
     <string name="decklist_menu_export">Exporter</string>
+    <string name="deck_exported">%1$s has been exported to: %2$s</string>
 </resources>

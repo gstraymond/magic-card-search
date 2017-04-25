@@ -7,6 +7,8 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.support.design.widget.Snackbar
+import android.support.design.widget.Snackbar.LENGTH_LONG
 import android.support.design.widget.TabLayout
 import android.support.v4.view.ViewPager
 import android.support.v7.widget.Toolbar
@@ -134,9 +136,13 @@ class DeckDetailActivity : CustomActivity(R.layout.activity_deck_detail) {
 
         when (requestCode) {
             DIR_PICKER_CODE -> when (resultCode) {
-                RESULT_CODE_DIR_SELECTED ->
-                    app().deckManager.export(deck, data!!.getStringExtra(RESULT_SELECTED_DIR))
-                    // TODO add snackbar
+                RESULT_CODE_DIR_SELECTED -> {
+                    val path = data!!.getStringExtra(RESULT_SELECTED_DIR)
+                    app().deckManager.export(deck, path)
+                    val rootView = findViewById(android.R.id.content)
+                    val message = String.format(resources.getString(R.string.deck_exported), deck.name, path)
+                    Snackbar.make(rootView, message, LENGTH_LONG).show()
+                }
             }
         }
     }
