@@ -15,7 +15,6 @@ import fr.gstraymond.utils.hasPerms
 import fr.gstraymond.utils.requestPerms
 import fr.gstraymond.utils.startActivity
 
-
 class DeckImporterActivity : CustomActivity(R.layout.activity_deck_importer) {
 
     companion object {

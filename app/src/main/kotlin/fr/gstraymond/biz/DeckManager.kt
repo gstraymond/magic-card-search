@@ -39,11 +39,13 @@ class DeckManager(private val deckList: DeckList,
         File("$path/${normalizeName(deck)}.mwdeck").printWriter().use {
             it.write("// NAME : ${deck.name}\n")
             it.write("// FORMAT : ${deck.format}\n")
-            cardList.map { (card, _, mult, isSideboard) ->
-                val line = "$mult [] ${card.title}\n"
-                if (isSideboard) it.write("SB:  $line")
-                else it.write("        $line")
-            }
+            cardList.all()
+                    .sortedBy { it.isSideboard }
+                    .map { (card, _, mult, isSideboard) ->
+                        val line = "$mult [] ${card.title}\n"
+                        if (isSideboard) it.write("SB:  $line")
+                        else it.write("        $line")
+                    }
         }
     }
 

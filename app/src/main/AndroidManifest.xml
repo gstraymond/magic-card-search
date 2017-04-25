@@ -129,11 +129,10 @@
         <activity
             android:name="net.rdrei.android.dirchooser.DirectoryChooserActivity"
             android:parentActivityName=".android.DeckDetailActivity"
-            android:theme="@style/AppTheme">
+            android:theme="@style/AppThemeDirChooser">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".android.DeckDetailActivity" />
-
         </activity>
 
         <meta-data
