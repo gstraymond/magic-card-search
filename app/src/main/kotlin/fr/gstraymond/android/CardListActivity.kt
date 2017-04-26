@@ -31,6 +31,7 @@ import fr.gstraymond.ui.SuggestionListener
 import fr.gstraymond.ui.TextListener
 import fr.gstraymond.ui.adapter.CardArrayAdapter
 import fr.gstraymond.ui.adapter.CardArrayData
+import fr.gstraymond.ui.adapter.CardClickCallbacks
 import fr.gstraymond.ui.adapter.SearchViewCursorAdapter
 import fr.gstraymond.utils.app
 import fr.gstraymond.utils.find
@@ -39,7 +40,7 @@ import fr.gstraymond.utils.startActivity
 import sheetrock.panda.changelog.ChangeLog
 
 class CardListActivity : CustomActivity(R.layout.activity_card_list),
-        AutocompleteProcessor.Callbacks, CardArrayAdapter.ClickCallbacks {
+        AutocompleteProcessor.Callbacks {
 
     companion object {
         val SEARCH_QUERY = "searchQuery"
@@ -64,11 +65,24 @@ class CardListActivity : CustomActivity(R.layout.activity_card_list),
     private val filterTextView by lazy { find<TextView>(R.id.toolbar_filter) }
     private val resetTextView by lazy { find<TextView>(R.id.toolbar_reset) }
     private val emptyTextView by lazy { find<TextView>(R.id.search_empty_text) }
+    private val leftNavigationView by lazy { find<NavigationView>(R.id.left_drawer) }
 
     private lateinit var arrayAdapter: CardArrayAdapter
 
     private val presenter = CardListPresenter(this)
     private val log = Log(javaClass)
+
+    private val clickCallback = object : CardArrayAdapter.ClickCallbacks {
+        override fun cardClicked(card: Card) = startActivity {
+            CardDetailActivity.getIntent(this@CardListActivity, card)
+        }
+    }
+
+    private val cardClickCallback = object : CardClickCallbacks {
+        override fun itemAdded(position: Int) = updateMenuWishlistSize()
+
+        override fun itemRemoved(position: Int) = updateMenuWishlistSize()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -98,7 +112,7 @@ class CardListActivity : CustomActivity(R.layout.activity_card_list),
                 cards = app().wishList,
                 deck = null)
 
-        arrayAdapter = CardArrayAdapter(rootView, data, this, presenter)
+        arrayAdapter = CardArrayAdapter(rootView, data, clickCallback, cardClickCallback, presenter)
 
         presenter.let {
             it.searchViewCursorAdapter = searchViewCursorAdapter
@@ -164,7 +178,7 @@ class CardListActivity : CustomActivity(R.layout.activity_card_list),
             drawerToggle = actionBarDrawerToggle
             drawerLayout.addDrawerListener(actionBarDrawerToggle)
 
-            find<NavigationView>(R.id.left_drawer).let {
+            leftNavigationView.let {
                 val headerView = it.getHeaderView(0)
                 headerView.find<TextView>(R.id.nav_header_app_name).text = VersionUtils.getAppName(this)
                 headerView.find<TextView>(R.id.nav_header_app_version).text = VersionUtils.getAppVersion()
@@ -213,11 +227,6 @@ class CardListActivity : CustomActivity(R.layout.activity_card_list),
         presenter.setSearchViewData(results)
     }
 
-    override fun cardClicked(card: Card) = startActivity {
-        CardDetailActivity.getIntent(this, card)
-    }
-
-
     override fun onSaveInstanceState(outState: Bundle) {
         outState.putParcelable(SEARCH_QUERY, presenter.getCurrentSearch().updateAppend(false))
         super.onSaveInstanceState(outState)
@@ -226,6 +235,29 @@ class CardListActivity : CustomActivity(R.layout.activity_card_list),
     override fun onResume() {
         super.onResume()
         findViewById(R.id.root_view).requestFocus()
+
+        if (presenter.getCurrentSearch().deckId == null) {
+            updateMenuWishlistSize()
+
+            updateMenuListSize(app().deckList.size(),
+                    R.id.menu_decks,
+                    R.string.decks_title,
+                    R.string.decks_title_number)
+        }
+    }
+
+    private fun updateMenuWishlistSize() {
+        updateMenuListSize(app().wishList.size(),
+                R.id.menu_wishlist,
+                R.string.wishlist_title,
+                R.string.wishlist_title_number)
+    }
+
+    private fun updateMenuListSize(size: Int, menuId: Int, stringEmpty: Int, stringNumber: Int) {
+        leftNavigationView.menu.findItem(menuId).title = when (size) {
+            0 -> getString(stringEmpty)
+            else -> String.format(getString(stringNumber), size)
+        }
     }
 }
 

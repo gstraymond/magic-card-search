@@ -20,6 +20,7 @@ import fr.gstraymond.utils.inflate
 class CardArrayAdapter(private val view: View,
                        private val data: CardArrayData,
                        private val clickCallbacks: ClickCallbacks,
+                       private val cardClickCallbacks: CardClickCallbacks,
                        private val dataUpdater: DataUpdater) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private val context = view.context
@@ -54,12 +55,14 @@ class CardArrayAdapter(private val view: View,
             notifyItemChanged(position)
             val message = getMessage(add = true, cardName = cards[position].getLocalizedTitle(context))
             showMessage(message)
+            cardClickCallbacks.itemAdded(position)
         }
 
         override fun itemRemoved(position: Int) {
             notifyItemChanged(position)
             val message = getMessage(add = false, cardName = cards[position].getLocalizedTitle(context))
             showMessage(message)
+            cardClickCallbacks.itemRemoved(position)
         }
     }
 

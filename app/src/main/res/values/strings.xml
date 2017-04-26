@@ -70,6 +70,7 @@
     <string name="changelog_show_full">more…</string>
 
     <string name="wishlist_title">Wishlist</string>
+    <string name="wishlist_title_number">Wishlist (%1$s)</string>
     <string name="wishlist_empty_text">Your wishlist is empty.\n\nAdd any card with the STAR button on search results.</string>
     <string name="deck_list_empty_text">Your deck list is empty.</string>
 
@@ -80,6 +81,7 @@
 
     <string name="added_to_clipboard">Copied to clipboard !</string>
     <string name="decks_title">Decks</string>
+    <string name="decks_title_number">Decks (%1$s)</string>
     <string name="quantity">Quantity</string>
     <string name="sideboard">Sideboard</string>
 
