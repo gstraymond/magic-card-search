@@ -12,7 +12,7 @@ class CostView(private val context: Context) : CommonDisplayableView<ImageView>(
     private val max1 = 1.0
     private val max2 = 10.0
 
-    override fun display(view: ImageView, card: Card) = true // display is done after
+    override fun display(view: ImageView, card: Card) = true
 
     override fun setValue(view: ImageView, card: Card, position: Int) {
         val prices = card.publications
