@@ -11,9 +11,9 @@ import fr.gstraymond.constants.FacetConst
 import fr.gstraymond.models.search.response.Facet
 import fr.gstraymond.models.search.response.Term
 import fr.gstraymond.utils.find
-import fr.gstraymond.utils.hide
+import fr.gstraymond.utils.gone
 import fr.gstraymond.utils.inflate
-import fr.gstraymond.utils.show
+import fr.gstraymond.utils.visible
 
 
 class FacetListAdapter(facetMap: Map<String, Facet>,
@@ -88,9 +88,9 @@ class FacetListAdapter(facetMap: Map<String, Facet>,
             counterTextViewInactive to counterTextViewActive
         }
 
-        hiddenCounterTextView.hide()
+        hiddenCounterTextView.gone()
 
-        counterTextView.show()
+        counterTextView.visible()
         counterTextView.text =
                 if (term.count > 0) term.count.toString() + ""
                 else "?"
@@ -121,9 +121,9 @@ class FacetListAdapter(facetMap: Map<String, Facet>,
         if (selectedFacets.contains(facet)) {
             val children = getChildren(groupPosition).filter { selectedTerms.contains(it) }
             selectedTextView.text = children.map(Term::term).joinToString()
-            selectedTextView.show()
+            selectedTextView.visible()
         } else {
-            selectedTextView.hide()
+            selectedTextView.gone()
         }
 
         return view

@@ -91,11 +91,11 @@ class DeckDetailCardsFragment : Fragment(), DeckLineCallback {
 
     private fun updateTotal() {
         if (cardList.isEmpty()) {
-            frame.hide()
-            emptyText.show()
+            frame.gone()
+            emptyText.visible()
         } else {
-            frame.show()
-            emptyText.hide()
+            frame.visible()
+            emptyText.gone()
             val deckStats = DeckStats(cardList.all())
             cardTotal.text = "${deckStats.deckSize} / ${deckStats.sideboardSize}"
         }

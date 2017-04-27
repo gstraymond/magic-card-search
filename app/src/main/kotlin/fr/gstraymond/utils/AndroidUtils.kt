@@ -13,8 +13,7 @@ import android.support.v4.content.ContextCompat
 import android.support.v4.content.res.ResourcesCompat
 import android.view.LayoutInflater
 import android.view.View
-import android.view.View.GONE
-import android.view.View.VISIBLE
+import android.view.View.*
 import android.view.ViewGroup
 import fr.gstraymond.android.CustomApplication
 
@@ -22,27 +21,31 @@ inline fun <reified A : View> View.find(id: Int): A = findViewById(id) as A
 
 inline fun <reified A : View> Activity.find(id: Int): A = findViewById(id) as A
 
-fun View.hide(): Unit {
+fun View.gone(): Unit {
     visibility = GONE
 }
 
-fun View.hide(id: Int): Unit {
-    findViewById(id).hide()
+fun View.gone(id: Int): Unit {
+    findViewById(id).gone()
 }
 
-fun View.show(): Unit {
+fun View.visible(): Unit {
     visibility = VISIBLE
 }
 
-fun View.show(id: Int): Unit {
-    findViewById(id).show()
+fun View.visible(id: Int): Unit {
+    findViewById(id).visible()
 }
 
-fun Activity.hide(id: Int): Unit {
+fun View.invisible(): Unit {
+    visibility = INVISIBLE
+}
+
+fun Activity.gone(id: Int): Unit {
     findViewById(id).visibility = GONE
 }
 
-fun Activity.show(id: Int): Unit {
+fun Activity.visible(id: Int): Unit {
     findViewById(id).visibility = VISIBLE
 }
 

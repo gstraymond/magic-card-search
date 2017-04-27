@@ -100,6 +100,7 @@
     <string name="organize_your_cards">Organisez vos cartes</string>
     <string name="reset">Réinitialiser</string>
     <string name="search_empty_text">Recherchez des cartes en tapant des mots-clés et en sélectionnant des filtres.</string>
+    <string name="search_last_extension"><![CDATA[<b>%2$s</b> cartes au total<br><b>%1$s</b> est la dernière édition]]></string>
     <string name="deck_detail_cards_add">Ajouter une carte via la recherche</string>
     <string name="deck_detail_cards_add_history">Ajouter une carte via l´historique</string>
     <string name="decks_add">Créer un deck vide</string>

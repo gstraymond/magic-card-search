@@ -14,7 +14,8 @@ data class SearchOptions(var query: String = QUERY_ALL,
                          var size: Int = 30,
                          var facets: Map<String, List<String>> = hashMapOf(),
                          var facetSize: Map<String, Int> = hashMapOf(),
-                         var deckId: String? = null) : Parcelable {
+                         var deckId: String? = null,
+                         var sort: String? = null) : Parcelable {
 
     constructor(source: Parcel) : this(
             query = source.readString(),
@@ -23,7 +24,8 @@ data class SearchOptions(var query: String = QUERY_ALL,
             from = source.readInt(),
             size = source.readInt(),
             facets = readFacets(source),
-            deckId = source.readString()
+            deckId = source.readString(),
+            sort = source.readString()
             // facetSize : pas de persistence de la taille des facettes
             // addToHistory : pas de persistence de l'ajout à l'historique
             // fromOkGoogle : pas de persistence
@@ -39,6 +41,7 @@ data class SearchOptions(var query: String = QUERY_ALL,
         dest.writeInt(size)
         writeFacets(dest, facets)
         dest.writeString(deckId)
+        dest.writeString(sort)
         // facetSize : pas de persistence de la taille des facettes
         // addToHistory : pas de persistence de l'ajout à l'historique
         // fromOkGoogle : pas de persistence
@@ -91,6 +94,11 @@ data class SearchOptions(var query: String = QUERY_ALL,
 
     companion object {
         val QUERY_ALL = "*"
+
+        val START_SEARCH_OPTIONS = SearchOptions(
+                size = 1,
+                sort = "publications.editionReleaseDate:desc",
+                addToHistory = false)
 
         @JvmField
         val CREATOR = object : Parcelable.Creator<SearchOptions> {

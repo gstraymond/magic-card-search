@@ -35,7 +35,7 @@ import fr.gstraymond.ui.adapter.CardClickCallbacks
 import fr.gstraymond.ui.adapter.SearchViewCursorAdapter
 import fr.gstraymond.utils.app
 import fr.gstraymond.utils.find
-import fr.gstraymond.utils.hide
+import fr.gstraymond.utils.gone
 import fr.gstraymond.utils.startActivity
 import sheetrock.panda.changelog.ChangeLog
 
@@ -122,6 +122,7 @@ class CardListActivity : CustomActivity(R.layout.activity_card_list),
             it.filterTextView = filterTextView
             it.resetTextView = resetTextView
             it.emptyTextView = emptyTextView
+            it.rootView = rootView
         }
 
         val linearLayoutManager = LinearLayoutManager(this)
@@ -153,13 +154,12 @@ class CardListActivity : CustomActivity(R.layout.activity_card_list),
         }
 
         resetTextView.setOnClickListener {
-            val options = SearchOptions(size = 0, addToHistory = false)
-            searchProcessor.build().execute(options)
+            searchProcessor.build().execute(SearchOptions.START_SEARCH_OPTIONS)
             searchView.apply {
                 clearFocus()
                 setQuery("", false)
             }
-            resetTextView.hide()
+            resetTextView.gone()
         }
 
         actionBarSetHomeButtonEnabled(true)

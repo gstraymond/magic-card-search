@@ -19,8 +19,8 @@ import fr.gstraymond.biz.DeckStats
 import fr.gstraymond.tools.CastingCostFormatter
 import fr.gstraymond.utils.app
 import fr.gstraymond.utils.find
-import fr.gstraymond.utils.hide
-import fr.gstraymond.utils.show
+import fr.gstraymond.utils.gone
+import fr.gstraymond.utils.visible
 
 class DeckDetailStatsFragment : Fragment() {
 
@@ -55,11 +55,11 @@ class DeckDetailStatsFragment : Fragment() {
         val deckId = activity.intent.getStringExtra(DECK_EXTRA)
         val cardList = activity.app().cardListBuilder.build(deckId.toInt())
         if (cardList.isEmpty()) {
-            recyclerView.hide()
-            emptyText.show()
+            recyclerView.gone()
+            emptyText.visible()
         } else {
-            recyclerView.show()
-            emptyText.hide()
+            recyclerView.visible()
+            emptyText.gone()
             val deckStats = DeckStats(cardList.all())
             deckDetailStatsAdapter.apply {
                 val formatColor = getText(R.string.stats_colors, ccFormatter.format(deckStats.colorSymbols))

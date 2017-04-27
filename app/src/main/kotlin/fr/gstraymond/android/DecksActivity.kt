@@ -67,9 +67,9 @@ class DecksActivity : CustomActivity(R.layout.activity_decks) {
         super.onResume()
         updateDecks()
         if (app().deckList.isEmpty()) {
-            show(R.id.decks_empty_text)
+            visible(R.id.decks_empty_text)
         } else {
-            hide(R.id.decks_empty_text)
+            gone(R.id.decks_empty_text)
         }
     }
 
