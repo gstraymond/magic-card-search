@@ -87,7 +87,7 @@ class CardListActivity : CustomActivity(R.layout.activity_card_list),
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val rootView = findViewById(android.R.id.content)
+        val rootView = findViewById(R.id.root_view)
         val toolbar = find<Toolbar>(R.id.toolbar)
 
         setSupportActionBar(toolbar)
