@@ -34,9 +34,12 @@ class DeckManager(private val deckList: DeckList,
         deckList.delete(deck)
     }
 
-    fun export(deck: Deck, path: String) {
+    fun export(deck: Deck, path: String): String {
         val cardList = cardListBuilder.build(deck.id)
-        File("$path/${normalizeName(deck)}.mwdeck").printWriter().use {
+        val files = File(path).listFiles().map { it.name }
+        val deckName = findUniqueName(files, normalizeName(deck))
+        val targetPath = "$path/$deckName"
+        File(targetPath).printWriter().use {
             it.write("// NAME : ${deck.name}\n")
             it.write("// FORMAT : ${deck.format}\n")
             cardList.all()
@@ -47,13 +50,26 @@ class DeckManager(private val deckList: DeckList,
                         else it.write("        $line")
                     }
         }
+        return targetPath
     }
 
-    // FIXME name already exists ?
     private fun normalizeName(deck: Deck) =
             Normalizer
                     .normalize(deck.name.toLowerCase(), Normalizer.Form.NFD)
                     .replace(" ", "_")
                     .replace("-", "_")
                     .replace("[^A-Za-z0-9_]".toRegex(), "")
+
+    private fun findUniqueName(files: List<String>, deckName: String): String {
+        val targetName = "$deckName.mwdeck"
+        return if (files.contains(targetName)) {
+            if (deckName.last().isDigit() && deckName.contains("_")) {
+                val rootName = deckName.dropLastWhile { it != '_' }
+                val counter = deckName.takeLastWhile { it != '_' }.toInt() + 1
+                findUniqueName(files, "$rootName$counter")
+            } else findUniqueName(files, "${deckName}_1")
+        } else {
+            targetName
+        }
+    }
 }

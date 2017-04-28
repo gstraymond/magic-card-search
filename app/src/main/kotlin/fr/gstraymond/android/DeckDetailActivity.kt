@@ -138,9 +138,9 @@ class DeckDetailActivity : CustomActivity(R.layout.activity_deck_detail) {
             DIR_PICKER_CODE -> when (resultCode) {
                 RESULT_CODE_DIR_SELECTED -> {
                     val path = data!!.getStringExtra(RESULT_SELECTED_DIR)
-                    app().deckManager.export(deck, path)
+                    val exportPath = app().deckManager.export(deck, path)
                     val rootView = findViewById(android.R.id.content)
-                    val message = String.format(resources.getString(R.string.deck_exported), deck.name, path)
+                    val message = String.format(resources.getString(R.string.deck_exported), deck.name, exportPath)
                     Snackbar.make(rootView, message, LENGTH_LONG).show()
                 }
             }
