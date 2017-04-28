@@ -72,10 +72,9 @@ class DeckImportProgressActivity : CustomActivity(R.layout.activity_deck_import_
         }
 
         override fun cardImported(card: String, result: Boolean) {
-            if (result) {
-                adapter.addLine(card)
-                layoutManager.scrollToPosition(adapter.itemCount - 1)
-            }
+            if (result) adapter.addLine(card)
+            else adapter.addLine(card + " -> KO")
+            layoutManager.scrollToPosition(adapter.itemCount - 1)
         }
 
         override fun finished(deckId: Int) {

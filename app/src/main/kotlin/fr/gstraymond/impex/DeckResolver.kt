@@ -10,7 +10,7 @@ class DeckResolver(val searchService: ElasticSearchService) {
         return deck.lines
                 .map { (mult, title, isSideboard) ->
                     searchService.resolve("title:$title")?.let { result ->
-                        val card = result.elem.hits.hits.find { it._source.title == title }?._source
+                        val card = result.elem.hits.hits.find { it._source.title.equals(title, ignoreCase = true) }?._source
                         deckImporterTask.publishProgress("$mult x $title", card != null)
                         card?.run {
                             DeckLine(this, Date().time, mult, isSideboard)

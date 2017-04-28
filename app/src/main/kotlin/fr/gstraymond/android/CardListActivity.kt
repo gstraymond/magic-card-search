@@ -154,7 +154,7 @@ class CardListActivity : CustomActivity(R.layout.activity_card_list),
         }
 
         resetTextView.setOnClickListener {
-            searchProcessor.build().execute(SearchOptions.START_SEARCH_OPTIONS)
+            searchProcessor.build().execute(SearchOptions.START_SEARCH_OPTIONS())
             searchView.apply {
                 clearFocus()
                 setQuery("", false)

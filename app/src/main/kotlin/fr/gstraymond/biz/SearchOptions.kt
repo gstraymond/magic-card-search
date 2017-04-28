@@ -92,10 +92,14 @@ data class SearchOptions(var query: String = QUERY_ALL,
         this.size = size
     }
 
+    fun updateSort(sort: String?) = apply {
+        this.sort = sort
+    }
+
     companion object {
         val QUERY_ALL = "*"
 
-        val START_SEARCH_OPTIONS = SearchOptions(
+        fun START_SEARCH_OPTIONS() = SearchOptions(
                 size = 1,
                 sort = "publications.editionReleaseDate:desc",
                 addToHistory = false)

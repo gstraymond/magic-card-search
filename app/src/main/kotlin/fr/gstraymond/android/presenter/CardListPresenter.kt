@@ -38,7 +38,7 @@ class CardListPresenter(private val context: Context) : DataUpdater {
 
     override fun updateCards(totalCardCount: Int, cards: List<Card>) {
         setTotalItemCount(totalCardCount)
-        if (searchOptions != SearchOptions.START_SEARCH_OPTIONS) {
+        if (searchOptions != SearchOptions.START_SEARCH_OPTIONS()) {
             if (searchOptions.append) {
                 arrayAdapter.appendCards(cards)
             } else {
@@ -53,13 +53,13 @@ class CardListPresenter(private val context: Context) : DataUpdater {
 
     override fun updateFacets(result: SearchResult) {
         if (!searchOptions.append) {
-            if (searchOptions != SearchOptions.START_SEARCH_OPTIONS
+            if (searchOptions != SearchOptions.START_SEARCH_OPTIONS()
                     && (searchOptions.query != "*" || searchOptions.facets.isNotEmpty())) {
                 resetTextView.visible()
                 emptyTextView.gone()
             } else {
                 emptyTextView.visible()
-                if (searchOptions == SearchOptions.START_SEARCH_OPTIONS) {
+                if (searchOptions == SearchOptions.START_SEARCH_OPTIONS()) {
                     result.hits.hits.firstOrNull()?._source?.publications?.firstOrNull()?.edition?.let { lastEdition ->
                         val text = String.format(context.getString(R.string.search_last_extension), lastEdition, result.hits.total)
                         snackbar?.dismiss()

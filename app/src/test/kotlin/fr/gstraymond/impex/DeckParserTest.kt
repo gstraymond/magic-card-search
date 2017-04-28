@@ -32,13 +32,19 @@ class DeckParserTest {
     fun should_import_mtgo_format_decks_4() {
         testUrl("https://mtgdecks.net/archetypes/analysis/3584/all/txt",
                 "txt",
-                sideboardSize = 17)
+                sideboardSize = 16)
     }
 
     @Test
     fun should_import_mtgo_format_decks_5() {
         testUrl("https://www.mtggoldfish.com/deck/download/615706",
                 "615706")
+    }
+
+    @Test
+    fun should_import_mtgo_format_decks_6() {
+        testUrl("https://www.mtggoldfish.com/deck/download/625122",
+                "625122")
     }
 
     @Test
