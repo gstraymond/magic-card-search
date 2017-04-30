@@ -2,6 +2,7 @@ buildscript {
     ext.kotlin_version = '1+'
 
     repositories {
+        mavenCentral()
         maven { url 'https://maven.fabric.io/public' }
         jcenter()
     }
@@ -17,8 +18,11 @@ apply plugin: 'io.fabric'
 apply plugin: 'kotlin-android'
 
 repositories {
+    mavenCentral()
     maven { url 'https://maven.fabric.io/public' }
+    maven { url  "http://dl.bintray.com/lukaville/maven" }
     maven { url "https://jitpack.io" }
+    maven { url 'http://guardian.github.com/maven/repo-releases' }
 }
 
 android {
@@ -29,8 +33,8 @@ android {
         applicationId "fr.gstraymond"
         minSdkVersion 14
         targetSdkVersion 25
-        versionCode 50
-        versionName "2.1.0"
+        versionCode 51
+        versionName "2.2.0"
     }
 
     signingConfigs {
@@ -81,7 +85,9 @@ ext {
     retrofitVersion = '2.1+'
     retrofitLoggingVersion = '3.3+'
     androidChartVersion = 'v3.+'
-    floatingactionbuttonVersion = '1.6.4'
+    floatingactionbuttonVersion = '1.6.+'
+    fileChooserVersion = '1.+'
+    dirChooserVersion = '3.+'
 }
 
 dependencies {
@@ -96,6 +102,7 @@ dependencies {
     compile "com.squareup.okhttp3:logging-interceptor:$retrofitLoggingVersion"
     compile "com.github.PhilJay:MPAndroidChart:$androidChartVersion"
     compile "com.github.clans:fab:$floatingactionbuttonVersion"
-
+    compile "com.nbsp:library:$fileChooserVersion"
+    compile ("net.rdrei.android.dirchooser:library:$dirChooserVersion@aar") { transitive = true }
     testCompile 'junit:junit:4.12'
 }

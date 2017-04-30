@@ -29,3 +29,14 @@
 -keepattributes SourceFile,LineNumberTable
 -keep class com.crashlytics.** { *; }
 -dontwarn com.crashlytics.**
+
+# autovalue
+-dontwarn javax.lang.**
+-dontwarn javax.tools.**
+-dontwarn javax.annotation.**
+-dontwarn autovalue.shaded.com.**
+-dontwarn com.google.auto.value.**
+
+-dontwarn org.apache.velocity.**
+
+-dontnote **

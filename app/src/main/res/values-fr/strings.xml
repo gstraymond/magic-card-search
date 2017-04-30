@@ -9,13 +9,13 @@
     <string name="list_menu_facets">Liste des filtres</string>
     <string name="list_menu_clear">Effacer la recherche</string>
     <string name="list_menu_search">Recherche</string>
-    <string name="list_menu_help">A l\'aide !</string>
+    <string name="list_menu_help">A l´aide !</string>
     <string name="list_menu_history">Recherches récentes</string>
     <string name="list_menu_deck">Retour au deck</string>
     <string name="added_to_wishlist">%1$s ajouté à votre wishlist</string>
     <string name="removed_from_wishlist">%1$s supprimé de votre wishlist</string>
-    <string name="added_to_deck">%1$s ajouté au deck \'%2$s\'</string>
-    <string name="removed_from_deck">%1$s supprimé du deck \'%2$s\'</string>
+    <string name="added_to_deck">%1$s ajouté au deck ´%2$s´</string>
+    <string name="removed_from_deck">%1$s supprimé du deck ´%2$s´</string>
 
     <string name="detail_menu_oracle">Texte</string>
     <string name="detail_menu_pictures">Images</string>
@@ -67,6 +67,7 @@
     <string name="changelog_show_full">plus…</string>
 
     <string name="wishlist_title">Wishlist</string>
+    <string name="wishlist_title_number">Wishlist (%1$s)</string>
     <string name="wishlist_empty_text">Votre wishlist est vide.\n\nAjoutez des cartes avec le bouton STAR dans les résultats de recherche.</string>
     <string name="deck_list_empty_text">Votre liste de deck est vide.</string>
 
@@ -77,6 +78,7 @@
 
     <string name="added_to_clipboard">Copié !</string>
     <string name="decks_title">Decks</string>
+    <string name="decks_title_number">Decks (%1$s)</string>
     <string name="quantity">Quantité</string>
     <string name="sideboard">Sideboard</string>
 
@@ -98,4 +100,18 @@
     <string name="organize_your_cards">Organisez vos cartes</string>
     <string name="reset">Réinitialiser</string>
     <string name="search_empty_text">Recherchez des cartes en tapant des mots-clés et en sélectionnant des filtres.</string>
+    <string name="search_last_extension"><![CDATA[<b>%2$s</b> cartes au total<br><b>%1$s</b> est la dernière édition]]></string>
+    <string name="deck_detail_cards_add">Ajouter une carte via la recherche</string>
+    <string name="deck_detail_cards_add_history">Ajouter une carte via l´historique</string>
+    <string name="decks_add">Créer un deck vide</string>
+    <string name="decks_import">Importer un deck depuis un fichier</string>
+    <string name="import_deck">Importer un deck</string>
+    <string name="select_file">Selectionner un ficher</string>
+    <string name="deck_importer_text_why">Vous pouvez importer un deck depuis un fichier sur votre appareil.\n\nSinon, vous pouvez télécharger un deck depuis un de ces sites :</string>
+    <string name="go_to_deck">Voir le deck</string>
+    <string name="downloading">Téléchargement</string>
+    <string name="go_back">Retour</string>
+    <string name="bad_format">Impossible d´importer le deck : format non-reconnu</string>
+    <string name="decklist_menu_export">Export</string>
+    <string name="deck_exported">%1$s a été exporté vers : %2$s</string>
 </resources>

@@ -20,7 +20,7 @@ class WishListActivity : CustomActivity(R.layout.activity_wishlist) {
 
     private val emptyTextViewId = R.id.wishlist_empty_text
     private val clickCallbacks = object : WishlistAdapter.ClickCallbacks {
-        override fun onEmptyList() = show(emptyTextViewId)
+        override fun onEmptyList() = visible(emptyTextViewId)
 
         override fun cardClicked(card: Card) = startActivity {
             CardDetailActivity.getIntent(this@WishListActivity, card)
@@ -36,6 +36,7 @@ class WishListActivity : CustomActivity(R.layout.activity_wishlist) {
 
 
         find<RecyclerView>(R.id.wishlist_recyclerview).let {
+            it.setHasFixedSize(true)
             it.layoutManager = LinearLayoutManager(this)
             it.adapter = WishlistAdapter(this, app().wishList, clickCallbacks)
         }
@@ -44,9 +45,9 @@ class WishListActivity : CustomActivity(R.layout.activity_wishlist) {
     override fun onResume() {
         super.onResume()
         if (app().wishList.isEmpty()) {
-            show(emptyTextViewId)
+            visible(emptyTextViewId)
         } else {
-            hide(emptyTextViewId)
+            gone(emptyTextViewId)
         }
     }
 }

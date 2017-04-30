@@ -26,7 +26,7 @@ class DeckImporter(private val contentResolver: ContentResolver) {
 
     private fun parse(deckList: String, url: URL): ImportedDeck? {
         val resolvedUri = when (url.protocol) {
-            "content" -> resolveFileURL(url)
+            "fle" -> resolveFileURL(url)
             else -> null
         } ?: url
 
@@ -54,7 +54,7 @@ class DeckImporter(private val contentResolver: ContentResolver) {
 
     private fun openUrl(url: URL): String? = when (url.protocol) {
         "http", "https" -> fetchHTTP(url)
-        "content" -> fetchContent(url)
+        "file" -> fetchContent(url)
         else -> null
     }
 

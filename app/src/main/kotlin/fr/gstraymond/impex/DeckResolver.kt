@@ -8,12 +8,12 @@ class DeckResolver(val searchService: ElasticSearchService) {
 
     fun resolve(deck: ImportedDeck, deckImporterTask: DeckImporterTask): List<DeckLine> {
         return deck.lines
-                .map { line ->
-                    searchService.resolve("title:${line.title}")?.let { result ->
-                        val card = result.elem.hits.hits.find { it._source.title == line.title }?._source
-                        deckImporterTask.publishProgress(line.title, card != null)
+                .map { (mult, title, isSideboard) ->
+                    searchService.resolve("title:$title")?.let { result ->
+                        val card = result.elem.hits.hits.find { it._source.title.equals(title, ignoreCase = true) }?._source
+                        deckImporterTask.publishProgress("$mult x $title", card != null)
                         card?.run {
-                            DeckLine(this, Date().time, line.mult, line.isSideboard)
+                            DeckLine(this, Date().time, mult, isSideboard)
                         }
                     }
                 }

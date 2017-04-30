@@ -25,6 +25,7 @@ class FacetOnChildClickListener(private val adapter: FacetListAdapter,
                 .updateFrom(0)
                 .updateAddToHistory(true)
                 .updateSize(30)
+                .updateSort(null)
 
         if (term.count > -1) {
             if (adapter.isTermSelected(term)) {

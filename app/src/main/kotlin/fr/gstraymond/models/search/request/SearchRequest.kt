@@ -8,7 +8,7 @@ data class Request(val query: Query,
                    val from: Int,
                    val size: Int,
                    val facets: Map<String, Facet>,
-                   val sort: List<String>) {
+                   val sort: Map<String, Order>) {
     companion object {
         fun fromOptions(options: SearchOptions) =
                 Request(query = Query.fromOptions(options),
@@ -22,9 +22,13 @@ data class Request(val query: Query,
                                 }
                             }
                         },
-                        sort = when (SearchOptions.QUERY_ALL == options.query && !options.random) {
-                            true -> listOf("_uid")
-                            else -> listOf()
+                        sort = when  {
+                            options.sort != null -> {
+                                val split = options.sort!!.split(":")
+                                mapOf(split[0] to Order(split[1]))
+                            }
+                            SearchOptions.QUERY_ALL == options.query && !options.random -> mapOf("_uid" to Order())
+                            else -> mapOf()
                         }
                 )
     }
@@ -70,3 +74,5 @@ data class Function_score(val query: QueryMatchAll = QueryMatchAll(),
 data class QueryMatchAll(val match_all: Any = object {})
 
 data class Term(val term: Map<String, String>)
+
+data class Order(var order: String = "asc")

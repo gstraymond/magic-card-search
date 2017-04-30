@@ -70,6 +70,7 @@
     <string name="changelog_show_full">more…</string>
 
     <string name="wishlist_title">Wishlist</string>
+    <string name="wishlist_title_number">Wishlist (%1$s)</string>
     <string name="wishlist_empty_text">Your wishlist is empty.\n\nAdd any card with the STAR button on search results.</string>
     <string name="deck_list_empty_text">Your deck list is empty.</string>
 
@@ -80,6 +81,7 @@
 
     <string name="added_to_clipboard">Copied to clipboard !</string>
     <string name="decks_title">Decks</string>
+    <string name="decks_title_number">Decks (%1$s)</string>
     <string name="quantity">Quantity</string>
     <string name="sideboard">Sideboard</string>
 
@@ -102,4 +104,18 @@
     <string name="reset">Reset</string>
 
     <string name="search_empty_text">Search cards by typing keywords and by selecting filters.</string>
+    <string name="search_last_extension"><![CDATA[<b>%2$s</b> cards<br><b>%1$s</b> is the newest set]]></string>
+    <string name="deck_detail_cards_add">Add card using search</string>
+    <string name="deck_detail_cards_add_history">Add card using history</string>
+    <string name="decks_add">Create empty deck</string>
+    <string name="decks_import">Import deck from file</string>
+    <string name="import_deck">Import deck</string>
+    <string name="select_file">Select a file</string>
+    <string name="deck_importer_text_why">You can import a deck from a file on your device.\n\nOtherwise, you can download one deck from one of theses website:</string>
+    <string name="go_to_deck">Go to deck</string>
+    <string name="downloading">Downloading…</string>
+    <string name="go_back">Go back</string>
+    <string name="bad_format">Unable to parse deck: unrecognized format</string>
+    <string name="decklist_menu_export">Export</string>
+    <string name="deck_exported">%1$s has been exported to: %2$s</string>
 </resources>

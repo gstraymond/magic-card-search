@@ -97,6 +97,7 @@
                         android:gravity="center"
                         android:paddingLeft="32dp"
                         android:paddingRight="32dp"
+                        android:paddingBottom="64dp"
                         android:text="@string/search_empty_text" />
                 </FrameLayout>
             </LinearLayout>

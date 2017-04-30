@@ -31,15 +31,16 @@ import fr.gstraymond.ui.SuggestionListener
 import fr.gstraymond.ui.TextListener
 import fr.gstraymond.ui.adapter.CardArrayAdapter
 import fr.gstraymond.ui.adapter.CardArrayData
+import fr.gstraymond.ui.adapter.CardClickCallbacks
 import fr.gstraymond.ui.adapter.SearchViewCursorAdapter
 import fr.gstraymond.utils.app
 import fr.gstraymond.utils.find
-import fr.gstraymond.utils.hide
+import fr.gstraymond.utils.gone
 import fr.gstraymond.utils.startActivity
 import sheetrock.panda.changelog.ChangeLog
 
 class CardListActivity : CustomActivity(R.layout.activity_card_list),
-        AutocompleteProcessor.Callbacks, CardArrayAdapter.ClickCallbacks {
+        AutocompleteProcessor.Callbacks {
 
     companion object {
         val SEARCH_QUERY = "searchQuery"
@@ -58,27 +59,35 @@ class CardListActivity : CustomActivity(R.layout.activity_card_list),
     private val suggestionListener by lazy { SuggestionListener(searchView, listOf()) }
     private val searchViewCursorAdapter by lazy { SearchViewCursorAdapter.empty(this) }
 
-    private lateinit var facetListView: ExpandableListView
-    private lateinit var searchView: SearchView
-    private lateinit var recyclerView: RecyclerView
+    private val facetListView by lazy { find<ExpandableListView>(R.id.right_drawer_list) }
+    private val searchView by lazy { find<SearchView>(R.id.search_input) }
+    private val recyclerView by lazy { find<RecyclerView>(R.id.search_recyclerview) }
+    private val filterTextView by lazy { find<TextView>(R.id.toolbar_filter) }
+    private val resetTextView by lazy { find<TextView>(R.id.toolbar_reset) }
+    private val emptyTextView by lazy { find<TextView>(R.id.search_empty_text) }
+    private val leftNavigationView by lazy { find<NavigationView>(R.id.left_drawer) }
+
     private lateinit var arrayAdapter: CardArrayAdapter
-    private lateinit var filterTextView: TextView
-    private lateinit var resetTextView: TextView
-    private lateinit var emptyTextView: TextView
 
     private val presenter = CardListPresenter(this)
     private val log = Log(javaClass)
 
+    private val clickCallback = object : CardArrayAdapter.ClickCallbacks {
+        override fun cardClicked(card: Card) = startActivity {
+            CardDetailActivity.getIntent(this@CardListActivity, card)
+        }
+    }
+
+    private val cardClickCallback = object : CardClickCallbacks {
+        override fun itemAdded(position: Int) = updateMenuWishlistSize()
+
+        override fun itemRemoved(position: Int) = updateMenuWishlistSize()
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        facetListView = find(R.id.right_drawer_list)
-        searchView = find(R.id.search_input)
-        recyclerView = find(R.id.search_recyclerview)
-        filterTextView = find(R.id.toolbar_filter)
-        resetTextView = find(R.id.toolbar_reset)
-        emptyTextView = find(R.id.search_empty_text)
-        val rootView = findViewById(android.R.id.content)
+        val rootView = findViewById(R.id.root_view)
         val toolbar = find<Toolbar>(R.id.toolbar)
 
         setSupportActionBar(toolbar)
@@ -89,6 +98,9 @@ class CardListActivity : CustomActivity(R.layout.activity_card_list),
 
         savedSearch?.apply {
             presenter.setCurrentSearch(this)
+            if (query != "*") {
+                searchView.setQuery(query, false)
+            }
         }
 
         val data = presenter.getCurrentSearch().deckId?.run {
@@ -100,7 +112,7 @@ class CardListActivity : CustomActivity(R.layout.activity_card_list),
                 cards = app().wishList,
                 deck = null)
 
-        arrayAdapter = CardArrayAdapter(rootView, data, this, presenter)
+        arrayAdapter = CardArrayAdapter(rootView, data, clickCallback, cardClickCallback, presenter)
 
         presenter.let {
             it.searchViewCursorAdapter = searchViewCursorAdapter
@@ -110,10 +122,12 @@ class CardListActivity : CustomActivity(R.layout.activity_card_list),
             it.filterTextView = filterTextView
             it.resetTextView = resetTextView
             it.emptyTextView = emptyTextView
+            it.rootView = rootView
         }
 
         val linearLayoutManager = LinearLayoutManager(this)
         recyclerView.apply {
+            setHasFixedSize(true)
             layoutManager = linearLayoutManager
             adapter = arrayAdapter
             addOnScrollListener(EndScrollListener(searchProcessor, presenter, linearLayoutManager))
@@ -140,13 +154,12 @@ class CardListActivity : CustomActivity(R.layout.activity_card_list),
         }
 
         resetTextView.setOnClickListener {
-            val options = SearchOptions(size = 0, addToHistory = false)
-            searchProcessor.build().execute(options)
+            searchProcessor.build().execute(SearchOptions.START_SEARCH_OPTIONS())
             searchView.apply {
                 clearFocus()
                 setQuery("", false)
             }
-            resetTextView.hide()
+            resetTextView.gone()
         }
 
         actionBarSetHomeButtonEnabled(true)
@@ -165,7 +178,7 @@ class CardListActivity : CustomActivity(R.layout.activity_card_list),
             drawerToggle = actionBarDrawerToggle
             drawerLayout.addDrawerListener(actionBarDrawerToggle)
 
-            find<NavigationView>(R.id.left_drawer).let {
+            leftNavigationView.let {
                 val headerView = it.getHeaderView(0)
                 headerView.find<TextView>(R.id.nav_header_app_name).text = VersionUtils.getAppName(this)
                 headerView.find<TextView>(R.id.nav_header_app_version).text = VersionUtils.getAppVersion()
@@ -214,19 +227,37 @@ class CardListActivity : CustomActivity(R.layout.activity_card_list),
         presenter.setSearchViewData(results)
     }
 
-    override fun cardClicked(card: Card) = startActivity {
-        CardDetailActivity.getIntent(this, card)
-    }
-
-
     override fun onSaveInstanceState(outState: Bundle) {
-        outState.putParcelable(SEARCH_QUERY, presenter.getCurrentSearch())
+        outState.putParcelable(SEARCH_QUERY, presenter.getCurrentSearch().updateAppend(false))
         super.onSaveInstanceState(outState)
     }
 
     override fun onResume() {
         super.onResume()
         findViewById(R.id.root_view).requestFocus()
+
+        if (presenter.getCurrentSearch().deckId == null) {
+            updateMenuWishlistSize()
+
+            updateMenuListSize(app().deckList.size(),
+                    R.id.menu_decks,
+                    R.string.decks_title,
+                    R.string.decks_title_number)
+        }
+    }
+
+    private fun updateMenuWishlistSize() {
+        updateMenuListSize(app().wishList.size(),
+                R.id.menu_wishlist,
+                R.string.wishlist_title,
+                R.string.wishlist_title_number)
+    }
+
+    private fun updateMenuListSize(size: Int, menuId: Int, stringEmpty: Int, stringNumber: Int) {
+        leftNavigationView.menu.findItem(menuId).title = when (size) {
+            0 -> getString(stringEmpty)
+            else -> String.format(getString(stringNumber), size)
+        }
     }
 }
 

@@ -2,6 +2,8 @@ package fr.gstraymond.android.presenter
 
 import android.content.Context
 import android.support.design.widget.Snackbar
+import android.text.Html
+import android.view.View
 import android.widget.ExpandableListView
 import android.widget.TextView
 import fr.gstraymond.R
@@ -15,8 +17,8 @@ import fr.gstraymond.ui.FacetOnChildClickListener
 import fr.gstraymond.ui.adapter.CardArrayAdapter
 import fr.gstraymond.ui.adapter.FacetListAdapter
 import fr.gstraymond.ui.adapter.SearchViewCursorAdapter
-import fr.gstraymond.utils.hide
-import fr.gstraymond.utils.show
+import fr.gstraymond.utils.gone
+import fr.gstraymond.utils.visible
 
 class CardListPresenter(private val context: Context) : DataUpdater {
 
@@ -32,37 +34,50 @@ class CardListPresenter(private val context: Context) : DataUpdater {
     lateinit var filterTextView: TextView
     lateinit var resetTextView: TextView
     lateinit var emptyTextView: TextView
+    lateinit var rootView: View
 
     override fun updateCards(totalCardCount: Int, cards: List<Card>) {
         setTotalItemCount(totalCardCount)
-        if (getCurrentSearch().append) {
-            arrayAdapter.appendCards(cards)
+        if (searchOptions != SearchOptions.START_SEARCH_OPTIONS()) {
+            if (searchOptions.append) {
+                arrayAdapter.appendCards(cards)
+            } else {
+                arrayAdapter.setCards(cards)
+            }
         } else {
-            arrayAdapter.setCards(cards)
+            arrayAdapter.setCards(listOf())
         }
     }
 
     private val filterText by lazy { context.getString(R.string.filter) }
 
     override fun updateFacets(result: SearchResult) {
-        if (!getCurrentSearch().append) {
-            if (result.hits.hits.isNotEmpty()) {
-                resetTextView.show()
-                emptyTextView.hide()
+        if (!searchOptions.append) {
+            if (searchOptions != SearchOptions.START_SEARCH_OPTIONS()
+                    && (searchOptions.query != "*" || searchOptions.facets.isNotEmpty())) {
+                resetTextView.visible()
+                emptyTextView.gone()
             } else {
-                emptyTextView.show()
+                emptyTextView.visible()
+                if (searchOptions == SearchOptions.START_SEARCH_OPTIONS()) {
+                    result.hits.hits.firstOrNull()?._source?.publications?.firstOrNull()?.edition?.let { lastEdition ->
+                        val text = String.format(context.getString(R.string.search_last_extension), lastEdition, result.hits.total)
+                        snackbar?.dismiss()
+                        snackbar = Snackbar.make(rootView, Html.fromHtml(text), Snackbar.LENGTH_INDEFINITE).apply { show() }
+                    }
+                }
             }
-            filterTextView.text = getCurrentSearch().facets.size.run {
+            filterTextView.text = searchOptions.facets.size.run {
                 when (this) {
                     0 -> filterText
                     else -> "$filterText ($this)"
                 }
             }
 
-            val adapter = FacetListAdapter(result.facets, getCurrentSearch(), context)
+            val adapter = FacetListAdapter(result.facets, searchOptions, context)
             facetListView.setAdapter(adapter)
 
-            val listener = FacetOnChildClickListener(adapter, getCurrentSearch(), searchProcessor)
+            val listener = FacetOnChildClickListener(adapter, searchOptions, searchProcessor)
             facetListView.setOnChildClickListener(listener)
         }
     }

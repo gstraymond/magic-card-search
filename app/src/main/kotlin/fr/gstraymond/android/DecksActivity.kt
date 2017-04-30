@@ -3,7 +3,6 @@ package fr.gstraymond.android
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.support.design.widget.FloatingActionButton
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.Toolbar
@@ -11,7 +10,6 @@ import android.view.View
 import fr.gstraymond.R
 import fr.gstraymond.analytics.Tracker
 import fr.gstraymond.android.adapter.DeckListAdapter
-import fr.gstraymond.biz.DeckManager
 import fr.gstraymond.models.Deck
 import fr.gstraymond.utils.*
 
@@ -28,9 +26,6 @@ class DecksActivity : CustomActivity(R.layout.activity_decks) {
             }
         }
     }
-    private val deckList by lazy { app().deckList }
-    private val cardListBuilder by lazy { app().cardListBuilder }
-    private val deckManager by lazy { DeckManager(deckList, cardListBuilder) }
 
     companion object {
         fun getIntent(context: Context) = Intent(context, DecksActivity::class.java)
@@ -43,17 +38,26 @@ class DecksActivity : CustomActivity(R.layout.activity_decks) {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         setTitle(R.string.decks_title)
 
-        find<FloatingActionButton>(R.id.decks_fab).let {
+        findViewById(R.id.decks_fab_add).let {
             it.setOnClickListener {
                 startActivity {
                     Tracker.addRemoveDeck(added = true)
-                    val deckId = deckManager.createEmptyDeck()
+                    val deckId = app().deckManager.createEmptyDeck()
                     DeckDetailActivity.getIntent(this, "$deckId")
                 }
             }
         }
 
+        findViewById(R.id.decks_fab_import).let {
+            it.setOnClickListener {
+                startActivity {
+                    DeckImporterActivity.getIntent(this)
+                }
+            }
+        }
+
         find<RecyclerView>(R.id.decks_recyclerview).let {
+            it.setHasFixedSize(true)
             it.layoutManager = LinearLayoutManager(this)
             it.adapter = deckListAdapter
         }
@@ -62,10 +66,10 @@ class DecksActivity : CustomActivity(R.layout.activity_decks) {
     override fun onResume() {
         super.onResume()
         updateDecks()
-        if (deckList.isEmpty()) {
-            show(R.id.decks_empty_text)
+        if (app().deckList.isEmpty()) {
+            visible(R.id.decks_empty_text)
         } else {
-            hide(R.id.decks_empty_text)
+            gone(R.id.decks_empty_text)
         }
     }
 
@@ -77,5 +81,5 @@ class DecksActivity : CustomActivity(R.layout.activity_decks) {
     }
 
     private fun getSortedDecks() =
-            deckList.all().sortedBy(Deck::timestamp).reversed()
+            app().deckList.all().sortedBy(Deck::timestamp).reversed()
 }

@@ -1,14 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="fr.gstraymond">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
         android:name=".android.CustomApplication"
         android:allowBackup="false"
         android:icon="@drawable/ic_launcher"
-        android:label="@string/app_name">
+        android:label="@string/app_name"
+        tools:replace="android:allowBackup">
 
         <!-- MAIN : Splash screen -->
         <activity
@@ -94,31 +98,38 @@
         </activity>
 
         <!-- Decks -->
-        <!--
-        <activity android:name=".android.DeckImporterActivity"
-            android:parentActivityName=".android.DeckListActivity"
+        <activity
+            android:name=".android.DeckImporterActivity"
+            android:parentActivityName=".android.CardListActivity"
             android:theme="@style/AppTheme">
-            <intent-filter>
-                <action android:name="android.intent.action.SEND" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-                <data android:mimeType="text/plain" />
-            </intent-filter>
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW"/>
-                <category android:name="android.intent.category.DEFAULT"/>
-                <data android:mimeType="text/plain"/>
-            </intent-filter>
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".android.DeckDetailActivity" />
+                android:value=".android.CardListActivity" />
         </activity>
-        -->
+
+        <activity
+            android:name=".android.DeckImportProgressActivity"
+            android:parentActivityName=".android.DeckImporterActivity"
+            android:theme="@style/AppTheme">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".android.DeckImporterActivity" />
+        </activity>
 
         <activity
             android:name=".android.DeckDetailActivity"
-            android:parentActivityName=".android.ListsActivity"
+            android:parentActivityName=".android.DecksActivity"
             android:theme="@style/AppTheme">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".android.DecksActivity" />
+        </activity>
+
+
+        <activity
+            android:name="net.rdrei.android.dirchooser.DirectoryChooserActivity"
+            android:parentActivityName=".android.DeckDetailActivity"
+            android:theme="@style/AppThemeDirChooser">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".android.DeckDetailActivity" />

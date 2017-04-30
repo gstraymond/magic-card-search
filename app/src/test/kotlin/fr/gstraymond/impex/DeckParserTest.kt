@@ -16,7 +16,7 @@ class DeckParserTest {
 
     @Test
     fun should_import_mtgo_format_decks_2() {
-        testUrl("http://www.mtgdecks.net/decks/view/660419/txt",
+        testUrl("https://www.mtgdecks.net/decks/view/660419/txt",
                 "txt")
     }
 
@@ -24,8 +24,27 @@ class DeckParserTest {
     fun should_import_mtgo_format_decks_3() {
         testUrl("https://www.mtggoldfish.com/deck/download/542503",
                 "542503",
-                100,
-                0)
+                deckSize = 100,
+                sideboardSize = 0)
+    }
+
+    @Test
+    fun should_import_mtgo_format_decks_4() {
+        testUrl("https://mtgdecks.net/archetypes/analysis/3584/all/txt",
+                "txt",
+                sideboardSize = 16)
+    }
+
+    @Test
+    fun should_import_mtgo_format_decks_5() {
+        testUrl("https://www.mtggoldfish.com/deck/download/615706",
+                "615706")
+    }
+
+    @Test
+    fun should_import_mtgo_format_decks_6() {
+        testUrl("https://www.mtggoldfish.com/deck/download/625122",
+                "625122")
     }
 
     @Test
@@ -36,8 +55,8 @@ class DeckParserTest {
 
     @Test
     fun should_import_magic_workstation_format_decks_2() {
-        testUrl("http://www.mtgdecks.net/decks/view/660419/dec",
-                "Azorius Flash a Standard MTG deck played by Misplacedginger in Competitive Standard Constructed League - MTGDECKS.NET ")
+        testUrl("https://www.mtgdecks.net/decks/view/660419/dec",
+                "Azorius Flash a Standard deck by Misplacedginger")
     }
 
     @Test

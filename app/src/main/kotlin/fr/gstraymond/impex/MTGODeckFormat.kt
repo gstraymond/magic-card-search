@@ -20,15 +20,14 @@ class MTGODeckFormat : DeckFormat {
     }
 
     override fun split(lines: List<String>) = lines.filter(String::isNotEmpty).run {
-        val sideboardIndex = lines.indexOfFirst { isSideboard(it) }
-        take(sideboardIndex) to drop(sideboardIndex + 1)
+        indexOfFirst { isSideboard(it) }.let { index ->
+            take(index) to drop(index + 1)
+        }
     }
 
-    override fun extractName(url: URL, lines: List<String>): String {
-        val candidates =
-                url.getParameters()
-                        .values
-                        .plus(url.getPathSegment().last())
-        return candidates.maxBy { it.length } ?: candidates.first()
-    }
+    override fun extractName(url: URL, lines: List<String>) =
+            url.getParameters()
+                    .values
+                    .plus(url.getPathSegment().last())
+                    .run { maxBy { it.length } ?: first() }
 }
