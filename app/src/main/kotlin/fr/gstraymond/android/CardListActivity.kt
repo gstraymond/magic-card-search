@@ -145,6 +145,16 @@ class CardListActivity : CustomActivity(R.layout.activity_card_list),
             setOnQueryTextListener(textListener)
             setOnSuggestionListener(suggestionListener)
             suggestionsAdapter = searchViewCursorAdapter
+            findViewById(R.id.search_close_btn).setOnClickListener {
+                if (presenter.getCurrentSearch().facets.isEmpty()) {
+                    searchProcessor.build().execute(SearchOptions.START_SEARCH_OPTIONS())
+                    resetTextView.gone()
+                } else {
+                    searchProcessor.build().execute(presenter.getCurrentSearch().updateQuery(""))
+                }
+                clearFocus()
+                setQuery("", false)
+            }
         }
 
 
