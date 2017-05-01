@@ -10,6 +10,7 @@ import fr.gstraymond.R
 import fr.gstraymond.android.DataUpdater
 import fr.gstraymond.biz.SearchOptions
 import fr.gstraymond.biz.SearchProcessorBuilder
+import fr.gstraymond.constants.FacetConst
 import fr.gstraymond.models.autocomplete.response.Option
 import fr.gstraymond.models.search.response.Card
 import fr.gstraymond.models.search.response.SearchResult
@@ -60,10 +61,16 @@ class CardListPresenter(private val context: Context) : DataUpdater {
             } else {
                 emptyTextView.visible()
                 if (searchOptions == SearchOptions.START_SEARCH_OPTIONS()) {
-                    result.hits.hits.firstOrNull()?._source?.publications?.firstOrNull()?.edition?.let { lastEdition ->
+                    result.hits.hits.firstOrNull()?._source?.publications?.maxBy { it.editionReleaseDate?.time ?: 0 }?.edition?.let { lastEdition ->
                         val text = String.format(context.getString(R.string.search_last_extension), lastEdition, result.hits.total)
                         snackbar?.dismiss()
-                        snackbar = Snackbar.make(rootView, Html.fromHtml(text), Snackbar.LENGTH_INDEFINITE).apply { show() }
+                        snackbar = Snackbar.make(rootView, Html.fromHtml(text), Snackbar.LENGTH_INDEFINITE).apply {
+                            setAction(R.string.snackbar_show) {
+                                val facets = mapOf(FacetConst.SET to listOf(lastEdition))
+                                searchProcessor.build().execute(SearchOptions(facets = facets))
+                            }
+                            show()
+                        }
                     }
                 }
             }
