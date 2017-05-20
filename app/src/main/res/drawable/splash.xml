@@ -3,7 +3,7 @@
 
     <item>
         <bitmap
-            android:gravity="clip_horizontal"
+            android:scaleType="centerCrop"
             android:src="@drawable/splashscreen" />
     </item>
 </layer-list>
