@@ -24,8 +24,9 @@ data class Request(val query: Query,
                         },
                         sort = when  {
                             options.sort != null -> {
-                                val split = options.sort!!.split(":")
-                                mapOf(split[0] to Order(split[1]))
+                                options.sort!!.split(",").map { 
+                                    it.split(":").let { it[0] to Order(it[1]) }
+                                }.toMap()
                             }
                             SearchOptions.QUERY_ALL == options.query && !options.random -> mapOf("_uid" to Order())
                             else -> mapOf()
