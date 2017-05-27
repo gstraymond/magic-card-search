@@ -67,6 +67,29 @@ class DeckStats(cards: List<DeckLine>) {
                 .groupBy { it.first }
                 .mapValues { it.value.map { it.second }.sumBy { it.mult } }
     }
+
+    val typeCount by lazy {
+        val primaryTypes =
+                deck.flatMap { it.card.type.split(" — ").first().split(" ") }
+                        .distinct()
+                        .filterNot { it == "Basic" }
+
+        primaryTypes
+                .map { primaryType ->
+                    val primaryGroup = deck.filter { it.card.type.split(" — ").first().contains(primaryType) }
+                    val secondaryTypes = primaryGroup.flatMap {
+                        val split = it.card.type.split(" — ")
+                        if (split.size > 1) split[1].split(" ")
+                        else listOf()
+                    }.distinct()
+                    val secondary = secondaryTypes.map { secondaryType ->
+                        val secondaryGroup = primaryGroup.filter { it.card.type.contains(secondaryType) }
+                        secondaryType to secondaryGroup.sumBy { it.mult }
+                    }.sortedBy { -it.second }
+                    Triple(primaryType, primaryGroup.sumBy { it.mult }, secondary)
+                }
+                .sortedBy { -it.second }
+    }
 }
 
 

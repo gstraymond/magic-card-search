@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import com.magic.card.search.commons.log.Log
 import fr.gstraymond.R
 import fr.gstraymond.android.DeckDetailActivity.Companion.DECK_EXTRA
 import fr.gstraymond.android.adapter.DeckDetailStatsAdapter
@@ -33,7 +34,7 @@ class DeckDetailStatsFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater,
                               container: ViewGroup?,
-                              savedInstanceState: Bundle?) =
+                              savedInstanceState: Bundle?): View =
             inflater.inflate(R.layout.fragment_deck_detail_stats, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -61,6 +62,7 @@ class DeckDetailStatsFragment : Fragment() {
             recyclerView.visible()
             emptyText.gone()
             val deckStats = DeckStats(cardList.all())
+            Log(javaClass).d("deckStats types: ${deckStats.typeCount}")
             deckDetailStatsAdapter.apply {
                 val formatColor = getText(R.string.stats_colors, ccFormatter.format(deckStats.colorSymbols))
                 elements = listOf(
