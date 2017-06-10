@@ -9,7 +9,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import com.magic.card.search.commons.log.Log
 import fr.gstraymond.R
 import fr.gstraymond.android.DeckDetailActivity.Companion.DECK_EXTRA
 import fr.gstraymond.android.adapter.DeckDetailStatsAdapter
@@ -62,7 +61,13 @@ class DeckDetailStatsFragment : Fragment() {
             recyclerView.visible()
             emptyText.gone()
             val deckStats = DeckStats(cardList.all())
-            Log(javaClass).d("deckStats types: ${deckStats.typeCount}")
+            val typeCount = deckStats.typeCount.map {
+                val secondary = it.secondaryTypes.map {
+                    "•\t\t${it.type} (${it.count})"
+                }.joinToString("\n")
+                if (secondary.isBlank()) "${it.type} (${it.count})"
+                else "${it.type} (${it.count})\n$secondary"
+            }.joinToString("\n\n")
             deckDetailStatsAdapter.apply {
                 val formatColor = getText(R.string.stats_colors, ccFormatter.format(deckStats.colorSymbols))
                 elements = listOf(
@@ -72,7 +77,10 @@ class DeckDetailStatsFragment : Fragment() {
                         getText(R.string.stats_total_price, "${deckStats.totalPrice}"),
                         IntChart(resources.getString(R.string.stats_mana_curve), deckStats.manaCurve),
                         StringChart(resources.getString(R.string.stats_color_distribution), deckStats.colorDistribution),
-                        StringChart(resources.getString(R.string.stats_type_distribution), deckStats.typeDistribution)
+                        StringChart(resources.getString(R.string.stats_type_distribution), deckStats.typeDistribution),
+                        "",
+                        "Types distribution",
+                        typeCount
                 )
                 notifyDataSetChanged()
             }

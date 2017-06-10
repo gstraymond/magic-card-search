@@ -84,14 +84,16 @@ class DeckStats(cards: List<DeckLine>) {
                     }.distinct()
                     val secondary = secondaryTypes.map { secondaryType ->
                         val secondaryGroup = primaryGroup.filter { it.card.type.contains(secondaryType) }
-                        secondaryType to secondaryGroup.sumBy { it.mult }
-                    }.sortedBy { -it.second }
-                    Triple(primaryType, primaryGroup.sumBy { it.mult }, secondary)
+                        SecondaryType(secondaryType, secondaryGroup.sumBy { it.mult })
+                    }.sortedBy { -it.count }
+                    TypeCount(primaryType, primaryGroup.sumBy { it.mult }, secondary)
                 }
-                .sortedBy { -it.second }
+                .sortedBy { -it.count }
     }
 }
 
+data class TypeCount(val `type`: String, val count: Int, val secondaryTypes: List<SecondaryType>)
+data class SecondaryType(val `type`: String, val count: Int)
 
 object Colors {
     val mainColors = listOf("Black", "Blue", "Green", "Red", "White")
