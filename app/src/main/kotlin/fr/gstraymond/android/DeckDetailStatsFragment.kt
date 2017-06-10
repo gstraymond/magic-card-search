@@ -61,15 +61,10 @@ class DeckDetailStatsFragment : Fragment() {
             recyclerView.visible()
             emptyText.gone()
             val deckStats = DeckStats(cardList.all())
-            val typeCount = deckStats.typeCount.map {
-                val secondary = it.secondaryTypes.map {
-                    "•\t\t${it.type} (${it.count})"
-                }.joinToString("\n")
-                if (secondary.isBlank()) "${it.type} (${it.count})"
-                else "${it.type} (${it.count})\n$secondary"
-            }.joinToString("\n\n")
             deckDetailStatsAdapter.apply {
                 val formatColor = getText(R.string.stats_colors, ccFormatter.format(deckStats.colorSymbols))
+                val typeCount = deckStats.typeCount
+                val abilitiesCount = deckStats.abilitiesCount
                 elements = listOf(
                         getText(R.string.stats_format, deckStats.format),
                         Html.fromHtml(formatColor, imageGetter, null),
@@ -77,11 +72,13 @@ class DeckDetailStatsFragment : Fragment() {
                         getText(R.string.stats_total_price, "${deckStats.totalPrice}"),
                         IntChart(resources.getString(R.string.stats_mana_curve), deckStats.manaCurve),
                         StringChart(resources.getString(R.string.stats_color_distribution), deckStats.colorDistribution),
-                        StringChart(resources.getString(R.string.stats_type_distribution), deckStats.typeDistribution),
-                        "",
-                        "Types distribution",
-                        typeCount
-                )
+                        StringChart(resources.getString(R.string.stats_type_distribution), deckStats.typeDistribution)
+                ) + (if (abilitiesCount.isEmpty()) listOf()
+                else listOf(StringChart("foobar", abilitiesCount))) + typeCount.filterNot { it.secondaryTypes.isEmpty() }.map {
+                    StringChart("${it.type} (${it.count})", it.secondaryTypes)
+                } + typeCount.filter { it.secondaryTypes.isEmpty() }.map {
+                    "${it.type} (${it.count})"
+                }
                 notifyDataSetChanged()
             }
         }
