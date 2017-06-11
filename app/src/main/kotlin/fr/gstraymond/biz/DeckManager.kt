@@ -35,22 +35,24 @@ class DeckManager(private val deckList: DeckList,
     }
 
     fun export(deck: Deck, path: String): String {
-        val cardList = cardListBuilder.build(deck.id)
         val files = File(path).listFiles().map { it.name }
         val deckName = findUniqueName(files, normalizeName(deck))
         val targetPath = "$path/$deckName"
         File(targetPath).printWriter().use {
-            it.write("// NAME : ${deck.name}\n")
-            it.write("// FORMAT : ${deck.format}\n")
-            cardList.all()
-                    .sortedBy { it.isSideboard }
-                    .map { (card, _, mult, isSideboard) ->
-                        val line = "$mult [] ${card.title}\n"
-                        if (isSideboard) it.write("SB:  $line")
-                        else it.write("        $line")
-                    }
+            export(deck).forEach { line -> it.write(line + "\n") }
         }
         return targetPath
+    }
+
+    fun export(deck: Deck): List<String> {
+        val lines = cardListBuilder.build(deck.id).all()
+                .sortedBy { it.isSideboard }
+                .map { (card, _, mult, isSideboard) ->
+                    val line = "$mult [] ${card.title}"
+                    if (isSideboard) "SB:  $line"
+                    else "        $line"
+                }
+        return listOf("// NAME : ${deck.name}", "// FORMAT : ${deck.format}") + lines
     }
 
     private fun normalizeName(deck: Deck) =

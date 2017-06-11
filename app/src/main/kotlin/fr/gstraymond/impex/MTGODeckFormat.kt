@@ -25,9 +25,10 @@ class MTGODeckFormat : DeckFormat {
         }
     }
 
-    override fun extractName(url: URL, lines: List<String>) =
+    override fun extractName(url: URL?, lines: List<String>) = url?.run {
             url.getParameters()
                     .values
                     .plus(url.getPathSegment().last())
                     .run { maxBy { it.length } ?: first() }
+    } ?: "Deck"
 }

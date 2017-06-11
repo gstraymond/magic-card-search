@@ -112,7 +112,8 @@
     <string name="downloading">Téléchargement</string>
     <string name="go_back">Retour</string>
     <string name="bad_format">Impossible d´importer le deck : format non-reconnu</string>
-    <string name="decklist_menu_export">Export</string>
+    <string name="decklist_menu_export">Exporter</string>
     <string name="deck_exported">%1$s a été exporté vers : %2$s</string>
     <string name="snackbar_show">Voir</string>
+    <string name="decklist_menu_refresh">Refresh</string>
 </resources>

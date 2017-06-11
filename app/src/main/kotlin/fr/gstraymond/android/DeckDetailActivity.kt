@@ -44,6 +44,7 @@ class DeckDetailActivity : CustomActivity(R.layout.activity_deck_detail) {
     private val deckTitle by lazy { find<TextView>(R.id.toolbar_text) }
     private val delete by lazy { find<TextView>(R.id.toolbar_delete) }
     private val export by lazy { find<TextView>(R.id.toolbar_export) }
+    private val refresh by lazy { find<TextView>(R.id.toolbar_refresh) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -75,6 +76,15 @@ class DeckDetailActivity : CustomActivity(R.layout.activity_deck_detail) {
             } else {
                 startDirPicker()
             }
+        }
+
+        refresh.setOnClickListener {
+            startActivity {
+                val deckList = app().deckManager.export(deck).joinToString("\n")
+                DeckImportProgressActivity.getIntentForDeckList(this, deckList)
+            }
+            finish()
+            app().deckManager.delete(deck)
         }
     }
 

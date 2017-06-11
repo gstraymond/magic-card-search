@@ -24,11 +24,16 @@ class DeckImporter(private val contentResolver: ContentResolver) {
         return deckList?.run { parse(this, url) }
     }
 
-    private fun parse(deckList: String, url: URL): ImportedDeck? {
-        val resolvedUri = when (url.protocol) {
+    fun importFromText(deckList: String): ImportedDeck? {
+        log.d("decklist: \n$deckList")
+        return parse(deckList, null)
+    }
+
+    private fun parse(deckList: String, url: URL?): ImportedDeck? {
+        val resolvedUri = when (url?.protocol) {
             "fle" -> resolveFileURL(url)
-            else -> null
-        } ?: url
+            else -> url
+        }
 
         return deckParser.parse(deckList, resolvedUri)?.apply {
             log.d("imported: ")
@@ -39,16 +44,12 @@ class DeckImporter(private val contentResolver: ContentResolver) {
 
     private val proj = arrayOf(MediaStore.Images.Media.TITLE)
 
-    private fun resolveFileURL(url: URL) = contentResolver.query(Uri.parse(url.toString()), proj, null, null, null)?.run {
-        if (count != 0) {
-            moveToFirst()
-            val resolvedUri = URL("content://downloads/${getString(getColumnIndexOrThrow(proj.first()))}")
-            close()
-            resolvedUri
+    private fun resolveFileURL(url: URL) = contentResolver.query(Uri.parse(url.toString()), proj, null, null, null)?.use {
+        if (it.count != 0) {
+            it.moveToFirst()
+            URL("content://downloads/${it.getString(it.getColumnIndexOrThrow(proj.first()))}")
         } else {
             null
-        }.apply {
-            close()
         }
     }
 
