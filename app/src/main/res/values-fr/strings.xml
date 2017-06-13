@@ -115,5 +115,6 @@
     <string name="decklist_menu_export">Exporter</string>
     <string name="deck_exported">%1$s a été exporté vers : %2$s</string>
     <string name="snackbar_show">Voir</string>
-    <string name="decklist_menu_refresh">Refresh</string>
+    <string name="decklist_menu_refresh">MaJ</string>
+    <string name="abilities">Capacités</string>
 </resources>
