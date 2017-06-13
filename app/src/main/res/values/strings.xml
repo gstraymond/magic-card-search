@@ -121,4 +121,8 @@
     <string name="snackbar_show">Browse</string>
     <string name="decklist_menu_refresh">Refresh</string>
     <string name="abilities">Abilities</string>
+    <string name="deckdetails_refresh_title">Refresh deck data ?</string>
+    <string name="deckdetails_refresh_message">Decks are stored on device. This will synchronize and update data like card prices, formats validity.</string>
+    <string name="deckdetails_refresh_ok">OK</string>
+    <string name="deckdetails_refresh_cancel">CANCEL</string>
 </resources>

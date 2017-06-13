@@ -117,4 +117,8 @@
     <string name="snackbar_show">Voir</string>
     <string name="decklist_menu_refresh">MaJ</string>
     <string name="abilities">Capacités</string>
+    <string name="deckdetails_refresh_title">Mettre à jour les données du deck ?</string>
+    <string name="deckdetails_refresh_message">Les decks sont stockés sur le téléphone. Cela va syncrhoniser et mettre à jour les données du deck tels que les prix des cartes et la validité du format.</string>
+    <string name="deckdetails_refresh_ok">OK</string>
+    <string name="deckdetails_refresh_cancel">ANNULER</string>
 </resources>

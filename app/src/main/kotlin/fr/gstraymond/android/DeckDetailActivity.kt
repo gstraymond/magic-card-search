@@ -78,14 +78,7 @@ class DeckDetailActivity : CustomActivity(R.layout.activity_deck_detail) {
             }
         }
 
-        refresh.setOnClickListener {
-            startActivity {
-                val deckList = app().deckManager.export(deck).joinToString("\n")
-                DeckImportProgressActivity.getIntentForDeckList(this, deckList)
-            }
-            finish()
-            app().deckManager.delete(deck)
-        }
+        refresh.setOnClickListener { createRefreshDialog() }
     }
 
     private fun startDirPicker() {
@@ -124,6 +117,22 @@ class DeckDetailActivity : CustomActivity(R.layout.activity_deck_detail) {
                     finish()
                 }
                 .setNegativeButton(getString(R.string.deckdetails_delete_cancel)) { _, _ -> }
+                .show()
+    }
+
+    private fun createRefreshDialog() {
+        AlertDialog.Builder(this)
+                .setTitle(getString(R.string.deckdetails_refresh_title))
+                .setMessage(getString(R.string.deckdetails_refresh_message))
+                .setPositiveButton(getString(R.string.deckdetails_refresh_ok)) { _, _ ->
+                    startActivity {
+                        val deckList = app().deckManager.export(deck).joinToString("\n")
+                        DeckImportProgressActivity.getIntentForDeckList(this, deckList)
+                    }
+                    finish()
+                    app().deckManager.delete(deck)
+                }
+                .setNegativeButton(getString(R.string.deckdetails_refresh_cancel)) { _, _ -> }
                 .show()
     }
 
