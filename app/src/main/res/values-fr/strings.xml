@@ -121,4 +121,8 @@
     <string name="deckdetails_refresh_message">Les decks sont stockés sur le téléphone. Cela va syncrhoniser et mettre à jour les données du deck tels que les prix des cartes et la validité du format.</string>
     <string name="deckdetails_refresh_ok">OK</string>
     <string name="deckdetails_refresh_cancel">ANNULER</string>
+    <string name="importing_deck">Import de %1$s</string>
+    <string name="refreshing">Mise à jour…</string>
+    <string name="deck_tab_cards">Cartes</string>
+    <string name="deck_tab_stats">Stats</string>
 </resources>

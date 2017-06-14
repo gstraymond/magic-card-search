@@ -125,4 +125,8 @@
     <string name="deckdetails_refresh_message">Decks are stored on device. This will synchronize and update data like card prices, formats validity.</string>
     <string name="deckdetails_refresh_ok">OK</string>
     <string name="deckdetails_refresh_cancel">CANCEL</string>
+    <string name="importing_deck">Importing %1$s</string>
+    <string name="refreshing">Refreshing…</string>
+    <string name="deck_tab_cards">Cards</string>
+    <string name="deck_tab_stats">Stats</string>
 </resources>

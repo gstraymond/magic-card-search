@@ -24,7 +24,6 @@ import net.rdrei.android.dirchooser.DirectoryChooserActivity
 import net.rdrei.android.dirchooser.DirectoryChooserActivity.*
 import net.rdrei.android.dirchooser.DirectoryChooserConfig
 
-
 class DeckDetailActivity : CustomActivity(R.layout.activity_deck_detail) {
 
     companion object {
@@ -65,7 +64,7 @@ class DeckDetailActivity : CustomActivity(R.layout.activity_deck_detail) {
         }
 
         val viewPager = find<ViewPager>(R.id.viewpager)
-        viewPager.adapter = DeckDetailFragmentPagerAdapter(supportFragmentManager)
+        viewPager.adapter = DeckDetailFragmentPagerAdapter(supportFragmentManager, this)
 
         find<TabLayout>(R.id.sliding_tabs).setupWithViewPager(viewPager)
 
