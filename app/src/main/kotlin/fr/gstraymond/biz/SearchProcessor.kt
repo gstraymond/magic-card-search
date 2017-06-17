@@ -16,6 +16,10 @@ class SearchProcessor(private val dataUpdater: DataUpdater,
                       private val rootView: View) : AsyncTask<SearchOptions, Void, SearchResult?>() {
     private val log = Log(this)
 
+    override fun onPreExecute() {
+        showText(context.getString(R.string.loading), dataUpdater, rootView)
+    }
+
     override fun doInBackground(vararg params: SearchOptions): SearchResult? {
         dataUpdater.setSearchAvailable(false)
         val options = params[0]
@@ -59,7 +63,6 @@ class SearchProcessor(private val dataUpdater: DataUpdater,
     private fun showText(message: String,
                          dataUpdater: DataUpdater,
                          rootView: View) {
-        dataUpdater.getLoadingSnackbar()?.dismiss()
         val snackbar = Snackbar.make(rootView, message, Snackbar.LENGTH_LONG)
         dataUpdater.setLoadingSnackbar(snackbar)
         snackbar.show()

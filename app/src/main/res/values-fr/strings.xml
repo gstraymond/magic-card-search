@@ -125,4 +125,5 @@
     <string name="refreshing">Mise à jour…</string>
     <string name="deck_tab_cards">Cartes</string>
     <string name="deck_tab_stats">Stats</string>
+    <string name="loading">Recherche en cours…</string>
 </resources>

@@ -129,4 +129,5 @@
     <string name="refreshing">Refreshing…</string>
     <string name="deck_tab_cards">Cards</string>
     <string name="deck_tab_stats">Stats</string>
+    <string name="loading">Searching…</string>
 </resources>
