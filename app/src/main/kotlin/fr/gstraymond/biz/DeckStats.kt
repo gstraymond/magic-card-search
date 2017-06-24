@@ -67,8 +67,38 @@ class DeckStats(cards: List<DeckLine>) {
                 .groupBy { it.first }
                 .mapValues { it.value.map { it.second }.sumBy { it.mult } }
     }
+
+    val typeCount by lazy {
+        val primaryTypes =
+                deck.flatMap { it.card.type.split(" — ").first().split(" ") }
+                        .distinct()
+                        .filterNot { it == "Basic" }
+
+        primaryTypes
+                .map { primaryType ->
+                    val primaryGroup = deck.filter { it.card.type.split(" — ").first().contains(primaryType) }
+                    val secondaryTypes = primaryGroup.flatMap {
+                        val split = it.card.type.split(" — ")
+                        if (split.size > 1) split[1].split(" ")
+                        else listOf()
+                    }.distinct()
+                    val secondary = secondaryTypes.map { secondaryType ->
+                        val secondaryGroup = primaryGroup.filter { it.card.type.contains(secondaryType) }
+                        secondaryType to secondaryGroup.sumBy { it.mult }
+                    }.toMap()
+                    TypeCount(primaryType, primaryGroup.sumBy { it.mult }, secondary)
+                }
+                .sortedBy { -it.count }
+    }
+
+    val abilitiesCount by lazy {
+        deck.flatMap { it.card.abilities ?: listOf() }.distinct().map { ability ->
+            ability to deck.filter { it.card.abilities.contains(ability) }.sumBy { it.mult }
+        }.toMap()
+    }
 }
 
+data class TypeCount(val `type`: String, val count: Int, val secondaryTypes: Map<String, Int>)
 
 object Colors {
     val mainColors = listOf("Black", "Blue", "Green", "Red", "White")

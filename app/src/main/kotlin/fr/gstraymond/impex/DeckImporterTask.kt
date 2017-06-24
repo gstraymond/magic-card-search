@@ -8,7 +8,7 @@ import java.net.URL
 class DeckImporterTask(private val contentResolver: ContentResolver,
                        private val deckResolver: DeckResolver,
                        private val deckManager: DeckManager,
-                       private val importerProcess: ImporterProcess) : AsyncTask<URL, DeckImporterTask.Progress, Int>() {
+                       private val importerProcess: ImporterProcess) : AsyncTask<String, DeckImporterTask.Progress, Int>() {
 
     data class Progress(val task: String, val result: Int)
 
@@ -20,8 +20,12 @@ class DeckImporterTask(private val contentResolver: ContentResolver,
 
     private val URL_TASK = "url_task"
 
-    override fun doInBackground(vararg urls: URL): Int? {
-        val importedDeck = DeckImporter(contentResolver).importFromUri(urls.first())
+    override fun doInBackground(vararg strings: String): Int? {
+        val string = strings.first()
+        val importedDeck = when {
+            string.startsWith("file:") -> DeckImporter(contentResolver).importFromUri(URL(string))
+            else -> DeckImporter(contentResolver).importFromText(string)
+        }
         publishProgress(Progress(URL_TASK, importedDeck?.lines?.size ?: -1))
         return importedDeck?.let { deck ->
             val cards = deckResolver.resolve(deck, this)

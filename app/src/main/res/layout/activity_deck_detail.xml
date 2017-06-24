@@ -26,7 +26,7 @@
 
                 <TextView
                     android:id="@+id/toolbar_delete"
-                    style="@android:style/TextAppearance.Medium"
+                    style="@android:style/TextAppearance.Small"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
@@ -37,12 +37,24 @@
 
                 <TextView
                     android:id="@+id/toolbar_export"
-                    style="@android:style/TextAppearance.Medium"
+                    style="@android:style/TextAppearance.Small"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="16dp"
                     android:layout_toLeftOf="@id/toolbar_delete"
                     android:text="@string/decklist_menu_export"
+                    android:textAllCaps="true"
+                    android:textColor="@android:color/white"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/toolbar_refresh"
+                    style="@android:style/TextAppearance.Small"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="16dp"
+                    android:layout_toLeftOf="@id/toolbar_export"
+                    android:text="@string/decklist_menu_refresh"
                     android:textAllCaps="true"
                     android:textColor="@android:color/white"
                     android:textStyle="bold" />

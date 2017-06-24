@@ -13,16 +13,21 @@ import fr.gstraymond.ui.adapter.DeckImporterAdapter
 import fr.gstraymond.utils.app
 import fr.gstraymond.utils.find
 import fr.gstraymond.utils.startActivity
-import java.net.URL
 
 class DeckImportProgressActivity : CustomActivity(R.layout.activity_deck_import_progress) {
 
     companion object {
         private val FILE_PATH = "FILE_PATH"
+        private val DECK_LIST = "DECK_LIST"
 
         fun getIntent(context: Context, filePath: String) =
                 Intent(context, DeckImportProgressActivity::class.java).apply {
                     putExtra(FILE_PATH, filePath)
+                }
+
+        fun getIntentForDeckList(context: Context, deckList: String) =
+                Intent(context, DeckImportProgressActivity::class.java).apply {
+                    putExtra(DECK_LIST, deckList)
                 }
     }
 
@@ -33,7 +38,7 @@ class DeckImportProgressActivity : CustomActivity(R.layout.activity_deck_import_
     private val adapter by lazy { DeckImporterAdapter(this) }
     private val layoutManager by lazy { LinearLayoutManager(this) }
 
-    private lateinit var url: String
+    private lateinit var urlOrDeck: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,8 +49,12 @@ class DeckImportProgressActivity : CustomActivity(R.layout.activity_deck_import_
             it.adapter = adapter
         }
 
-        url = "file://${intent.getStringExtra(FILE_PATH)}"
-        logView.text = "Importing ${url.split("/").last()}" // FIXME translate
+        urlOrDeck = intent.getStringExtra(FILE_PATH)?.run {
+            logView.text = String.format(getString(R.string.import_deck), split("/").last())
+            "file://$this"
+        } ?: intent.getStringExtra (DECK_LIST).apply {
+            logView.text = getString(R.string.refreshing)
+        }
     }
 
     override fun onPostCreate(savedInstanceState: Bundle?) {
@@ -55,7 +64,7 @@ class DeckImportProgressActivity : CustomActivity(R.layout.activity_deck_import_
                 app().deckResolver,
                 app().deckManager,
                 process
-        ).execute(URL(url))
+        ).execute(urlOrDeck)
     }
 
     val process = object : DeckImporterTask.ImporterProcess {

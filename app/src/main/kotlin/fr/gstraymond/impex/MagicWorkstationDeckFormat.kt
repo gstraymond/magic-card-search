@@ -34,9 +34,9 @@ class MagicWorkstationDeckFormat : DeckFormat {
         return DeckTextLine(occ.toInt(), name, sideboard)
     }
 
-    override fun extractName(url: URL, lines: List<String>) =
+    override fun extractName(url: URL?, lines: List<String>) =
             extractNameFromComments(lines)
-                    ?: url.getPathSegment().last()
+                    ?: (url?.getPathSegment()?.last() ?: "Deck")
 
     private fun extractNameFromComments(lines: List<String>): String? {
         val nameComment = lines

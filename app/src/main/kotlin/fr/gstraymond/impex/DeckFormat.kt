@@ -10,5 +10,5 @@ interface DeckFormat {
 
     fun parse(line: String, sideboard: Boolean): DeckTextLine
 
-    fun extractName(url: URL, lines: List<String>): String
+    fun extractName(url: URL?, lines: List<String>): String
 }

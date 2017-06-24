@@ -24,7 +24,6 @@ import net.rdrei.android.dirchooser.DirectoryChooserActivity
 import net.rdrei.android.dirchooser.DirectoryChooserActivity.*
 import net.rdrei.android.dirchooser.DirectoryChooserConfig
 
-
 class DeckDetailActivity : CustomActivity(R.layout.activity_deck_detail) {
 
     companion object {
@@ -44,6 +43,7 @@ class DeckDetailActivity : CustomActivity(R.layout.activity_deck_detail) {
     private val deckTitle by lazy { find<TextView>(R.id.toolbar_text) }
     private val delete by lazy { find<TextView>(R.id.toolbar_delete) }
     private val export by lazy { find<TextView>(R.id.toolbar_export) }
+    private val refresh by lazy { find<TextView>(R.id.toolbar_refresh) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -64,7 +64,7 @@ class DeckDetailActivity : CustomActivity(R.layout.activity_deck_detail) {
         }
 
         val viewPager = find<ViewPager>(R.id.viewpager)
-        viewPager.adapter = DeckDetailFragmentPagerAdapter(supportFragmentManager)
+        viewPager.adapter = DeckDetailFragmentPagerAdapter(supportFragmentManager, this)
 
         find<TabLayout>(R.id.sliding_tabs).setupWithViewPager(viewPager)
 
@@ -76,6 +76,8 @@ class DeckDetailActivity : CustomActivity(R.layout.activity_deck_detail) {
                 startDirPicker()
             }
         }
+
+        refresh.setOnClickListener { createRefreshDialog() }
     }
 
     private fun startDirPicker() {
@@ -114,6 +116,22 @@ class DeckDetailActivity : CustomActivity(R.layout.activity_deck_detail) {
                     finish()
                 }
                 .setNegativeButton(getString(R.string.deckdetails_delete_cancel)) { _, _ -> }
+                .show()
+    }
+
+    private fun createRefreshDialog() {
+        AlertDialog.Builder(this)
+                .setTitle(getString(R.string.deckdetails_refresh_title))
+                .setMessage(getString(R.string.deckdetails_refresh_message))
+                .setPositiveButton(getString(R.string.deckdetails_refresh_ok)) { _, _ ->
+                    startActivity {
+                        val deckList = app().deckManager.export(deck).joinToString("\n")
+                        DeckImportProgressActivity.getIntentForDeckList(this, deckList)
+                    }
+                    finish()
+                    app().deckManager.delete(deck)
+                }
+                .setNegativeButton(getString(R.string.deckdetails_refresh_cancel)) { _, _ -> }
                 .show()
     }
 

@@ -119,4 +119,15 @@
     <string name="decklist_menu_export">Export</string>
     <string name="deck_exported">%1$s has been exported to: %2$s</string>
     <string name="snackbar_show">Browse</string>
+    <string name="decklist_menu_refresh">Refresh</string>
+    <string name="abilities">Abilities</string>
+    <string name="deckdetails_refresh_title">Refresh deck data ?</string>
+    <string name="deckdetails_refresh_message">Decks are stored on device. This will synchronize and update data like card prices, formats validity.</string>
+    <string name="deckdetails_refresh_ok">OK</string>
+    <string name="deckdetails_refresh_cancel">CANCEL</string>
+    <string name="importing_deck">Importing %1$s</string>
+    <string name="refreshing">Refreshing…</string>
+    <string name="deck_tab_cards">Cards</string>
+    <string name="deck_tab_stats">Stats</string>
+    <string name="loading">Searching…</string>
 </resources>

@@ -112,7 +112,18 @@
     <string name="downloading">Téléchargement</string>
     <string name="go_back">Retour</string>
     <string name="bad_format">Impossible d´importer le deck : format non-reconnu</string>
-    <string name="decklist_menu_export">Export</string>
+    <string name="decklist_menu_export">Exporter</string>
     <string name="deck_exported">%1$s a été exporté vers : %2$s</string>
     <string name="snackbar_show">Voir</string>
+    <string name="decklist_menu_refresh">MaJ</string>
+    <string name="abilities">Capacités</string>
+    <string name="deckdetails_refresh_title">Mettre à jour les données du deck ?</string>
+    <string name="deckdetails_refresh_message">Les decks sont stockés sur le téléphone. Cela va syncrhoniser et mettre à jour les données du deck tels que les prix des cartes et la validité du format.</string>
+    <string name="deckdetails_refresh_ok">OK</string>
+    <string name="deckdetails_refresh_cancel">ANNULER</string>
+    <string name="importing_deck">Import de %1$s</string>
+    <string name="refreshing">Mise à jour…</string>
+    <string name="deck_tab_cards">Cartes</string>
+    <string name="deck_tab_stats">Stats</string>
+    <string name="loading">Recherche en cours…</string>
 </resources>

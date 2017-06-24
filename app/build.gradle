@@ -27,14 +27,14 @@ repositories {
 
 android {
     compileSdkVersion 25
-    buildToolsVersion "25.0.2"
+    buildToolsVersion "25.0.3"
 
     defaultConfig {
         applicationId "fr.gstraymond"
         minSdkVersion 14
         targetSdkVersion 25
-        versionCode 52
-        versionName "2.2.1"
+        versionCode 53
+        versionName "2.2.2"
     }
 
     signingConfigs {

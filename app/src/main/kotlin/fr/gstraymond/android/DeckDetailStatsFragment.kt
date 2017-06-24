@@ -33,7 +33,7 @@ class DeckDetailStatsFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater,
                               container: ViewGroup?,
-                              savedInstanceState: Bundle?) =
+                              savedInstanceState: Bundle?): View =
             inflater.inflate(R.layout.fragment_deck_detail_stats, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -63,6 +63,16 @@ class DeckDetailStatsFragment : Fragment() {
             val deckStats = DeckStats(cardList.all())
             deckDetailStatsAdapter.apply {
                 val formatColor = getText(R.string.stats_colors, ccFormatter.format(deckStats.colorSymbols))
+                val typeCount = deckStats.typeCount
+                val typeCountsCharts = typeCount.filterNot { it.secondaryTypes.isEmpty() }.map {
+                    StringChart("Type: ${it.type} (${it.count})", it.secondaryTypes)
+                } + typeCount.filter { it.secondaryTypes.isEmpty() }.map {
+                    "Type: ${it.type} (${it.count})"
+                }
+                val abilitiesCharts = deckStats.abilitiesCount.run {
+                    if (isEmpty()) listOf<StringChart>()
+                    else listOf(StringChart(getText(R.string.abilities).toString(), this))
+                }
                 elements = listOf(
                         getText(R.string.stats_format, deckStats.format),
                         Html.fromHtml(formatColor, imageGetter, null),
@@ -71,7 +81,8 @@ class DeckDetailStatsFragment : Fragment() {
                         IntChart(resources.getString(R.string.stats_mana_curve), deckStats.manaCurve),
                         StringChart(resources.getString(R.string.stats_color_distribution), deckStats.colorDistribution),
                         StringChart(resources.getString(R.string.stats_type_distribution), deckStats.typeDistribution)
-                )
+                ) + abilitiesCharts + typeCountsCharts
+
                 notifyDataSetChanged()
             }
         }

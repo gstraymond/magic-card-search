@@ -12,7 +12,7 @@ class DeckParser {
             MTGODeckFormat(),
             MagicWorkstationDeckFormat())
 
-    fun parse(deckList: String, resolvedURL: URL): ImportedDeck? {
+    fun parse(deckList: String, resolvedURL: URL?): ImportedDeck? {
         log.d("DeckParser.parse:\n$deckList")
 
         val lines = deckList.split("\n")

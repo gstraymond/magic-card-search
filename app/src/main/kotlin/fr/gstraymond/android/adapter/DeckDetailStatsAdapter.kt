@@ -51,10 +51,11 @@ class DeckDetailStatsAdapter(context: Context) : RecyclerView.Adapter<RecyclerVi
                 val chart = element
                 when (chart) {
                     is StringChart -> {
-                        val keys = chart.data.keys.toList()
-                        val entries = chart.data.map { (k, v) -> BarEntry(keys.indexOf(k).toFloat(), v.toFloat()) }
+                        val data = chart.data.toList().sortedBy { -it.second }.take(5)
+                        val keys = data.map { it.first }
+                        val entries = data.map { (k, v) -> BarEntry(keys.indexOf(k).toFloat(), v.toFloat()) }
                         barChart.data = BarData(BarDataSet(entries, chart.name).apply {
-                            styleDataSet(this)
+                            styleDataSet(this, position)
                             setValueFormatter { fl, _, _, _ -> "${fl.toInt()}" }
                         })
                         styleChart(barChart) { fl, _ -> keys.elementAtOrNull(fl.toInt()) ?: "" }
@@ -62,7 +63,7 @@ class DeckDetailStatsAdapter(context: Context) : RecyclerView.Adapter<RecyclerVi
                     is IntChart -> {
                         val entries = chart.data.map { (k, v) -> BarEntry(k.toFloat(), v.toFloat()) }
                         barChart.data = BarData(BarDataSet(entries, chart.name).apply {
-                            styleDataSet(this)
+                            styleDataSet(this, position)
                             setValueFormatter { fl, _, _, _ -> "${fl.toInt()}" }
                         })
                         styleChart(barChart) { fl, _ ->
@@ -126,8 +127,8 @@ class DeckDetailStatsAdapter(context: Context) : RecyclerView.Adapter<RecyclerVi
         }
     }
 
-    private fun styleDataSet(dataSet: BarDataSet) {
-        dataSet.color = resources.color(R.color.gold)
+    private fun styleDataSet(dataSet: BarDataSet, position: Int) {
+        dataSet.color = resources.color(if (position % 2 == 0) R.color.gold else R.color.colorPrimary)
         dataSet.valueTextColor = resources.color(android.R.color.white)
         dataSet.valueTextSize = CHART_TEXT_SIZE
     }

@@ -16,17 +16,16 @@ import fr.gstraymond.utils.inflate
 import fr.gstraymond.utils.visible
 
 
-class FacetListAdapter(facetMap: Map<String, Facet>,
+class FacetListAdapter(facetMap: Map<String, Facet>?,
                        private val options: SearchOptions, context: Context) : BaseExpandableListAdapter() {
-
-    private val mutableFacetMap = facetMap.toMutableMap()
+    private val mutableFacetMap = facetMap?.toMutableMap() ?: mutableMapOf()
     private val facetList = mutableListOf<String>()
     private val selectedFacets = mutableListOf<String>()
     private val selectedTerms = mutableListOf<Term>()
 
     init {
         for (facetAsString in FacetConst.getFacetOrder()) {
-            val facet = facetMap[facetAsString]
+            val facet = mutableFacetMap[facetAsString]
 
             if (facet == null || facet.terms.isEmpty()) {
                 mutableFacetMap.remove(facetAsString)
