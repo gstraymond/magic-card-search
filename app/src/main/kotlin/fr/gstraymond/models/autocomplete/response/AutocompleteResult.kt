@@ -5,7 +5,7 @@ data class AutocompleteResult(val suggest: Suggest) {
         fun empty() = AutocompleteResult(Suggest(listOf()))
     }
 
-    fun getResults(): List<Option> = suggest.card.flatMap(Card::options)
+    fun getResults(): List<Option> = suggest?.card?.flatMap(Card::options) ?: listOf()
 }
 
 data class Suggest(val card: List<Card>)

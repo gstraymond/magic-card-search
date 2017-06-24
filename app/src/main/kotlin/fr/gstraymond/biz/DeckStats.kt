@@ -1,10 +1,13 @@
 package fr.gstraymond.biz
 
+import com.magic.card.search.commons.log.Log
 import fr.gstraymond.models.DeckLine
 import java.math.BigDecimal
 import java.math.RoundingMode
 
 class DeckStats(cards: List<DeckLine>) {
+
+    private val log = Log(javaClass)
 
     companion object {
         fun colorSymbols(colors: List<String>) = colors.map { Colors.mainColorsMap[it] }.sortedBy { it }.joinToString(" ")
@@ -92,9 +95,14 @@ class DeckStats(cards: List<DeckLine>) {
     }
 
     val abilitiesCount by lazy {
-        deck.flatMap { it.card.abilities ?: listOf() }.distinct().map { ability ->
-            ability to deck.filter { it.card.abilities.contains(ability) }.sumBy { it.mult }
-        }.toMap()
+        try {
+            deck.flatMap { it.card.abilities ?: listOf() }.distinct().map { ability ->
+                ability to deck.filter { it.card.abilities.contains(ability) }.sumBy { it.mult }
+            }.toMap()
+        } catch (e: Exception) {
+            log.e("${e.message} / $deck", e)
+            mapOf<String, Int>()
+        }
     }
 }
 
