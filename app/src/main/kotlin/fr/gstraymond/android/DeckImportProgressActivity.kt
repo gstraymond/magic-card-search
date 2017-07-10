@@ -82,7 +82,8 @@ class DeckImportProgressActivity : CustomActivity(R.layout.activity_deck_import_
 
         override fun cardImported(card: String, result: Boolean) {
             if (result) adapter.addLine(card)
-            else adapter.addLine(card + " -> KO")
+            else adapter.addLine("""<font color="red">$card -> KO</font>""")
+
             layoutManager.scrollToPosition(adapter.itemCount - 1)
         }
 

@@ -2,6 +2,7 @@ package fr.gstraymond.ui.adapter
 
 import android.content.Context
 import android.support.v7.widget.RecyclerView
+import android.text.Html
 import android.view.ViewGroup
 import android.widget.TextView
 import fr.gstraymond.R
@@ -16,7 +17,7 @@ class DeckImporterAdapter(private val context: Context) : RecyclerView.Adapter<R
                     .run { object : RecyclerView.ViewHolder(this) {} }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        (holder.itemView as TextView).text = lines[position]
+        (holder.itemView as TextView).text = Html.fromHtml(lines[position])
     }
 
     override fun getItemCount() = lines.size

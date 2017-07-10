@@ -13,11 +13,14 @@ class DeckResolver(val searchService: ElasticSearchService) {
                 .map { (mult, title, isSideboard) ->
                     searchService.resolve("title:$title")?.let { (elem) ->
                         val card = elem.hits.hits.find { it._source.title.equals(title, ignoreCase = true) }?._source
-                        deckImporterTask.publishProgress("$mult x $title", card != null)
                         card?.run {
+                            deckImporterTask.publishProgress("$mult x $title", result = true)
                             DeckLine(this, Date().time, mult, isSideboard)
                         }
-                    } ?: CardNotImported(title, mult, isSideboard)
+                    } ?: {
+                        deckImporterTask.publishProgress("$mult x $title", result = false)
+                        CardNotImported(title, mult, isSideboard)
+                    }()
                 }
     }
 }
