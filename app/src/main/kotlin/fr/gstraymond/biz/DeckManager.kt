@@ -2,8 +2,10 @@ package fr.gstraymond.biz
 
 import fr.gstraymond.db.json.CardListBuilder
 import fr.gstraymond.db.json.DeckList
+import fr.gstraymond.models.CardNotImported
 import fr.gstraymond.models.Deck
 import fr.gstraymond.models.DeckLine
+import fr.gstraymond.models.ImportResult
 import java.io.File
 import java.text.Normalizer
 import java.util.*
@@ -14,18 +16,21 @@ class DeckManager(private val deckList: DeckList,
     fun createEmptyDeck() = createDeck("Deck ${deckList.size() + 1}")
 
     fun createDeck(deckName: String,
-                   cards: List<DeckLine> = listOf<DeckLine>()): Int {
+                   results: List<ImportResult> = listOf<ImportResult>()): Int {
         val deckId = deckList.getLastId() + 1
+        val cards = results.filter { it is DeckLine }.map { it as DeckLine }
+        val cardsNotImported = results.filter { it is CardNotImported }.map { it as CardNotImported }
         cardListBuilder.build(deckId).save(cards)
         val deckStats = DeckStats(cards)
         deckList.addOrRemove(Deck(
-                deckId,
-                Date(),
-                deckName,
-                deckStats.colors,
-                deckStats.format,
-                deckStats.deck.sumBy { it.mult },
-                deckStats.sideboard.sumBy { it.mult }))
+                id = deckId,
+                timestamp = Date(),
+                name = deckName,
+                colors = deckStats.colors,
+                format = deckStats.format,
+                deckSize = deckStats.deck.sumBy { it.mult },
+                sideboardSize = deckStats.sideboard.sumBy { it.mult },
+                cardsNotImported = cardsNotImported))
         return deckId
     }
 

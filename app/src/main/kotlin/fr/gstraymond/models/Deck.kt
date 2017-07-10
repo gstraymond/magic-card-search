@@ -8,4 +8,5 @@ data class Deck(val id: Int = 0,
                 val colors: List<String>,
                 val format: String,
                 val deckSize: Int,
-                val sideboardSize: Int)
+                val sideboardSize: Int,
+                val cardsNotImported: List<CardNotImported>)

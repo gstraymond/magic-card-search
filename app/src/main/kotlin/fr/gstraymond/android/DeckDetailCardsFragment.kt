@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.text.Html
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -29,6 +30,7 @@ class DeckDetailCardsFragment : Fragment(), DeckLineCallback {
     private lateinit var emptyText: TextView
     private lateinit var fabAdd: FloatingActionButton
     private lateinit var fabHistory: FloatingActionButton
+    private lateinit var notImported: TextView
 
     var deckLineCallback: DeckLineCallback? = null
 
@@ -55,6 +57,7 @@ class DeckDetailCardsFragment : Fragment(), DeckLineCallback {
         emptyText = view.find(R.id.deck_detail_cards_empty)
         fabAdd = view.find(R.id.deck_detail_cards_add)
         fabHistory = view.find(R.id.deck_detail_cards_add_history)
+        notImported = view.find(R.id.deck_detail_cards_not_imported)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -81,6 +84,25 @@ class DeckDetailCardsFragment : Fragment(), DeckLineCallback {
     override fun onResume() {
         super.onResume()
         val deckId = activity.intent.getStringExtra(DeckDetailActivity.DECK_EXTRA)
+        val deck = activity.app().deckList.getByUid(deckId)
+
+        val cardsNotImported = deck?.cardsNotImported ?: listOf()
+        if (cardsNotImported.isEmpty()) notImported.gone()
+        else {
+            val cards = cardsNotImported.map {
+                val sideboard = when (it.isSideboard) {
+                    true -> "sideboard"
+                    else -> "deck"
+                }
+                """- ${it.mult} x "${it.card}" in $sideboard"""
+            }.joinToString("<br>")
+            notImported.text = Html.fromHtml("<b>Cards that couldn't be imported :</b><br>$cards")
+            notImported.visible()
+            notImported.setOnClickListener {
+                //TODO
+            }
+        }
+
         cardList = activity.app().cardListBuilder.build(deckId.toInt())
         updateTotal()
         deckDetailAdapter.let {
