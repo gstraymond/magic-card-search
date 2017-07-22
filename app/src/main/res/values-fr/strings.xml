@@ -126,4 +126,9 @@
     <string name="deck_tab_cards">Cartes</string>
     <string name="deck_tab_stats">Stats</string>
     <string name="loading">Recherche en cours…</string>
+
+    <string name="deck_detail_cards_not_imported_text">Vous devez ajouter manuellement ces cartes :</string>
+    <string name="deck_detail_cards_not_imported_title">Effacer ce message ?</string>
+    <string name="deck_detail_cards_not_imported_ok">Effacer</string>
+    <string name="deck_detail_cards_not_imported_cancel">Annuler</string>
 </resources>

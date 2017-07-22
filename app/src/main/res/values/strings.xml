@@ -24,7 +24,7 @@
     <string name="history_menu_clear">Clear searches</string>
     <string name="history_empty">No recent search</string>
     <string name="history_search_text">Keywords</string>
-    <string name="history_alert_title">Clear recent search ?</string>
+    <string name="history_alert_title">Clear recent search?</string>
     <string name="history_alert_description">
         All unchecked searches will be deleted.
     </string>
@@ -64,7 +64,7 @@
     <!--suppress MissingTranslation -->
 
     <string name="background_color" translatable="false">black</string>
-    <string name="changelog_full_title">What\'s new ?</string>
+    <string name="changelog_full_title">What\'s new?</string>
     <string name="changelog_title">Changelog</string>
     <string name="changelog_ok_button">OK</string>
     <string name="changelog_show_full">more…</string>
@@ -121,7 +121,7 @@
     <string name="snackbar_show">Browse</string>
     <string name="decklist_menu_refresh">Refresh</string>
     <string name="abilities">Abilities</string>
-    <string name="deckdetails_refresh_title">Refresh deck data ?</string>
+    <string name="deckdetails_refresh_title">Refresh deck data?</string>
     <string name="deckdetails_refresh_message">Decks are stored on device. This will synchronize and update data like card prices, formats validity.</string>
     <string name="deckdetails_refresh_ok">OK</string>
     <string name="deckdetails_refresh_cancel">CANCEL</string>
@@ -130,4 +130,9 @@
     <string name="deck_tab_cards">Cards</string>
     <string name="deck_tab_stats">Stats</string>
     <string name="loading">Searching…</string>
+
+    <string name="deck_detail_cards_not_imported_text">You should add manually theses cards:</string>
+    <string name="deck_detail_cards_not_imported_title">Clear this message?</string>
+    <string name="deck_detail_cards_not_imported_ok">Clear</string>
+    <string name="deck_detail_cards_not_imported_cancel">Cancel</string>
 </resources>
