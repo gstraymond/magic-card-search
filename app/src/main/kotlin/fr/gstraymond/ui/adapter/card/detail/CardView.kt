@@ -11,6 +11,7 @@ import fr.gstraymond.android.CardListActivity
 import fr.gstraymond.biz.CastingCostImageGetter
 import fr.gstraymond.biz.SearchOptions
 import fr.gstraymond.constants.FacetConst
+import fr.gstraymond.constants.FacetConst.*
 import fr.gstraymond.glide.CardLoader
 import fr.gstraymond.models.search.response.Card
 import fr.gstraymond.tools.*
@@ -66,7 +67,7 @@ class CardView(val context: Context,
                 context.startActivity {
                     val searchOptions = SearchOptions(
                             query = item.title,
-                            facets = mapOf(FacetConst.LAYOUT to listOf(item.layout)))
+                            facets = mapOf(LAYOUT to listOf(item.layout)))
                     CardListActivity.getIntent(context, searchOptions)
                 }
             }

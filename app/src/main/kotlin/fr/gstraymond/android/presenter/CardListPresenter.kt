@@ -11,6 +11,7 @@ import fr.gstraymond.android.DataUpdater
 import fr.gstraymond.biz.SearchOptions
 import fr.gstraymond.biz.SearchProcessorBuilder
 import fr.gstraymond.constants.FacetConst
+import fr.gstraymond.constants.FacetConst.*
 import fr.gstraymond.models.autocomplete.response.Option
 import fr.gstraymond.models.search.response.Card
 import fr.gstraymond.models.search.response.SearchResult
@@ -66,7 +67,7 @@ class CardListPresenter(private val context: Context) : DataUpdater {
                         snackbar?.dismiss()
                         snackbar = Snackbar.make(rootView, Html.fromHtml(text), Snackbar.LENGTH_INDEFINITE).apply {
                             setAction(R.string.snackbar_show) {
-                                val facets = mapOf(FacetConst.SET to listOf(lastEdition))
+                                val facets = mapOf(SET to listOf(lastEdition))
                                 searchProcessor.build().execute(SearchOptions(facets = facets))
                             }
                             show()

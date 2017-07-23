@@ -103,5 +103,15 @@
             fab:fab_label="@string/deck_detail_cards_add_history"
             fab:fab_size="mini" />
 
+        <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/deck_detail_cards_add_land"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_landscape_white_18dp"
+            fab:fab_colorNormal="@color/colorPrimary"
+            fab:fab_colorPressed="@color/colorPrimary"
+            fab:fab_label="@string/deck_detail_cards_add_land"
+            fab:fab_size="mini" />
+
     </com.github.clans.fab.FloatingActionMenu>
 </RelativeLayout>

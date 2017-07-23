@@ -17,6 +17,8 @@ import fr.gstraymond.android.adapter.DeckDetailCardsAdapter
 import fr.gstraymond.android.adapter.DeckLineCallback
 import fr.gstraymond.biz.DeckStats
 import fr.gstraymond.biz.SearchOptions
+import fr.gstraymond.constants.FacetConst.FORMAT
+import fr.gstraymond.constants.FacetConst.TYPE
 import fr.gstraymond.db.json.CardList
 import fr.gstraymond.models.Deck
 import fr.gstraymond.models.DeckLine
@@ -32,6 +34,7 @@ class DeckDetailCardsFragment : Fragment(), DeckLineCallback {
     private lateinit var emptyText: TextView
     private lateinit var fabAdd: FloatingActionButton
     private lateinit var fabHistory: FloatingActionButton
+    private lateinit var fabLand: FloatingActionButton
     private lateinit var notImported: TextView
 
     var deckLineCallback: DeckLineCallback? = null
@@ -61,6 +64,7 @@ class DeckDetailCardsFragment : Fragment(), DeckLineCallback {
         emptyText = view.find(R.id.deck_detail_cards_empty)
         fabAdd = view.find(R.id.deck_detail_cards_add)
         fabHistory = view.find(R.id.deck_detail_cards_add_history)
+        fabLand = view.find(R.id.deck_detail_cards_add_land)
         notImported = view.find(R.id.deck_detail_cards_not_imported)
     }
 
@@ -68,19 +72,22 @@ class DeckDetailCardsFragment : Fragment(), DeckLineCallback {
         super.onActivityCreated(savedInstanceState)
         val deckId = activity.intent.getStringExtra(DeckDetailActivity.DECK_EXTRA)
 
-        fabAdd.apply {
-            setOnClickListener {
-                startActivity {
-                    CardListActivity.getIntent(activity, SearchOptions(deckId = deckId, size = 0))
-                }
+        fabAdd.setOnClickListener {
+            startActivity {
+                CardListActivity.getIntent(activity, SearchOptions(deckId = deckId, size = 0))
             }
         }
 
-        fabHistory.apply {
-            setOnClickListener {
-                startActivity {
-                    HistoryActivity.getIntent(activity, deckId)
-                }
+        fabHistory.setOnClickListener {
+            startActivity {
+                HistoryActivity.getIntent(activity, deckId)
+            }
+        }
+
+        fabLand.setOnClickListener {
+            startActivity {
+                val facets = mapOf(TYPE to listOf("land", "basic"), FORMAT to listOf("Standard"))
+                CardListActivity.getIntent(activity, SearchOptions(deckId = deckId, facets = facets))
             }
         }
     }
