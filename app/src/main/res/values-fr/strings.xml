@@ -103,6 +103,7 @@
     <string name="search_last_extension"><![CDATA[<b>%2$s</b> cartes au total<br><b>%1$s</b> est la dernière édition]]></string>
     <string name="deck_detail_cards_add">Ajouter une carte via la recherche</string>
     <string name="deck_detail_cards_add_history">Ajouter une carte via l´historique</string>
+    <string name="deck_detail_cards_add_land">Ajouter un terrain basique</string>
     <string name="decks_add">Créer un deck vide</string>
     <string name="decks_import">Importer un deck depuis un fichier</string>
     <string name="import_deck">Importer un deck</string>
@@ -126,4 +127,9 @@
     <string name="deck_tab_cards">Cartes</string>
     <string name="deck_tab_stats">Stats</string>
     <string name="loading">Recherche en cours…</string>
+
+    <string name="deck_detail_cards_not_imported_text">Vous devez ajouter manuellement ces cartes :</string>
+    <string name="deck_detail_cards_not_imported_title">Effacer ce message ?</string>
+    <string name="deck_detail_cards_not_imported_ok">Effacer</string>
+    <string name="deck_detail_cards_not_imported_cancel">Annuler</string>
 </resources>

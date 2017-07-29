@@ -1,9 +1,11 @@
 package fr.gstraymond.android
 
+import android.app.AlertDialog
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.text.Html
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,7 +17,10 @@ import fr.gstraymond.android.adapter.DeckDetailCardsAdapter
 import fr.gstraymond.android.adapter.DeckLineCallback
 import fr.gstraymond.biz.DeckStats
 import fr.gstraymond.biz.SearchOptions
+import fr.gstraymond.constants.FacetConst.FORMAT
+import fr.gstraymond.constants.FacetConst.TYPE
 import fr.gstraymond.db.json.CardList
+import fr.gstraymond.models.Deck
 import fr.gstraymond.models.DeckLine
 import fr.gstraymond.utils.*
 
@@ -29,6 +34,8 @@ class DeckDetailCardsFragment : Fragment(), DeckLineCallback {
     private lateinit var emptyText: TextView
     private lateinit var fabAdd: FloatingActionButton
     private lateinit var fabHistory: FloatingActionButton
+    private lateinit var fabLand: FloatingActionButton
+    private lateinit var notImported: TextView
 
     var deckLineCallback: DeckLineCallback? = null
 
@@ -37,6 +44,8 @@ class DeckDetailCardsFragment : Fragment(), DeckLineCallback {
             deckLineCallback = this@DeckDetailCardsFragment
         }
     }
+
+    private val deckList by lazy { activity.app().deckList }
 
     override fun onCreateView(inflater: LayoutInflater,
                               container: ViewGroup?,
@@ -55,25 +64,30 @@ class DeckDetailCardsFragment : Fragment(), DeckLineCallback {
         emptyText = view.find(R.id.deck_detail_cards_empty)
         fabAdd = view.find(R.id.deck_detail_cards_add)
         fabHistory = view.find(R.id.deck_detail_cards_add_history)
+        fabLand = view.find(R.id.deck_detail_cards_add_land)
+        notImported = view.find(R.id.deck_detail_cards_not_imported)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         val deckId = activity.intent.getStringExtra(DeckDetailActivity.DECK_EXTRA)
 
-        fabAdd.apply {
-            setOnClickListener {
-                startActivity {
-                    CardListActivity.getIntent(activity, SearchOptions(deckId = deckId, size = 0))
-                }
+        fabAdd.setOnClickListener {
+            startActivity {
+                CardListActivity.getIntent(activity, SearchOptions(deckId = deckId, size = 0))
             }
         }
 
-        fabHistory.apply {
-            setOnClickListener {
-                startActivity {
-                    HistoryActivity.getIntent(activity, deckId)
-                }
+        fabHistory.setOnClickListener {
+            startActivity {
+                HistoryActivity.getIntent(activity, deckId)
+            }
+        }
+
+        fabLand.setOnClickListener {
+            startActivity {
+                val facets = mapOf(TYPE to listOf("land", "basic"), FORMAT to listOf("Standard"))
+                CardListActivity.getIntent(activity, SearchOptions(deckId = deckId, facets = facets))
             }
         }
     }
@@ -81,12 +95,43 @@ class DeckDetailCardsFragment : Fragment(), DeckLineCallback {
     override fun onResume() {
         super.onResume()
         val deckId = activity.intent.getStringExtra(DeckDetailActivity.DECK_EXTRA)
+        val deck = deckList.getByUid(deckId)
+
+        val cardsNotImported = deck?.cardsNotImported ?: listOf()
+        if (cardsNotImported.isEmpty()) notImported.gone()
+        else {
+            val cards = cardsNotImported.map {
+                val sideboard = when (it.isSideboard) {
+                    true -> "sideboard"
+                    else -> "deck"
+                }
+                """- ${it.mult} x "${it.card}" - $sideboard"""
+            }.joinToString("<br>")
+
+            notImported.text = Html.fromHtml("<b>${getString(R.string.deck_detail_cards_not_imported_text)}</b><br>$cards")
+            notImported.visible()
+            notImported.setOnClickListener {
+                deck?.run { createNotImportedDialog(deck) }
+            }
+        }
+
         cardList = activity.app().cardListBuilder.build(deckId.toInt())
         updateTotal()
         deckDetailAdapter.let {
             it.cardList = cardList
             it.notifyDataSetChanged()
         }
+    }
+
+    private fun createNotImportedDialog(deck: Deck) {
+        AlertDialog.Builder(activity)
+                .setTitle(getString(R.string.deck_detail_cards_not_imported_title))
+                .setPositiveButton(getString(R.string.deck_detail_cards_not_imported_ok)) { _, _ ->
+                    deckList.update(deck.copy(cardsNotImported = listOf()))
+                    notImported.gone()
+                }
+                .setNegativeButton(getString(R.string.deck_detail_cards_not_imported_cancel)) { _, _ -> }
+                .show()
     }
 
     private fun updateTotal() {
