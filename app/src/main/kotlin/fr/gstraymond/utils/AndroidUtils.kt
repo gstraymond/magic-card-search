@@ -17,16 +17,20 @@ import android.view.View.*
 import android.view.ViewGroup
 import fr.gstraymond.android.CustomApplication
 
-inline fun <reified A : View> View.find(id: Int): A = findViewById(id) as A
+inline fun <reified A : View> View.find(id: Int): A = findViewById(id)
 
-inline fun <reified A : View> Activity.find(id: Int): A = findViewById(id) as A
+inline fun <reified A : View> Activity.find(id: Int): A = findViewById(id)
+
+fun View.findView(id: Int): View = findViewById(id)
+
+fun Activity.findView(id: Int): View = findViewById(id)
 
 fun View.gone(): Unit {
     visibility = GONE
 }
 
 fun View.gone(id: Int): Unit {
-    findViewById(id).gone()
+    findView(id).gone()
 }
 
 fun View.visible(): Unit {
@@ -34,7 +38,7 @@ fun View.visible(): Unit {
 }
 
 fun View.visible(id: Int): Unit {
-    findViewById(id).visible()
+    findView(id).visible()
 }
 
 fun View.invisible(): Unit {
@@ -42,11 +46,11 @@ fun View.invisible(): Unit {
 }
 
 fun Activity.gone(id: Int): Unit {
-    findViewById(id).visibility = GONE
+    findView(id).visibility = GONE
 }
 
 fun Activity.visible(id: Int): Unit {
-    findViewById(id).visibility = VISIBLE
+    findView(id).visibility = VISIBLE
 }
 
 fun Activity.startActivity(buildIntent: () -> Intent) {

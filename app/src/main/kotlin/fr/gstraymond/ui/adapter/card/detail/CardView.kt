@@ -15,6 +15,7 @@ import fr.gstraymond.constants.FacetConst.*
 import fr.gstraymond.glide.CardLoader
 import fr.gstraymond.models.search.response.Card
 import fr.gstraymond.tools.*
+import fr.gstraymond.utils.find
 import fr.gstraymond.utils.startActivity
 
 class CardView(val context: Context,
@@ -28,12 +29,12 @@ class CardView(val context: Context,
     private val imageGetter = CastingCostImageGetter.large(context)
 
     override fun getView(item: Card, view: android.view.View): android.view.View {
-        val ccptView = view.findViewById(R.id.card_textview_ccpt) as TextView
-        val typeView = view.findViewById(R.id.card_textview_type) as TextView
-        val pictureView = view.findViewById(R.id.card_picture) as ImageView
-        val descView = view.findViewById(R.id.card_textview_description) as TextView
-        val formatsView = view.findViewById(R.id.card_textview_formats) as TextView
-        val altView = view.findViewById(R.id.card_alt) as Button
+        val ccptView = view.find<TextView>(R.id.card_textview_ccpt)
+        val typeView = view.find<TextView>(R.id.card_textview_type)
+        val pictureView = view.find<ImageView>(R.id.card_picture)
+        val descView = view.find<TextView>(R.id.card_textview_description)
+        val formatsView = view.find<TextView>(R.id.card_textview_formats)
+        val altView = view.find<Button>(R.id.card_alt)
 
         val ccpt = formatCCPT(item)
         if (ccpt.toString().isEmpty()) ccptView.visibility = android.view.View.GONE

@@ -13,6 +13,7 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.SearchView
 import android.support.v7.widget.Toolbar
+import android.view.View
 import android.widget.ExpandableListView
 import android.widget.TextView
 import com.magic.card.search.commons.log.Log
@@ -33,10 +34,7 @@ import fr.gstraymond.ui.adapter.CardArrayAdapter
 import fr.gstraymond.ui.adapter.CardArrayData
 import fr.gstraymond.ui.adapter.CardClickCallbacks
 import fr.gstraymond.ui.adapter.SearchViewCursorAdapter
-import fr.gstraymond.utils.app
-import fr.gstraymond.utils.find
-import fr.gstraymond.utils.gone
-import fr.gstraymond.utils.startActivity
+import fr.gstraymond.utils.*
 import sheetrock.panda.changelog.ChangeLog
 
 class CardListActivity : CustomActivity(R.layout.activity_card_list),
@@ -145,7 +143,7 @@ class CardListActivity : CustomActivity(R.layout.activity_card_list),
             setOnQueryTextListener(textListener)
             setOnSuggestionListener(suggestionListener)
             suggestionsAdapter = searchViewCursorAdapter
-            findViewById(R.id.search_close_btn).setOnClickListener {
+            findView(R.id.search_close_btn).setOnClickListener {
                 if (presenter.getCurrentSearch().facets.isEmpty()) {
                     searchProcessor.build().execute(SearchOptions.START_SEARCH_OPTIONS())
                     resetTextView.gone()

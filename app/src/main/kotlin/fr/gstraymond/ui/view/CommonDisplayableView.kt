@@ -12,7 +12,7 @@ abstract class CommonDisplayableView<in V : View>(override val id: Int) : Displa
     abstract fun setValue(view: V, card: Card, position: Int)
 
     override fun display(parentView: View, card: Card, position: Int) {
-        val view = parentView.findViewById(id) as V
+        val view = parentView.findViewById<V>(id)
         if (display(view, card)) {
             setValue(view, card, position)
         }

@@ -6,6 +6,7 @@ import android.widget.TextView
 import fr.gstraymond.R
 import fr.gstraymond.biz.SetImageGetter
 import fr.gstraymond.models.search.response.Publication
+import fr.gstraymond.utils.find
 import java.math.BigDecimal
 import java.math.MathContext
 import java.math.RoundingMode
@@ -18,11 +19,11 @@ class PublicationView(context: Context) : View<Publication>(context, R.layout.ca
     private val dateFormat = SimpleDateFormat("MMM yyyy", Locale.getDefault())
 
     override fun getView(item: Publication, view: android.view.View): android.view.View {
-        val publicationImage = view.findViewById(R.id.card_textview_set_image) as ImageView
-        val publicationImageAlt = view.findViewById(R.id.card_textview_set_image_alt) as TextView
-        val publicationText = view.findViewById(R.id.card_textview_set_text) as TextView
-        val publicationYear = view.findViewById(R.id.card_textview_set_year) as TextView
-        val publicationPrice = view.findViewById(R.id.card_textview_set_price) as TextView
+        val publicationImage = view.find<ImageView>(R.id.card_textview_set_image)
+        val publicationImageAlt = view.find<TextView>(R.id.card_textview_set_image_alt)
+        val publicationText = view.find<TextView>(R.id.card_textview_set_text)
+        val publicationYear = view.find<TextView>(R.id.card_textview_set_year)
+        val publicationPrice = view.find<TextView>(R.id.card_textview_set_price)
         val setDrawable = setImageGetter.getDrawable(item)
 
         if (setDrawable == null) {
