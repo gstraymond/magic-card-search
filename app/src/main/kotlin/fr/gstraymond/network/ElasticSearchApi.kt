@@ -7,10 +7,10 @@ import retrofit2.http.GET
 import retrofit2.http.Query
 
 interface ElasticSearchApi {
-    @GET("magic/card/_search")
+    @GET("mtg/card/_search")
     fun search(@Query("source") source: String): Call<SearchResult>
 
-    @GET("magic/card/_search")
+    @GET("mtg/card/_search")
     fun resolve(@Query("q") query: String,
                 @Query("size") size: Int = 10): Call<SearchResult>
 

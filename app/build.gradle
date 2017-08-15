@@ -51,13 +51,13 @@ android {
             minifyEnabled false
             applicationIdSuffix ".debug"
             versionNameSuffix " debug"
-            resValue "string", "app_name", "[DEBUG] MTG Search"
+            resValue "string", "app_name", "[DEBUG] MTG Search - deck builder"
         }
         release {
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.release
-            resValue "string", "app_name", "MTG Search"
+            resValue "string", "app_name", "MTG Search - deck builder"
         }
     }
 
