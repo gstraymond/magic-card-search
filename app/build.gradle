@@ -26,21 +26,21 @@ repositories {
 }
 
 android {
-    compileSdkVersion 25
-    buildToolsVersion "25.0.3"
+    compileSdkVersion 26
+    buildToolsVersion "26.0.0"
 
     defaultConfig {
-        applicationId "fr.gstraymond"
+        applicationId "mtg.magic.search.deck.builder"
         minSdkVersion 14
-        targetSdkVersion 25
-        versionCode 55
-        versionName "2.2.4"
+        targetSdkVersion 26
+        versionCode 56
+        versionName "2.2.5"
     }
 
     signingConfigs {
         release {
-            storeFile file("/home/guillaume/androidKeystore/key")
-            keyAlias "magic-card-search"
+            storeFile file("/home/guillaume/androidKeystore/mtgsearch.jks")
+            keyAlias "mtgsearch"
             storePassword file(".storePassword").text
             keyPassword file(".keyPassword").text
         }
@@ -81,7 +81,7 @@ android {
 
 ext {
     glideVersion = '3.+'
-    supportLibVersion = '25.+'
+    supportLibVersion = '26.+'
     retrofitVersion = '2.1+'
     retrofitLoggingVersion = '3.3+'
     androidChartVersion = 'v3.+'

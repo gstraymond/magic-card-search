@@ -13,6 +13,7 @@ import fr.gstraymond.R
 import fr.gstraymond.biz.SetImageGetter
 import fr.gstraymond.models.autocomplete.response.Option
 import fr.gstraymond.tools.CardColorUtil
+import fr.gstraymond.utils.findView
 import fr.gstraymond.utils.inflate
 import java.util.*
 
@@ -30,14 +31,14 @@ class SearchViewCursorAdapter private constructor(context: Context,
             FIELD_TYPE_EDITION -> {
                 view = context.inflate(R.layout.searchview_adapter_edition, parent)
                 holder = EditionViewHolder(
-                        view.findViewById(R.id.searchview_edition_text) as TextView,
-                        view.findViewById(R.id.searchview_edition_image) as ImageView)
+                        view.findView(R.id.searchview_edition_text) as TextView,
+                        view.findView(R.id.searchview_edition_image) as ImageView)
             }
             FIELD_TYPE_CARD -> {
                 view = context.inflate(R.layout.searchview_adapter_card, parent)
                 holder = CardViewHolder(
-                        view.findViewById(R.id.searchview_card_title) as TextView,
-                        view.findViewById(R.id.searchview_card_type) as TextView)
+                        view.findView(R.id.searchview_card_title) as TextView,
+                        view.findView(R.id.searchview_card_type) as TextView)
             }
             else -> {
                 view = context.inflate(R.layout.searchview_adapter_token, parent)

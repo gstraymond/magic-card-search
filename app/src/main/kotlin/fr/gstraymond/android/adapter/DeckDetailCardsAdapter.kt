@@ -27,7 +27,7 @@ class DeckDetailCardsAdapter(private val context: Context) : RecyclerView.Adapte
     private val cardViews = DeckDetailCardViews(context)
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        val root = holder.itemView.findViewById(R.id.array_adapter_deck_card_root)
+        val root = holder.itemView.findView(R.id.array_adapter_deck_card_root)
         if (position >= cardList.size()) {
             root.invisible()
             return
