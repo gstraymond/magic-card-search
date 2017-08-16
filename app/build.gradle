@@ -33,14 +33,14 @@ android {
         applicationId "mtg.magic.search.deck.builder"
         minSdkVersion 14
         targetSdkVersion 26
-        versionCode 55
-        versionName "2.2.4"
+        versionCode 56
+        versionName "2.2.5"
     }
 
     signingConfigs {
         release {
-            storeFile file("/home/guillaume/androidKeystore/key")
-            keyAlias "magic-card-search"
+            storeFile file("/home/guillaume/androidKeystore/mtgsearch.jks")
+            keyAlias "mtgsearch"
             storePassword file(".storePassword").text
             keyPassword file(".keyPassword").text
         }
@@ -51,13 +51,13 @@ android {
             minifyEnabled false
             applicationIdSuffix ".debug"
             versionNameSuffix " debug"
-            resValue "string", "app_name", "[DEBUG] MTG Search - deck builder"
+            resValue "string", "app_name", "[DEBUG] MTG Search"
         }
         release {
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.release
-            resValue "string", "app_name", "MTG Search - deck builder"
+            resValue "string", "app_name", "MTG Search"
         }
     }
 
