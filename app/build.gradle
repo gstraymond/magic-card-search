@@ -104,5 +104,6 @@ dependencies {
     compile "com.github.clans:fab:$floatingactionbuttonVersion"
     compile "com.nbsp:library:$fileChooserVersion"
     compile ("net.rdrei.android.dirchooser:library:$dirChooserVersion@aar") { transitive = true }
+    compile 'com.google.android.gms:play-services-vision:9.4.0+'
     testCompile 'junit:junit:4.12'
 }

@@ -1,7 +1,9 @@
 package fr.gstraymond.android
 
+import android.Manifest.permission.CAMERA
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.content.res.Configuration
 import android.os.Bundle
 import android.support.design.widget.NavigationView
@@ -13,7 +15,7 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.SearchView
 import android.support.v7.widget.Toolbar
-import android.view.View
+import android.widget.Button
 import android.widget.ExpandableListView
 import android.widget.TextView
 import com.magic.card.search.commons.log.Log
@@ -26,6 +28,7 @@ import fr.gstraymond.biz.SearchProcessorBuilder
 import fr.gstraymond.models.autocomplete.response.Option
 import fr.gstraymond.models.search.response.Card
 import fr.gstraymond.models.search.response.SearchResult
+import fr.gstraymond.ocr.OcrCaptureActivity
 import fr.gstraymond.tools.VersionUtils
 import fr.gstraymond.ui.EndScrollListener
 import fr.gstraymond.ui.SuggestionListener
@@ -64,11 +67,14 @@ class CardListActivity : CustomActivity(R.layout.activity_card_list),
     private val resetTextView by lazy { find<TextView>(R.id.toolbar_reset) }
     private val emptyTextView by lazy { find<TextView>(R.id.search_empty_text) }
     private val leftNavigationView by lazy { find<NavigationView>(R.id.left_drawer) }
+    private val scanButton by lazy { find<Button>(R.id.scan_card) }
 
     private lateinit var arrayAdapter: CardArrayAdapter
 
     private val presenter = CardListPresenter(this)
     private val log = Log(javaClass)
+
+    private val REQUEST_CAMERA_CODE = 1232
 
     private val clickCallback = object : CardArrayAdapter.ClickCallbacks {
         override fun cardClicked(card: Card) = startActivity {
@@ -213,6 +219,23 @@ class CardListActivity : CustomActivity(R.layout.activity_card_list),
         } else {
             supportActionBar?.setDisplayHomeAsUpEnabled(true)
         }
+
+        scanButton.setOnClickListener {
+            if (!hasPerms(CAMERA)) {
+                requestPerms(REQUEST_CAMERA_CODE, CAMERA)
+            } else {
+                startScanner()
+            }
+        }
+    }
+
+    private fun startScanner() {
+        startActivity {
+            Intent(this, OcrCaptureActivity::class.java).apply {
+                putExtra("AutoFocus", true)
+                putExtra("UseFlash", false)
+            }
+        }
     }
 
     override fun onPostCreate(savedInstanceState: Bundle?) {
@@ -265,6 +288,16 @@ class CardListActivity : CustomActivity(R.layout.activity_card_list),
         leftNavigationView.menu.findItem(menuId).title = when (size) {
             0 -> getString(stringEmpty)
             else -> String.format(getString(stringNumber), size)
+        }
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int,
+                                            permissions: Array<out String>,
+                                            grantResults: IntArray) {
+        when (requestCode) {
+            REQUEST_CAMERA_CODE -> if (grantResults.all { it == PackageManager.PERMISSION_GRANTED }) {
+                startScanner()
+            }
         }
     }
 }
