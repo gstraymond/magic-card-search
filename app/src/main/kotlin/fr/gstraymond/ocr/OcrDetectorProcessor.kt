@@ -28,10 +28,11 @@ class OcrDetectorProcessor(private val mGraphicOverlay: GraphicOverlay<OcrGraphi
 
     interface CardDetector {
         fun onCardDetected(card: Card)
+        fun isPaused(): Boolean
     }
 
     private val expectedTypes = listOf(
-            "artifact", "instant", "sorcery", "creature", "enchantment", "land", "summon", "planeswalker",
+            "artifact", "instant", "sorcery", "creature", "enchant", "enchantment", "land", "summon", "planeswalker",
             "artefact", "ephemere", "rituel", "creature", "enchantement", "terrain", "invoquer")
 
     private val convertedTypes = mapOf(
@@ -39,6 +40,7 @@ class OcrDetectorProcessor(private val mGraphicOverlay: GraphicOverlay<OcrGraphi
             "artefact" to "artifact",
             "ephemere" to "instant",
             "rituel" to "sorcery",
+            "enchant" to "enchantment",
             "enchantement" to "enchantment",
             "terrain" to "land",
             "invoquer" to "creature")
@@ -70,6 +72,7 @@ class OcrDetectorProcessor(private val mGraphicOverlay: GraphicOverlay<OcrGraphi
 
     override fun receiveDetections(detections: Detector.Detections<TextBlock>) {
         mGraphicOverlay.clear()
+        if (cardDetector.isPaused()) return
 
         val items = detections.detectedItems
         val textBlocks = (0..items.size() - 1).map { items.valueAt(it) }.filter { it.components.size == 1 }
@@ -86,6 +89,15 @@ class OcrDetectorProcessor(private val mGraphicOverlay: GraphicOverlay<OcrGraphi
                         .filter { it.boundingBox.bottom < detectedType.boundingBox.top }
                         .sortedBy { Math.abs(it.boundingBox.left - detectedType.boundingBox.left) }
                         .first()
+
+
+
+                listOf(detectedTitle, detectedType).map {
+                    OcrGraphic(mGraphicOverlay, it)
+                }.forEach {
+                    mGraphicOverlay.add(it)
+                }
+
                 val normTypes = normTypes(detectedType)
                 val writtenType = expectedTypes.find { normTypes.contains(it) }
                 val normalizedType = convertedTypes.getOrDefault(writtenType!!, writtenType)
@@ -97,7 +109,7 @@ class OcrDetectorProcessor(private val mGraphicOverlay: GraphicOverlay<OcrGraphi
                             it._source.title.levenshtein(trimmedTitle),
                             it._source.frenchTitle?.levenshtein(trimmedTitle) ?: Int.MAX_VALUE)
                 }?.filter {
-                    it.second < 8
+                    it.second < 5
                 }?.minBy {
                     it.second
                 }?.let {
@@ -105,12 +117,6 @@ class OcrDetectorProcessor(private val mGraphicOverlay: GraphicOverlay<OcrGraphi
                 }
             }
         }
-
-        /*textBlocks.map {
-            OcrGraphic(mGraphicOverlay, it, detected.contains(it))
-        }.forEach {
-            mGraphicOverlay.add(it)
-        }*/
     }
 
     private fun normTypes(it: TextBlock): List<String> {

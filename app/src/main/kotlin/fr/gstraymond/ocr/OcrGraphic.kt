@@ -29,27 +29,19 @@ import com.google.android.gms.vision.text.TextBlock
  * overlay view.
  */
 class OcrGraphic internal constructor(overlay: GraphicOverlay<*>,
-                                      val textBlock: TextBlock?,
-                                      detected: Boolean) : GraphicOverlay.Graphic(overlay) {
+                                      val textBlock: TextBlock?) : GraphicOverlay.Graphic(overlay) {
 
     var id: Int = 0
 
     private var sRectPaint: Paint? = null
-    private var sTextPaint: Paint? = null
 
     init {
 
         if (sRectPaint == null) {
             sRectPaint = Paint()
-            sRectPaint!!.color = if (detected) DETECTED_COLOR else TEXT_COLOR
-            sRectPaint!!.style = Paint.Style.STROKE
-            sRectPaint!!.strokeWidth = 4.0f
-        }
-
-        if (sTextPaint == null) {
-            sTextPaint = Paint()
-            sTextPaint!!.color = TEXT_COLOR
-            sTextPaint!!.textSize = 54.0f
+            sRectPaint!!.color = TEXT_COLOR
+            sRectPaint!!.style = Paint.Style.FILL
+            sRectPaint!!.alpha = 128
         }
         // Redraw the overlay, as this graphic has been added.
         postInvalidate()
@@ -87,19 +79,10 @@ class OcrGraphic internal constructor(overlay: GraphicOverlay<*>,
         rect.right = translateX(rect.right)
         rect.bottom = translateY(rect.bottom)
         canvas.drawRect(rect, sRectPaint!!)
-
-        // Break the text into multiple lines and draw each one according to its own bounding box.
-        val textComponents = text.components
-        for (currentText in textComponents) {
-            val left = translateX(currentText.boundingBox.left.toFloat())
-            val bottom = translateY(currentText.boundingBox.bottom.toFloat())
-            canvas.drawText(currentText.value, left, bottom, sTextPaint!!)
-        }
     }
 
     companion object {
 
         private val TEXT_COLOR = Color.WHITE
-        private val DETECTED_COLOR = Color.RED
     }
 }

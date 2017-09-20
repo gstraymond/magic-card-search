@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:padding="16dp">
+
+    <TextView
+        android:id="@+id/array_adapter_card_casting_cost"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/castingCostSize"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="2dp"
+        tools:text="UUU" />
+
+    <TextView
+        android:id="@+id/array_adapter_text"
+        style="@android:style/TextAppearance.Medium"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/array_adapter_card_casting_cost"
+        android:ellipsize="end"
+        android:maxLines="2"
+        tools:text="Black lotus" />
+
+    <TextView
+        android:id="@+id/array_adapter_card_format"
+        style="@android:style/TextAppearance.Medium"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/array_adapter_text"
+        android:layout_marginRight="8dp"
+        android:textColor="@android:color/darker_gray"
+        tools:text="Standard" />
+
+    <TextView
+        android:id="@+id/array_adapter_card_type_pt"
+        style="@android:style/TextAppearance.Medium"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/array_adapter_text"
+        android:ellipsize="end"
+        android:maxLines="1"
+        tools:text=" - Sorcery" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/array_adapter_card_format"
+        android:paddingTop="16dp">
+
+        <CheckBox
+            android:id="@+id/ocr_scan_continue_checkbox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:checked="true"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            android:scaleX="1.5"
+            android:scaleY="1.5" />
+
+        <TextView
+            android:id="@+id/ocr_scan_continue_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@id/ocr_scan_continue_checkbox"
+            android:paddingRight="8dp"
+            android:paddingTop="8dp"
+            android:text="@string/ocr_continue_scan" />
+
+    </RelativeLayout>
+
+</RelativeLayout>

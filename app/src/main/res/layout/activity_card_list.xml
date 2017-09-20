@@ -84,7 +84,7 @@
                         android:layout_centerVertical="true"
                         android:layout_marginRight="16dp"
                         android:background="@drawable/ic_photo_camera_white_48dp"
-                        android:padding="12dp" />
+                        android:foreground="?attr/selectableItemBackground" />
 
                     <android.support.v7.widget.SearchView
                         android:id="@+id/search_input"

@@ -104,6 +104,7 @@
     <string name="deck_detail_cards_add">Ajouter une carte via la recherche</string>
     <string name="deck_detail_cards_add_history">Ajouter une carte via l´historique</string>
     <string name="deck_detail_cards_add_land">Ajouter un terrain de base</string>
+    <string name="deck_detail_cards_camera_scan">Ajouter une carte via l´appareil photo</string>
     <string name="decks_add">Créer un deck vide</string>
     <string name="decks_import">Importer un deck depuis un fichier</string>
     <string name="import_deck">Importer un deck</string>
@@ -132,4 +133,5 @@
     <string name="deck_detail_cards_not_imported_title">Effacer ce message ?</string>
     <string name="deck_detail_cards_not_imported_ok">Effacer</string>
     <string name="deck_detail_cards_not_imported_cancel">Annuler</string>
+    <string name="ocr_continue_scan">Continuer le scan ?</string>
 </resources>

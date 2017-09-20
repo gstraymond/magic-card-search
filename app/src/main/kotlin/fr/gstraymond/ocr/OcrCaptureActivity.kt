@@ -1,35 +1,58 @@
 package fr.gstraymond.ocr
 
 import android.annotation.SuppressLint
+import android.app.AlertDialog
+import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.hardware.Camera
 import android.os.Bundle
 import android.support.design.widget.Snackbar
+import android.widget.CheckBox
 import android.widget.Toast
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GoogleApiAvailability
-import com.google.android.gms.common.api.CommonStatusCodes
-import com.google.android.gms.vision.text.TextBlock
 import com.google.android.gms.vision.text.TextRecognizer
 import com.magic.card.search.commons.log.Log
 import fr.gstraymond.R
 import fr.gstraymond.android.CardDetailActivity
 import fr.gstraymond.android.CustomActivity
+import fr.gstraymond.models.DeckLine
 import fr.gstraymond.models.search.response.Card
 import fr.gstraymond.ocr.ui.camera.CameraSource
 import fr.gstraymond.ocr.ui.camera.CameraSourcePreview
 import fr.gstraymond.ocr.ui.camera.GraphicOverlay
+import fr.gstraymond.ui.adapter.DeckDetailCardViews
 import fr.gstraymond.utils.app
 import fr.gstraymond.utils.find
+import fr.gstraymond.utils.inflate
 import fr.gstraymond.utils.startActivity
 import java.io.IOException
+import java.util.*
+import java.util.concurrent.atomic.AtomicBoolean
 
 class OcrCaptureActivity : CustomActivity(R.layout.ocr_capture), OcrDetectorProcessor.CardDetector {
 
     private var mCameraSource: CameraSource? = null
     private var mPreview: CameraSourcePreview? = null
     private var mGraphicOverlay: GraphicOverlay<OcrGraphic>? = null
+
+    companion object {
+        private val RC_HANDLE_GMS = 9001
+        val AUTO_FOCUS = "AutoFocus"
+        val USE_FLASH = "UseFlash"
+        val DECK_ID = "DeckId"
+
+        fun getIntent(context: Context,
+                      autoFocus: Boolean,
+                      useFlash: Boolean,
+                      deckId: String? = null): Intent =
+                Intent(context, OcrCaptureActivity::class.java).apply {
+                    putExtra(AUTO_FOCUS, autoFocus)
+                    putExtra(USE_FLASH, useFlash)
+                    putExtra(DECK_ID, deckId)
+                }
+    }
 
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,8 +61,8 @@ class OcrCaptureActivity : CustomActivity(R.layout.ocr_capture), OcrDetectorProc
         mGraphicOverlay = find<GraphicOverlay<OcrGraphic>>(R.id.graphicOverlay)
 
         // read parameters from the intent used to launch the activity.
-        val autoFocus = intent.getBooleanExtra(AutoFocus, false)
-        val useFlash = intent.getBooleanExtra(UseFlash, false)
+        val autoFocus = intent.getBooleanExtra(AUTO_FOCUS, false)
+        val useFlash = intent.getBooleanExtra(USE_FLASH, false)
 
         createCameraSource(autoFocus, useFlash)
 
@@ -154,51 +177,57 @@ class OcrCaptureActivity : CustomActivity(R.layout.ocr_capture), OcrDetectorProc
         }
     }
 
-    /**
-     * onTap is called to capture the first TextBlock under the tap location and return it to
-     * the Initializing Activity.
-
-     * @param rawX - the raw position of the tap
-     * *
-     * @param rawY - the raw position of the tap.
-     * *
-     * @return true if the activity is ending.
-     */
-    private fun onTap(rawX: Float, rawY: Float): Boolean {
-        val graphic = mGraphicOverlay!!.getGraphicAtLocation(rawX, rawY)
-        var text: TextBlock? = null
-        if (graphic != null) {
-            text = graphic.textBlock
-            if (text != null && text.value != null) {
-                val data = Intent()
-                data.putExtra(TextBlockObject, text.value)
-                setResult(CommonStatusCodes.SUCCESS, data)
-                finish()
-            } else {
-                log.d("text data is null")
-            }
-        } else {
-            log.d("no text detected")
-        }
-        return text != null
-    }
-
     private val log = Log(javaClass)
 
+    private var pause = AtomicBoolean(false)
+
     override fun onCardDetected(card: Card) {
-        startActivity {
+        if (!pause.compareAndSet(false, true)) return
+
+        intent.getStringExtra(DECK_ID)?.let { deckId ->
+            runOnUiThread {
+                createScanDialog(deckId, card)
+            }
+        } ?: startActivity {
+            finish()
             CardDetailActivity.getIntent(this@OcrCaptureActivity, card)
         }
-        finish()
     }
 
-    companion object {
-        // Intent request code to handle updating play services if needed.
-        private val RC_HANDLE_GMS = 9001
-
-        // Constants used to pass extra data in the intent
-        val AutoFocus = "AutoFocus"
-        val UseFlash = "UseFlash"
-        val TextBlockObject = "String"
+    private fun addCardToDeck(deckId: String, card: Card) {
+        val cardList = app().cardListBuilder.build(deckId.toInt())
+        val newDeckLine = DeckLine(card, Date().time, 1, false)
+        if (cardList.contains(newDeckLine)) {
+            val deckLine = cardList.getByUid(newDeckLine.id())!!
+            cardList.update(deckLine.copy(mult = deckLine.mult + 1))
+        } else {
+            cardList.addOrRemove(newDeckLine)
+        }
     }
+
+    private val cardViews by lazy { DeckDetailCardViews(this) }
+
+    private fun createScanDialog(deckId: String, card: Card) {
+        val view = inflate(R.layout.activity_ocr_scan)
+        val continueScan = view.find<CheckBox>(R.id.ocr_scan_continue_checkbox)
+        cardViews.display(view, card, 0)
+        AlertDialog.Builder(this)
+                .setView(view)
+                .setPositiveButton("Add", { _, _ ->
+                    addCardToDeck(deckId, card)
+                    finishScan(continueScan.isChecked)
+                })
+                .setNegativeButton("Discard", { _, _ ->
+                    finishScan(continueScan.isChecked)
+                })
+                .create()
+                .show()
+    }
+
+    private fun finishScan(continueScan: Boolean) {
+        if (!continueScan) finish()
+        else pause.set(false)
+    }
+
+    override fun isPaused() = pause.get()
 }

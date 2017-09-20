@@ -11,11 +11,7 @@ import android.support.design.widget.Snackbar
 import android.support.v4.view.GravityCompat
 import android.support.v4.widget.DrawerLayout
 import android.support.v7.app.ActionBarDrawerToggle
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
-import android.support.v7.widget.SearchView
-import android.support.v7.widget.Toolbar
-import android.widget.Button
+import android.support.v7.widget.*
 import android.widget.ExpandableListView
 import android.widget.TextView
 import com.magic.card.search.commons.log.Log
@@ -67,7 +63,7 @@ class CardListActivity : CustomActivity(R.layout.activity_card_list),
     private val resetTextView by lazy { find<TextView>(R.id.toolbar_reset) }
     private val emptyTextView by lazy { find<TextView>(R.id.search_empty_text) }
     private val leftNavigationView by lazy { find<NavigationView>(R.id.left_drawer) }
-    private val scanButton by lazy { find<Button>(R.id.scan_card) }
+    private val scanButton by lazy { find<AppCompatButton>(R.id.scan_card) }
 
     private lateinit var arrayAdapter: CardArrayAdapter
 
@@ -220,21 +216,21 @@ class CardListActivity : CustomActivity(R.layout.activity_card_list),
             supportActionBar?.setDisplayHomeAsUpEnabled(true)
         }
 
-        scanButton.setOnClickListener {
-            if (!hasPerms(CAMERA)) {
-                requestPerms(REQUEST_CAMERA_CODE, CAMERA)
-            } else {
-                startScanner()
+        scanButton.apply {
+            supportBackgroundTintList = resources.colorStateList(R.color.colorAccent)
+            setOnClickListener {
+                if (!hasPerms(CAMERA)) {
+                    requestPerms(REQUEST_CAMERA_CODE, CAMERA)
+                } else {
+                    startScanner()
+                }
             }
         }
     }
 
     private fun startScanner() {
         startActivity {
-            Intent(this, OcrCaptureActivity::class.java).apply {
-                putExtra("AutoFocus", true)
-                putExtra("UseFlash", false)
-            }
+            OcrCaptureActivity.getIntent(this, autoFocus = true, useFlash = false)
         }
     }
 

@@ -1,6 +1,8 @@
 package fr.gstraymond.android
 
+import android.Manifest
 import android.app.AlertDialog
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
@@ -11,6 +13,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import com.github.clans.fab.FloatingActionButton
+import com.github.clans.fab.FloatingActionMenu
 import com.magic.card.search.commons.log.Log
 import fr.gstraymond.R
 import fr.gstraymond.android.adapter.DeckDetailCardsAdapter
@@ -22,19 +25,24 @@ import fr.gstraymond.constants.FacetConst.TYPE
 import fr.gstraymond.db.json.CardList
 import fr.gstraymond.models.Deck
 import fr.gstraymond.models.DeckLine
+import fr.gstraymond.ocr.OcrCaptureActivity
 import fr.gstraymond.utils.*
 
 class DeckDetailCardsFragment : Fragment(), DeckLineCallback {
 
     private val log = Log(javaClass)
 
+    private val REQUEST_CAMERA_CODE = 1233
+
     private lateinit var cardList: CardList
     private lateinit var cardTotal: TextView
     private lateinit var frame: View
     private lateinit var emptyText: TextView
+    private lateinit var floatingMenu: FloatingActionMenu
     private lateinit var fabAdd: FloatingActionButton
     private lateinit var fabHistory: FloatingActionButton
     private lateinit var fabLand: FloatingActionButton
+    private lateinit var fabScan: FloatingActionButton
     private lateinit var notImported: TextView
 
     var deckLineCallback: DeckLineCallback? = null
@@ -62,9 +70,11 @@ class DeckDetailCardsFragment : Fragment(), DeckLineCallback {
         cardTotal = view.find(R.id.deck_detail_cards_total)
         frame = view.find(R.id.deck_detail_cards_frame)
         emptyText = view.find(R.id.deck_detail_cards_empty)
+        floatingMenu = view.find(R.id.deck_detail_cards_floating_menu)
         fabAdd = view.find(R.id.deck_detail_cards_add)
         fabHistory = view.find(R.id.deck_detail_cards_add_history)
         fabLand = view.find(R.id.deck_detail_cards_add_land)
+        fabScan = view.find(R.id.deck_detail_cards_camera_scan)
         notImported = view.find(R.id.deck_detail_cards_not_imported)
     }
 
@@ -90,10 +100,29 @@ class DeckDetailCardsFragment : Fragment(), DeckLineCallback {
                 CardListActivity.getIntent(activity, SearchOptions(deckId = deckId, facets = facets))
             }
         }
+
+        fabScan.setOnClickListener {
+            if (!activity.hasPerms(Manifest.permission.CAMERA)) {
+                activity.requestPerms(REQUEST_CAMERA_CODE, Manifest.permission.CAMERA)
+            } else {
+                startScanner()
+            }
+        }
+    }
+
+    private fun startScanner() {
+        startActivity {
+            OcrCaptureActivity.getIntent(
+                    activity,
+                    autoFocus = true,
+                    useFlash = false,
+                    deckId = activity.intent.getStringExtra(DeckDetailActivity.DECK_EXTRA))
+        }
     }
 
     override fun onResume() {
         super.onResume()
+        floatingMenu.close(false)
         val deckId = activity.intent.getStringExtra(DeckDetailActivity.DECK_EXTRA)
         val deck = deckList.getByUid(deckId)
 
@@ -168,5 +197,15 @@ class DeckDetailCardsFragment : Fragment(), DeckLineCallback {
             CardDetailActivity.getIntent(context, deckLine.card)
         }
         deckLineCallback?.cardClick(deckLine)
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int,
+                                            permissions: Array<out String>,
+                                            grantResults: IntArray) {
+        when (requestCode) {
+            REQUEST_CAMERA_CODE -> if (grantResults.all { it == PackageManager.PERMISSION_GRANTED }) {
+                startScanner()
+            }
+        }
     }
 }
