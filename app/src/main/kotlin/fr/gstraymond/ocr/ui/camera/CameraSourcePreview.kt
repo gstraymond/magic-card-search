@@ -24,7 +24,8 @@ import android.view.SurfaceView
 import android.view.ViewGroup
 import java.io.IOException
 
-class CameraSourcePreview(private val mContext: Context, attrs: AttributeSet) : ViewGroup(mContext, attrs) {
+class CameraSourcePreview(private val mContext: Context,
+                          attrs: AttributeSet) : ViewGroup(mContext, attrs) {
     private val mSurfaceView: SurfaceView
     private var mStartRequested: Boolean = false
     private var mSurfaceAvailable: Boolean = false

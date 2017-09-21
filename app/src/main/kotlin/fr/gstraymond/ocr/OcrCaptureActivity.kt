@@ -1,6 +1,5 @@
 package fr.gstraymond.ocr
 
-import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
@@ -33,9 +32,13 @@ import java.util.concurrent.atomic.AtomicBoolean
 
 class OcrCaptureActivity : CustomActivity(R.layout.ocr_capture), OcrDetectorProcessor.CardDetector {
 
-    private var mCameraSource: CameraSource? = null
-    private var mPreview: CameraSourcePreview? = null
-    private var mGraphicOverlay: GraphicOverlay<OcrGraphic>? = null
+    private var cameraSource: CameraSource? = null
+    private val preview by lazy { find<CameraSourcePreview>(R.id.preview) }
+    private val graphicOverlay by lazy { find<GraphicOverlay<OcrGraphic>>(R.id.graphicOverlay) }
+
+    private val log = Log(javaClass)
+
+    private val pause = AtomicBoolean(false)
 
     companion object {
         private val RC_HANDLE_GMS = 9001
@@ -57,50 +60,24 @@ class OcrCaptureActivity : CustomActivity(R.layout.ocr_capture), OcrDetectorProc
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        mPreview = find<CameraSourcePreview>(R.id.preview)
-        mGraphicOverlay = find<GraphicOverlay<OcrGraphic>>(R.id.graphicOverlay)
-
-        // read parameters from the intent used to launch the activity.
         val autoFocus = intent.getBooleanExtra(AUTO_FOCUS, false)
         val useFlash = intent.getBooleanExtra(USE_FLASH, false)
 
         createCameraSource(autoFocus, useFlash)
 
-        Snackbar.make(mGraphicOverlay!!, "Place card under camera, at least card title and type",
+        // FIXME string
+        Snackbar.make(graphicOverlay, "Place card under camera, at least card title and type",
                 Snackbar.LENGTH_INDEFINITE)
                 .show()
     }
 
-    /**
-     * Creates and starts the camera.  Note that this uses a higher resolution in comparison
-     * to other detection examples to enable the ocr detector to detect small text samples
-     * at long distances.
-
-     * Suppressing InlinedApi since there is a check that the minimum version is met before using
-     * the constant.
-     */
-    @SuppressLint("InlinedApi")
     private fun createCameraSource(autoFocus: Boolean, useFlash: Boolean) {
-        // A text recognizer is created to find text.  An associated processor instance
-        // is set to receive the text recognition results and display graphics for each text block
-        // on screen.
         val textRecognizer = TextRecognizer.Builder(applicationContext).build()
-        textRecognizer.setProcessor(OcrDetectorProcessor(mGraphicOverlay!!, this, app().searchService))
+        textRecognizer.setProcessor(OcrDetectorProcessor(graphicOverlay, this, app().searchService))
 
         if (!textRecognizer.isOperational) {
-            // Note: The first time that an app using a Vision API is installed on a
-            // device, GMS will download a native libraries to the device in order to do detection.
-            // Usually this completes before the app is run for the first time.  But if that
-            // download has not yet completed, then the above call will not detect any text,
-            // barcodes, or faces.
-            //
-            // isOperational() can be used to check if the required native libraries are currently
-            // available.  The detectors will automatically become operational once the library
-            // downloads complete on device.
             log.w("Detector dependencies are not yet available.")
 
-            // Check for low storage.  If there is low storage, the native library will not be
-            // downloaded, so detection will not become operational.
             val lowStorageFilter = IntentFilter(Intent.ACTION_DEVICE_STORAGE_LOW)
             val hasLowStorage = registerReceiver(null, lowStorageFilter) != null
 
@@ -110,9 +87,7 @@ class OcrCaptureActivity : CustomActivity(R.layout.ocr_capture), OcrDetectorProc
             }
         }
 
-        // Creates and starts the camera.  Note that this uses a higher resolution in comparison
-        // to other detection examples to enable the text recognizer to detect small pieces of text.
-        mCameraSource = CameraSource.Builder(applicationContext, textRecognizer)
+        cameraSource = CameraSource.Builder(applicationContext, textRecognizer)
                 .setFacing(CameraSource.CAMERA_FACING_BACK)
                 .setRequestedPreviewSize(1280, 1024)
                 .setRequestedFps(2.0f)
@@ -121,65 +96,38 @@ class OcrCaptureActivity : CustomActivity(R.layout.ocr_capture), OcrDetectorProc
                 .build()
     }
 
-    /**
-     * Restarts the camera.
-     */
     override fun onResume() {
         super.onResume()
         startCameraSource()
     }
 
-    /**
-     * Stops the camera.
-     */
     override fun onPause() {
         super.onPause()
-        if (mPreview != null) {
-            mPreview!!.stop()
-        }
+        preview.stop()
     }
 
-    /**
-     * Releases the resources associated with the camera source, the associated detectors, and the
-     * rest of the processing pipeline.
-     */
     override fun onDestroy() {
         super.onDestroy()
-        if (mPreview != null) {
-            mPreview!!.release()
-        }
+        preview.release()
     }
 
-    /**
-     * Starts or restarts the camera source, if it exists.  If the camera source doesn't exist yet
-     * (e.g., because onResume was called before the camera source was created), this will be called
-     * again when the camera source is created.
-     */
-    @Throws(SecurityException::class)
     private fun startCameraSource() {
         // Check that the device has play services available.
-        val code = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(
-                applicationContext)
+        val code = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(applicationContext)
         if (code != ConnectionResult.SUCCESS) {
-            val dlg = GoogleApiAvailability.getInstance().getErrorDialog(this, code, RC_HANDLE_GMS)
-            dlg.show()
+            GoogleApiAvailability.getInstance().getErrorDialog(this, code, RC_HANDLE_GMS).show()
         }
 
-        if (mCameraSource != null) {
+        cameraSource?.apply {
             try {
-                mPreview!!.start(mCameraSource!!, mGraphicOverlay!!)
+                preview.start(this, graphicOverlay)
             } catch (e: IOException) {
                 log.e("Unable to start camera source.", e)
-                mCameraSource!!.release()
-                mCameraSource = null
+                release()
+                cameraSource = null
             }
-
         }
     }
-
-    private val log = Log(javaClass)
-
-    private var pause = AtomicBoolean(false)
 
     override fun onCardDetected(card: Card) {
         if (!pause.compareAndSet(false, true)) return

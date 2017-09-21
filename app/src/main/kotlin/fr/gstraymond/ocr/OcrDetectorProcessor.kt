@@ -20,9 +20,10 @@ import com.google.android.gms.vision.text.TextBlock
 import fr.gstraymond.models.search.response.Card
 import fr.gstraymond.network.ElasticSearchService
 import fr.gstraymond.ocr.ui.camera.GraphicOverlay
+import fr.gstraymond.utils.levenshtein
 import java.text.Normalizer
 
-class OcrDetectorProcessor(private val mGraphicOverlay: GraphicOverlay<OcrGraphic>,
+class OcrDetectorProcessor(private val graphicOverlay: GraphicOverlay<OcrGraphic>,
                            private val cardDetector: CardDetector,
                            private val searchService: ElasticSearchService) : Detector.Processor<TextBlock> {
 
@@ -71,7 +72,7 @@ class OcrDetectorProcessor(private val mGraphicOverlay: GraphicOverlay<OcrGraphi
     private val norm = Regex("\\p{M}")
 
     override fun receiveDetections(detections: Detector.Detections<TextBlock>) {
-        mGraphicOverlay.clear()
+        graphicOverlay.clear()
         if (cardDetector.isPaused()) return
 
         val items = detections.detectedItems
@@ -93,9 +94,9 @@ class OcrDetectorProcessor(private val mGraphicOverlay: GraphicOverlay<OcrGraphi
 
 
                 listOf(detectedTitle, detectedType).map {
-                    OcrGraphic(mGraphicOverlay, it)
+                    OcrGraphic(graphicOverlay, it)
                 }.forEach {
-                    mGraphicOverlay.add(it)
+                    graphicOverlay.add(it)
                 }
 
                 val normTypes = normTypes(detectedType)
@@ -126,38 +127,7 @@ class OcrDetectorProcessor(private val mGraphicOverlay: GraphicOverlay<OcrGraphi
                 .map { it.replace(":", "") }
     }
 
-    /**
-     * Frees the resources associated with this detection processor.
-     */
     override fun release() {
-        mGraphicOverlay.clear()
-    }
-
-    private fun CharSequence.levenshtein(rhs: CharSequence): Int {
-        val lhsLength = this.length
-        val rhsLength = rhs.length
-
-        var cost = Array(lhsLength) { it }
-        var newCost = Array(lhsLength) { 0 }
-
-        for (i in 1..rhsLength - 1) {
-            newCost[0] = i
-
-            for (j in 1..lhsLength - 1) {
-                val match = if (this[j - 1] == rhs[i - 1]) 0 else 1
-
-                val costReplace = cost[j - 1] + match
-                val costInsert = cost[j] + 1
-                val costDelete = newCost[j - 1] + 1
-
-                newCost[j] = Math.min(Math.min(costInsert, costDelete), costReplace)
-            }
-
-            val swap = cost
-            cost = newCost
-            newCost = swap
-        }
-
-        return cost[lhsLength - 1]
+        graphicOverlay.clear()
     }
 }
