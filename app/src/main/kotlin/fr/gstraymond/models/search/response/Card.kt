@@ -20,7 +20,8 @@ class Card(val title: String,
            val loyalty: String?,
            val altTitles: List<String>,
            val convertedManaCost: Int,
-           val abilities: List<String>) : Parcelable {
+           val abilities: List<String>,
+           val ruling: List<Ruling>) : Parcelable {
 
     constructor(source: Parcel) : this(
             title = source.readString(),
@@ -47,6 +48,9 @@ class Card(val title: String,
             convertedManaCost = source.readInt() ?: 0,
             abilities = ArrayList<String>().apply {
                 source.readList(this, String::class.java.classLoader)
+            },
+            ruling = ArrayList<Ruling>().apply {
+                source.readList(this, Ruling::class.java.classLoader)
             }
     )
 
@@ -68,6 +72,7 @@ class Card(val title: String,
         dest.writeList(altTitles)
         dest.writeInt(convertedManaCost ?: 0)
         dest.writeList(abilities)
+        dest.writeList(ruling)
     }
 
     override fun toString() = title

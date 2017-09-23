@@ -152,4 +152,6 @@
     <string name="ocr_failure">No text captured</string>
     <string name="ocr_error">"Error reading text: %1$s"</string>
     <string name="ocr_continue_scan">Continue scan?</string>
+
+    <string name="deck_detail_ruling"><![CDATA[%1$s…<br><br>Tap to see %2$s more ruling(s)]]></string>
 </resources>

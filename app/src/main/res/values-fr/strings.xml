@@ -134,4 +134,6 @@
     <string name="deck_detail_cards_not_imported_ok">Effacer</string>
     <string name="deck_detail_cards_not_imported_cancel">Annuler</string>
     <string name="ocr_continue_scan">Continuer le scan ?</string>
+
+    <string name="deck_detail_ruling"><![CDATA[%1$s…<br><br>Appuyer pour voir %2$s règle(s) supplémentaire(s)]]></string>
 </resources>

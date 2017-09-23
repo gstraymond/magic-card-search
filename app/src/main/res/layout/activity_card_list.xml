@@ -91,6 +91,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@color/colorPrimaryDark"
+                        android:paddingRight="48dp"
                         app:iconifiedByDefault="false"
                         app:queryHint="@string/search_hint" />
 
