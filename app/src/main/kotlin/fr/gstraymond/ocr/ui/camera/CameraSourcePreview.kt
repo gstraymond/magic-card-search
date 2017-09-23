@@ -3,102 +3,93 @@ package fr.gstraymond.ocr.ui.camera
 import android.content.Context
 import android.content.res.Configuration
 import android.util.AttributeSet
-import android.util.Log
 import android.view.SurfaceHolder
 import android.view.SurfaceView
 import android.view.ViewGroup
+import com.magic.card.search.commons.log.Log
 import java.io.IOException
 
-class CameraSourcePreview(private val mContext: Context,
-                          attrs: AttributeSet) : ViewGroup(mContext, attrs) {
-    private val mSurfaceView: SurfaceView
-    private var mStartRequested: Boolean = false
-    private var mSurfaceAvailable: Boolean = false
-    private var mCameraSource: CameraSource? = null
+class CameraSourcePreview(context: Context,
+                          attrs: AttributeSet) : ViewGroup(context, attrs) {
 
-    private var mOverlay: GraphicOverlay<*>? = null
+    private val log = Log(javaClass)
 
-    init {
-        mStartRequested = false
-        mSurfaceAvailable = false
-
-        mSurfaceView = SurfaceView(mContext)
-        mSurfaceView.holder.addCallback(SurfaceCallback())
-        addView(mSurfaceView)
+    private val surfaceView = SurfaceView(context).apply {
+        holder.addCallback(SurfaceCallback())
     }
 
-    //@RequiresPermission(Manifest.permission.CAMERA)
-    @Throws(IOException::class, SecurityException::class)
+    private var startRequested = false
+    private var surfaceAvailable = false
+    private var cameraSource: CameraSource? = null
+
+    private var overlay: GraphicOverlay<*>? = null
+
+    init {
+        addView(surfaceView)
+    }
+
     fun start(cameraSource: CameraSource?) {
         if (cameraSource == null) {
             stop()
         }
 
-        mCameraSource = cameraSource
+        this.cameraSource = cameraSource
 
-        if (mCameraSource != null) {
-            mStartRequested = true
+        if (cameraSource != null) {
+            startRequested = true
             startIfReady()
         }
     }
 
-    //@RequiresPermission(Manifest.permission.CAMERA)
-    @Throws(IOException::class, SecurityException::class)
     fun start(cameraSource: CameraSource, overlay: GraphicOverlay<*>) {
-        mOverlay = overlay
+        this.overlay = overlay
         start(cameraSource)
     }
 
     fun stop() {
-        if (mCameraSource != null) {
-            mCameraSource!!.stop()
-        }
+        cameraSource?.apply { stop() }
     }
 
     fun release() {
-        if (mCameraSource != null) {
-            mCameraSource!!.release()
-            mCameraSource = null
+        cameraSource?.apply {
+            release()
+            cameraSource = null
         }
     }
 
-    //@RequiresPermission(Manifest.permission.CAMERA)
-    @Throws(IOException::class, SecurityException::class)
     private fun startIfReady() {
-        if (mStartRequested && mSurfaceAvailable) {
-            mCameraSource!!.start(mSurfaceView.holder)
-            if (mOverlay != null) {
-                val size = mCameraSource!!.previewSize
+        if (startRequested && surfaceAvailable) {
+            cameraSource!!.start(surfaceView.holder)
+            overlay?.apply {
+                val size = cameraSource!!.previewSize
                 val min = Math.min(size!!.width, size.height)
                 val max = Math.max(size.width, size.height)
                 if (isPortraitMode) {
-                    // Swap width and height sizes when in portrait, since it will be rotated by
-                    // 90 degrees
-                    mOverlay!!.setCameraInfo(min, max, mCameraSource!!.cameraFacing)
+                    setCameraInfo(min, max, cameraSource!!.cameraFacing)
                 } else {
-                    mOverlay!!.setCameraInfo(max, min, mCameraSource!!.cameraFacing)
+                    setCameraInfo(max, min, cameraSource!!.cameraFacing)
                 }
-                mOverlay!!.clear()
+                clear()
             }
-            mStartRequested = false
+            startRequested = false
         }
     }
 
     private inner class SurfaceCallback : SurfaceHolder.Callback {
         override fun surfaceCreated(surface: SurfaceHolder) {
-            mSurfaceAvailable = true
+            surfaceAvailable = true
             try {
                 startIfReady()
             } catch (se: SecurityException) {
-                Log.e(TAG, "Do not have permission to start the camera", se)
+                log.e("Do not have permission to start the camera", se)
             } catch (e: IOException) {
-                Log.e(TAG, "Could not start camera source.", e)
+                log.e("Could not start camera source.", e)
             }
 
         }
 
         override fun surfaceDestroyed(surface: SurfaceHolder) {
-            mSurfaceAvailable = false
+            surfaceAvailable = false
         }
 
         override fun surfaceChanged(holder: SurfaceHolder, format: Int, width: Int, height: Int) {}
@@ -107,15 +98,14 @@ class CameraSourcePreview(private val mContext: Context,
     override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
         var previewWidth = 320
         var previewHeight = 240
-        if (mCameraSource != null) {
-            val size = mCameraSource!!.previewSize
+        cameraSource?.apply {
+            val size = previewSize
             if (size != null) {
                 previewWidth = size.width
                 previewHeight = size.height
             }
         }
 
-        // Swap width and height sizes when in portrait, since it will be rotated 90 degrees
         if (isPortraitMode) {
             val tmp = previewWidth
             previewWidth = previewHeight
@@ -132,10 +122,6 @@ class CameraSourcePreview(private val mContext: Context,
         val widthRatio = viewWidth.toFloat() / previewWidth.toFloat()
         val heightRatio = viewHeight.toFloat() / previewHeight.toFloat()
 
-        // To fill the view with the camera preview, while also preserving the correct aspect ratio,
-        // it is usually necessary to slightly oversize the child and to crop off portions along one
-        // of the dimensions.  We scale up based on the dimension requiring the most correction, and
-        // compute a crop offset for the other dimension.
         if (widthRatio > heightRatio) {
             childWidth = viewWidth
             childHeight = (previewHeight.toFloat() * widthRatio).toInt()
@@ -147,38 +133,23 @@ class CameraSourcePreview(private val mContext: Context,
         }
 
         for (i in 0..childCount - 1) {
-            // One dimension will be cropped.  We shift child over or up by this offset and adjust
-            // the size to maintain the proper aspect ratio.
             getChildAt(i).layout(
-                    -1 * childXOffset, -1 * childYOffset,
-                    childWidth - childXOffset, childHeight - childYOffset)
+                    -1 * childXOffset,
+                    -1 * childYOffset,
+                    childWidth - childXOffset,
+                    childHeight - childYOffset)
         }
 
         try {
             startIfReady()
         } catch (se: SecurityException) {
-            Log.e(TAG, "Do not have permission to start the camera", se)
+            log.e("Do not have permission to start the camera", se)
         } catch (e: IOException) {
-            Log.e(TAG, "Could not start camera source.", e)
+            log.e("Could not start camera source.", e)
         }
 
     }
 
-    private val isPortraitMode: Boolean
-        get() {
-            val orientation = mContext.resources.configuration.orientation
-            if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
-                return false
-            }
-            if (orientation == Configuration.ORIENTATION_PORTRAIT) {
-                return true
-            }
-
-            Log.d(TAG, "isPortraitMode returning false by default")
-            return false
-        }
-
-    companion object {
-        private val TAG = "CameraSourcePreview"
-    }
+    private val isPortraitMode =
+            context.resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT
 }
