@@ -48,6 +48,13 @@ class DeckDetailCardViews(context: Context) : CardViews(listOf(
         TypePTView()
 ))
 
+class CardDetailViews(context: Context,
+                      cards: JsonList<Card>,
+                      clickCallbacks: CardClickCallbacks) :
+        CardViews(listOf(
+                FavoriteView(cards, clickCallbacks, context.resources)
+        ))
+
 interface CardClickCallbacks {
     fun itemAdded(position: Int)
 

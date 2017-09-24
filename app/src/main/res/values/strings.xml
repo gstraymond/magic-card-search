@@ -18,8 +18,8 @@
     <string name="removed_from_deck">%1$s removed from \'%2$s\' deck</string>
 
     <string name="detail_menu_oracle">Text</string>
-    <string name="detail_menu_pictures">Pictures</string>
-    <string name="detail_buy_ebay">Buy on Ebay</string>
+    <string name="detail_menu_pictures">Gallery</string>
+    <string name="detail_buy_ebay">Ebay</string>
 
     <string name="history_menu_clear">Clear searches</string>
     <string name="history_empty">No recent search</string>

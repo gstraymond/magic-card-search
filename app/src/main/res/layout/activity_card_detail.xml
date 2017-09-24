@@ -20,14 +20,58 @@
 
             <TextView
                 android:id="@+id/toolbar_title"
+                style="@android:style/TextAppearance.Large"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="8dp"
-                style="@android:style/TextAppearance.Large"/>
+                android:padding="8dp" />
 
-            </android.support.v7.widget.Toolbar>
+        </android.support.v7.widget.Toolbar>
 
     </android.support.design.widget.AppBarLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimaryDark"
+        android:padding="8dp">
+
+        <Button
+            android:id="@+id/card_favorite"
+            android:layout_width="42dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="8dp"
+            android:drawableLeft="@drawable/ic_star_white_18dp"
+            android:focusable="false"
+            android:text="" />
+
+        <TextView
+            android:id="@+id/card_detail_pics"
+            style="@android:style/TextAppearance.Medium"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@id/card_favorite"
+            android:text="@string/detail_menu_pictures"
+            android:textAllCaps="true"
+            android:textColor="@android:color/white"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/card_detail_ebay"
+            style="@android:style/TextAppearance.Medium"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="16dp"
+            android:layout_toLeftOf="@id/card_detail_pics"
+            android:text="@string/detail_buy_ebay"
+            android:textAllCaps="true"
+            android:textColor="@android:color/white"
+            android:textStyle="bold" />
+
+    </RelativeLayout>
 
     <FrameLayout
         android:id="@+id/card_detail_container"

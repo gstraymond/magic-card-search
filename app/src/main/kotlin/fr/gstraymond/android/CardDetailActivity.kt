@@ -4,9 +4,9 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.support.design.widget.Snackbar
 import android.support.v7.widget.Toolbar
-import android.view.Menu
-import android.view.MenuItem
+import android.view.View
 import android.widget.TextView
 import fr.gstraymond.R
 import fr.gstraymond.affiliate.ebay.LinkGenerator
@@ -14,6 +14,10 @@ import fr.gstraymond.analytics.Tracker
 import fr.gstraymond.android.fragment.CardDetailFragment
 import fr.gstraymond.models.search.response.Card
 import fr.gstraymond.models.search.response.getLocalizedTitle
+import fr.gstraymond.ui.adapter.CardClickCallbacks
+import fr.gstraymond.ui.adapter.CardDetailViews
+import fr.gstraymond.utils.app
+import fr.gstraymond.utils.find
 import fr.gstraymond.utils.startActivity
 
 class CardDetailActivity : CardCommonActivity(R.layout.activity_card_detail),
@@ -26,41 +30,60 @@ class CardDetailActivity : CardCommonActivity(R.layout.activity_card_detail),
                 }
     }
 
+    private val rooView by lazy { find<View>(android.R.id.content) }
+    private val picsView by lazy { find<TextView>(R.id.card_detail_pics) }
+    private val ebayView by lazy { find<TextView>(R.id.card_detail_ebay) }
+    private val favoriteView by lazy { CardDetailViews(this, app().wishList, cardClickCallbacks) }
+
+    private val cardClickCallbacks = object : CardClickCallbacks {
+        override fun itemAdded(position: Int) {
+            showMessage(getMessage(add = true, cardName = card.getLocalizedTitle(this@CardDetailActivity)))
+        }
+
+        override fun itemRemoved(position: Int) {
+            showMessage(getMessage(add = false, cardName = card.getLocalizedTitle(this@CardDetailActivity)))
+        }
+
+        private fun getMessage(add: Boolean, cardName: String): String =
+                if (add) String.format(resources.getString(R.string.added_to_wishlist), cardName)
+                else String.format(resources.getString(R.string.removed_from_wishlist), cardName)
+
+
+        private fun showMessage(message: String) {
+            Snackbar.make(rooView, message, Snackbar.LENGTH_LONG).show()
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val toolbar = findViewById(R.id.toolbar) as Toolbar
+        val toolbar = find<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
         actionBarSetDisplayHomeAsUpEnabled(true)
 
-        val title = findViewById(R.id.toolbar_title) as TextView
+        val title = find<TextView>(R.id.toolbar_title)
         title.text = card.getLocalizedTitle(this, Card::title, { c, ft -> "$ft (${c.title})" })
 
         replaceFragment(CardDetailFragment(), R.id.card_detail_container, getBundle())
-    }
 
-    override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
-        R.id.pictures_tab -> startActivity {
-            CardPagerActivity.getIntent(this, card)
-        }.run {
-            true
+        picsView.setOnClickListener {
+            startActivity { CardPagerActivity.getIntent(this, card) }
         }
-
-        R.id.ebay_tab -> {
+        
+        ebayView.setOnClickListener {
             startActivity {
                 Intent(Intent.ACTION_VIEW).apply {
                     data = Uri.parse(LinkGenerator.generate(card.title))
                 }
             }
             Tracker.ebayCart(card)
-            true
         }
-
-        else -> super.onOptionsItemSelected(item)
     }
 
-    override fun onCreateOptionsMenu(menu: Menu) =
-            menuInflater.inflate(R.menu.card_detail_menu, menu).run { true }
+    override fun onResume() {
+        super.onResume()
+        favoriteView.display(rooView, card, 0)
+    }
 
     override fun onItemSelected(id: Int) = startActivity {
         CardPagerActivity.getIntent(this, card, id)

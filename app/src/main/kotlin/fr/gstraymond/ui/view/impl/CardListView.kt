@@ -34,8 +34,13 @@ abstract class CardListView<out A>(private val cards: JsonList<A>,
                 clickCallbacks.itemRemoved(position)
                 Tracker.addRemoveCard(listName, card, false)
             }
+            updateState(card, view)
         }
 
+        updateState(card, view)
+    }
+
+    private fun updateState(card: Card, view: AppCompatButton) {
         val contains = cards.contains(getElem(card))
         log.d("contains %s -> %s [%s]", card, contains, view.javaClass)
         if (contains) {

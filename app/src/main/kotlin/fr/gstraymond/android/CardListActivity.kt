@@ -262,6 +262,7 @@ class CardListActivity : CustomActivity(R.layout.activity_card_list),
     override fun onResume() {
         super.onResume()
         findViewById(R.id.root_view).requestFocus()
+        arrayAdapter.notifyDataSetChanged()
 
         if (presenter.getCurrentSearch().deckId == null) {
             updateMenuWishlistSize()
