@@ -88,6 +88,7 @@ ext {
     floatingactionbuttonVersion = '1.6.+'
     fileChooserVersion = '1.+'
     dirChooserVersion = '3.+'
+    gmsVisionVersion = '11.0.+'
 }
 
 dependencies {
@@ -104,6 +105,6 @@ dependencies {
     compile "com.github.clans:fab:$floatingactionbuttonVersion"
     compile "com.nbsp:library:$fileChooserVersion"
     compile ("net.rdrei.android.dirchooser:library:$dirChooserVersion@aar") { transitive = true }
-    compile 'com.google.android.gms:play-services-vision:9.4.0+'
+    compile "com.google.android.gms:play-services-vision:$gmsVisionVersion"
     testCompile 'junit:junit:4.12'
 }

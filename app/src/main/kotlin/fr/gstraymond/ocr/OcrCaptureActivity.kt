@@ -65,8 +65,7 @@ class OcrCaptureActivity : CustomActivity(R.layout.ocr_capture), OcrDetectorProc
 
         createCameraSource(autoFocus, useFlash)
 
-        // FIXME string
-        Snackbar.make(graphicOverlay, "Place card under camera, at least card title and type",
+        Snackbar.make(graphicOverlay, getString(R.string.ocr_hint),
                 Snackbar.LENGTH_INDEFINITE)
                 .show()
     }

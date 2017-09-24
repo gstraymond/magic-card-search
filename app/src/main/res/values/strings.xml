@@ -154,4 +154,5 @@
     <string name="ocr_continue_scan">Continue scan?</string>
 
     <string name="deck_detail_ruling"><![CDATA[%1$s…<br><br>Tap to see %2$s more ruling(s)]]></string>
+    <string name="ocr_hint">Place card under camera, at least card title and type</string>
 </resources>

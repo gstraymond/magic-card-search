@@ -136,4 +136,5 @@
     <string name="ocr_continue_scan">Continuer le scan ?</string>
 
     <string name="deck_detail_ruling"><![CDATA[%1$s…<br><br>Appuyer pour voir %2$s règle(s) supplémentaire(s)]]></string>
+    <string name="ocr_hint">Visez le titre et le type de la carte</string>
 </resources>
