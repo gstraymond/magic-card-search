@@ -7,6 +7,7 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.Toolbar
 import android.view.View
+import com.github.clans.fab.FloatingActionMenu
 import fr.gstraymond.R
 import fr.gstraymond.analytics.Tracker
 import fr.gstraymond.android.adapter.DeckListAdapter
@@ -26,6 +27,8 @@ class DecksActivity : CustomActivity(R.layout.activity_decks) {
             }
         }
     }
+
+    private val floatingMenu by lazy { find<FloatingActionMenu>(R.id.decks_floating_menu) }
 
     companion object {
         fun getIntent(context: Context) = Intent(context, DecksActivity::class.java)
@@ -65,6 +68,7 @@ class DecksActivity : CustomActivity(R.layout.activity_decks) {
 
     override fun onResume() {
         super.onResume()
+        floatingMenu.close(false)
         updateDecks()
         if (app().deckList.isEmpty()) {
             visible(R.id.decks_empty_text)

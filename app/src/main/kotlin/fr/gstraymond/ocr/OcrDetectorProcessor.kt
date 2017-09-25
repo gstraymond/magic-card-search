@@ -86,7 +86,7 @@ class OcrDetectorProcessor(private val graphicOverlay: GraphicOverlay<OcrGraphic
 
                 val normTypes = normTypes(detectedType)
                 val writtenType = expectedTypes.find { normTypes.contains(it) }
-                val normalizedType = convertedTypes.getOrDefault(writtenType!!, writtenType)
+                val normalizedType = convertedTypes[writtenType!!] ?: writtenType
 
                 val trimmedTitle = detectedTitle.value.trim()
                 val result = searchService.search(queryTemplate.replace("QUERY_ARG", trimmedTitle).replace("TYPE_ARG", normalizedType))

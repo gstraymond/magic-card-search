@@ -74,6 +74,7 @@
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:background="@color/colorPrimaryDark"
                     android:orientation="horizontal">
 
                     <Button
@@ -90,8 +91,7 @@
                         android:id="@+id/search_input"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="@color/colorPrimaryDark"
-                        android:paddingRight="48dp"
+                        android:layout_toLeftOf="@id/scan_card"
                         app:iconifiedByDefault="false"
                         app:queryHint="@string/search_hint" />
 
