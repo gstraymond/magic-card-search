@@ -14,7 +14,7 @@ class FavoriteView(cards: JsonList<Card>,
         cards,
         clickCallbacks,
         resources.colorStateList(R.color.colorAccent),
-        resources.colorStateList(R.color.colorPrimaryDark),
+        resources.colorStateList(R.color.colorPrimary),
         resources.drawable(R.drawable.ic_star_white_18dp),
         resources.drawable(R.drawable.ic_star_border_white_18dp),
         "wishlist") {

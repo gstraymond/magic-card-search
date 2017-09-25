@@ -22,7 +22,6 @@ class CostView(private val context: Context) : CommonDisplayableView<ImageView>(
                 .sorted()
 
         val color = when {
-            prices.any { it <= max1 } -> R.color.colorPrimaryDark
             prices.any { it > max1 && it <= max2 } -> R.color.colorPrimary
             prices.any { it > max2 } -> R.color.colorAccent
             else -> R.color.colorPrimaryDark

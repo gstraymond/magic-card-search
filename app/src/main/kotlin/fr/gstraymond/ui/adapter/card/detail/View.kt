@@ -10,7 +10,7 @@ abstract class View<in A>(context: Context,
 
     private val inflater = LayoutInflater.from(context)
 
-    protected abstract fun getView(item: A, view: View): View
+    protected abstract fun getView(card: A, view: View): View
 
     fun getView(item: A, convertView: View?, parent: ViewGroup): View =
             getView(item, convertView ?: inflater.inflate(layoutId, parent, false))

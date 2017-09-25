@@ -27,6 +27,8 @@ class WishListActivity : CustomActivity(R.layout.activity_wishlist) {
         }
     }
 
+    private val wishlistAdapter by lazy { WishlistAdapter(this, app().wishList, clickCallbacks) }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -38,12 +40,13 @@ class WishListActivity : CustomActivity(R.layout.activity_wishlist) {
         find<RecyclerView>(R.id.wishlist_recyclerview).let {
             it.setHasFixedSize(true)
             it.layoutManager = LinearLayoutManager(this)
-            it.adapter = WishlistAdapter(this, app().wishList, clickCallbacks)
+            it.adapter = wishlistAdapter
         }
     }
 
     override fun onResume() {
         super.onResume()
+        wishlistAdapter.notifyDataSetChanged()
         if (app().wishList.isEmpty()) {
             visible(emptyTextViewId)
         } else {

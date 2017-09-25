@@ -18,8 +18,8 @@
     <string name="removed_from_deck">%1$s removed from \'%2$s\' deck</string>
 
     <string name="detail_menu_oracle">Text</string>
-    <string name="detail_menu_pictures">Pictures</string>
-    <string name="detail_buy_ebay">Buy on Ebay</string>
+    <string name="detail_menu_pictures">Gallery</string>
+    <string name="detail_buy_ebay">Ebay</string>
 
     <string name="history_menu_clear">Clear searches</string>
     <string name="history_empty">No recent search</string>
@@ -108,6 +108,7 @@
     <string name="deck_detail_cards_add">Add card using search</string>
     <string name="deck_detail_cards_add_history">Add card using history</string>
     <string name="deck_detail_cards_add_land">Add basic land</string>
+    <string name="deck_detail_cards_camera_scan">Add card using camera</string>
     <string name="decks_add">Create empty deck</string>
     <string name="decks_import">Import deck from file</string>
     <string name="import_deck">Import deck</string>
@@ -136,4 +137,22 @@
     <string name="deck_detail_cards_not_imported_title">Clear this message?</string>
     <string name="deck_detail_cards_not_imported_ok">Clear</string>
     <string name="deck_detail_cards_not_imported_cancel">Cancel</string>
+
+
+    <string name="ok">OK</string>
+    <string name="permission_camera_rationale">Access to the camera is needed for detection</string>
+    <string name="no_camera_permission">This application cannot run because it does not have the camera permission.  The application will now exit.</string>
+    <string name="low_storage_error">Ocr dependencies cannot be downloaded due to low device storage</string>
+    <string name="title_activity_main">Ocr Detector Sample</string>
+    <string name="ocr_header">Click &quot;Detect Text&quot; to detect text</string>
+    <string name="read_text">Detect Text</string>
+    <string name="auto_focus">Auto Focus</string>
+    <string name="use_flash">Use Flash</string>
+    <string name="ocr_success">Text read successfully</string>
+    <string name="ocr_failure">No text captured</string>
+    <string name="ocr_error">"Error reading text: %1$s"</string>
+    <string name="ocr_continue_scan">Continue scan?</string>
+
+    <string name="deck_detail_ruling"><![CDATA[%1$s…<br><br>Tap to see %2$s more ruling(s)]]></string>
+    <string name="ocr_hint">Place card under camera, at least card title and type</string>
 </resources>

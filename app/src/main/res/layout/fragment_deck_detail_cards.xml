@@ -73,6 +73,7 @@
         android:text="@string/deckdetails_cards_empty" />
 
     <com.github.clans.fab.FloatingActionMenu
+        android:id="@+id/deck_detail_cards_floating_menu"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
@@ -111,6 +112,16 @@
             fab:fab_colorNormal="@color/colorPrimary"
             fab:fab_colorPressed="@color/colorPrimary"
             fab:fab_label="@string/deck_detail_cards_add_land"
+            fab:fab_size="mini" />
+
+        <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/deck_detail_cards_camera_scan"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_photo_camera_white_18dp"
+            fab:fab_colorNormal="@color/colorPrimary"
+            fab:fab_colorPressed="@color/colorPrimary"
+            fab:fab_label="@string/deck_detail_cards_camera_scan"
             fab:fab_size="mini" />
 
     </com.github.clans.fab.FloatingActionMenu>

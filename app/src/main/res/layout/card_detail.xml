@@ -27,7 +27,24 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/counter_border_active"
-        android:fontFamily="sans-serif-condensed"
+        android:padding="8dp"
+        android:textIsSelectable="true" />
+
+    <TextView
+        android:id="@+id/card_textview_first_ruling"
+        style="@android:style/TextAppearance.Medium"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/counter_border_active"
+        android:padding="8dp"
+        android:textIsSelectable="true" />
+
+    <TextView
+        android:id="@+id/card_textview_ruling"
+        style="@android:style/TextAppearance.Medium"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/counter_border_active"
         android:padding="8dp"
         android:textIsSelectable="true" />
 

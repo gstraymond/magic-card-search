@@ -5,7 +5,6 @@ import com.magic.card.search.commons.json.MapperUtil
 import com.squareup.moshi.Moshi
 import fr.gstraymond.biz.DeckStats
 import fr.gstraymond.models.DeckLine
-import fr.gstraymond.utils.getId
 
 class CardList(context: Context,
                moshi: Moshi,
@@ -15,7 +14,7 @@ class CardList(context: Context,
         MapperUtil.fromType(moshi, DeckLine::class.java),
         "deck",
         deckId) {
-    override fun DeckLine.uid() = card.getId()
+    override fun DeckLine.uid() = id()
 
     override fun addOrRemove(elem: DeckLine) = super.addOrRemove(elem).apply { updateDeck() }
 

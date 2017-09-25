@@ -18,13 +18,13 @@ class PublicationView(context: Context) : View<Publication>(context, R.layout.ca
     private val setImageGetter = SetImageGetter(context)
     private val dateFormat = SimpleDateFormat("MMM yyyy", Locale.getDefault())
 
-    override fun getView(item: Publication, view: android.view.View): android.view.View {
+    override fun getView(card: Publication, view: android.view.View): android.view.View {
         val publicationImage = view.find<ImageView>(R.id.card_textview_set_image)
         val publicationImageAlt = view.find<TextView>(R.id.card_textview_set_image_alt)
         val publicationText = view.find<TextView>(R.id.card_textview_set_text)
         val publicationYear = view.find<TextView>(R.id.card_textview_set_year)
         val publicationPrice = view.find<TextView>(R.id.card_textview_set_price)
-        val setDrawable = setImageGetter.getDrawable(item)
+        val setDrawable = setImageGetter.getDrawable(card)
 
         if (setDrawable == null) {
             publicationImage.visibility = android.view.View.GONE
@@ -35,13 +35,13 @@ class PublicationView(context: Context) : View<Publication>(context, R.layout.ca
             publicationImage.visibility = android.view.View.VISIBLE
             publicationImage.setImageDrawable(setDrawable)
         }
-        if (item.editionReleaseDate != null) {
-            publicationYear.text = dateFormat.format(item.editionReleaseDate)
+        if (card.editionReleaseDate != null) {
+            publicationYear.text = dateFormat.format(card.editionReleaseDate)
         } else {
             publicationYear.text = ""
         }
-        publicationText.text = item.edition
-        val price = formatPrice(item)
+        publicationText.text = card.edition
+        val price = formatPrice(card)
         if (price == "") {
             publicationPrice.visibility = android.view.View.GONE
         } else {
