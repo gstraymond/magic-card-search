@@ -16,7 +16,15 @@ import fr.gstraymond.network.ElasticSearchService
 import fr.gstraymond.network.RetrofitBuilder.buildRetrofit
 import java.util.*
 
+val prefs: Prefs by lazy {
+    CustomApplication.prefs!!
+}
+
 class CustomApplication : BaseApplication() {
+
+    companion object {
+        var prefs: Prefs? = null
+    }
 
     val elasticSearchClient by lazy {
         ElasticSearchClient(
@@ -42,6 +50,7 @@ class CustomApplication : BaseApplication() {
 
     override fun onCreate() {
         super.onCreate()
+        prefs = Prefs(applicationContext)
         refreshLists()
         historyList.migrate()
         wishList.migrate()

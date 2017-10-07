@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="?attr/selectableItemBackground">
 
     <item android:title="@string/organize_your_cards">
@@ -22,4 +23,9 @@
         android:id="@+id/menu_changelog"
         android:icon="@drawable/ic_help_outline_white_48dp"
         android:title="@string/changelog_title" />
+    <item
+        android:id="@+id/menu_gallery_mode"
+        android:icon="@android:drawable/checkbox_on_background"
+        android:title="Gallery mode"
+        app:actionLayout="@layout/widget_switch" />
 </menu>
