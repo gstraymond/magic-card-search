@@ -6,25 +6,14 @@
     android:layout_height="wrap_content"
     android:padding="8dp">
 
-    <android.support.v7.widget.AppCompatButton
+    <Button
         android:id="@+id/array_adapter_deck_card_mult"
         style="@android:style/TextAppearance.Medium"
-        android:layout_width="48dp"
-        android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_marginRight="8dp" />
-
-    <CheckBox
-        android:id="@+id/array_adapter_deck_card_sideboard"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
-        android:layout_marginLeft="8dp"
-        android:focusable="false"
-        android:focusableInTouchMode="false"
-        android:scaleX="1.5"
-        android:scaleY="1.5" />
+        android:layout_marginRight="8dp"
+        android:drawableLeft="@drawable/ic_mode_edit_white_24dp" />
 
     <TextView
         android:id="@+id/array_adapter_card_casting_cost"
@@ -61,7 +50,6 @@
         style="@android:style/TextAppearance.Medium"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toLeftOf="@id/array_adapter_deck_card_sideboard"
         android:layout_toRightOf="@id/array_adapter_text"
         android:ellipsize="end"
         android:maxLines="1"

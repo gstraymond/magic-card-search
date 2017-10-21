@@ -6,30 +6,41 @@ import android.support.v4.app.FragmentStatePagerAdapter
 import fr.gstraymond.R
 import fr.gstraymond.android.DeckDetailCardsFragment
 import fr.gstraymond.android.DeckDetailStatsFragment
-import fr.gstraymond.models.DeckLine
+import fr.gstraymond.android.adapter.DeckCardCallback.FROM.DECK
+import fr.gstraymond.android.adapter.DeckCardCallback.FROM.SB
+import fr.gstraymond.models.DeckCard
+
 
 class DeckDetailFragmentPagerAdapter(fragmentManager: FragmentManager, context: Context) :
         FragmentStatePagerAdapter(fragmentManager) {
 
-    private val callbacks = object : DeckLineCallback {
-        override fun multChanged(deckLine: DeckLine, mult: Int) {
-            deckDetailStatsFragment.updateStats()
-        }
+    var deckCardCallback: DeckCardCallback? = null
 
-        override fun sideboardChanged(deckLine: DeckLine, sideboard: Boolean) {
-            deckDetailStatsFragment.updateStats()
-        }
+    private val callbacks = object : DeckCardCallback {
+        override fun multChanged(deckCard: DeckCard, from: DeckCardCallback.FROM, deck: Int, sideboard: Int) =
+                onMultChanged(deckCard, from, deck, sideboard)
 
-        override fun cardClick(deckLine: DeckLine) {
-        }
+        override fun cardClick(deckCard: DeckCard) = Unit
     }
 
-    private val pageTitles = listOf(context.getString(R.string.deck_tab_cards), context.getString(R.string.deck_tab_stats))
-    private val deckDetailCardsFragment = DeckDetailCardsFragment().apply { deckLineCallback = callbacks }
+    private fun onMultChanged(deckCard: DeckCard, from: DeckCardCallback.FROM, deck: Int, sideboard: Int) {
+        deckDetailStatsFragment.updateStats()
+        when (from) {
+            DECK -> deckDetailSideboardFragment.multChanged(deckCard, from, deck, sideboard)
+            SB -> deckDetailCardsFragment.multChanged(deckCard, from, deck, sideboard)
+        }
+        deckCardCallback?.multChanged(deckCard, from, deck, sideboard)
+    }
+
+    private val pageTitles = listOf("", "", context.getString(R.string.deck_tab_stats))
+    private val deckDetailCardsFragment = DeckDetailCardsFragment().apply { deckCardCallback = callbacks }
+    private val deckDetailSideboardFragment = DeckDetailCardsFragment().apply {
+        deckCardCallback = callbacks
+        sideboard = true
+    }
     private val deckDetailStatsFragment = DeckDetailStatsFragment()
 
-    // FIXME todo data structure for fragment and title
-    private val fragments = listOf(deckDetailCardsFragment, deckDetailStatsFragment)
+    private val fragments = listOf(deckDetailCardsFragment, deckDetailSideboardFragment, deckDetailStatsFragment)
 
     override fun getCount() = fragments.size
 

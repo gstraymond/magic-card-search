@@ -4,7 +4,7 @@ import android.content.Context
 import android.view.View
 import fr.gstraymond.api.ui.view.DisplayableView
 import fr.gstraymond.db.json.JsonList
-import fr.gstraymond.models.DeckLine
+import fr.gstraymond.models.DeckCard
 import fr.gstraymond.models.search.response.Card
 import fr.gstraymond.ui.view.impl.*
 
@@ -30,7 +30,7 @@ class WishlistCardViews(context: Context,
         ))
 
 class DeckCardViews(context: Context,
-                    cards: JsonList<DeckLine>,
+                    cards: JsonList<DeckCard>,
                     clickCallbacks: CardClickCallbacks) :
         CardViews(listOf(
                 TitleView(),

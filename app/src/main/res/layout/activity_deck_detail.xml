@@ -73,7 +73,6 @@
         android:drawableLeft="@drawable/ic_mode_edit_white_24dp"
         android:drawablePadding="16dp"
         android:ellipsize="end"
-        android:gravity="center"
         android:maxLines="2"
         android:padding="16dp"
         tools:text="deck deck deck" />

@@ -16,7 +16,7 @@ import com.magic.card.search.commons.log.Log
 import fr.gstraymond.R
 import fr.gstraymond.android.CardDetailActivity
 import fr.gstraymond.android.CustomActivity
-import fr.gstraymond.models.DeckLine
+import fr.gstraymond.models.DeckCard
 import fr.gstraymond.models.search.response.Card
 import fr.gstraymond.ocr.ui.camera.CameraSource
 import fr.gstraymond.ocr.ui.camera.CameraSourcePreview
@@ -143,10 +143,10 @@ class OcrCaptureActivity : CustomActivity(R.layout.ocr_capture), OcrDetectorProc
 
     private fun addCardToDeck(deckId: String, card: Card) {
         val cardList = app().cardListBuilder.build(deckId.toInt())
-        val newDeckLine = DeckLine(card, Date().time, 1, false)
+        val newDeckLine = DeckCard(card, Date().time, DeckCard.Counts(deck = 1, sideboard = 0))
         if (cardList.contains(newDeckLine)) {
             val deckLine = cardList.getByUid(newDeckLine.id())!!
-            cardList.update(deckLine.copy(mult = deckLine.mult + 1))
+            cardList.update(deckLine.setDeckCount(deckLine.counts.deck + 1))
         } else {
             cardList.addOrRemove(newDeckLine)
         }

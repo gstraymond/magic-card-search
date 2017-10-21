@@ -6,60 +6,72 @@ import android.support.v7.widget.AppCompatButton
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.CheckBox
 import android.widget.NumberPicker
 import android.widget.TextView
 import fr.gstraymond.R
-import fr.gstraymond.db.json.CardList
-import fr.gstraymond.models.DeckLine
+import fr.gstraymond.android.adapter.DeckCardCallback.FROM.DECK
+import fr.gstraymond.android.adapter.DeckCardCallback.FROM.SB
+import fr.gstraymond.db.json.DeckCardListBuilder
+import fr.gstraymond.models.DeckCard
 import fr.gstraymond.models.search.response.getLocalizedTitle
 import fr.gstraymond.ui.adapter.DeckDetailCardViews
 import fr.gstraymond.utils.*
 import java.util.*
 
+class DeckDetailCardsAdapter(private val context: Context,
+                             private val sideboard: Boolean) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-class DeckDetailCardsAdapter(private val context: Context) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+    lateinit var cardListBuilder: DeckCardListBuilder
+    var deckId: Int = 0
 
-    lateinit var cardList: CardList
-
-    var deckLineCallback: DeckLineCallback? = null
+    var deckCardCallback: DeckCardCallback? = null
 
     private val cardViews = DeckDetailCardViews(context)
 
+    private lateinit var cards: List<DeckCard>
+
+    fun updateDeckList() {
+        cards = cardListBuilder.build(deckId).all().filter { getMult(it) > 0 }.sortedWith(cardComparator)
+        notifyDataSetChanged()
+    }
+
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val root = holder.itemView.findView(R.id.array_adapter_deck_card_root)
-        if (position >= cardList.size()) {
+        if (position >= cards.size) {
             root.invisible()
             return
         }
 
         root.visible()
-        val deckLine = cardList.all().sortedWith(cardComparator)[position]
-        val card = deckLine.card
+        val deckCard = cards[position]
+        val card = deckCard.card
         cardViews.display(holder.itemView, card, position)
 
         val mult = holder.itemView.find<AppCompatButton>(R.id.array_adapter_deck_card_mult)
         mult.supportBackgroundTintList = context.resources.colorStateList(R.color.colorPrimaryDark)
-        mult.text = "${deckLine.mult}"
+        mult.text = "${getMult(deckCard)}"
         mult.setOnClickListener {
             val view = context.inflate(R.layout.array_adapter_deck_card_mult)
-            val picker = view.find<NumberPicker>(R.id.array_adapter_deck_card_mult).apply {
+            val deckPicker = view.find<NumberPicker>(R.id.array_adapter_deck_card_mult).apply {
                 minValue = 0
                 maxValue = 100
-                value = deckLine.mult
+                value = deckCard.counts.deck
+                wrapSelectorWheel = false
+            }
+
+            val sbPicker = view.find<NumberPicker>(R.id.array_adapter_deck_card_sb).apply {
+                minValue = 0
+                maxValue = 100
+                value = deckCard.counts.sideboard
                 wrapSelectorWheel = false
             }
 
             AlertDialog.Builder(context)
                     .setView(view)
                     .setPositiveButton(android.R.string.ok, { _, _ ->
-                        val pickerMult = picker.value
-                        deckLineCallback?.multChanged(deckLine, pickerMult)
-                        when (pickerMult) {
-                            0 -> notifyItemRemoved(position)
-                            else -> notifyItemChanged(position)
-                        }
-
+                        val pickerDeckMult = deckPicker.value
+                        val pickerSbMult = sbPicker.value
+                        deckCardCallback?.multChanged(deckCard, if (sideboard) SB else DECK, pickerDeckMult, pickerSbMult)
                     })
                     .setNegativeButton(android.R.string.cancel, { _, _ -> })
                     .create()
@@ -67,20 +79,17 @@ class DeckDetailCardsAdapter(private val context: Context) : RecyclerView.Adapte
         }
 
         holder.itemView.find<TextView>(R.id.array_adapter_text).setOnClickListener {
-            deckLineCallback?.cardClick(deckLine)
-        }
-
-        val sideboard = holder.itemView.find<CheckBox>(R.id.array_adapter_deck_card_sideboard)
-        sideboard.isChecked = deckLine.isSideboard
-        sideboard.setOnClickListener {
-            deckLineCallback?.sideboardChanged(deckLine, sideboard.isChecked)
-            notifyDataSetChanged()
+            deckCardCallback?.cardClick(deckCard)
         }
     }
 
+    private fun getMult(deckCard: DeckCard) =
+            if (sideboard) deckCard.counts.sideboard
+            else deckCard.counts.deck
+
     private val FAB_TOTAL_SIZE = 1
 
-    override fun getItemCount() = cardList.size() + FAB_TOTAL_SIZE
+    override fun getItemCount() = cards.size + FAB_TOTAL_SIZE
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
             LayoutInflater
@@ -89,11 +98,9 @@ class DeckDetailCardsAdapter(private val context: Context) : RecyclerView.Adapte
                     .run { object : RecyclerView.ViewHolder(this) {} }
 
 
-    private val cardComparator = Comparator<DeckLine> { c1, c2 ->
-        compare({ c1.isSideboard.compareTo(c2.isSideboard) }, {
-            compare({ c1.card.convertedManaCost.compareTo(c2.card.convertedManaCost) },
-                    { c1.card.getLocalizedTitle(context).compareTo(c2.card.getLocalizedTitle(context)) })
-        })
+    private val cardComparator = Comparator<DeckCard> { (card1), (card2) ->
+        compare({ card1.convertedManaCost.compareTo(card2.convertedManaCost) },
+                { card1.getLocalizedTitle(context).compareTo(card2.getLocalizedTitle(context)) })
     }
 
     private fun compare(f: () -> Int, f2: () -> Int): Int {
@@ -105,9 +112,11 @@ class DeckDetailCardsAdapter(private val context: Context) : RecyclerView.Adapte
     }
 }
 
-interface DeckLineCallback {
+interface DeckCardCallback {
+    enum class FROM {
+        DECK, SB
+    }
 
-    fun multChanged(deckLine: DeckLine, mult: Int)
-    fun sideboardChanged(deckLine: DeckLine, sideboard: Boolean)
-    fun cardClick(deckLine: DeckLine)
+    fun multChanged(deckCard: DeckCard, from: FROM, deck: Int, sideboard: Int)
+    fun cardClick(deckCard: DeckCard)
 }

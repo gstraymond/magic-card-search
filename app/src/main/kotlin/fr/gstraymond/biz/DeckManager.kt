@@ -1,6 +1,7 @@
 package fr.gstraymond.biz
 
-import fr.gstraymond.db.json.CardListBuilder
+import fr.gstraymond.db.json.CardListMigrator
+import fr.gstraymond.db.json.DeckCardListBuilder
 import fr.gstraymond.db.json.DeckList
 import fr.gstraymond.models.CardNotImported
 import fr.gstraymond.models.Deck
@@ -11,25 +12,26 @@ import java.text.Normalizer
 import java.util.*
 
 class DeckManager(private val deckList: DeckList,
-                  private val cardListBuilder: CardListBuilder) {
+                  private val cardListBuilder: DeckCardListBuilder) {
 
     fun createEmptyDeck() = createDeck("Deck ${deckList.size() + 1}")
 
     fun createDeck(deckName: String,
-                   results: List<ImportResult> = listOf<ImportResult>()): Int {
+                   results: List<ImportResult> = listOf()): Int {
         val deckId = deckList.getLastId() + 1
         val cards = results.filter { it is DeckLine }.map { it as DeckLine }
+        val mergedCards = CardListMigrator.toDeckCardList(cards)
         val cardsNotImported = results.filter { it is CardNotImported }.map { it as CardNotImported }
-        cardListBuilder.build(deckId).save(cards)
-        val deckStats = DeckStats(cards)
+        cardListBuilder.build(deckId).save(mergedCards)
+        val deckStats = DeckStats(mergedCards)
         deckList.addOrRemove(Deck(
                 id = deckId,
                 timestamp = Date(),
                 name = deckName,
                 colors = deckStats.colors,
                 format = deckStats.format,
-                deckSize = deckStats.deck.sumBy { it.mult },
-                sideboardSize = deckStats.sideboard.sumBy { it.mult },
+                deckSize = deckStats.deckSize,
+                sideboardSize = deckStats.sideboardSize,
                 cardsNotImported = cardsNotImported))
         return deckId
     }
@@ -51,10 +53,15 @@ class DeckManager(private val deckList: DeckList,
 
     fun export(deck: Deck): List<String> {
         val lines = cardListBuilder.build(deck.id).all()
-                .sortedBy { it.isSideboard }
-                .map { (card, _, mult, isSideboard) ->
-                    val line = "$mult [] ${card.title}"
-                    if (isSideboard) "SB:  $line"
+                .flatMap { card ->
+                    if (card.counts.deck > 0 && card.counts.sideboard > 0) {
+                        listOf(card.setDeckCount(0), card.setSBCount(0))
+                    } else listOf(card)
+                }
+                .sortedBy { it.counts.sideboard < 0 }
+                .map { (card, _, counts) ->
+                    val line = "${counts.deck + counts.sideboard} [] ${card.title}"
+                    if (counts.sideboard > 0) "SB:  $line"
                     else "        $line"
                 }
         return listOf("// NAME : ${deck.name}", "// FORMAT : ${deck.format}") + lines

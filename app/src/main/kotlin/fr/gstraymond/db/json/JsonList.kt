@@ -20,20 +20,18 @@ abstract class JsonList<A>(private val context: Context,
     private fun loadIndex() =
             mutableMapOf(*(elems.map { it.uid() to it }.toTypedArray()))
 
-    private fun load(): MutableList<A> {
-        try {
-            return mutableListOf<A>().apply {
-                context.openFileInput(listName).bufferedReader().useLines {
-                    it.forEach {
-                        mapperUtil.read(it)?.let { add(it) }
-                    }
+    private fun load(): MutableList<A> = try {
+        mutableListOf<A>().apply {
+            context.openFileInput(listName).bufferedReader().useLines {
+                it.forEach {
+                    mapperUtil.read(it)?.let { add(it) }
                 }
             }
-        } catch (e: FileNotFoundException) {
-            log.w("get: %s", e)
-            //save(listOf())
-            return mutableListOf()
         }
+    } catch (e: FileNotFoundException) {
+        log.w("get: %s", e)
+        //save(listOf())
+        mutableListOf()
     }
 
     override fun save(elements: List<A>) {

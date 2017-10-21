@@ -17,12 +17,15 @@ import android.widget.TextView
 import android.widget.TextView.BufferType.EDITABLE
 import fr.gstraymond.R
 import fr.gstraymond.analytics.Tracker
+import fr.gstraymond.android.adapter.DeckCardCallback
 import fr.gstraymond.android.adapter.DeckDetailFragmentPagerAdapter
 import fr.gstraymond.models.Deck
+import fr.gstraymond.models.DeckCard
 import fr.gstraymond.utils.*
 import net.rdrei.android.dirchooser.DirectoryChooserActivity
 import net.rdrei.android.dirchooser.DirectoryChooserActivity.*
 import net.rdrei.android.dirchooser.DirectoryChooserConfig
+
 
 class DeckDetailActivity : CustomActivity(R.layout.activity_deck_detail) {
 
@@ -38,17 +41,21 @@ class DeckDetailActivity : CustomActivity(R.layout.activity_deck_detail) {
         private val DIR_PICKER_CODE = 2001
     }
 
+    private lateinit var deckId: String
     private lateinit var deck: Deck
 
     private val deckTitle by lazy { find<TextView>(R.id.toolbar_text) }
     private val delete by lazy { find<TextView>(R.id.toolbar_delete) }
     private val export by lazy { find<TextView>(R.id.toolbar_export) }
     private val refresh by lazy { find<TextView>(R.id.toolbar_refresh) }
+    private val tabLayout by lazy { find<TabLayout>(R.id.sliding_tabs) }
+
+    private val perms = arrayOf(READ_EXTERNAL_STORAGE, WRITE_EXTERNAL_STORAGE)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val deckId = intent.getStringExtra(DECK_EXTRA)
+        deckId = intent.getStringExtra(DECK_EXTRA)
         deck = app().deckList.getByUid(deckId)!!
 
         val toolbar = findViewById(R.id.toolbar) as Toolbar
@@ -64,20 +71,37 @@ class DeckDetailActivity : CustomActivity(R.layout.activity_deck_detail) {
         }
 
         val viewPager = find<ViewPager>(R.id.viewpager)
-        viewPager.adapter = DeckDetailFragmentPagerAdapter(supportFragmentManager, this)
+        viewPager.adapter = DeckDetailFragmentPagerAdapter(supportFragmentManager, this).apply {
+            deckCardCallback = this@DeckDetailActivity.deckCardCallback
+        }
 
-        find<TabLayout>(R.id.sliding_tabs).setupWithViewPager(viewPager)
+
+        tabLayout.setupWithViewPager(viewPager)
 
         delete.setOnClickListener { createDeleteDialog() }
         export.setOnClickListener {
-            if (!hasPerms(READ_EXTERNAL_STORAGE, WRITE_EXTERNAL_STORAGE)) {
-                requestPerms(REQUEST_STORAGE_CODE, READ_EXTERNAL_STORAGE, WRITE_EXTERNAL_STORAGE)
+            if (!hasPerms(*perms)) {
+                requestPerms(REQUEST_STORAGE_CODE, *perms)
             } else {
                 startDirPicker()
             }
         }
 
         refresh.setOnClickListener { createRefreshDialog() }
+        setTabsText()
+    }
+
+    private val deckCardCallback = object : DeckCardCallback {
+        override fun multChanged(deckCard: DeckCard, from: DeckCardCallback.FROM, deck: Int, sideboard: Int) = setTabsText()
+
+        override fun cardClick(deckCard: DeckCard) = Unit
+    }
+
+    private fun setTabsText() {
+        app().deckList.getByUid(deckId)?.apply {
+            tabLayout.getTabAt(0)?.text = String.format(getString(R.string.deck_tab_cards), deckSize)
+            tabLayout.getTabAt(1)?.text = String.format(getString(R.string.deck_tab_sideboard), sideboardSize)
+        }
     }
 
     private fun startDirPicker() {
