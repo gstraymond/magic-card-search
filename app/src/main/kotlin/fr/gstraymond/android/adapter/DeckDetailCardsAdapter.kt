@@ -6,7 +6,7 @@ import android.support.v7.widget.AppCompatButton
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.NumberPicker
+import android.widget.Button
 import android.widget.TextView
 import fr.gstraymond.R
 import fr.gstraymond.android.adapter.DeckCardCallback.FROM.DECK
@@ -52,25 +52,33 @@ class DeckDetailCardsAdapter(private val context: Context,
         mult.text = "${getMult(deckCard)}"
         mult.setOnClickListener {
             val view = context.inflate(R.layout.array_adapter_deck_card_mult)
-            val deckPicker = view.find<NumberPicker>(R.id.array_adapter_deck_card_mult).apply {
-                minValue = 0
-                maxValue = 100
-                value = deckCard.counts.deck
-                wrapSelectorWheel = false
+            cardViews.display(view, card, 0)
+
+            val deckCount = view.find<TextView>(R.id.array_adapter_deck_card_mult).apply {
+                text = deckCard.counts.deck.toString()
+            }
+            val sbCount = view.find<TextView>(R.id.array_adapter_deck_sb_mult).apply {
+                text = deckCard.counts.sideboard.toString()
             }
 
-            val sbPicker = view.find<NumberPicker>(R.id.array_adapter_deck_card_sb).apply {
-                minValue = 0
-                maxValue = 100
-                value = deckCard.counts.sideboard
-                wrapSelectorWheel = false
+            listOf("card", "sb").forEach { line ->
+                val multView = view.find<TextView>(getId("array_adapter_deck_${line}_mult"))
+                listOf("add", "remove").forEach { action ->
+                    val coef = if (action == "add") 1 else -1
+                    listOf(1, 4).forEach { mult ->
+                        view.find<Button>(getId("array_adapter_deck_${line}_${action}_$mult")).setOnClickListener {
+                            val m = multView.text.toString().toInt()
+                            multView.text = Math.min(99, Math.max(0, m + mult * coef)).toString()
+                        }
+                    }
+                }
             }
 
             AlertDialog.Builder(context)
                     .setView(view)
                     .setPositiveButton(android.R.string.ok, { _, _ ->
-                        val pickerDeckMult = deckPicker.value
-                        val pickerSbMult = sbPicker.value
+                        val pickerDeckMult = deckCount.text.toString().toInt()
+                        val pickerSbMult = sbCount.text.toString().toInt()
                         deckCardCallback?.multChanged(deckCard, if (sideboard) SB else DECK, pickerDeckMult, pickerSbMult)
                     })
                     .setNegativeButton(android.R.string.cancel, { _, _ -> })
@@ -82,6 +90,9 @@ class DeckDetailCardsAdapter(private val context: Context,
             deckCardCallback?.cardClick(deckCard)
         }
     }
+
+    private fun getId(id: String) =
+            context.resources.getIdentifier(id, "id", context.packageName)
 
     private fun getMult(deckCard: DeckCard) =
             if (sideboard) deckCard.counts.sideboard

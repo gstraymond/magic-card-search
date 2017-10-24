@@ -129,7 +129,7 @@
     <string name="deckdetails_refresh_cancel">CANCEL</string>
     <string name="importing_deck">Importing %1$s</string>
     <string name="refreshing">Refreshing…</string>
-    <string name="deck_tab_cards">Cards (%1$s)</string>
+    <string name="deck_tab_cards">Deck (%1$s)</string>
     <string name="deck_tab_sideboard">Sideboard (%1$s)</string>
     <string name="deck_tab_stats">Stats</string>
     <string name="loading">Searching…</string>

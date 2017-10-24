@@ -14,7 +14,6 @@ import android.view.ViewGroup
 import android.widget.TextView
 import com.github.clans.fab.FloatingActionButton
 import com.github.clans.fab.FloatingActionMenu
-import com.magic.card.search.commons.log.Log
 import fr.gstraymond.R
 import fr.gstraymond.android.adapter.DeckCardCallback
 import fr.gstraymond.android.adapter.DeckCardCallback.FROM.DECK
@@ -30,8 +29,6 @@ import fr.gstraymond.ocr.OcrCaptureActivity
 import fr.gstraymond.utils.*
 
 class DeckDetailCardsFragment : Fragment(), DeckCardCallback {
-
-    private val log = Log(javaClass)
 
     private val REQUEST_CAMERA_CODE = 1233
 

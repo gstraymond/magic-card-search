@@ -125,7 +125,7 @@
     <string name="deckdetails_refresh_cancel">ANNULER</string>
     <string name="importing_deck">Import de %1$s</string>
     <string name="refreshing">Mise à jour…</string>
-    <string name="deck_tab_cards">Cartes (%1$s)</string>
+    <string name="deck_tab_cards">Deck (%1$s)</string>
     <string name="deck_tab_sideboard">Sideboard (%1$s)</string>
     <string name="deck_tab_stats">Stats</string>
     <string name="loading">Recherche en cours…</string>
