@@ -12,21 +12,26 @@ import fr.gstraymond.R
 import fr.gstraymond.android.adapter.DeckCardCallback.FROM.DECK
 import fr.gstraymond.android.adapter.DeckCardCallback.FROM.SB
 import fr.gstraymond.db.json.DeckCardListBuilder
+import fr.gstraymond.db.json.WishList
 import fr.gstraymond.models.DeckCard
 import fr.gstraymond.models.search.response.getLocalizedTitle
+import fr.gstraymond.ui.adapter.CardClickCallbacks
+import fr.gstraymond.ui.adapter.DeckDetailCardDialogViews
 import fr.gstraymond.ui.adapter.DeckDetailCardViews
 import fr.gstraymond.utils.*
 import java.util.*
 
 class DeckDetailCardsAdapter(private val context: Context,
-                             private val sideboard: Boolean) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+                             private val sideboard: Boolean,
+                             private val wishList: WishList) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     lateinit var cardListBuilder: DeckCardListBuilder
     var deckId: Int = 0
 
     var deckCardCallback: DeckCardCallback? = null
 
-    private val cardViews = DeckDetailCardViews(context)
+    private val cardViews by lazy { DeckDetailCardViews(context) }
+    private val cardDialogViews by lazy { DeckDetailCardDialogViews(context, wishList, carcClickCallbacks) }
 
     private lateinit var cards: List<DeckCard>
 
@@ -52,7 +57,7 @@ class DeckDetailCardsAdapter(private val context: Context,
         mult.text = "${getMult(deckCard)}"
         mult.setOnClickListener {
             val view = context.inflate(R.layout.array_adapter_deck_card_mult)
-            cardViews.display(view, card, 0)
+            cardDialogViews.display(view, card, 0)
 
             val deckCount = view.find<TextView>(R.id.array_adapter_deck_card_mult).apply {
                 text = deckCard.counts.deck.toString()
@@ -120,6 +125,15 @@ class DeckDetailCardsAdapter(private val context: Context,
             0 -> f2()
             else -> comparison
         }
+    }
+
+    private val carcClickCallbacks = object : CardClickCallbacks {
+        override fun itemAdded(position: Int) {
+        }
+
+        override fun itemRemoved(position: Int) {
+        }
+
     }
 }
 

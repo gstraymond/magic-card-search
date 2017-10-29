@@ -48,6 +48,16 @@ class DeckDetailCardViews(context: Context) : CardViews(listOf(
         TypePTView()
 ))
 
+class DeckDetailCardDialogViews(context: Context,
+                          cards: JsonList<Card>,
+                          clickCallbacks: CardClickCallbacks) : CardViews(listOf(
+        TitleView(),
+        CastingCostView(context),
+        FormatView(),
+        TypePTView(),
+        FavoriteView(cards, clickCallbacks, context.resources)
+))
+
 class CardDetailViews(context: Context,
                       cards: JsonList<Card>,
                       clickCallbacks: CardClickCallbacks) :

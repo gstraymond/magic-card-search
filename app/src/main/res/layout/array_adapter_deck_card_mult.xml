@@ -10,6 +10,17 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
 
+        <Button
+            android:id="@+id/card_favorite"
+            android:layout_width="42dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="8dp"
+            android:drawableLeft="@drawable/ic_star_white_18dp"
+            android:focusable="false"
+            android:text="" />
+
         <TextView
             android:id="@+id/array_adapter_card_casting_cost"
             android:layout_width="wrap_content"
@@ -44,6 +55,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_toRightOf="@id/array_adapter_text"
+            android:layout_toLeftOf="@id/card_favorite"
             android:ellipsize="end"
             android:maxLines="1"
             tools:text=" - Sorcery" />
@@ -156,5 +168,4 @@
         </LinearLayout>
 
     </RelativeLayout>
-
 </LinearLayout>

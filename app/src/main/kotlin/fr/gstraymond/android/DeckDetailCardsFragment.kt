@@ -46,7 +46,7 @@ class DeckDetailCardsFragment : Fragment(), DeckCardCallback {
     var sideboard: Boolean = false
 
     private val deckDetailAdapter by lazy {
-        DeckDetailCardsAdapter(activity, sideboard).apply {
+        DeckDetailCardsAdapter(activity, sideboard, activity.app().wishList).apply {
             deckCardCallback = this@DeckDetailCardsFragment
         }
     }
