@@ -26,6 +26,6 @@
     <item
         android:id="@+id/menu_gallery_mode"
         android:icon="@android:drawable/checkbox_on_background"
-        android:title="Gallery mode"
+        android:title="@string/gallery_mode"
         app:actionLayout="@layout/widget_switch" />
 </menu>

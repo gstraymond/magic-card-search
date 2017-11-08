@@ -11,7 +11,7 @@ import retrofit2.converter.moshi.MoshiConverterFactory
 
 object RetrofitBuilder {
 
-    private val SEARCH_SERVER_HOST = "http://engine.mtg-search.com:8080"
+    private val SEARCH_SERVER_HOST = "http://engine.mtg-search.com"
     //private val SEARCH_SERVER_HOST = "http://192.168.1.15:9200"
 
     fun buildRetrofit(moshi: Moshi, context: Context): Retrofit {
