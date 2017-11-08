@@ -26,15 +26,21 @@ repositories {
 }
 
 android {
-    compileSdkVersion 26
-    buildToolsVersion "26.0.0"
+    compileSdkVersion 27
+    buildToolsVersion '26.0.2'
 
     defaultConfig {
         applicationId "mtg.magic.search.deck.builder"
         minSdkVersion 14
-        targetSdkVersion 26
+        targetSdkVersion 27
         versionCode 58
         versionName "3.0.1"
+
+        javaCompileOptions {
+            annotationProcessorOptions {
+                includeCompileClasspath false
+            }
+        }
     }
 
     signingConfigs {
@@ -107,5 +113,6 @@ dependencies {
     compile "com.nbsp:library:$fileChooserVersion"
     compile ("net.rdrei.android.dirchooser:library:$dirChooserVersion@aar") { transitive = true }
     compile "com.google.android.gms:play-services-vision:$gmsVisionVersion"
+    kapt "com.google.auto.value:auto-value:1.1"
     testCompile 'junit:junit:4.12'
 }

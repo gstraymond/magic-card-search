@@ -5,13 +5,15 @@ import android.content.Context
 import android.support.v7.widget.AppCompatButton
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.TextView
+import android.widget.*
+import com.magic.card.search.commons.log.Log
 import fr.gstraymond.R
 import fr.gstraymond.android.adapter.DeckCardCallback.FROM.DECK
 import fr.gstraymond.android.adapter.DeckCardCallback.FROM.SB
 import fr.gstraymond.db.json.DeckCardListBuilder
+import fr.gstraymond.db.json.DeckList
 import fr.gstraymond.db.json.WishList
 import fr.gstraymond.models.DeckCard
 import fr.gstraymond.models.search.response.getLocalizedTitle
@@ -23,9 +25,9 @@ import java.util.*
 
 class DeckDetailCardsAdapter(private val context: Context,
                              private val sideboard: Boolean,
-                             private val wishList: WishList) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-
-    lateinit var cardListBuilder: DeckCardListBuilder
+                             private val wishList: WishList,
+                             private val deckList: DeckList,
+                             private val cardListBuilder: DeckCardListBuilder) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     var deckId: Int = 0
 
     var deckCardCallback: DeckCardCallback? = null
@@ -71,12 +73,43 @@ class DeckDetailCardsAdapter(private val context: Context,
                 listOf("add", "remove").forEach { action ->
                     val coef = if (action == "add") 1 else -1
                     listOf(1, 4).forEach { mult ->
-                        view.find<Button>(getId("array_adapter_deck_${line}_${action}_$mult")).setOnClickListener {
-                            val m = multView.text.toString().toInt()
-                            multView.text = Math.min(99, Math.max(0, m + mult * coef)).toString()
+                        view.find<AppCompatButton>(getId("array_adapter_deck_${line}_${action}_$mult")).apply {
+                            supportBackgroundTintList = context.resources.colorStateList(R.color.colorPrimary)
+                            setOnClickListener {
+                                val m = multView.text.toString().toInt()
+                                multView.text = Math.min(99, Math.max(0, m + mult * coef)).toString()
+                            }
                         }
                     }
                 }
+            }
+
+            val otherDecks = deckList.filter { it.id != deckId }
+            val spinner = view.find<Spinner>(R.id.array_adapter_decks)
+            if (otherDecks.isNotEmpty()) {
+                spinner.visible()
+                spinner.adapter = ArrayAdapter(
+                        context,
+                        android.R.layout.simple_spinner_item,
+                        // FIXME translate
+                        listOf("Add this card to deck:") + otherDecks.map { it.name }).apply {
+                    setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+                }
+                spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+                    override fun onNothingSelected(parent: AdapterView<*>?) = Unit
+
+                    override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
+                        Log(javaClass).w("$parent / $view / $position / $id")
+                        // TODO add to deck / snackbar
+                        if (position > 0) {
+                            cardListBuilder.build(otherDecks[position - 1].id)
+                                    .addOrRemove(DeckCard(card, Date().time, DeckCard.Counts(1, 0)))
+                        }
+                    }
+
+                }
+            } else {
+                spinner.gone()
             }
 
             AlertDialog.Builder(context)

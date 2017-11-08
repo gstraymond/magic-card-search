@@ -31,4 +31,6 @@ interface UidList<A> {
     fun <B> map(f: (A) -> B): List<B>
 
     fun <B> flatMap(f: (A) -> List<B>): List<B>
+
+    fun filter(predicate: (A) -> Boolean): List<A>
 }

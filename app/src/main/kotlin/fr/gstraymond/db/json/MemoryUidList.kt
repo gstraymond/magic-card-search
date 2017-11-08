@@ -79,4 +79,6 @@ abstract class MemoryUidList<A> : UidList<A> {
     override fun <B> map(f: (A) -> B): List<B> = elems.map(f)
 
     override fun <B> flatMap(f: (A) -> List<B>): List<B> = elems.flatMap(f)
+
+    override fun filter(predicate: (A) -> Boolean) = elems.filter(predicate)
 }

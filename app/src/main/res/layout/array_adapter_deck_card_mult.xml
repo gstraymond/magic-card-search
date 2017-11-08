@@ -4,6 +4,9 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:orientation="vertical"
+    android:dividerPadding="16dp"
+    android:divider="@color/transparent"
+    android:showDividers="middle"
     android:padding="8dp">
 
     <RelativeLayout
@@ -65,6 +68,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
         android:paddingRight="8dp">
 
         <TextView
@@ -75,10 +79,13 @@
 
         <TextView
             android:id="@+id/array_adapter_deck_card_mult"
-            android:layout_width="16dp"
+            style="@android:style/TextAppearance.Medium"
+            android:textStyle="bold"
+            android:layout_width="24dp"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
+            android:gravity="center"
             tools:text="2" />
 
         <LinearLayout
@@ -129,10 +136,13 @@
 
         <TextView
             android:id="@+id/array_adapter_deck_sb_mult"
-            android:layout_width="16dp"
+            style="@android:style/TextAppearance.Medium"
+            android:textStyle="bold"
+            android:layout_width="24dp"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
+            android:gravity="center"
             tools:text="12" />
 
         <LinearLayout
@@ -167,5 +177,16 @@
                 android:text="-4" />
         </LinearLayout>
 
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp">
+        <Spinner
+            android:id="@+id/array_adapter_decks"
+            android:layout_alignParentRight="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
     </RelativeLayout>
 </LinearLayout>
