@@ -13,6 +13,7 @@ import android.support.v4.widget.DrawerLayout
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.widget.*
 import android.widget.ExpandableListView
+import android.widget.Switch
 import android.widget.TextView
 import com.magic.card.search.commons.log.Log
 import fr.gstraymond.R
@@ -29,10 +30,7 @@ import fr.gstraymond.tools.VersionUtils
 import fr.gstraymond.ui.EndScrollListener
 import fr.gstraymond.ui.SuggestionListener
 import fr.gstraymond.ui.TextListener
-import fr.gstraymond.ui.adapter.CardArrayAdapter
-import fr.gstraymond.ui.adapter.CardArrayData
-import fr.gstraymond.ui.adapter.CardClickCallbacks
-import fr.gstraymond.ui.adapter.SearchViewCursorAdapter
+import fr.gstraymond.ui.adapter.*
 import fr.gstraymond.utils.*
 import sheetrock.panda.changelog.ChangeLog
 
@@ -64,8 +62,11 @@ class CardListActivity : CustomActivity(R.layout.activity_card_list),
     private val emptyTextView by lazy { find<TextView>(R.id.search_empty_text) }
     private val leftNavigationView by lazy { find<NavigationView>(R.id.left_drawer) }
     private val scanButton by lazy { find<AppCompatButton>(R.id.scan_card) }
+    private val rootView by lazy { findViewById(R.id.root_view) }
 
-    private lateinit var arrayAdapter: CardArrayAdapter
+    private lateinit var cardArrayAdapter: CardArrayAdapter
+    private lateinit var cardLayoutManager: LinearLayoutManager
+    private lateinit var cardArrayData: CardArrayData
 
     private val presenter = CardListPresenter(this)
     private val log = Log(javaClass)
@@ -94,7 +95,7 @@ class CardListActivity : CustomActivity(R.layout.activity_card_list),
         supportActionBar?.title = ""
 
         val savedSearch = savedInstanceState?.getParcelable<SearchOptions>(SEARCH_QUERY)
-                ?: intent.getParcelableExtra<SearchOptions>(SEARCH_QUERY)
+                ?: intent.getParcelableExtra(SEARCH_QUERY)
 
         savedSearch?.apply {
             presenter.setCurrentSearch(this)
@@ -103,7 +104,7 @@ class CardListActivity : CustomActivity(R.layout.activity_card_list),
             }
         }
 
-        val data = presenter.getCurrentSearch().deckId?.run {
+        cardArrayData = presenter.getCurrentSearch().deckId?.run {
             val deck = app().deckList.getByUid(this)
             CardArrayData(
                     cards = null,
@@ -112,11 +113,10 @@ class CardListActivity : CustomActivity(R.layout.activity_card_list),
                 cards = app().wishList,
                 deck = null)
 
-        arrayAdapter = CardArrayAdapter(rootView, data, clickCallback, cardClickCallback, presenter)
+        setArrayAdapter()
 
         presenter.let {
             it.searchViewCursorAdapter = searchViewCursorAdapter
-            it.arrayAdapter = arrayAdapter
             it.facetListView = facetListView
             it.searchProcessor = searchProcessor
             it.filterTextView = filterTextView
@@ -125,19 +125,16 @@ class CardListActivity : CustomActivity(R.layout.activity_card_list),
             it.rootView = rootView
         }
 
-        val linearLayoutManager = LinearLayoutManager(this)
+        setLayoutManager()
+
         recyclerView.apply {
             setHasFixedSize(true)
-            layoutManager = linearLayoutManager
-            adapter = arrayAdapter
-            addOnScrollListener(EndScrollListener(searchProcessor, presenter, linearLayoutManager))
             setOnTouchListener { _, _ ->
                 when {
                     searchView.hasFocus() -> searchView.clearFocus()
                 }
                 false
             }
-
         }
 
         val textListener = TextListener(presenter, this, searchProcessor, autocompleteProcessor)
@@ -158,7 +155,7 @@ class CardListActivity : CustomActivity(R.layout.activity_card_list),
         }
 
 
-        drawerLayout = find<DrawerLayout>(R.id.drawer_layout)
+        drawerLayout = find(R.id.drawer_layout)
         filterTextView.setOnClickListener {
             drawerLayout.openDrawer(GravityCompat.END)
         }
@@ -211,6 +208,14 @@ class CardListActivity : CustomActivity(R.layout.activity_card_list),
                     }
                     true
                 }
+                val item = it.menu.findItem(R.id.menu_gallery_mode)
+                item.actionView.find<Switch>(R.id.switch_gallery_mode).apply {
+                    isChecked = prefs.galleryMode
+                    setOnCheckedChangeListener { _, b ->
+                        prefs.galleryMode = b
+                        switchAdapter()
+                    }
+                }
             }
         } else {
             supportActionBar?.setDisplayHomeAsUpEnabled(true)
@@ -225,6 +230,26 @@ class CardListActivity : CustomActivity(R.layout.activity_card_list),
                     startScanner()
                 }
             }
+        }
+    }
+
+    private fun setArrayAdapter() {
+        cardArrayAdapter = when (prefs.galleryMode) {
+            true -> GridCardArrayAdapter(this, clickCallback, presenter)
+            else -> LinearCardArrayAdapter(rootView, cardArrayData, clickCallback, cardClickCallback, presenter)
+        }
+        recyclerView.adapter = cardArrayAdapter
+        presenter.arrayAdapter = cardArrayAdapter
+    }
+
+    private fun setLayoutManager() {
+        cardLayoutManager = when (prefs.galleryMode) {
+            true -> GridLayoutManager(this, 2)
+            else -> LinearLayoutManager(this)
+        }
+        recyclerView.apply {
+            layoutManager = cardLayoutManager
+            addOnScrollListener(EndScrollListener(searchProcessor, presenter, cardLayoutManager))
         }
     }
 
@@ -262,7 +287,7 @@ class CardListActivity : CustomActivity(R.layout.activity_card_list),
     override fun onResume() {
         super.onResume()
         findViewById(R.id.root_view).requestFocus()
-        arrayAdapter.notifyDataSetChanged()
+        cardArrayAdapter.notifyDataSetChanged()
 
         if (presenter.getCurrentSearch().deckId == null) {
             updateMenuWishlistSize()
@@ -296,6 +321,14 @@ class CardListActivity : CustomActivity(R.layout.activity_card_list),
                 startScanner()
             }
         }
+    }
+
+    private fun switchAdapter() {
+        val cards = cardArrayAdapter.cards()
+        setArrayAdapter()
+        cardArrayAdapter.setCards(cards)
+        setLayoutManager()
+        cardArrayAdapter.notifyDataSetChanged()
     }
 }
 

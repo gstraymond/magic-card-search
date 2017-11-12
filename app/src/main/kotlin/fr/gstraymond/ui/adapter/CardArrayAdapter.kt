@@ -17,15 +17,14 @@ import fr.gstraymond.models.search.response.Card
 import fr.gstraymond.models.search.response.getLocalizedTitle
 import fr.gstraymond.utils.inflate
 
-class CardArrayAdapter(private val view: View,
-                       private val data: CardArrayData,
-                       private val clickCallbacks: ClickCallbacks,
-                       private val cardClickCallbacks: CardClickCallbacks,
-                       private val dataUpdater: DataUpdater) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class LinearCardArrayAdapter(private val view: View,
+                             private val data: CardArrayData,
+                             private val clickCallbacks: ClickCallbacks,
+                             private val cardClickCallbacks: CardClickCallbacks,
+                             private val dataUpdater: DataUpdater) : CardArrayAdapter() {
 
     private val context = view.context
 
-    private val cards = mutableListOf<Card>()
     private val clipboard = context.getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = context
@@ -42,8 +41,6 @@ class CardArrayAdapter(private val view: View,
             true
         }
     }
-
-    override fun getItemCount() = cards.size
 
     private val cardViews = data.cards?.run {
         WishlistCardViews(context, this, FavoriteViewClickCallbacks())
@@ -77,23 +74,6 @@ class CardArrayAdapter(private val view: View,
         val snackbar = Snackbar.make(view, message, LENGTH_LONG)
         snackbar.show()
         dataUpdater.setLoadingSnackbar(snackbar)
-    }
-
-
-    fun setCards(newCards: List<Card>): Unit {
-        cards.clear()
-        cards.addAll(newCards)
-        notifyDataSetChanged()
-    }
-
-    fun appendCards(newCards: List<Card>): Unit {
-        cards.addAll(newCards)
-        notifyItemRangeInserted(cards.size - 1, newCards.size)
-    }
-
-    interface ClickCallbacks {
-
-        fun cardClicked(card: Card)
     }
 }
 

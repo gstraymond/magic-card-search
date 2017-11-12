@@ -32,8 +32,8 @@ public class CardFragment extends Fragment implements PictureRequestListener.Cal
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_card, container, false);
-        ImageView imageView = (ImageView) rootView.findViewById(R.id.fragment_card_picture);
-        progressBar = (ProgressBar) rootView.findViewById(R.id.fragment_card_progress_bar);
+        ImageView imageView = rootView.findViewById(R.id.fragment_card_picture);
+        progressBar = rootView.findViewById(R.id.fragment_card_progress_bar);
 
         url = getArguments().getString(URL);
         card = getArguments().getParcelable(CARD);
