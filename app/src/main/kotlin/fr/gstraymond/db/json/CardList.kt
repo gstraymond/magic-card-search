@@ -49,10 +49,6 @@ object CardListMigrator {
         context.filesDir
                 .listFiles()
                 .map { it.name }
-                .map {
-                    Log(javaClass).w("FILE: $it")
-                    it
-                }
                 .filter { it.startsWith("deck_") }
                 .forEach { file ->
                     val deckId = file.drop("deck_".length).toInt()

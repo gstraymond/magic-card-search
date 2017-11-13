@@ -15,6 +15,7 @@
     <string name="added_to_wishlist">%1$s added to your wishlist</string>
     <string name="removed_from_wishlist">%1$s removed from wishlist</string>
     <string name="added_to_deck">%1$s added to \'%2$s\' deck</string>
+    <string name="already_in_deck">%1$s already in \'%2$s\' deck</string>
     <string name="removed_from_deck">%1$s removed from \'%2$s\' deck</string>
 
     <string name="detail_menu_oracle">Text</string>
@@ -157,4 +158,5 @@
     <string name="deck_detail_ruling"><![CDATA[%1$s…<br><br>Tap to see %2$s more ruling(s)]]></string>
     <string name="ocr_hint">Place card under camera, at least card title and type</string>
     <string name="gallery_mode">Gallery mode</string>
+    <string name="add_card_to_deck">Add this card to deck:</string>
 </resources>

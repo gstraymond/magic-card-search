@@ -2,6 +2,7 @@ package fr.gstraymond.android.adapter
 
 import android.app.AlertDialog
 import android.content.Context
+import android.support.design.widget.Snackbar
 import android.support.v7.widget.AppCompatButton
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
@@ -27,13 +28,11 @@ class DeckDetailCardsAdapter(private val context: Context,
                              private val sideboard: Boolean,
                              private val wishList: WishList,
                              private val deckList: DeckList,
-                             private val cardListBuilder: DeckCardListBuilder) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+                             private val cardListBuilder: DeckCardListBuilder,
+                             private val rootView: View) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     var deckId: Int = 0
 
     var deckCardCallback: DeckCardCallback? = null
-
-    private val cardViews by lazy { DeckDetailCardViews(context) }
-    private val cardDialogViews by lazy { DeckDetailCardDialogViews(context, wishList, carcClickCallbacks) }
 
     private lateinit var cards: List<DeckCard>
 
@@ -52,7 +51,11 @@ class DeckDetailCardsAdapter(private val context: Context,
         root.visible()
         val deckCard = cards[position]
         val card = deckCard.card
-        cardViews.display(holder.itemView, card, position)
+
+
+        val carcClickCallbacks = WishlistCardClickCallbacks(card, context, rootView)
+        DeckDetailCardViews(context).display(holder.itemView, card, position)
+        val cardDialogViews = DeckDetailCardDialogViews(context, wishList, carcClickCallbacks)
 
         val mult = holder.itemView.find<AppCompatButton>(R.id.array_adapter_deck_card_mult)
         mult.supportBackgroundTintList = context.resources.colorStateList(R.color.colorPrimaryDark)
@@ -91,19 +94,24 @@ class DeckDetailCardsAdapter(private val context: Context,
                 spinner.adapter = ArrayAdapter(
                         context,
                         android.R.layout.simple_spinner_item,
-                        // FIXME translate
-                        listOf("Add this card to deck:") + otherDecks.map { it.name }).apply {
+                        listOf(context.getString(R.string.add_card_to_deck)) + otherDecks.map { it.name }).apply {
                     setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
                 }
                 spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
                     override fun onNothingSelected(parent: AdapterView<*>?) = Unit
 
                     override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
-                        Log(javaClass).w("$parent / $view / $position / $id")
-                        // TODO add to deck / snackbar
                         if (position > 0) {
-                            cardListBuilder.build(otherDecks[position - 1].id)
-                                    .addOrRemove(DeckCard(card, Date().time, DeckCard.Counts(1, 0)))
+                            val deck = otherDecks[position - 1]
+                            val otherCardList = cardListBuilder.build(deck.id)
+                            val otherDeckCard = DeckCard(card, Date().time, DeckCard.Counts(1, 0))
+                            val message = if (otherCardList.contains(otherDeckCard)) {
+                                String.format(context.resources.getString(R.string.already_in_deck), card.title, deck.name)
+                            } else {
+                                otherCardList.addOrRemove(otherDeckCard)
+                                String.format(context.resources.getString(R.string.added_to_deck), card.title, deck.name)
+                            }
+                            Snackbar.make(rootView, message, Snackbar.LENGTH_LONG).show()
                         }
                     }
 
@@ -158,15 +166,6 @@ class DeckDetailCardsAdapter(private val context: Context,
             0 -> f2()
             else -> comparison
         }
-    }
-
-    private val carcClickCallbacks = object : CardClickCallbacks {
-        override fun itemAdded(position: Int) {
-        }
-
-        override fun itemRemoved(position: Int) {
-        }
-
     }
 }
 
