@@ -145,7 +145,7 @@ class SearchViewCursorAdapter private constructor(context: Context,
                         editionCode = stdEditionCode
                     } else {
                         type = FIELD_TYPE_CARD
-                        cardColorId = CardColorUtil.getColorId(colors, this.type)
+                        cardColorId = CardColorUtil.getColorId(colors ?: listOf(), this.type, listOf())
                         cardType = this.type
                     }
                 }
