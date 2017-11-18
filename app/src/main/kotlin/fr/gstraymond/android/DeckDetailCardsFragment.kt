@@ -43,6 +43,7 @@ class DeckDetailCardsFragment : Fragment(), DeckCardCallback {
     private lateinit var notImported: TextView
 
     private val rooView by lazy { activity.find<View>(android.R.id.content) }
+    private val deckId by lazy { activity.intent.getStringExtra(DeckDetailActivity.DECK_EXTRA) }
 
     var deckCardCallback: DeckCardCallback? = null
     var sideboard: Boolean = false
@@ -84,19 +85,16 @@ class DeckDetailCardsFragment : Fragment(), DeckCardCallback {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        val deckId = activity.intent.getStringExtra(DeckDetailActivity.DECK_EXTRA)
 
         fabAdd.setOnClickListener {
             startActivity {
-                // TODO handle sideboard
-                CardListActivity.getIntent(activity, SearchOptions(deckId = deckId, size = 0))
+                CardListActivity.getIntent(activity, SearchOptions(deckId = deckId, size = 0, addToSideboard = sideboard))
             }
         }
 
         fabHistory.setOnClickListener {
             startActivity {
-                // TODO handle sideboard
-                HistoryActivity.getIntent(activity, deckId)
+                HistoryActivity.getIntent(activity, deckId, sideboard)
             }
         }
 
@@ -106,9 +104,8 @@ class DeckDetailCardsFragment : Fragment(), DeckCardCallback {
             fabLand.visible()
             fabLand.setOnClickListener {
                 startActivity {
-                    // TODO handle sideboard
                     val facets = mapOf(TYPE to listOf("land", "basic"), FORMAT to listOf("Standard"))
-                    CardListActivity.getIntent(activity, SearchOptions(deckId = deckId, facets = facets))
+                    CardListActivity.getIntent(activity, SearchOptions(deckId = deckId, facets = facets, addToSideboard = sideboard))
                 }
             }
         }
@@ -133,7 +130,8 @@ class DeckDetailCardsFragment : Fragment(), DeckCardCallback {
                     activity,
                     autoFocus = true,
                     useFlash = false,
-                    deckId = activity.intent.getStringExtra(DeckDetailActivity.DECK_EXTRA))
+                    deckId = deckId,
+                    addToSideboard = sideboard)
         }
     }
 
@@ -141,7 +139,6 @@ class DeckDetailCardsFragment : Fragment(), DeckCardCallback {
         super.onResume()
 
         floatingMenu.close(false)
-        val deckId = activity.intent.getStringExtra(DeckDetailActivity.DECK_EXTRA)
         val deck = deckList.getByUid(deckId)
 
         val cardsNotImported = deck?.cardsNotImported ?: listOf()

@@ -12,7 +12,8 @@ import java.util.*
 
 class DeckItemView(cards: JsonList<DeckCard>,
                    clickCallbacks: CardClickCallbacks,
-                   resources: Resources) : CardListView<DeckCard>(
+                   resources: Resources,
+                   private val addToSideboard: Boolean) : CardListView<DeckCard>(
         cards,
         clickCallbacks,
         resources.colorStateList(R.color.colorAccent),
@@ -21,5 +22,10 @@ class DeckItemView(cards: JsonList<DeckCard>,
         resources.drawable(R.drawable.ic_bookmark_border_white_18dp),
         "deck") {
 
-    override fun getElem(card: Card) = DeckCard(card, Date().time, DeckCard.Counts(deck = 1, sideboard = 0))
+    override fun getElem(card: Card) = DeckCard(
+            card,
+            Date().time,
+            if (addToSideboard) DeckCard.Counts(deck = 0, sideboard = 1)
+            else DeckCard.Counts(deck = 1, sideboard = 0)
+    )
 }

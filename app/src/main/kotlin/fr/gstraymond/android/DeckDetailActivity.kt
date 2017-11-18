@@ -26,7 +26,6 @@ import net.rdrei.android.dirchooser.DirectoryChooserActivity
 import net.rdrei.android.dirchooser.DirectoryChooserActivity.*
 import net.rdrei.android.dirchooser.DirectoryChooserConfig
 
-
 class DeckDetailActivity : CustomActivity(R.layout.activity_deck_detail) {
 
     companion object {
@@ -88,6 +87,11 @@ class DeckDetailActivity : CustomActivity(R.layout.activity_deck_detail) {
         }
 
         refresh.setOnClickListener { createRefreshDialog() }
+        setTabsText()
+    }
+
+    override fun onResume() {
+        super.onResume()
         setTabsText()
     }
 

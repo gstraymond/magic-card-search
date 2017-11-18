@@ -31,13 +31,14 @@ class WishlistCardViews(context: Context,
 
 class DeckCardViews(context: Context,
                     cards: JsonList<DeckCard>,
-                    clickCallbacks: CardClickCallbacks) :
+                    clickCallbacks: CardClickCallbacks,
+                    addToSideboard: Boolean) :
         CardViews(listOf(
                 TitleView(),
                 DescriptionView(context),
                 CastingCostView(context),
                 TypePTView(),
-                DeckItemView(cards, clickCallbacks, context.resources),
+                DeckItemView(cards, clickCallbacks, context.resources, addToSideboard),
                 CostView(context)
         ))
 

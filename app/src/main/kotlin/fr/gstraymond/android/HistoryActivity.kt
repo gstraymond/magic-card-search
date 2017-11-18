@@ -17,10 +17,14 @@ class HistoryActivity : CustomActivity(R.layout.activity_history) {
 
     companion object {
         val DECK_ID_EXTRA = "deck_id"
+        val ADD_TO_SIDEBOARD_EXTRA = "add_to_sideboard"
 
-        fun getIntent(context: Context, deckId: String? = null) =
+        fun getIntent(context: Context,
+                      deckId: String? = null,
+                      addToSideboard: Boolean = false) =
                 Intent(context, HistoryActivity::class.java).apply {
                     putExtra(DECK_ID_EXTRA, deckId)
+                    putExtra(ADD_TO_SIDEBOARD_EXTRA, addToSideboard)
                 }
     }
 
@@ -63,6 +67,7 @@ class HistoryActivity : CustomActivity(R.layout.activity_history) {
             val allHistory = ArrayList(jsonHistoryDataSource.all().sortedByDescending { it.date })
             putParcelableArrayList(HISTORY_LIST, allHistory)
             putString(DECK_ID_EXTRA, intent.getStringExtra(DECK_ID_EXTRA))
+            putBoolean(ADD_TO_SIDEBOARD_EXTRA, intent.getBooleanExtra(ADD_TO_SIDEBOARD_EXTRA, false))
         }
 
         replaceFragment(HistoryListFragment(), R.id.history_fragment, bundle)

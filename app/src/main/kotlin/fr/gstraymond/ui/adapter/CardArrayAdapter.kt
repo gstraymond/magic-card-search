@@ -44,7 +44,7 @@ class LinearCardArrayAdapter(private val view: View,
 
     private val cardViews = data.cards?.run {
         WishlistCardViews(context, this, FavoriteViewClickCallbacks())
-    } ?: DeckCardViews(context, data.deck!!.second, FavoriteViewClickCallbacks())
+    } ?: DeckCardViews(context, data.deck!!.second, FavoriteViewClickCallbacks(), dataUpdater.getCurrentSearch().addToSideboard)
 
     private inner class FavoriteViewClickCallbacks : CardClickCallbacks {
 
