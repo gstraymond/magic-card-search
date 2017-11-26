@@ -15,6 +15,7 @@ import fr.gstraymond.android.adapter.DeckCardCallback.FROM.SB
 import fr.gstraymond.models.DeckCard
 import fr.gstraymond.models.search.response.getLocalizedTitle
 import fr.gstraymond.ui.adapter.DeckDetailCardViews
+import fr.gstraymond.ui.adapter.SimpleCardViews
 import fr.gstraymond.utils.*
 import java.util.*
 
@@ -27,6 +28,8 @@ class DeckDetailCardsAdapter(private val app: CustomApplication,
     var deckCardCallback: DeckCardCallback? = null
 
     private lateinit var cards: List<DeckCard>
+
+    private val cardViews by lazy { SimpleCardViews(context) }
 
     fun updateDeckList() {
         cards = app.cardListBuilder.build(deckId).all().filter { getMult(it) > 0 }.sortedWith(cardComparator)
@@ -51,6 +54,7 @@ class DeckDetailCardsAdapter(private val app: CustomApplication,
         mult.text = "${getMult(deckCard)}"
         mult.setOnClickListener {
             val view = context.inflate(R.layout.array_adapter_deck_card_mult)
+            cardViews.display(view, card, position)
             val deckCount = view.find<TextView>(R.id.array_adapter_deck_card_mult).apply {
                 text = deckCard.counts.deck.toString()
             }

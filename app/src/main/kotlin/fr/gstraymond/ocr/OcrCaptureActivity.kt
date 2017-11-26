@@ -21,7 +21,7 @@ import fr.gstraymond.models.search.response.Card
 import fr.gstraymond.ocr.ui.camera.CameraSource
 import fr.gstraymond.ocr.ui.camera.CameraSourcePreview
 import fr.gstraymond.ocr.ui.camera.GraphicOverlay
-import fr.gstraymond.ui.adapter.DeckDetailCardViews
+import fr.gstraymond.ui.adapter.SimpleCardViews
 import fr.gstraymond.utils.app
 import fr.gstraymond.utils.find
 import fr.gstraymond.utils.inflate
@@ -166,12 +166,13 @@ class OcrCaptureActivity : CustomActivity(R.layout.ocr_capture), OcrDetectorProc
         }
     }
 
+    private val cardViews by lazy { SimpleCardViews(this) }
+
     private fun createScanDialog(deckId: String,
                                  card: Card,
                                  addToSideboard: Boolean) {
         val view = inflate(R.layout.activity_ocr_scan)
         val continueScan = view.find<CheckBox>(R.id.ocr_scan_continue_checkbox)
-        val cardViews by lazy { DeckDetailCardViews(app(),this, rootView, deckId.toInt()) }
         cardViews.display(view, card, 0)
         AlertDialog.Builder(this)
                 .setView(view)

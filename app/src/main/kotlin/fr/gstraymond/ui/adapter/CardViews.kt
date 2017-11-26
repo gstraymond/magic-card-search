@@ -67,6 +67,13 @@ class DeckDetailCardViews(app: CustomApplication,
         ShareView(app, context, rootView, deckId, null)
 ))
 
+class SimpleCardViews(context: Context) : CardViews(listOf(
+        TitleView(),
+        CastingCostView(context),
+        FormatView(),
+        TypePTView()
+))
+
 class ShareCardDialogViews(context: Context,
                            cards: JsonList<Card>,
                            clickCallbacks: CardClickCallbacks) : CardViews(listOf(

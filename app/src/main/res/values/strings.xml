@@ -160,4 +160,6 @@
     <string name="gallery_mode">Gallery mode</string>
     <string name="add_card_to_deck">Add this card to deck:</string>
     <string name="close">Close</string>
+    <string name="mult_deck">Deck</string>
+    <string name="mult_sideboard">Sideboard</string>
 </resources>

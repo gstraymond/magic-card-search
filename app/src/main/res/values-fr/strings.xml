@@ -142,4 +142,6 @@
     <string name="gallery_mode">Mode gallerie</string>
     <string name="add_card_to_deck">Ajouter cette carte au deck :</string>
     <string name="close">Fermer</string>
+    <string name="mult_deck">Deck</string>
+    <string name="mult_sideboard">Sideboard</string>
 </resources>
