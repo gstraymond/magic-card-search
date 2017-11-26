@@ -50,11 +50,9 @@ class DeckDetailCardsFragment : Fragment(), DeckCardCallback {
 
     private val deckDetailAdapter by lazy {
         DeckDetailCardsAdapter(
+                app(),
                 activity,
                 sideboard,
-                activity.app().wishList,
-                activity.app().deckList,
-                activity.app().cardListBuilder,
                 rooView).apply {
             deckCardCallback = this@DeckDetailCardsFragment
         }

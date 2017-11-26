@@ -5,7 +5,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.support.v7.widget.Toolbar
 import fr.gstraymond.R
 import fr.gstraymond.android.adapter.WishlistAdapter
 import fr.gstraymond.models.search.response.Card
@@ -27,15 +26,16 @@ class WishListActivity : CustomActivity(R.layout.activity_wishlist) {
         }
     }
 
-    private val wishlistAdapter by lazy { WishlistAdapter(this, app().wishList, clickCallbacks) }
+    private val rootView by lazy { findViewById(android.R.id.content) }
+
+    private val wishlistAdapter by lazy { WishlistAdapter(app(), this, rootView, app().wishList, clickCallbacks) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        setSupportActionBar(find<Toolbar>(R.id.toolbar))
+        setSupportActionBar(find(R.id.toolbar))
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         setTitle(R.string.wishlist_title)
-
 
         find<RecyclerView>(R.id.wishlist_recyclerview).let {
             it.setHasFixedSize(true)

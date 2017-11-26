@@ -159,4 +159,5 @@
     <string name="ocr_hint">Place card under camera, at least card title and type</string>
     <string name="gallery_mode">Gallery mode</string>
     <string name="add_card_to_deck">Add this card to deck:</string>
+    <string name="close">Close</string>
 </resources>

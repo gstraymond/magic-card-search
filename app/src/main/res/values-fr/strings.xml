@@ -141,4 +141,5 @@
     <string name="ocr_hint">Visez le titre et le type de la carte</string>
     <string name="gallery_mode">Mode gallerie</string>
     <string name="add_card_to_deck">Ajouter cette carte au deck :</string>
+    <string name="close">Fermer</string>
 </resources>

@@ -35,6 +35,7 @@ class OcrCaptureActivity : CustomActivity(R.layout.ocr_capture), OcrDetectorProc
     private var cameraSource: CameraSource? = null
     private val preview by lazy { find<CameraSourcePreview>(R.id.preview) }
     private val graphicOverlay by lazy { find<GraphicOverlay<OcrGraphic>>(R.id.graphicOverlay) }
+    private val rootView by lazy { findViewById(android.R.id.content) }
 
     private val log = Log(javaClass)
 
@@ -165,13 +166,12 @@ class OcrCaptureActivity : CustomActivity(R.layout.ocr_capture), OcrDetectorProc
         }
     }
 
-    private val cardViews by lazy { DeckDetailCardViews(this) }
-
     private fun createScanDialog(deckId: String,
                                  card: Card,
                                  addToSideboard: Boolean) {
         val view = inflate(R.layout.activity_ocr_scan)
         val continueScan = view.find<CheckBox>(R.id.ocr_scan_continue_checkbox)
+        val cardViews by lazy { DeckDetailCardViews(app(),this, rootView, deckId.toInt()) }
         cardViews.display(view, card, 0)
         AlertDialog.Builder(this)
                 .setView(view)

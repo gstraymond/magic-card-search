@@ -2,6 +2,7 @@ package fr.gstraymond.ui.adapter
 
 import android.content.Context
 import android.view.View
+import fr.gstraymond.android.CustomApplication
 import fr.gstraymond.api.ui.view.DisplayableView
 import fr.gstraymond.db.json.JsonList
 import fr.gstraymond.models.DeckCard
@@ -17,7 +18,20 @@ abstract class CardViews(private val displayableViews: List<DisplayableView>) {
     }
 }
 
-class WishlistCardViews(context: Context,
+class WishlistCardViews(app: CustomApplication,
+                        context: Context,
+                        rootView: View,
+                        sharedViewCallbacks: ShareView.ShareViewCallbacks) :
+        CardViews(listOf(
+                TitleView(),
+                DescriptionView(context),
+                CastingCostView(context),
+                TypePTView(),
+                ShareView(app, context, rootView, null, sharedViewCallbacks),
+                CostView(context)
+        ))
+
+class FavoriteCardViews(context: Context,
                         cards: JsonList<Card>,
                         clickCallbacks: CardClickCallbacks) :
         CardViews(listOf(
@@ -42,16 +56,20 @@ class DeckCardViews(context: Context,
                 CostView(context)
         ))
 
-class DeckDetailCardViews(context: Context) : CardViews(listOf(
+class DeckDetailCardViews(app: CustomApplication,
+                          context: Context,
+                          rootView: View,
+                          deckId: Int) : CardViews(listOf(
         TitleView(),
         CastingCostView(context),
         FormatView(),
-        TypePTView()
+        TypePTView(),
+        ShareView(app, context, rootView, deckId, null)
 ))
 
-class DeckDetailCardDialogViews(context: Context,
-                          cards: JsonList<Card>,
-                          clickCallbacks: CardClickCallbacks) : CardViews(listOf(
+class ShareCardDialogViews(context: Context,
+                           cards: JsonList<Card>,
+                           clickCallbacks: CardClickCallbacks) : CardViews(listOf(
         TitleView(),
         CastingCostView(context),
         FormatView(),

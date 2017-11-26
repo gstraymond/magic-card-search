@@ -2,33 +2,25 @@ package fr.gstraymond.android.adapter
 
 import android.app.AlertDialog
 import android.content.Context
-import android.support.design.widget.Snackbar
 import android.support.v7.widget.AppCompatButton
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.*
-import com.magic.card.search.commons.log.Log
+import android.widget.TextView
 import fr.gstraymond.R
+import fr.gstraymond.android.CustomApplication
 import fr.gstraymond.android.adapter.DeckCardCallback.FROM.DECK
 import fr.gstraymond.android.adapter.DeckCardCallback.FROM.SB
-import fr.gstraymond.db.json.DeckCardListBuilder
-import fr.gstraymond.db.json.DeckList
-import fr.gstraymond.db.json.WishList
 import fr.gstraymond.models.DeckCard
 import fr.gstraymond.models.search.response.getLocalizedTitle
-import fr.gstraymond.ui.adapter.CardClickCallbacks
-import fr.gstraymond.ui.adapter.DeckDetailCardDialogViews
 import fr.gstraymond.ui.adapter.DeckDetailCardViews
 import fr.gstraymond.utils.*
 import java.util.*
 
-class DeckDetailCardsAdapter(private val context: Context,
+class DeckDetailCardsAdapter(private val app: CustomApplication,
+                             private val context: Context,
                              private val sideboard: Boolean,
-                             private val wishList: WishList,
-                             private val deckList: DeckList,
-                             private val cardListBuilder: DeckCardListBuilder,
                              private val rootView: View) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     var deckId: Int = 0
 
@@ -37,7 +29,7 @@ class DeckDetailCardsAdapter(private val context: Context,
     private lateinit var cards: List<DeckCard>
 
     fun updateDeckList() {
-        cards = cardListBuilder.build(deckId).all().filter { getMult(it) > 0 }.sortedWith(cardComparator)
+        cards = app.cardListBuilder.build(deckId).all().filter { getMult(it) > 0 }.sortedWith(cardComparator)
         notifyDataSetChanged()
     }
 
@@ -52,18 +44,13 @@ class DeckDetailCardsAdapter(private val context: Context,
         val deckCard = cards[position]
         val card = deckCard.card
 
-
-        val carcClickCallbacks = WishlistCardClickCallbacks(card, context, rootView)
-        DeckDetailCardViews(context).display(holder.itemView, card, position)
-        val cardDialogViews = DeckDetailCardDialogViews(context, wishList, carcClickCallbacks)
+        DeckDetailCardViews(app, context, rootView, deckId).display(holder.itemView, card, position)
 
         val mult = holder.itemView.find<AppCompatButton>(R.id.array_adapter_deck_card_mult)
         mult.supportBackgroundTintList = context.resources.colorStateList(R.color.colorPrimaryDark)
         mult.text = "${getMult(deckCard)}"
         mult.setOnClickListener {
             val view = context.inflate(R.layout.array_adapter_deck_card_mult)
-            cardDialogViews.display(view, card, 0)
-
             val deckCount = view.find<TextView>(R.id.array_adapter_deck_card_mult).apply {
                 text = deckCard.counts.deck.toString()
             }
@@ -85,39 +72,6 @@ class DeckDetailCardsAdapter(private val context: Context,
                         }
                     }
                 }
-            }
-
-            val otherDecks = deckList.filter { it.id != deckId }
-            val spinner = view.find<Spinner>(R.id.array_adapter_decks)
-            if (otherDecks.isNotEmpty()) {
-                spinner.visible()
-                spinner.adapter = ArrayAdapter(
-                        context,
-                        android.R.layout.simple_spinner_item,
-                        listOf(context.getString(R.string.add_card_to_deck)) + otherDecks.map { it.name }).apply {
-                    setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-                }
-                spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-                    override fun onNothingSelected(parent: AdapterView<*>?) = Unit
-
-                    override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
-                        if (position > 0) {
-                            val deck = otherDecks[position - 1]
-                            val otherCardList = cardListBuilder.build(deck.id)
-                            val otherDeckCard = DeckCard(card, Date().time, DeckCard.Counts(1, 0))
-                            val message = if (otherCardList.contains(otherDeckCard)) {
-                                String.format(context.resources.getString(R.string.already_in_deck), card.title, deck.name)
-                            } else {
-                                otherCardList.addOrRemove(otherDeckCard)
-                                String.format(context.resources.getString(R.string.added_to_deck), card.title, deck.name)
-                            }
-                            Snackbar.make(rootView, message, Snackbar.LENGTH_LONG).show()
-                        }
-                    }
-
-                }
-            } else {
-                spinner.gone()
             }
 
             AlertDialog.Builder(context)
