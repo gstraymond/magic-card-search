@@ -61,7 +61,7 @@ class OcrDetectorProcessor(private val graphicOverlay: GraphicOverlay<OcrGraphic
         if (cardDetector.isPaused()) return
 
         val items = detections.detectedItems
-        val textBlocks = (0..items.size() - 1).map { items.valueAt(it) }.filter { it.components.size == 1 }
+        val textBlocks = (0 until items.size()).map { items.valueAt(it) }.filter { it.components.size == 1 }
 
         if (textBlocks.size > 1) {
             textBlocks.filter {
@@ -75,8 +75,6 @@ class OcrDetectorProcessor(private val graphicOverlay: GraphicOverlay<OcrGraphic
                         .filter { it.boundingBox.bottom < detectedType.boundingBox.top }
                         .sortedBy { Math.abs(it.boundingBox.left - detectedType.boundingBox.left) }
                         .first()
-
-
 
                 listOf(detectedTitle, detectedType).map {
                     OcrGraphic(graphicOverlay, it)

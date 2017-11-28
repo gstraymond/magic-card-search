@@ -15,3 +15,15 @@ data class DeckLine(val card: Card,
                     val isSideboard: Boolean) : ImportResult() {
     fun id() = card.getId()
 }
+
+data class DeckCard(val card: Card,
+                    val cardTimestamp: Long,
+                    val counts: Counts) : ImportResult() {
+    fun id() = card.getId()
+
+    data class Counts(val deck: Int, val sideboard: Int)
+
+    fun setDeckCount(count: Int) = copy(counts = counts.copy(deck = count))
+    fun setSBCount(count: Int) = copy(counts = counts.copy(sideboard = count))
+    fun total() = counts.deck + counts.sideboard
+}

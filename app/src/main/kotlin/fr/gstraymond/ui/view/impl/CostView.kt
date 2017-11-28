@@ -15,16 +15,11 @@ class CostView(private val context: Context) : CommonDisplayableView<ImageView>(
     override fun display(view: ImageView, card: Card) = true
 
     override fun setValue(view: ImageView, card: Card, position: Int) {
-        val prices = card.publications
-                .map { it.price }
-                .filter { it > 0 }
-                .distinct()
-                .sorted()
-
+        val prices = card.publications.map { it.price }.filter { it > 0 }
         val color = when {
+            prices.any { it <= max1 } -> R.color.colorPrimaryDark
             prices.any { it > max1 && it <= max2 } -> R.color.colorPrimary
-            prices.any { it > max2 } -> R.color.colorAccent
-            else -> R.color.colorPrimaryDark
+            else -> R.color.colorAccent
         }
 
         view.setColorFilter(context.resources.color(color))

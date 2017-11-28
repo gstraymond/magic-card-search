@@ -16,12 +16,12 @@ import com.magic.card.search.commons.log.Log
 import fr.gstraymond.R
 import fr.gstraymond.android.CardDetailActivity
 import fr.gstraymond.android.CustomActivity
-import fr.gstraymond.models.DeckLine
+import fr.gstraymond.models.DeckCard
 import fr.gstraymond.models.search.response.Card
 import fr.gstraymond.ocr.ui.camera.CameraSource
 import fr.gstraymond.ocr.ui.camera.CameraSourcePreview
 import fr.gstraymond.ocr.ui.camera.GraphicOverlay
-import fr.gstraymond.ui.adapter.DeckDetailCardViews
+import fr.gstraymond.ui.adapter.SimpleCardViews
 import fr.gstraymond.utils.app
 import fr.gstraymond.utils.find
 import fr.gstraymond.utils.inflate
@@ -35,6 +35,7 @@ class OcrCaptureActivity : CustomActivity(R.layout.ocr_capture), OcrDetectorProc
     private var cameraSource: CameraSource? = null
     private val preview by lazy { find<CameraSourcePreview>(R.id.preview) }
     private val graphicOverlay by lazy { find<GraphicOverlay<OcrGraphic>>(R.id.graphicOverlay) }
+    private val rootView by lazy { findViewById(android.R.id.content) }
 
     private val log = Log(javaClass)
 
@@ -45,15 +46,18 @@ class OcrCaptureActivity : CustomActivity(R.layout.ocr_capture), OcrDetectorProc
         val AUTO_FOCUS = "AutoFocus"
         val USE_FLASH = "UseFlash"
         val DECK_ID = "DeckId"
+        val ADD_TO_SIDEBOARD = "AddToSideboard"
 
         fun getIntent(context: Context,
                       autoFocus: Boolean,
                       useFlash: Boolean,
-                      deckId: String? = null): Intent =
+                      deckId: String? = null,
+                      addToSideboard: Boolean = false): Intent =
                 Intent(context, OcrCaptureActivity::class.java).apply {
                     putExtra(AUTO_FOCUS, autoFocus)
                     putExtra(USE_FLASH, useFlash)
                     putExtra(DECK_ID, deckId)
+                    putExtra(ADD_TO_SIDEBOARD, addToSideboard)
                 }
     }
 
@@ -133,7 +137,7 @@ class OcrCaptureActivity : CustomActivity(R.layout.ocr_capture), OcrDetectorProc
 
         intent.getStringExtra(DECK_ID)?.let { deckId ->
             runOnUiThread {
-                createScanDialog(deckId, card)
+                createScanDialog(deckId, card, intent.getBooleanExtra(ADD_TO_SIDEBOARD, false))
             }
         } ?: startActivity {
             finish()
@@ -141,27 +145,39 @@ class OcrCaptureActivity : CustomActivity(R.layout.ocr_capture), OcrDetectorProc
         }
     }
 
-    private fun addCardToDeck(deckId: String, card: Card) {
+    private fun addCardToDeck(deckId: String,
+                              card: Card,
+                              addToSideboard: Boolean) {
         val cardList = app().cardListBuilder.build(deckId.toInt())
-        val newDeckLine = DeckLine(card, Date().time, 1, false)
+        val newDeckLine = DeckCard(
+                card,
+                Date().time,
+                if (addToSideboard) DeckCard.Counts(deck = 0, sideboard = 1)
+                else DeckCard.Counts(deck = 1, sideboard = 0)
+        )
         if (cardList.contains(newDeckLine)) {
             val deckLine = cardList.getByUid(newDeckLine.id())!!
-            cardList.update(deckLine.copy(mult = deckLine.mult + 1))
+            cardList.update(
+                    if (addToSideboard) deckLine.setSBCount(deckLine.counts.sideboard + 1)
+                    else deckLine.setDeckCount(deckLine.counts.deck + 1)
+            )
         } else {
             cardList.addOrRemove(newDeckLine)
         }
     }
 
-    private val cardViews by lazy { DeckDetailCardViews(this) }
+    private val cardViews by lazy { SimpleCardViews(this) }
 
-    private fun createScanDialog(deckId: String, card: Card) {
+    private fun createScanDialog(deckId: String,
+                                 card: Card,
+                                 addToSideboard: Boolean) {
         val view = inflate(R.layout.activity_ocr_scan)
         val continueScan = view.find<CheckBox>(R.id.ocr_scan_continue_checkbox)
         cardViews.display(view, card, 0)
         AlertDialog.Builder(this)
                 .setView(view)
                 .setPositiveButton("Add", { _, _ ->
-                    addCardToDeck(deckId, card)
+                    addCardToDeck(deckId, card, addToSideboard)
                     finishScan(continueScan.isChecked)
                 })
                 .setNegativeButton("Discard", { _, _ ->

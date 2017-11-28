@@ -12,7 +12,7 @@ import fr.gstraymond.R
 import fr.gstraymond.android.DataUpdater
 import fr.gstraymond.db.json.JsonList
 import fr.gstraymond.models.Deck
-import fr.gstraymond.models.DeckLine
+import fr.gstraymond.models.DeckCard
 import fr.gstraymond.models.search.response.Card
 import fr.gstraymond.models.search.response.getLocalizedTitle
 import fr.gstraymond.utils.inflate
@@ -43,8 +43,8 @@ class LinearCardArrayAdapter(private val view: View,
     }
 
     private val cardViews = data.cards?.run {
-        WishlistCardViews(context, this, FavoriteViewClickCallbacks())
-    } ?: DeckCardViews(context, data.deck!!.second, FavoriteViewClickCallbacks())
+        FavoriteCardViews(context, this, FavoriteViewClickCallbacks())
+    } ?: DeckCardViews(context, data.deck!!.second, FavoriteViewClickCallbacks(), dataUpdater.getCurrentSearch().addToSideboard)
 
     private inner class FavoriteViewClickCallbacks : CardClickCallbacks {
 
@@ -78,4 +78,4 @@ class LinearCardArrayAdapter(private val view: View,
 }
 
 data class CardArrayData(val cards: JsonList<Card>?,
-                         val deck: Pair<Deck, JsonList<DeckLine>>?)
+                         val deck: Pair<Deck, JsonList<DeckCard>>?)

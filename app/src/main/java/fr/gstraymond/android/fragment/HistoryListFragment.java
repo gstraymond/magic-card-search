@@ -77,6 +77,7 @@ public class HistoryListFragment extends CustomListFragment {
         if (deckId != null) {
             currentSearch.setDeckId(deckId);
         }
+        currentSearch.setAddToSideboard(getArguments().getBoolean(HistoryActivity.Companion.getADD_TO_SIDEBOARD_EXTRA()));
 
         Intent intent = CardListActivity.Companion.getIntent(getActivity(), currentSearch);
         startActivity(intent);

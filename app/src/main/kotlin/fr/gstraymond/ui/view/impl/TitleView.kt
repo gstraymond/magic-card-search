@@ -13,7 +13,7 @@ class TitleView :
         CommonDisplayableView<TextView>(R.id.array_adapter_text) {
 
     override fun setValue(view: TextView, card: Card, position: Int) {
-        val color = CardColorUtil.getColorId(card.colors, card.type)
+        val color = CardColorUtil.getColorId(card.colors, card.type, card.land ?: listOf())
         view.apply {
             text = Html.fromHtml("<b>${card.getLocalizedTitle(context)}</b>")
             setTextColor(context.resources.color(color))

@@ -15,6 +15,7 @@
     <string name="added_to_wishlist">%1$s ajouté à votre wishlist</string>
     <string name="removed_from_wishlist">%1$s supprimé de votre wishlist</string>
     <string name="added_to_deck">%1$s ajouté au deck ´%2$s´</string>
+    <string name="already_in_deck">%1$s déjà présent dans le deck ´%2$s´</string>
     <string name="removed_from_deck">%1$s supprimé du deck ´%2$s´</string>
 
     <string name="detail_menu_oracle">Texte</string>
@@ -125,7 +126,8 @@
     <string name="deckdetails_refresh_cancel">ANNULER</string>
     <string name="importing_deck">Import de %1$s</string>
     <string name="refreshing">Mise à jour…</string>
-    <string name="deck_tab_cards">Cartes</string>
+    <string name="deck_tab_cards">Deck (%1$s)</string>
+    <string name="deck_tab_sideboard">Sideboard (%1$s)</string>
     <string name="deck_tab_stats">Stats</string>
     <string name="loading">Recherche en cours…</string>
 
@@ -138,4 +140,8 @@
     <string name="deck_detail_ruling"><![CDATA[%1$s…<br><br>Appuyer pour voir %2$s règle(s) supplémentaire(s)]]></string>
     <string name="ocr_hint">Visez le titre et le type de la carte</string>
     <string name="gallery_mode">Mode gallerie</string>
+    <string name="add_card_to_deck">Ajouter cette carte au deck :</string>
+    <string name="close">Fermer</string>
+    <string name="mult_deck">Deck</string>
+    <string name="mult_sideboard">Sideboard</string>
 </resources>

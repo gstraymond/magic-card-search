@@ -236,8 +236,7 @@ class CameraSource() {
         focusMode = parameters.focusMode
 
         if (flashMode != null) {
-            if (parameters.supportedFlashModes.contains(
-                    flashMode)) {
+            if (parameters.supportedFlashModes?.contains(flashMode) == true) {
                 parameters.flashMode = flashMode
             } else {
                 log.i("Camera flash mode: $flashMode is not supported on this device.")

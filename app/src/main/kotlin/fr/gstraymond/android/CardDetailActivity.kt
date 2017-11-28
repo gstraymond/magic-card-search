@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.support.design.widget.Snackbar
 import android.support.v7.widget.Toolbar
 import android.view.View
 import android.widget.TextView
@@ -14,8 +13,8 @@ import fr.gstraymond.analytics.Tracker
 import fr.gstraymond.android.fragment.CardDetailFragment
 import fr.gstraymond.models.search.response.Card
 import fr.gstraymond.models.search.response.getLocalizedTitle
-import fr.gstraymond.ui.adapter.CardClickCallbacks
 import fr.gstraymond.ui.adapter.CardDetailViews
+import fr.gstraymond.utils.WishlistCardClickCallbacks
 import fr.gstraymond.utils.app
 import fr.gstraymond.utils.find
 import fr.gstraymond.utils.startActivity
@@ -34,25 +33,7 @@ class CardDetailActivity : CardCommonActivity(R.layout.activity_card_detail),
     private val picsView by lazy { find<TextView>(R.id.card_detail_pics) }
     private val ebayView by lazy { find<TextView>(R.id.card_detail_ebay) }
     private val favoriteView by lazy { CardDetailViews(this, app().wishList, cardClickCallbacks) }
-
-    private val cardClickCallbacks = object : CardClickCallbacks {
-        override fun itemAdded(position: Int) {
-            showMessage(getMessage(add = true, cardName = card.getLocalizedTitle(this@CardDetailActivity)))
-        }
-
-        override fun itemRemoved(position: Int) {
-            showMessage(getMessage(add = false, cardName = card.getLocalizedTitle(this@CardDetailActivity)))
-        }
-
-        private fun getMessage(add: Boolean, cardName: String): String =
-                if (add) String.format(resources.getString(R.string.added_to_wishlist), cardName)
-                else String.format(resources.getString(R.string.removed_from_wishlist), cardName)
-
-
-        private fun showMessage(message: String) {
-            Snackbar.make(rooView, message, Snackbar.LENGTH_LONG).show()
-        }
-    }
+    private val cardClickCallbacks by lazy { WishlistCardClickCallbacks(card, this, rooView) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

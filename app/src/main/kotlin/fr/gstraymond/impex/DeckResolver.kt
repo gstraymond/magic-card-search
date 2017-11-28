@@ -1,12 +1,13 @@
 package fr.gstraymond.impex
 
 import fr.gstraymond.models.CardNotImported
+import fr.gstraymond.models.DeckCard
 import fr.gstraymond.models.DeckLine
 import fr.gstraymond.models.ImportResult
 import fr.gstraymond.network.ElasticSearchService
 import java.util.*
 
-class DeckResolver(val searchService: ElasticSearchService) {
+class DeckResolver(private val searchService: ElasticSearchService) {
 
     fun resolve(deck: ImportedDeck, deckImporterTask: DeckImporterTask): List<ImportResult> {
         return deck.lines

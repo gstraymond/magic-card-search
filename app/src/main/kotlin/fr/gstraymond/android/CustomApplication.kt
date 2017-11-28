@@ -5,10 +5,7 @@ import com.magic.card.search.commons.json.MapperUtil
 import com.magic.card.search.commons.log.Log
 import fr.gstraymond.biz.DeckManager
 import fr.gstraymond.biz.ElasticSearchClient
-import fr.gstraymond.db.json.CardListBuilder
-import fr.gstraymond.db.json.DeckList
-import fr.gstraymond.db.json.HistoryList
-import fr.gstraymond.db.json.WishList
+import fr.gstraymond.db.json.*
 import fr.gstraymond.impex.DeckResolver
 import fr.gstraymond.models.search.request.Request
 import fr.gstraymond.network.ElasticSearchApi
@@ -40,7 +37,7 @@ class CustomApplication : BaseApplication() {
     val historyList by lazy { HistoryList(this, objectMapper) }
     val wishList by lazy { WishList(this, objectMapper) }
     val deckList by lazy { DeckList(this, objectMapper) }
-    val cardListBuilder by lazy { CardListBuilder(this, objectMapper, deckList) }
+    val cardListBuilder by lazy { DeckCardListBuilder(this, objectMapper, deckList) }
     val deckResolver by lazy { DeckResolver(searchService) }
     val deckManager by lazy { DeckManager(deckList, cardListBuilder) }
 
@@ -55,6 +52,9 @@ class CustomApplication : BaseApplication() {
         historyList.migrate()
         wishList.migrate()
         registerActivityLifecycleCallbacks(LogActivityLifecycleCallbacks())
+
+        // migrate
+        CardListMigrator.migrate(this, objectMapper, deckList)
     }
 
     fun refreshLists() {

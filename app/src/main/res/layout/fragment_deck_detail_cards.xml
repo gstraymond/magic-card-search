@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:fab="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -16,52 +15,11 @@
         android:background="@color/colorPrimaryDark"
         android:padding="8dp" />
 
-    <RelativeLayout
-        android:id="@+id/deck_detail_cards_frame"
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/deck_detail_cards_recyclerview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/deck_detail_cards_not_imported">
-
-        <RelativeLayout
-            android:id="@+id/deck_detail_cards_block"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingBottom="16dp"
-            android:paddingLeft="8dp"
-            android:paddingRight="8dp"
-            android:paddingTop="16dp">
-
-            <TextView
-                android:id="@+id/deck_detail_cards_quantity"
-                style="@android:style/TextAppearance.Medium"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/quantity" />
-
-            <TextView
-                android:id="@+id/deck_detail_cards_total"
-                style="@android:style/TextAppearance.Medium"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                tools:text="60 / 15" />
-
-            <TextView
-                android:id="@+id/deck_detail_cards_sideboard"
-                style="@android:style/TextAppearance.Medium"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:text="@string/sideboard" />
-
-        </RelativeLayout>
-
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/deck_detail_cards_recyclerview"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@id/deck_detail_cards_block" />
-    </RelativeLayout>
+        android:layout_below="@id/deck_detail_cards_not_imported" />
 
     <TextView
         android:id="@+id/deck_detail_cards_empty"
