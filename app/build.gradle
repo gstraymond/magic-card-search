@@ -33,8 +33,8 @@ android {
         applicationId "mtg.magic.search.deck.builder"
         minSdkVersion 14
         targetSdkVersion 27
-        versionCode 58
-        versionName "3.0.1"
+        versionCode 59
+        versionName "3.1.0"
 
         javaCompileOptions {
             annotationProcessorOptions {
