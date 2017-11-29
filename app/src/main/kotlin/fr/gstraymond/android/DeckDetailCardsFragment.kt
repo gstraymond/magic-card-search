@@ -135,6 +135,7 @@ class DeckDetailCardsFragment : Fragment(), DeckCardCallback {
 
     override fun onResume() {
         super.onResume()
+        cardList = activity.app().cardListBuilder.build(deckId.toInt())
 
         floatingMenu.close(false)
         val deck = deckList.getByUid(deckId)
@@ -157,7 +158,6 @@ class DeckDetailCardsFragment : Fragment(), DeckCardCallback {
             }
         }
 
-        cardList = activity.app().cardListBuilder.build(deckId.toInt())
         updateTotal()
         deckDetailAdapter.updateDeckList()
     }
