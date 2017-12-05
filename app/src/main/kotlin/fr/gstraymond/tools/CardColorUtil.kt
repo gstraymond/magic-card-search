@@ -21,7 +21,7 @@ object CardColorUtil {
             R.color.blue
         else if (colors.contains("Uncolored") && type.contains("Artifact"))
             R.color.uncolored
-        else if (type?.contains("Land")) {
+        else if (type.contains("Land")) {
             val produce = land.filter { it.startsWith("Produce") }.map { it.split(" ")[1] }
             when {
                 produce.size > 1 -> R.color.gold
