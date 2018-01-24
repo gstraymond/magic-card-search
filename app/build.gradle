@@ -113,6 +113,6 @@ dependencies {
     compile "com.nbsp:library:$fileChooserVersion"
     compile ("net.rdrei.android.dirchooser:library:$dirChooserVersion@aar") { transitive = true }
     compile "com.google.android.gms:play-services-vision:$gmsVisionVersion"
-    kapt "com.google.auto.value:auto-value:1.1"
+    kapt 'com.google.auto.value:auto-value:1.1'
     testCompile 'junit:junit:4.12'
 }

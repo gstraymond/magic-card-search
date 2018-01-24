@@ -11,6 +11,7 @@
     <string name="list_menu_search">Search</string>
     <string name="list_menu_help">Help !</string>
     <string name="list_menu_history">Recent search</string>
+    <string name="list_menu_rules">Rules</string>
     <string name="list_menu_deck">Go back to deck</string>
     <string name="added_to_wishlist">%1$s added to your wishlist</string>
     <string name="removed_from_wishlist">%1$s removed from wishlist</string>
@@ -162,4 +163,8 @@
     <string name="close">Close</string>
     <string name="mult_deck">Deck</string>
     <string name="mult_sideboard">Sideboard</string>
+    <string name="rules_empty_text">No rules found, check your internet connection and restart the application</string>
+    <string name="rules_title">Rules</string>
+    <string name="top">Top</string>
+    <string name="back">Back</string>
 </resources>

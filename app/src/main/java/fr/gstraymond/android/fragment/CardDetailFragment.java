@@ -18,7 +18,6 @@ import fr.gstraymond.android.CustomApplication;
 import fr.gstraymond.models.Deck;
 import fr.gstraymond.models.search.response.Card;
 import fr.gstraymond.ui.adapter.card.detail.CardDetailAdapter;
-import fr.gstraymond.utils.CardIdUtilsKt;
 
 public class CardDetailFragment extends CustomListFragment {
 
@@ -51,12 +50,8 @@ public class CardDetailFragment extends CustomListFragment {
         CustomActivity activity = (CustomActivity) getActivity();
         final CustomApplication customApplication = (CustomApplication) activity.getApplication();
 
-        String id = CardIdUtilsKt.getId(card);
-        List<String> listIds = customApplication.getListsCardId().get(id);
-
         objects = new ArrayList<>();
         objects.add(card);
-        if (listIds != null) objects.addAll(listIds);
         objects.addAll(card.getPublications());
 
         ListAdapter arrayAdapter = new CardDetailAdapter(
