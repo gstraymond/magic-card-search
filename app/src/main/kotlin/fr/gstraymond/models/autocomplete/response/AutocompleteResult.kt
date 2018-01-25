@@ -17,4 +17,5 @@ data class Option(val text: String,
 
 data class Payload(val stdEditionCode: String?,
                    val colors: List<String>,
-                   val type: String)
+                   val type: String,
+                   val land: List<String>)

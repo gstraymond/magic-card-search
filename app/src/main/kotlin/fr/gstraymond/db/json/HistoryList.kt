@@ -8,7 +8,7 @@ import fr.gstraymond.biz.SearchOptions
 import fr.gstraymond.models.History
 import java.util.*
 
-class HistoryList(private val context: Context,
+class HistoryList(context: Context,
                   moshi: Moshi) : JsonList<History>(
         context,
         MapperUtil.fromType(moshi, History::class.java),
@@ -31,20 +31,5 @@ class HistoryList(private val context: Context,
         getByUid(history.uid())?.apply { isFavorite = add }
         Tracker.historyAddRemoveFav(add)
         save(elems)
-    }
-
-    private val mapper = MapperUtil.fromCollectionType(moshi, History::class.java)
-
-    fun migrate() {
-        try {
-            val file = "json_history"
-            if (context.fileList().contains(file)) {
-                val json = context.openFileInput(file).bufferedReader().use { it.readText() }
-                save(mapper.read(json).sortedBy { it.date })
-                context.deleteFile(file)
-            }
-        } catch (e: Exception) {
-            log.e("migrate", e)
-        }
     }
 }

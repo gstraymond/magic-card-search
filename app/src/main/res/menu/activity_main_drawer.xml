@@ -16,6 +16,10 @@
         </menu>
     </item>
     <item
+        android:id="@+id/menu_rules"
+        android:icon="@drawable/ic_lightbulb_outline_white_48dp"
+        android:title="@string/list_menu_rules" />
+    <item
         android:id="@+id/menu_searches"
         android:icon="@drawable/ic_history_white_48dp"
         android:title="@string/list_menu_history" />

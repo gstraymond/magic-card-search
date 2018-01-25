@@ -31,7 +31,7 @@ class OcrDetectorProcessor(private val graphicOverlay: GraphicOverlay<OcrGraphic
             "terrain" to "land",
             "invoquer" to "creature")
 
-    private val queryTemplate = """
+    private fun queryTemplate(query: String, type: String) = """
 {
   "query": {
     "filtered": {
@@ -41,13 +41,13 @@ class OcrDetectorProcessor(private val graphicOverlay: GraphicOverlay<OcrGraphic
             "title",
             "frenchTitle"
           ],
-          "query": "QUERY_ARG",
+          "query": "$query",
           "fuzziness": "AUTO"
         }
       },
       "filter": {
         "term": {
-          "type": "TYPE_ARG"
+          "type": "$type"
         }
       }
     }
@@ -70,35 +70,37 @@ class OcrDetectorProcessor(private val graphicOverlay: GraphicOverlay<OcrGraphic
                 it.boundingBox.top
             }?.let { detectedType ->
                 // title is above type / title starts to the same left
-                val detectedTitle = textBlocks
+                textBlocks
                         .filterNot { it == detectedType }
                         .filter { it.boundingBox.bottom < detectedType.boundingBox.top }
                         .sortedBy { Math.abs(it.boundingBox.left - detectedType.boundingBox.left) }
-                        .first()
+                        .firstOrNull()
+                        ?.let { detectedTitle ->
 
-                listOf(detectedTitle, detectedType).map {
-                    OcrGraphic(graphicOverlay, it)
-                }.forEach {
-                    graphicOverlay.add(it)
-                }
+                            listOf(detectedTitle, detectedType).map {
+                                OcrGraphic(graphicOverlay, it)
+                            }.forEach {
+                                graphicOverlay.add(it)
+                            }
 
-                val normTypes = normTypes(detectedType)
-                val writtenType = expectedTypes.find { normTypes.contains(it) }
-                val normalizedType = convertedTypes[writtenType!!] ?: writtenType
+                            val normTypes = normTypes(detectedType)
+                            val writtenType = expectedTypes.find { normTypes.contains(it) }
+                            val normalizedType = convertedTypes[writtenType!!] ?: writtenType
 
-                val trimmedTitle = detectedTitle.value.trim()
-                val result = searchService.search(queryTemplate.replace("QUERY_ARG", trimmedTitle).replace("TYPE_ARG", normalizedType))
-                result?.elem?.hits?.hits?.map {
-                    it to Math.min(
-                            it._source.title.levenshtein(trimmedTitle),
-                            it._source.frenchTitle?.levenshtein(trimmedTitle) ?: Int.MAX_VALUE)
-                }?.filter {
-                    it.second < 5
-                }?.minBy {
-                    it.second
-                }?.let {
-                    cardDetector.onCardDetected(it.first._source)
-                }
+                            val trimmedTitle = detectedTitle.value.trim()
+                            val result = searchService.search(queryTemplate(trimmedTitle, normalizedType))
+                            result?.elem?.hits?.hits?.map {
+                                it to Math.min(
+                                        it._source.title.levenshtein(trimmedTitle),
+                                        it._source.frenchTitle?.levenshtein(trimmedTitle) ?: Int.MAX_VALUE)
+                            }?.filter {
+                                it.second < 5
+                            }?.minBy {
+                                it.second
+                            }?.let {
+                                cardDetector.onCardDetected(it.first._source)
+                            }
+                        }
             }
         }
     }

@@ -201,6 +201,9 @@ class CardListActivity : CustomActivity(R.layout.activity_card_list),
                         R.id.menu_searches -> startActivity {
                             HistoryActivity.getIntent(this)
                         }
+                        R.id.menu_rules -> startActivity {
+                            RulesActivity.getIntent(this)
+                        }
                         R.id.menu_changelog -> {
                             drawerLayout.closeDrawers()
                             ChangeLog(this).fullLogDialog.show()

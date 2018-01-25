@@ -18,7 +18,6 @@ class CardDetailAdapter(context: Context,
 
     private val cardView = CardView(context, callbacks)
     private val publicationView = PublicationView(context)
-    private val listView = ListView(context, callbacks)
 
     interface Callbacks {
         fun onImageClick(position: Int)
@@ -26,12 +25,11 @@ class CardDetailAdapter(context: Context,
         fun getDeck(deckId: String): Deck?
     }
 
-    enum class ItemTypes { CARD, PUBLICATION, DECK }
+    enum class ItemTypes { CARD, PUBLICATION }
 
     override fun getItemViewType(position: Int) = when (getItem(position)) {
         is Card -> CARD
-        is Publication -> PUBLICATION
-        else -> DECK
+        else -> PUBLICATION
     }.ordinal
 
     override fun getViewTypeCount() = values().size
@@ -39,8 +37,7 @@ class CardDetailAdapter(context: Context,
     override fun getView(position: Int, convertView: View?, parent: ViewGroup) = getItem(position).run {
         when (this) {
             is Card -> cardView.getView(this, convertView, parent)
-            is Publication -> publicationView.getView(this, convertView, parent)
-            else -> listView.getView(this as String, convertView, parent)
+            else -> publicationView.getView(this as Publication, convertView, parent)
         }
     }
 }

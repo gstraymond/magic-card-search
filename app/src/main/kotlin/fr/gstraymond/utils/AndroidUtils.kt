@@ -25,31 +25,31 @@ fun View.findView(id: Int): View = findViewById(id)
 
 fun Activity.findView(id: Int): View = findViewById(id)
 
-fun View.gone(): Unit {
+fun View.gone() {
     visibility = GONE
 }
 
-fun View.gone(id: Int): Unit {
+fun View.gone(id: Int) {
     findView(id).gone()
 }
 
-fun View.visible(): Unit {
+fun View.visible() {
     visibility = VISIBLE
 }
 
-fun View.visible(id: Int): Unit {
+fun View.visible(id: Int) {
     findView(id).visible()
 }
 
-fun View.invisible(): Unit {
+fun View.invisible() {
     visibility = INVISIBLE
 }
 
-fun Activity.gone(id: Int): Unit {
+fun Activity.gone(id: Int) {
     findView(id).visibility = GONE
 }
 
-fun Activity.visible(id: Int): Unit {
+fun Activity.visible(id: Int) {
     findView(id).visibility = VISIBLE
 }
 

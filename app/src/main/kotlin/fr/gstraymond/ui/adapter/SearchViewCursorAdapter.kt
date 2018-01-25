@@ -119,7 +119,7 @@ class SearchViewCursorAdapter private constructor(context: Context,
         private val FIELD_TYPE_CARD = 2
 
         fun empty(context: Context): SearchViewCursorAdapter {
-            return SearchViewCursorAdapter(context, convert(ArrayList<Option>()), 0)
+            return SearchViewCursorAdapter(context, convert(ArrayList()), 0)
         }
 
         private fun convert(data: List<Option>): Cursor {
@@ -145,7 +145,7 @@ class SearchViewCursorAdapter private constructor(context: Context,
                         editionCode = stdEditionCode
                     } else {
                         type = FIELD_TYPE_CARD
-                        cardColorId = CardColorUtil.getColorId(colors ?: listOf(), this.type ?: "", listOf())
+                        cardColorId = CardColorUtil.getColorId(colors ?: listOf(), this.type ?: "", land ?: listOf())
                         cardType = this.type
                     }
                 }

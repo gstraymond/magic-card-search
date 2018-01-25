@@ -10,28 +10,37 @@ import java.io.FileOutputStream
 abstract class JsonList<A>(private val context: Context,
                            private val mapperUtil: MapperUtil<A>,
                            listPrefix: String = "list",
-                           listName: String) : MemoryUidList<A>() {
+                           listName: String,
+                           loadOnInit: Boolean = true) : MemoryUidList<A>() {
 
-    private val listName = "${listPrefix}_$listName"
+    protected val listName = "${listPrefix}_$listName"
 
-    override val elems = load()
-    override val index = loadIndex()
+    override val elems: MutableList<A> = mutableListOf()
+    override val index: MutableMap<String, A> = mutableMapOf()
 
-    private fun loadIndex() =
-            mutableMapOf(*(elems.map { it.uid() to it }.toTypedArray()))
+    init {
+        if (loadOnInit) init()
+    }
 
-    private fun load(): MutableList<A> = try {
-        mutableListOf<A>().apply {
-            context.openFileInput(listName).bufferedReader().useLines {
-                it.forEach {
-                    mapperUtil.read(it)?.let { add(it) }
-                }
-            }
-        }
-    } catch (e: FileNotFoundException) {
-        log.w("get: %s", e)
-        //save(listOf())
-        mutableListOf()
+    protected fun init() {
+        elems.addAll(
+                try {
+                    mutableListOf<A>().apply {
+                        context.openFileInput(listName).bufferedReader().useLines {
+                            it.forEach {
+                                mapperUtil.read(it)?.let { add(it) }
+                            }
+                        }
+                    }
+                } catch (e: FileNotFoundException) {
+                    log.w("get: %s", e)
+                    //save(listOf())
+                    mutableListOf<A>()
+                })
+
+        index.putAll(
+                mutableMapOf(*(elems.map { it.uid() to it }.toTypedArray()))
+        )
     }
 
     override fun save(elements: List<A>) {

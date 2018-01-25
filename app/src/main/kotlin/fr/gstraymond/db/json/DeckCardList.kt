@@ -5,7 +5,6 @@ import com.magic.card.search.commons.json.MapperUtil
 import com.squareup.moshi.Moshi
 import fr.gstraymond.biz.DeckStats
 import fr.gstraymond.models.DeckCard
-import fr.gstraymond.models.DeckLine
 
 class DeckCardList(context: Context,
                    moshi: Moshi,

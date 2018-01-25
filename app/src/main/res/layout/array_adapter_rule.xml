@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:foreground="?android:attr/selectableItemBackground"
+    android:paddingLeft="8dp"
+    android:paddingRight="8dp">
+
+    <TextView
+        android:id="@+id/array_adapter_rule_id"
+        android:layout_width="72dp"
+        android:layout_height="wrap_content"
+        android:gravity="right"
+        android:paddingRight="8dp"
+        tools:text="702.104f" />
+
+    <TextView
+        android:id="@+id/array_adapter_rule_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/array_adapter_rule_id"
+        android:clickable="true"
+        android:focusable="true"
+        tools:text="foo" />
+
+</RelativeLayout>

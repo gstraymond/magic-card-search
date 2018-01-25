@@ -11,6 +11,7 @@
     <string name="list_menu_search">Recherche</string>
     <string name="list_menu_help">A l´aide !</string>
     <string name="list_menu_history">Recherches récentes</string>
+    <string name="list_menu_rules">Régles</string>
     <string name="list_menu_deck">Retour au deck</string>
     <string name="added_to_wishlist">%1$s ajouté à votre wishlist</string>
     <string name="removed_from_wishlist">%1$s supprimé de votre wishlist</string>
@@ -144,4 +145,8 @@
     <string name="close">Fermer</string>
     <string name="mult_deck">Deck</string>
     <string name="mult_sideboard">Sideboard</string>
+    <string name="rules_empty_text">Aucune règles téléchargées, vérifier votre connexion internet et redémarre l\'application.</string>
+    <string name="rules_title">Règles</string>
+    <string name="top">Haut</string>
+    <string name="back">Précèdent</string>
 </resources>

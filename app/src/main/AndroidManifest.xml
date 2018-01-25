@@ -145,6 +145,15 @@
             android:name=".ocr.OcrCaptureActivity"
             android:theme="@style/AppTheme.NoActionBar" />
 
+        <activity
+            android:name=".android.RulesActivity"
+            android:parentActivityName=".android.CardListActivity"
+            android:theme="@style/AppTheme">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".android.CardListActivity" />
+        </activity>
+
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="f5b7e9047975b71a4f542065a3016e1fbcab379f" />
