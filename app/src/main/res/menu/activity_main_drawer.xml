@@ -29,7 +29,6 @@
         android:title="@string/changelog_title" />
     <item
         android:id="@+id/menu_gallery_mode"
-        android:icon="@android:drawable/checkbox_on_background"
         android:title="@string/gallery_mode"
         app:actionLayout="@layout/widget_switch" />
 </menu>
