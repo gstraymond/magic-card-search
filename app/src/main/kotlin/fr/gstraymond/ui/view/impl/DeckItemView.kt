@@ -8,7 +8,6 @@ import fr.gstraymond.models.search.response.Card
 import fr.gstraymond.ui.adapter.CardClickCallbacks
 import fr.gstraymond.utils.colorStateList
 import fr.gstraymond.utils.drawable
-import java.util.*
 
 class DeckItemView(cards: JsonList<DeckCard>,
                    clickCallbacks: CardClickCallbacks,
@@ -23,9 +22,8 @@ class DeckItemView(cards: JsonList<DeckCard>,
         "deck") {
 
     override fun getElem(card: Card) = DeckCard(
-            card,
-            Date().time,
-            if (addToSideboard) DeckCard.Counts(deck = 0, sideboard = 1)
+            card = card,
+            counts = if (addToSideboard) DeckCard.Counts(deck = 0, sideboard = 1)
             else DeckCard.Counts(deck = 1, sideboard = 0)
     )
 }

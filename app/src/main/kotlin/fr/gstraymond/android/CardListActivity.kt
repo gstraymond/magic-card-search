@@ -22,9 +22,11 @@ import fr.gstraymond.biz.AutocompleteProcessor
 import fr.gstraymond.biz.AutocompleteProcessorBuilder
 import fr.gstraymond.biz.SearchOptions
 import fr.gstraymond.biz.SearchProcessorBuilder
+import fr.gstraymond.models.DeckCard
 import fr.gstraymond.models.autocomplete.response.Option
 import fr.gstraymond.models.search.response.Card
 import fr.gstraymond.models.search.response.SearchResult
+import fr.gstraymond.models.search.response.getLocalizedTitle
 import fr.gstraymond.ocr.OcrCaptureActivity
 import fr.gstraymond.tools.VersionUtils
 import fr.gstraymond.ui.EndScrollListener
@@ -38,7 +40,7 @@ class CardListActivity : CustomActivity(R.layout.activity_card_list),
         AutocompleteProcessor.Callbacks {
 
     companion object {
-        val SEARCH_QUERY = "searchQuery"
+        const val SEARCH_QUERY = "searchQuery"
 
         fun getIntent(context: Context, searchOptions: SearchOptions): Intent =
                 Intent(context, CardListActivity::class.java).apply {
@@ -74,9 +76,38 @@ class CardListActivity : CustomActivity(R.layout.activity_card_list),
     private val REQUEST_CAMERA_CODE = 1232
 
     private val clickCallback = object : CardArrayAdapter.ClickCallbacks {
+
+        private val context = this@CardListActivity
+
         override fun cardClicked(card: Card) = startActivity {
-            CardDetailActivity.getIntent(this@CardListActivity, card)
+            CardDetailActivity.getIntent(context, card)
         }
+
+        override fun cardLongClicked(card: Card): Boolean {
+            log.w("cardLongClicked ${card.title}")
+            val title = card.getLocalizedTitle(context)
+            val message = presenter.getCurrentSearch().deckId?.run {
+                val deck = app().deckList.getByUid(this)!!
+                val add = app().cardListBuilder.build(toInt()).addOrRemove(DeckCard(card))
+                if (add) String.format(resources.getString(R.string.added_to_deck), title, deck.name)
+                else String.format(resources.getString(R.string.removed_from_deck), title, deck.name)
+            } ?: {
+                val add = app().wishList.addOrRemove(card)
+                val message = if (add) String.format(resources.getString(R.string.added_to_wishlist), title)
+                else String.format(resources.getString(R.string.removed_from_wishlist), title)
+                updateMenuWishlistSize()
+                message
+            }()
+            showMessage(message)
+            return true
+        }
+    }
+
+    private fun showMessage(message: String) {
+        presenter.getLoadingSnackbar()?.dismiss()
+        val snackbar = Snackbar.make(rootView, message, Snackbar.LENGTH_LONG)
+        snackbar.show()
+        presenter.setLoadingSnackbar(snackbar)
     }
 
     private val cardClickCallback = object : CardClickCallbacks {
@@ -122,6 +153,7 @@ class CardListActivity : CustomActivity(R.layout.activity_card_list),
             it.filterTextView = filterTextView
             it.resetTextView = resetTextView
             it.emptyTextView = emptyTextView
+            it.longPressTextView = find(R.id.text_long_press)
             it.rootView = rootView
         }
 
@@ -238,7 +270,7 @@ class CardListActivity : CustomActivity(R.layout.activity_card_list),
 
     private fun setArrayAdapter() {
         cardArrayAdapter = when (prefs.galleryMode) {
-            true -> GridCardArrayAdapter(this, clickCallback, presenter)
+            true -> GridCardArrayAdapter(this, clickCallback, presenter, cardArrayData)
             else -> LinearCardArrayAdapter(rootView, cardArrayData, clickCallback, cardClickCallback, presenter)
         }
         recyclerView.adapter = cardArrayAdapter

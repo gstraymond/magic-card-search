@@ -27,7 +27,6 @@ import fr.gstraymond.utils.find
 import fr.gstraymond.utils.inflate
 import fr.gstraymond.utils.startActivity
 import java.io.IOException
-import java.util.*
 import java.util.concurrent.atomic.AtomicBoolean
 
 class OcrCaptureActivity : CustomActivity(R.layout.ocr_capture), OcrDetectorProcessor.CardDetector {
@@ -35,18 +34,17 @@ class OcrCaptureActivity : CustomActivity(R.layout.ocr_capture), OcrDetectorProc
     private var cameraSource: CameraSource? = null
     private val preview by lazy { find<CameraSourcePreview>(R.id.preview) }
     private val graphicOverlay by lazy { find<GraphicOverlay<OcrGraphic>>(R.id.graphicOverlay) }
-    private val rootView by lazy { findViewById(android.R.id.content) }
 
     private val log = Log(javaClass)
 
     private val pause = AtomicBoolean(false)
 
     companion object {
-        private val RC_HANDLE_GMS = 9001
-        val AUTO_FOCUS = "AutoFocus"
-        val USE_FLASH = "UseFlash"
-        val DECK_ID = "DeckId"
-        val ADD_TO_SIDEBOARD = "AddToSideboard"
+        private const val RC_HANDLE_GMS = 9001
+        const val AUTO_FOCUS = "AutoFocus"
+        const val USE_FLASH = "UseFlash"
+        const val DECK_ID = "DeckId"
+        const val ADD_TO_SIDEBOARD = "AddToSideboard"
 
         fun getIntent(context: Context,
                       autoFocus: Boolean,
@@ -150,9 +148,8 @@ class OcrCaptureActivity : CustomActivity(R.layout.ocr_capture), OcrDetectorProc
                               addToSideboard: Boolean) {
         val cardList = app().cardListBuilder.build(deckId.toInt())
         val newDeckLine = DeckCard(
-                card,
-                Date().time,
-                if (addToSideboard) DeckCard.Counts(deck = 0, sideboard = 1)
+                card = card,
+                counts = if (addToSideboard) DeckCard.Counts(deck = 0, sideboard = 1)
                 else DeckCard.Counts(deck = 1, sideboard = 0)
         )
         if (cardList.contains(newDeckLine)) {

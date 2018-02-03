@@ -29,15 +29,15 @@ import net.rdrei.android.dirchooser.DirectoryChooserConfig
 class DeckDetailActivity : CustomActivity(R.layout.activity_deck_detail) {
 
     companion object {
-        val DECK_EXTRA = "deck"
+        const val DECK_EXTRA = "deck"
 
         fun getIntent(context: Context, deckId: String) =
                 Intent(context, DeckDetailActivity::class.java).apply {
                     putExtra(DECK_EXTRA, deckId)
                 }
 
-        private val REQUEST_STORAGE_CODE = 2000
-        private val DIR_PICKER_CODE = 2001
+        private const val REQUEST_STORAGE_CODE = 2000
+        private const val DIR_PICKER_CODE = 2001
     }
 
     private lateinit var deckId: String
@@ -98,7 +98,7 @@ class DeckDetailActivity : CustomActivity(R.layout.activity_deck_detail) {
     private val deckCardCallback = object : DeckCardCallback {
         override fun multChanged(deckCard: DeckCard, from: DeckCardCallback.FROM, deck: Int, sideboard: Int) = setTabsText()
 
-        override fun cardClick(deckCard: DeckCard) = Unit
+        override fun cardClick(deckCard: DeckCard) {}
     }
 
     private fun setTabsText() {

@@ -149,4 +149,6 @@
     <string name="rules_title">Règles</string>
     <string name="top">Haut</string>
     <string name="back">Précèdent</string>
+    <string name="long_press_deck_editor">Long press to add to your deck</string>
+    <string name="long_press_wishlist">Long press to add to your wishlist</string>
 </resources>

@@ -99,8 +99,10 @@ data class SearchOptions(var query: String = QUERY_ALL,
         this.sort = sort
     }
 
+    fun isStartSearchOptions() = this == START_SEARCH_OPTIONS().copy(deckId = deckId)
+
     companion object {
-        val QUERY_ALL = "*"
+        const val QUERY_ALL = "*"
 
         fun START_SEARCH_OPTIONS() = SearchOptions(
                 size = 1,

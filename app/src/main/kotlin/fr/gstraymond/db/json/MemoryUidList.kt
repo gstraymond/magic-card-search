@@ -7,8 +7,8 @@ abstract class MemoryUidList<A> : UidList<A> {
 
     protected val log = Log(javaClass)
 
-    abstract protected val elems: MutableList<A>
-    abstract protected val index: MutableMap<String, A>
+    protected abstract val elems: MutableList<A>
+    protected abstract val index: MutableMap<String, A>
 
     override fun contains(elem: A) = index.contains(elem.uid())
 

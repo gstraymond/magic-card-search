@@ -86,7 +86,7 @@ class DeckDetailCardsFragment : Fragment(), DeckCardCallback {
 
         fabAdd.setOnClickListener {
             startActivity {
-                CardListActivity.getIntent(activity, SearchOptions(deckId = deckId, size = 0, addToSideboard = sideboard))
+                CardListActivity.getIntent(activity, SearchOptions.START_SEARCH_OPTIONS().copy(deckId = deckId))
             }
         }
 

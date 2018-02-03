@@ -8,10 +8,10 @@ import android.widget.ExpandableListView
 import android.widget.TextView
 import fr.gstraymond.R
 import fr.gstraymond.android.DataUpdater
+import fr.gstraymond.android.prefs
 import fr.gstraymond.biz.SearchOptions
 import fr.gstraymond.biz.SearchProcessorBuilder
-import fr.gstraymond.constants.FacetConst
-import fr.gstraymond.constants.FacetConst.*
+import fr.gstraymond.constants.FacetConst.SET
 import fr.gstraymond.models.autocomplete.response.Option
 import fr.gstraymond.models.search.response.Card
 import fr.gstraymond.models.search.response.SearchResult
@@ -36,18 +36,29 @@ class CardListPresenter(private val context: Context) : DataUpdater {
     lateinit var filterTextView: TextView
     lateinit var resetTextView: TextView
     lateinit var emptyTextView: TextView
+    lateinit var longPressTextView: TextView
     lateinit var rootView: View
 
     override fun updateCards(totalCardCount: Int, cards: List<Card>) {
         setTotalItemCount(totalCardCount)
-        if (searchOptions != SearchOptions.START_SEARCH_OPTIONS()) {
+
+        if (searchOptions.isStartSearchOptions()) {
+            arrayAdapter.setCards(listOf())
+        } else {
+            if (prefs.galleryMode) {
+                val textId = searchOptions.deckId
+                        ?.run { R.string.long_press_deck_editor }
+                        ?: R.string.long_press_wishlist
+                longPressTextView.setText(textId)
+                longPressTextView.visible()
+            } else {
+                longPressTextView.gone()
+            }
             if (searchOptions.append) {
                 arrayAdapter.appendCards(cards)
             } else {
                 arrayAdapter.setCards(cards)
             }
-        } else {
-            arrayAdapter.setCards(listOf())
         }
     }
 
@@ -55,20 +66,22 @@ class CardListPresenter(private val context: Context) : DataUpdater {
 
     override fun updateFacets(result: SearchResult) {
         if (!searchOptions.append) {
-            if (searchOptions != SearchOptions.START_SEARCH_OPTIONS()
+            if (!searchOptions.isStartSearchOptions()
                     && (searchOptions.query != "*" || searchOptions.facets.isNotEmpty())) {
                 resetTextView.visible()
                 emptyTextView.gone()
             } else {
                 emptyTextView.visible()
-                if (searchOptions == SearchOptions.START_SEARCH_OPTIONS()) {
-                    result.hits.hits.firstOrNull()?._source?.publications?.maxBy { it.editionReleaseDate?.time ?: 0 }?.edition?.let { lastEdition ->
+                if (searchOptions.isStartSearchOptions()) {
+                    result.hits.hits.firstOrNull()?._source?.publications?.maxBy {
+                        it.editionReleaseDate?.time ?: 0
+                    }?.edition?.let { lastEdition ->
                         val text = String.format(context.getString(R.string.search_last_extension), lastEdition, result.hits.total)
                         snackbar?.dismiss()
                         snackbar = Snackbar.make(rootView, Html.fromHtml(text), Snackbar.LENGTH_INDEFINITE).apply {
                             setAction(R.string.snackbar_show) {
                                 val facets = mapOf(SET to listOf(lastEdition))
-                                searchProcessor.build().execute(SearchOptions(facets = facets))
+                                searchProcessor.build().execute(SearchOptions(facets = facets, deckId = searchOptions.deckId))
                             }
                             show()
                         }
