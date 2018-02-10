@@ -75,11 +75,16 @@ class DeckDetailStatsFragment : Fragment() {
                     if (isEmpty()) listOf<StringChart>()
                     else listOf(StringChart(getText(R.string.abilities).toString(), this))
                 }
-                elements = listOf(
+
+                val text = listOf(
                         getText(R.string.stats_format, deckStats.format),
-                        Html.fromHtml(formatColor, imageGetter, null),
+                        formatColor,
                         getText(R.string.stats_total_cards, "${deckStats.deckSize}", "${deckStats.sideboardSize}"),
-                        getText(R.string.stats_total_price, "${deckStats.totalPrice}"),
+                        getText(R.string.stats_total_price, "${deckStats.totalPrice}")
+                ).joinToString("<br>".repeat(2))
+
+                elements = listOf(
+                        Html.fromHtml(text, imageGetter, null),
                         IntChart(resources.getString(R.string.stats_mana_curve), deckStats.manaCurve),
                         StringChart(resources.getString(R.string.stats_color_distribution), deckStats.colorDistribution),
                         StringChart(resources.getString(R.string.stats_type_distribution), deckStats.typeDistribution)

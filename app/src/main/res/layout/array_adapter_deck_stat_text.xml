@@ -3,7 +3,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/array_adapter_deck_stat_text"
     style="@android:style/TextAppearance.Medium"
-    android:layout_width="wrap_content"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="8dp"
+    android:layout_margin="16dp"
+    android:background="@drawable/counter_border_active"
+    android:gravity="center"
+    android:padding="16dp"
     tools:text="foo" />
