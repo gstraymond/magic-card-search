@@ -23,7 +23,7 @@ class ShareView(private val app: CustomApplication,
                 private val deckId: Int?,
                 private val shareViewCallbacks: ShareViewCallbacks?) : CommonDisplayableView<AppCompatButton>(R.id.card_share) {
 
-    override fun display(view: AppCompatButton, card: Card) = display(view, true)
+    override fun display(view: AppCompatButton, card: Card) = true
 
     override fun setValue(view: AppCompatButton, card: Card, position: Int) {
         view.supportBackgroundTintList = context.resources.colorStateList(R.color.colorPrimaryDark)

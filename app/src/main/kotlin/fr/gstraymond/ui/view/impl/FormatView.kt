@@ -12,6 +12,5 @@ class FormatView : CommonDisplayableView<TextView>(R.id.array_adapter_card_forma
         view.text = card.formats.maxBy { Formats.ordered.indexOf(it) }
     }
 
-    override fun display(view: TextView, card: Card) =
-            display(view, true)
+    override fun display(view: TextView, card: Card) = true
 }
