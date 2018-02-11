@@ -130,6 +130,7 @@
     <string name="deck_tab_cards">Deck (%1$s)</string>
     <string name="deck_tab_sideboard">Sideboard (%1$s)</string>
     <string name="deck_tab_stats">Stats</string>
+    <string name="deck_tab_hand">Main de départ</string>
     <string name="loading">Recherche en cours…</string>
 
     <string name="deck_detail_cards_not_imported_text">Vous devez ajouter manuellement ces cartes :</string>

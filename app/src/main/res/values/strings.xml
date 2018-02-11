@@ -134,6 +134,7 @@
     <string name="deck_tab_cards">Deck (%1$s)</string>
     <string name="deck_tab_sideboard">Sideboard (%1$s)</string>
     <string name="deck_tab_stats">Stats</string>
+    <string name="deck_tab_hand">Starting hand</string>
     <string name="loading">Searching…</string>
 
     <string name="deck_detail_cards_not_imported_text">You should add manually theses cards:</string>

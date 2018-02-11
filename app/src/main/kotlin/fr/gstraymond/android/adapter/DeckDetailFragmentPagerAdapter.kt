@@ -5,6 +5,7 @@ import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentStatePagerAdapter
 import fr.gstraymond.R
 import fr.gstraymond.android.DeckDetailCardsFragment
+import fr.gstraymond.android.DeckDetailHandFragment
 import fr.gstraymond.android.DeckDetailStatsFragment
 import fr.gstraymond.android.adapter.DeckCardCallback.FROM.DECK
 import fr.gstraymond.android.adapter.DeckCardCallback.FROM.SB
@@ -32,7 +33,7 @@ class DeckDetailFragmentPagerAdapter(fragmentManager: FragmentManager, context: 
         deckCardCallback?.multChanged(deckCard, from, deck, sideboard)
     }
 
-    private val pageTitles = listOf("", "", context.getString(R.string.deck_tab_stats))
+    private val pageTitles = listOf("", "", context.getString(R.string.deck_tab_stats), context.getString(R.string.deck_tab_hand))
     private val deckDetailCardsFragment = DeckDetailCardsFragment().apply { deckCardCallback = callbacks }
     private val deckDetailSideboardFragment = DeckDetailCardsFragment().apply {
         deckCardCallback = callbacks
@@ -40,7 +41,12 @@ class DeckDetailFragmentPagerAdapter(fragmentManager: FragmentManager, context: 
     }
     private val deckDetailStatsFragment = DeckDetailStatsFragment()
 
-    private val fragments = listOf(deckDetailCardsFragment, deckDetailSideboardFragment, deckDetailStatsFragment)
+    private val fragments = listOf(
+            deckDetailCardsFragment,
+            deckDetailSideboardFragment,
+            deckDetailStatsFragment,
+            DeckDetailHandFragment()
+    )
 
     override fun getCount() = fragments.size
 

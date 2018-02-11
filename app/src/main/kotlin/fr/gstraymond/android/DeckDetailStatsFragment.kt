@@ -43,7 +43,7 @@ class DeckDetailStatsFragment : Fragment() {
             layoutManager = LinearLayoutManager(context)
             adapter = deckDetailStatsAdapter
         }
-        emptyText = view.find<TextView>(R.id.deck_detail_stats_empty)
+        emptyText = view.find(R.id.deck_detail_stats_empty)
     }
 
     override fun onResume() {
@@ -72,7 +72,7 @@ class DeckDetailStatsFragment : Fragment() {
                     "Type: ${it.type} (${it.count})"
                 }
                 val abilitiesCharts = deckStats.abilitiesCount.run {
-                    if (isEmpty()) listOf<StringChart>()
+                    if (isEmpty()) listOf()
                     else listOf(StringChart(getText(R.string.abilities).toString(), this))
                 }
 
