@@ -31,7 +31,7 @@ class RulesActivity : CustomActivity(R.layout.activity_rules), RulesCallback, La
     private val progressBar by lazy { find<ProgressBar>(R.id.rules_progressbar) }
     private val emptyText by lazy { find<TextView>(R.id.rules_empty_text) }
 
-    private val history = mutableListOf<Int>() // TODO on save instance
+    private val history = mutableListOf<Int>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
