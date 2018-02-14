@@ -8,11 +8,14 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.widget.ProgressBar
 import android.widget.TextView
+import com.magic.card.search.commons.log.Log
 import fr.gstraymond.R
 import fr.gstraymond.android.adapter.RulesAdapter
 import fr.gstraymond.android.adapter.RulesCallback
 import fr.gstraymond.db.json.LazyJsonList
+import fr.gstraymond.search.TrieBuilder
 import fr.gstraymond.utils.*
+import kotlin.system.measureTimeMillis
 
 class RulesActivity : CustomActivity(R.layout.activity_rules), RulesCallback, LazyJsonList.LoadingCallback {
 
@@ -32,6 +35,7 @@ class RulesActivity : CustomActivity(R.layout.activity_rules), RulesCallback, La
     private val emptyText by lazy { find<TextView>(R.id.rules_empty_text) }
 
     private val history = mutableListOf<Int>()
+    private val trie = TrieBuilder.empty()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -65,6 +69,26 @@ class RulesActivity : CustomActivity(R.layout.activity_rules), RulesCallback, La
     }
 
     override fun loaded() {
+        val trieIndexTime = measureTimeMillis {
+            app().ruleList.all().withIndex().forEach { (index, rule) ->
+                rule.text
+                        .toLowerCase()
+                        .split(" ")
+                        .map { it.filter { it.isLetterOrDigit() } }
+                        .filter { it.length > 2 }
+                        .fold(trie) { acc, t ->
+                            acc.add(t, index)
+                            acc
+                        }
+
+            }
+        }
+        Log(javaClass).w("$$$$$ TRIE TOOK ${trieIndexTime}ms")
+        Log(javaClass).w("$$$$$ TRIE HAND ${trie.get("hand")}")
+        Log(javaClass).w("$$$$$ TRIE TURN ${trie.get("turn")}")
+        Log(javaClass).w("$$$$$ TRIE TURN/HAND ${trie.get("turn").intersect(trie.get("hand"))}")
+        Log(javaClass).w("$$$$$ TRIE trample ${trie.get("trample")}")
+
         val adapter = RulesAdapter(this, app().ruleList).apply { rulesCallback = this@RulesActivity }
         runOnUiThread {
             progressBar.gone()

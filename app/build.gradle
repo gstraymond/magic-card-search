@@ -115,4 +115,5 @@ dependencies {
     compile "com.google.android.gms:play-services-vision:$gmsVisionVersion"
     kapt 'com.google.auto.value:auto-value:1.1'
     testCompile 'junit:junit:4.12'
+    testCompile 'io.kotlintest:kotlintest:2.0.7'
 }
