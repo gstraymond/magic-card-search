@@ -97,6 +97,15 @@
 
                 </RelativeLayout>
 
+                <TextView
+                    android:id="@+id/text_long_press"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/colorPrimaryDark"
+                    android:gravity="center"
+                    android:padding="8dp"
+                    android:visibility="gone" />
+
                 <FrameLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">

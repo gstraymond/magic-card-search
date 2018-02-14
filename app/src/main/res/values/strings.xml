@@ -134,6 +134,7 @@
     <string name="deck_tab_cards">Deck (%1$s)</string>
     <string name="deck_tab_sideboard">Sideboard (%1$s)</string>
     <string name="deck_tab_stats">Stats</string>
+    <string name="deck_tab_hand">Starting hand</string>
     <string name="loading">Searching…</string>
 
     <string name="deck_detail_cards_not_imported_text">You should add manually theses cards:</string>
@@ -167,4 +168,6 @@
     <string name="rules_title">Rules</string>
     <string name="top">Top</string>
     <string name="back">Back</string>
+    <string name="long_press_deck_editor">Long press to add to your deck</string>
+    <string name="long_press_wishlist">Long press to add to your wishlist</string>
 </resources>

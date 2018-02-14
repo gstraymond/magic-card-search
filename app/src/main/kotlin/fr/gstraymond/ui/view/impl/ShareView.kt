@@ -23,7 +23,7 @@ class ShareView(private val app: CustomApplication,
                 private val deckId: Int?,
                 private val shareViewCallbacks: ShareViewCallbacks?) : CommonDisplayableView<AppCompatButton>(R.id.card_share) {
 
-    override fun display(view: AppCompatButton, card: Card) = display(view, true)
+    override fun display(view: AppCompatButton, card: Card) = true
 
     override fun setValue(view: AppCompatButton, card: Card, position: Int) {
         view.supportBackgroundTintList = context.resources.colorStateList(R.color.colorPrimaryDark)
@@ -52,7 +52,7 @@ class ShareView(private val app: CustomApplication,
                         if (position > 0) {
                             val deck = otherDecks[position - 1]
                             val otherCardList = app.cardListBuilder.build(deck.id)
-                            val otherDeckCard = DeckCard(card, Date().time, DeckCard.Counts(1, 0))
+                            val otherDeckCard = DeckCard(card)
                             val message = if (otherCardList.contains(otherDeckCard)) {
                                 String.format(context.resources.getString(R.string.already_in_deck), card.title, deck.name)
                             } else {

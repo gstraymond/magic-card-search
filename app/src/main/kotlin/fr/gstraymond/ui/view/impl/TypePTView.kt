@@ -19,7 +19,7 @@ class TypePTView : CommonDisplayableView<TextView>(R.id.array_adapter_card_type_
         else view.text = " — $ptOrType"
     }
 
-    override fun display(view: TextView, card: Card) = display(view, true)
+    override fun display(view: TextView, card: Card) = true
 
     private fun getPtOrType(card: Card): String {
         val pt = ptFormatter.format(card)

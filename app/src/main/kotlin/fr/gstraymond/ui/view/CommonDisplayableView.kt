@@ -4,6 +4,8 @@ import android.view.View
 
 import fr.gstraymond.api.ui.view.DisplayableView
 import fr.gstraymond.models.search.response.Card
+import fr.gstraymond.utils.gone
+import fr.gstraymond.utils.visible
 
 abstract class CommonDisplayableView<in V : View>(override val id: Int) : DisplayableView {
 
@@ -14,14 +16,10 @@ abstract class CommonDisplayableView<in V : View>(override val id: Int) : Displa
     override fun display(parentView: View, card: Card, position: Int) {
         val view = parentView.findViewById<V>(id)
         if (display(view, card)) {
+            view.visible()
             setValue(view, card, position)
-        }
-    }
-
-    protected fun display(view: V, display: Boolean) = display.apply {
-        view.visibility = when (this) {
-            true -> View.VISIBLE
-            else -> View.GONE
+        } else {
+            view.gone()
         }
     }
 }

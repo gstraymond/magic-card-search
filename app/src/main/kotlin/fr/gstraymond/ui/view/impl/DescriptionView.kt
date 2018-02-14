@@ -21,5 +21,5 @@ class DescriptionView(context: Context) : CommonDisplayableView<TextView>(R.id.a
         view.text = html
     }
 
-    override fun display(view: TextView, card: Card) = display(view, card.description.isNotEmpty())
+    override fun display(view: TextView, card: Card) = card.description.isNotEmpty()
 }

@@ -23,7 +23,7 @@ abstract class CardListView<out A>(private val cards: JsonList<A>,
 
     abstract fun getElem(card: Card): A
 
-    override fun display(view: AppCompatButton, card: Card) = display(view, true)
+    override fun display(view: AppCompatButton, card: Card) = true
 
     override fun setValue(view: AppCompatButton, card: Card, position: Int) {
         view.setOnClickListener {

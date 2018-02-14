@@ -23,5 +23,5 @@ class CastingCostView(context: Context) : CommonDisplayableView<TextView>(R.id.a
     }
 
     override fun display(view: TextView, card: Card) =
-            display(view, card.castingCost?.isNotEmpty() ?: false)
+            card.castingCost?.isNotEmpty() ?: false
 }

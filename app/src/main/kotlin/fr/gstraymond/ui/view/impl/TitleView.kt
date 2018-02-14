@@ -20,5 +20,5 @@ class TitleView :
         }
     }
 
-    override fun display(view: TextView, card: Card) = display(view, true)
+    override fun display(view: TextView, card: Card) = true
 }

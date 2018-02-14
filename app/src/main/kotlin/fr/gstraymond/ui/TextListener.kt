@@ -14,7 +14,7 @@ class TextListener(private val dataUpdater: DataUpdater,
                    private val autocompleteProcessorBuilder: AutocompleteProcessorBuilder) : SearchView.OnQueryTextListener {
 
     companion object {
-        val SEP = "\u00A0"
+        const val SEP = "\u00A0"
     }
 
     var canSearch = true
@@ -41,7 +41,8 @@ class TextListener(private val dataUpdater: DataUpdater,
         if (canSearch) {
             val options = SearchOptions(
                     query = text.replace(":", ""),
-                    facets = dataUpdater.getCurrentSearch().facets)
+                    facets = dataUpdater.getCurrentSearch().facets,
+                    deckId = dataUpdater.getCurrentSearch().deckId)
             searchProcessorBuilder.build().execute(options)
         }
         return true

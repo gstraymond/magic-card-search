@@ -31,6 +31,14 @@ class WishlistCardViews(app: CustomApplication,
                 CostView(context)
         ))
 
+class HandCardViews(context: Context) :
+        CardViews(listOf(
+                TitleView(),
+                DescriptionView(context),
+                CastingCostView(context),
+                TypePTView()
+        ))
+
 class FavoriteCardViews(context: Context,
                         cards: JsonList<Card>,
                         clickCallbacks: CardClickCallbacks) :

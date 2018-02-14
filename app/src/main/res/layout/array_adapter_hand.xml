@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="64dp"
+    android:foreground="?android:attr/selectableItemBackground"
+    android:padding="8dp">
+
+    <RelativeLayout
+        android:id="@+id/card_first_line"
+        android:layout_width="match_parent"
+        android:layout_height="24dp">
+
+        <TextView
+            android:id="@+id/array_adapter_card_casting_cost"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/castingCostSize"
+            android:layout_gravity="bottom"
+            android:layout_marginRight="8dp"
+            tools:text="UUU" />
+
+        <TextView
+            android:id="@+id/array_adapter_text"
+            style="@android:style/TextAppearance.Medium"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/array_adapter_card_casting_cost"
+            android:ellipsize="end"
+            android:maxLines="1"
+            tools:text="Abandon de l'espoir, foo" />
+
+        <TextView
+            android:id="@+id/array_adapter_card_type_pt"
+            style="@android:style/TextAppearance.Medium"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/array_adapter_text"
+            android:ellipsize="end"
+            android:maxLines="1"
+            tools:text=" - Sorcery" />
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/array_adapter_description"
+        style="@android:style/TextAppearance.Medium"
+        android:layout_width="match_parent"
+        android:layout_height="28dp"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@id/card_first_line"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:textColor="@android:color/darker_gray"
+        tools:text="As an additionnal cost to cast Abandon Hp" />
+
+</RelativeLayout>

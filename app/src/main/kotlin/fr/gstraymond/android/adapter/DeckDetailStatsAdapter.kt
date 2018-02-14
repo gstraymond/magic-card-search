@@ -48,21 +48,20 @@ class DeckDetailStatsAdapter(context: Context) : RecyclerView.Adapter<RecyclerVi
                     }
             is ChartViewHolder -> {
                 val barChart = holder.itemView as BarChart
-                val chart = element
-                when (chart) {
+                when (element) {
                     is StringChart -> {
-                        val data = chart.data.toList().sortedBy { -it.second }.take(5)
+                        val data = element.data.toList().sortedBy { -it.second }.take(5)
                         val keys = data.map { it.first }
                         val entries = data.map { (k, v) -> BarEntry(keys.indexOf(k).toFloat(), v.toFloat()) }
-                        barChart.data = BarData(BarDataSet(entries, chart.name).apply {
+                        barChart.data = BarData(BarDataSet(entries, element.name).apply {
                             styleDataSet(this, position)
                             setValueFormatter { fl, _, _, _ -> "${fl.toInt()}" }
                         })
                         styleChart(barChart) { fl, _ -> keys.elementAtOrNull(fl.toInt()) ?: "" }
                     }
                     is IntChart -> {
-                        val entries = chart.data.map { (k, v) -> BarEntry(k.toFloat(), v.toFloat()) }
-                        barChart.data = BarData(BarDataSet(entries, chart.name).apply {
+                        val entries = element.data.map { (k, v) -> BarEntry(k.toFloat(), v.toFloat()) }
+                        barChart.data = BarData(BarDataSet(entries, element.name).apply {
                             styleDataSet(this, position)
                             setValueFormatter { fl, _, _, _ -> "${fl.toInt()}" }
                         })
