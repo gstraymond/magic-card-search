@@ -152,4 +152,5 @@
     <string name="back">Précèdent</string>
     <string name="long_press_deck_editor">Long press to add to your deck</string>
     <string name="long_press_wishlist">Long press to add to your wishlist</string>
+    <string name="rules_search_hint">Mot clés</string>
 </resources>

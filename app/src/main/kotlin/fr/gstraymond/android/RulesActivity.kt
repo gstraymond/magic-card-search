@@ -6,16 +6,16 @@ import android.net.Uri
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.support.v7.widget.SearchView
+import android.widget.ImageButton
 import android.widget.ProgressBar
 import android.widget.TextView
-import com.magic.card.search.commons.log.Log
 import fr.gstraymond.R
 import fr.gstraymond.android.adapter.RulesAdapter
 import fr.gstraymond.android.adapter.RulesCallback
 import fr.gstraymond.db.json.LazyJsonList
-import fr.gstraymond.search.TrieBuilder
+import fr.gstraymond.search.Trie
 import fr.gstraymond.utils.*
-import kotlin.system.measureTimeMillis
 
 class RulesActivity : CustomActivity(R.layout.activity_rules), RulesCallback, LazyJsonList.LoadingCallback {
 
@@ -28,14 +28,22 @@ class RulesActivity : CustomActivity(R.layout.activity_rules), RulesCallback, La
 
     private lateinit var linearLayoutManager: LinearLayoutManager
     private lateinit var recyclerView: RecyclerView
+    private lateinit var adapter: RulesAdapter
 
     private val topTextView by lazy { find<TextView>(R.id.toolbar_top) }
     private val backTextView by lazy { find<TextView>(R.id.toolbar_back) }
     private val progressBar by lazy { find<ProgressBar>(R.id.rules_progressbar) }
     private val emptyText by lazy { find<TextView>(R.id.rules_empty_text) }
+    private val searchView by lazy { find<SearchView>(R.id.search_input) }
+    private val scrollStatus by lazy { find<TextView>(R.id.scroll_status) }
+    private val searchStatus by lazy { find<TextView>(R.id.search_status) }
+    private val searchPrevious by lazy { find<ImageButton>(R.id.search_previous) }
+    private val searchNext by lazy { find<ImageButton>(R.id.search_next) }
 
     private val history = mutableListOf<Int>()
-    private val trie = TrieBuilder.empty()
+    private val trie = Trie()
+    private var searchResults = listOf<Int>()
+    private var searchPosition = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,55 +61,126 @@ class RulesActivity : CustomActivity(R.layout.activity_rules), RulesCallback, La
         recyclerView = find<RecyclerView>(R.id.rules_recyclerview).apply {
             linearLayoutManager = LinearLayoutManager(this@RulesActivity)
             layoutManager = linearLayoutManager
+            setOnTouchListener { _, _ ->
+                when {
+                    searchView.hasFocus() -> searchView.clearFocus()
+                }
+                false
+            }
+            addOnScrollListener(object : RecyclerView.OnScrollListener() {
+                override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                    super.onScrollStateChanged(recyclerView, newState)
+                    updateStatus(linearLayoutManager.findFirstVisibleItemPosition())
+                }
+            })
         }
 
         topTextView.setOnClickListener {
-            linearLayoutManager.scrollToPosition(0)
+            scroll(0)
         }
 
         backTextView.setOnClickListener {
             val position = history.removeAt(history.size - 1)
-            linearLayoutManager.scrollToPosition(position)
+            scroll(position)
             if (history.isEmpty()) backTextView.gone()
         }
+
+        searchView.setOnQueryTextListener(
+                object : SearchView.OnQueryTextListener {
+                    override fun onQueryTextSubmit(text: String): Boolean {
+                        val tokens = text.toLowerCase().split(" ")
+                        searchResults = tokens.foldIndexed(setOf<Int>()) { index, acc, word ->
+                            when (index) {
+                                0 -> trie.get(word)
+                                else -> acc.intersect(trie.get(word))
+                            }
+                        }.sorted()
+                        searchPosition = 0
+                        updateResult()
+                        adapter.highlightWords = tokens
+                        adapter.notifyDataSetChanged()
+                        searchResults.firstOrNull()?.apply { scroll(this) }
+                        return true
+                    }
+
+                    override fun onQueryTextChange(text: String) = true
+                })
+
+        searchPrevious.setOnClickListener {
+            if (searchResults.isNotEmpty()) {
+                searchPosition = when (searchPosition) {
+                    0 -> searchResults.size - 1
+                    else -> searchPosition - 1
+                }
+                updateResult()
+                scroll(searchResults[searchPosition])
+            }
+        }
+
+        searchNext.setOnClickListener {
+            if (searchResults.isNotEmpty()) {
+                searchPosition = when (searchPosition) {
+                    searchResults.size - 1 -> 0
+                    else -> searchPosition + 1
+                }
+                updateResult()
+                scroll(searchResults[searchPosition])
+            }
+        }
+
+        updateResult()
 
         if (app().ruleList.isLoaded()) loaded()
     }
 
+    override fun onResume() {
+        super.onResume()
+        findView(R.id.root_view).requestFocus()
+    }
+
     override fun loaded() {
-        val trieIndexTime = measureTimeMillis {
-            app().ruleList.all().withIndex().forEach { (index, rule) ->
-                rule.text
-                        .toLowerCase()
-                        .split(" ")
-                        .map { it.filter { it.isLetterOrDigit() } }
-                        .filter { it.length > 2 }
-                        .fold(trie) { acc, t ->
-                            acc.add(t, index)
-                            acc
-                        }
+        val rangeSize = 2..15
+        app().ruleList.all().withIndex().forEach { (index, rule) ->
+            rule.text
+                    .toLowerCase()
+                    .split(" ")
+                    .map { it.filter { it.isLetterOrDigit() } }
+                    .filter { rangeSize.contains(it.length) }
+                    .fold(trie) { acc, t ->
+                        acc.add(t, index)
+                        acc
+                    }
 
-            }
         }
-        Log(javaClass).w("$$$$$ TRIE TOOK ${trieIndexTime}ms")
-        Log(javaClass).w("$$$$$ TRIE HAND ${trie.get("hand")}")
-        Log(javaClass).w("$$$$$ TRIE TURN ${trie.get("turn")}")
-        Log(javaClass).w("$$$$$ TRIE TURN/HAND ${trie.get("turn").intersect(trie.get("hand"))}")
-        Log(javaClass).w("$$$$$ TRIE trample ${trie.get("trample")}")
 
-        val adapter = RulesAdapter(this, app().ruleList).apply { rulesCallback = this@RulesActivity }
+        adapter = RulesAdapter(this, app().ruleList).apply { rulesCallback = this@RulesActivity }
         runOnUiThread {
             progressBar.gone()
             recyclerView.adapter = adapter
             adapter.notifyDataSetChanged()
             if (app().ruleList.isEmpty()) emptyText.visible()
+            else updateStatus(0)
         }
     }
 
     override fun scrollTo(position: Int) {
         backTextView.visible()
         history.add(linearLayoutManager.findFirstVisibleItemPosition())
+        scroll(position)
+    }
+
+    private fun scroll(position: Int) {
         linearLayoutManager.scrollToPositionWithOffset(position, 0)
+        updateStatus(position)
+    }
+
+    private fun updateStatus(position: Int) {
+        val percent = 100 * position / adapter.itemCount
+        scrollStatus.text = "%s/%s — %s%%".format(position + 1, adapter.itemCount, percent)
+    }
+
+    private fun updateResult() {
+        searchStatus.text = "%s/%s".format(Math.min(searchResults.size, searchPosition + 1), searchResults.size)
     }
 
     override fun browse(url: String) {

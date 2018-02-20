@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/root_view"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:focusableInTouchMode="true"
     android:orientation="vertical">
 
     <android.support.design.widget.AppBarLayout
@@ -51,34 +53,91 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <FrameLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/rules_recyclerview"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-
-        <ProgressBar
-            android:id="@+id/rules_progressbar"
-            style="@style/Widget.AppCompat.ProgressBar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:scaleX="2"
-            android:scaleY="2"
-            android:layout_gravity="center"/>
+        android:layout_height="wrap_content">
 
         <TextView
-            android:id="@+id/rules_empty_text"
-            style="@android:style/TextAppearance.Large"
-            android:layout_width="wrap_content"
+            android:id="@+id/scroll_status"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
+            android:layout_alignParentBottom="true"
+            android:background="@color/colorPrimaryDark"
             android:gravity="center"
-            android:paddingLeft="32dp"
-            android:paddingRight="32dp"
-            android:text="@string/rules_empty_text"
-            android:visibility="gone" />
-    </FrameLayout>
+            android:padding="8dp" />
+
+        <RelativeLayout
+            android:id="@+id/search_bar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorPrimaryDark">
+
+            <ImageButton
+                android:id="@+id/search_next"
+                android:layout_width="42dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:background="?android:selectableItemBackground"
+                android:src="@drawable/ic_navigate_next_white_48dp" />
+
+            <ImageButton
+                android:id="@+id/search_previous"
+                android:layout_width="42dp"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toLeftOf="@id/search_next"
+                android:background="?android:selectableItemBackground"
+                android:src="@drawable/ic_navigate_before_white_48dp" />
+
+            <TextView
+                android:id="@+id/search_status"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_toLeftOf="@id/search_previous"
+                android:padding="8dp" />
+
+            <android.support.v7.widget.SearchView
+                android:id="@+id/search_input"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_toLeftOf="@id/search_status"
+                app:iconifiedByDefault="false"
+                app:queryHint="@string/rules_search_hint" />
+        </RelativeLayout>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@id/scroll_status"
+            android:layout_below="@id/search_bar">
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/rules_recyclerview"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+            <ProgressBar
+                android:id="@+id/rules_progressbar"
+                style="@style/Widget.AppCompat.ProgressBar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:scaleX="2"
+                android:scaleY="2" />
+
+            <TextView
+                android:id="@+id/rules_empty_text"
+                style="@android:style/TextAppearance.Large"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:paddingLeft="32dp"
+                android:paddingRight="32dp"
+                android:text="@string/rules_empty_text"
+                android:visibility="gone" />
+        </FrameLayout>
+
+    </RelativeLayout>
 </LinearLayout>
