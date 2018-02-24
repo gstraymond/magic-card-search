@@ -14,7 +14,6 @@ import fr.gstraymond.R
 import fr.gstraymond.android.adapter.RulesAdapter
 import fr.gstraymond.android.adapter.RulesCallback
 import fr.gstraymond.db.json.LazyJsonList
-import fr.gstraymond.search.Trie
 import fr.gstraymond.utils.*
 
 class RulesActivity : CustomActivity(R.layout.activity_rules), RulesCallback, LazyJsonList.LoadingCallback {
@@ -27,7 +26,6 @@ class RulesActivity : CustomActivity(R.layout.activity_rules), RulesCallback, La
     }
 
     private lateinit var linearLayoutManager: LinearLayoutManager
-    private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: RulesAdapter
 
     private val topTextView by lazy { find<TextView>(R.id.toolbar_top) }
@@ -40,14 +38,15 @@ class RulesActivity : CustomActivity(R.layout.activity_rules), RulesCallback, La
     private val searchPrevious by lazy { find<ImageButton>(R.id.search_previous) }
     private val searchNext by lazy { find<ImageButton>(R.id.search_next) }
 
+    private val ruleList by lazy { app().ruleList }
+
     private val history = mutableListOf<Int>()
-    private val trie = Trie()
     private var searchResults = listOf<Int>()
     private var searchPosition = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        app().ruleList.registerLoading(this)
+        ruleList.registerLoading(this)
 
         savedInstanceState?.apply {
             history.addAll(getIntegerArrayList(HISTORY))
@@ -58,16 +57,17 @@ class RulesActivity : CustomActivity(R.layout.activity_rules), RulesCallback, La
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         setTitle(R.string.rules_title)
 
-        recyclerView = find<RecyclerView>(R.id.rules_recyclerview).apply {
-            linearLayoutManager = LinearLayoutManager(this@RulesActivity)
-            layoutManager = linearLayoutManager
-            setOnTouchListener { _, _ ->
-                when {
-                    searchView.hasFocus() -> searchView.clearFocus()
-                }
+        adapter = RulesAdapter(this).apply { rulesCallback = this@RulesActivity }
+
+        find<RecyclerView>(R.id.rules_recyclerview).let {
+            linearLayoutManager = LinearLayoutManager(this)
+            it.layoutManager = linearLayoutManager
+            it.adapter = adapter
+            it.setOnTouchListener { _, _ ->
+                resetSearchFocus()
                 false
             }
-            addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            it.addOnScrollListener(object : RecyclerView.OnScrollListener() {
                 override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                     super.onScrollStateChanged(recyclerView, newState)
                     updateStatus(linearLayoutManager.findFirstVisibleItemPosition())
@@ -77,33 +77,38 @@ class RulesActivity : CustomActivity(R.layout.activity_rules), RulesCallback, La
 
         topTextView.setOnClickListener {
             scroll(0)
+            resetSearchFocus()
         }
 
         backTextView.setOnClickListener {
             val position = history.removeAt(history.size - 1)
             scroll(position)
             if (history.isEmpty()) backTextView.gone()
+            resetSearchFocus()
         }
 
         searchView.setOnQueryTextListener(
                 object : SearchView.OnQueryTextListener {
-                    override fun onQueryTextSubmit(text: String): Boolean {
-                        val tokens = text.toLowerCase().split(" ")
+                    override fun onQueryTextChange(text: String): Boolean {
+                        val tokens = text.toLowerCase().split(" ").filter { it.isNotBlank() }
                         searchResults = tokens.foldIndexed(setOf<Int>()) { index, acc, word ->
                             when (index) {
-                                0 -> trie.get(word)
-                                else -> acc.intersect(trie.get(word))
+                                0 -> ruleList.trie.get(word)
+                                else -> acc.intersect(ruleList.trie.get(word))
                             }
                         }.sorted()
                         searchPosition = 0
                         updateResult()
-                        adapter.highlightWords = tokens
+                        adapter.highlightWords = listOf()
+                        searchResults.firstOrNull()?.apply {
+                            scroll(this)
+                            adapter.highlightWords = tokens
+                        }
                         adapter.notifyDataSetChanged()
-                        searchResults.firstOrNull()?.apply { scroll(this) }
                         return true
                     }
 
-                    override fun onQueryTextChange(text: String) = true
+                    override fun onQueryTextSubmit(text: String) = true
                 })
 
         searchPrevious.setOnClickListener {
@@ -114,6 +119,7 @@ class RulesActivity : CustomActivity(R.layout.activity_rules), RulesCallback, La
                 }
                 updateResult()
                 scroll(searchResults[searchPosition])
+                resetSearchFocus()
             }
         }
 
@@ -125,12 +131,17 @@ class RulesActivity : CustomActivity(R.layout.activity_rules), RulesCallback, La
                 }
                 updateResult()
                 scroll(searchResults[searchPosition])
+                resetSearchFocus()
             }
         }
 
         updateResult()
 
-        if (app().ruleList.isLoaded()) loaded()
+        if (ruleList.isLoaded()) loaded()
+    }
+
+    private fun resetSearchFocus() {
+        if (searchView.hasFocus()) searchView.clearFocus()
     }
 
     override fun onResume() {
@@ -139,26 +150,13 @@ class RulesActivity : CustomActivity(R.layout.activity_rules), RulesCallback, La
     }
 
     override fun loaded() {
-        val rangeSize = 2..15
-        app().ruleList.all().withIndex().forEach { (index, rule) ->
-            rule.text
-                    .toLowerCase()
-                    .split(" ")
-                    .map { it.filter { it.isLetterOrDigit() } }
-                    .filter { rangeSize.contains(it.length) }
-                    .fold(trie) { acc, t ->
-                        acc.add(t, index)
-                        acc
-                    }
+        ruleList.unregisterLoading(this)
+        adapter.rules = ruleList.all()
 
-        }
-
-        adapter = RulesAdapter(this, app().ruleList).apply { rulesCallback = this@RulesActivity }
         runOnUiThread {
             progressBar.gone()
-            recyclerView.adapter = adapter
             adapter.notifyDataSetChanged()
-            if (app().ruleList.isEmpty()) emptyText.visible()
+            if (ruleList.isEmpty()) emptyText.visible()
             else updateStatus(0)
         }
     }
@@ -183,10 +181,8 @@ class RulesActivity : CustomActivity(R.layout.activity_rules), RulesCallback, La
         searchStatus.text = "%s/%s".format(Math.min(searchResults.size, searchPosition + 1), searchResults.size)
     }
 
-    override fun browse(url: String) {
-        startActivity {
-            Intent(Intent.ACTION_VIEW).apply { data = Uri.parse("http://$url") }
-        }
+    override fun browse(url: String) = startActivity {
+        Intent(Intent.ACTION_VIEW).apply { data = Uri.parse("http://$url") }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

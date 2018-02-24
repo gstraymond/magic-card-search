@@ -6,9 +6,9 @@ data class Trie(private val indices: MutableSet<Int> = mutableSetOf(),
     fun add(word: String,
             index: Int) {
         val trie = findOrCreate(word.first())
-        when (word.length) {
-            1 -> trie.indices.add(index)
-            else -> trie.add(word.drop(1), index)
+        trie.indices.add(index)
+        if (word.length > 1) {
+            trie.add(word.drop(1), index)
         }
     }
 

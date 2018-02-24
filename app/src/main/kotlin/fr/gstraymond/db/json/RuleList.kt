@@ -4,6 +4,7 @@ import android.content.Context
 import com.magic.card.search.commons.json.MapperUtil
 import com.squareup.moshi.Moshi
 import fr.gstraymond.models.search.response.Rule
+import fr.gstraymond.search.Trie
 
 
 class RuleList(context: Context,
@@ -12,4 +13,19 @@ class RuleList(context: Context,
         MapperUtil.fromType(moshi, Rule::class.java),
         listName = "rule") {
     override fun Rule.uid() = ""
+
+    val trie = Trie()
+
+    override fun setLoaded() {
+        val rangeSize = 2..15
+        all().withIndex().forEach { (index, rule) ->
+            rule.text
+                    .toLowerCase()
+                    .split(" ")
+                    .map { it.filter { it.isLetterOrDigit() } }
+                    .filter { rangeSize.contains(it.length) }
+                    .fold(trie) { acc, t -> acc.apply { add(t, index) } }
+        }
+        super.setLoaded()
+    }
 }
