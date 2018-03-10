@@ -15,7 +15,6 @@ import fr.gstraymond.models.search.response.Card
 import fr.gstraymond.ui.adapter.ShareCardDialogViews
 import fr.gstraymond.ui.view.CommonDisplayableView
 import fr.gstraymond.utils.*
-import java.util.*
 
 class ShareView(private val app: CustomApplication,
                 private val context: Context,
@@ -26,7 +25,7 @@ class ShareView(private val app: CustomApplication,
     override fun display(view: AppCompatButton, card: Card) = true
 
     override fun setValue(view: AppCompatButton, card: Card, position: Int) {
-        view.supportBackgroundTintList = context.resources.colorStateList(R.color.colorPrimaryDark)
+        view.supportBackgroundTintList = context.resources.colorStateList(R.color.colorPrimary)
         view.setOnClickListener {
             val dialogView = context.inflate(R.layout.dialog_share)
             val clickCallbacks = WishlistCardClickCallbacks(card, context, rootView)

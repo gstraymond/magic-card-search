@@ -74,7 +74,6 @@ class DeckDetailActivity : CustomActivity(R.layout.activity_deck_detail) {
             deckCardCallback = this@DeckDetailActivity.deckCardCallback
         }
 
-
         tabLayout.setupWithViewPager(viewPager)
 
         delete.setOnClickListener { createDeleteDialog() }

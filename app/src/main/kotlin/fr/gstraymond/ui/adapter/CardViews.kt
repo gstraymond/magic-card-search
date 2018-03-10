@@ -18,25 +18,19 @@ abstract class CardViews(private val displayableViews: List<DisplayableView>) {
     }
 }
 
-class WishlistCardViews(app: CustomApplication,
-                        context: Context,
-                        rootView: View,
-                        sharedViewCallbacks: ShareView.ShareViewCallbacks) :
+class WishlistCardViews(context: Context) :
         CardViews(listOf(
                 TitleView(),
                 DescriptionView(context),
                 CastingCostView(context),
                 TypePTView(),
-                ShareView(app, context, rootView, null, sharedViewCallbacks),
                 CostView(context)
         ))
 
 class HandCardViews(context: Context) :
         CardViews(listOf(
                 TitleView(),
-                DescriptionView(context),
-                CastingCostView(context),
-                TypePTView()
+                CastingCostView(context)
         ))
 
 class FavoriteCardViews(context: Context,
@@ -64,15 +58,10 @@ class DeckCardViews(context: Context,
                 CostView(context)
         ))
 
-class DeckDetailCardViews(app: CustomApplication,
-                          context: Context,
-                          rootView: View,
-                          deckId: Int) : CardViews(listOf(
+class DeckDetailCardViews(context: Context) : CardViews(listOf(
         TitleView(),
         CastingCostView(context),
-        FormatView(),
-        TypePTView(),
-        ShareView(app, context, rootView, deckId, null)
+        CostView(context)
 ))
 
 class SimpleCardViews(context: Context) : CardViews(listOf(
@@ -92,11 +81,12 @@ class ShareCardDialogViews(context: Context,
         FavoriteView(cards, clickCallbacks, context.resources)
 ))
 
-class CardDetailViews(context: Context,
-                      cards: JsonList<Card>,
-                      clickCallbacks: CardClickCallbacks) :
+class CardDetailViews(app: CustomApplication,
+                      context: Context,
+                      rootView: View,
+                      shareViewCallbacks: ShareView.ShareViewCallbacks) :
         CardViews(listOf(
-                FavoriteView(cards, clickCallbacks, context.resources)
+                ShareView(app, context, rootView, null, shareViewCallbacks)
         ))
 
 interface CardClickCallbacks {

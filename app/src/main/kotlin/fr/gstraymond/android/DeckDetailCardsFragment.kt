@@ -42,18 +42,13 @@ class DeckDetailCardsFragment : Fragment(), DeckCardCallback {
     private lateinit var fabScan: FloatingActionButton
     private lateinit var notImported: TextView
 
-    private val rooView by lazy { activity.find<View>(android.R.id.content) }
     private val deckId by lazy { activity.intent.getStringExtra(DeckDetailActivity.DECK_EXTRA) }
 
     var deckCardCallback: DeckCardCallback? = null
     var sideboard: Boolean = false
 
     private val deckDetailAdapter by lazy {
-        DeckDetailCardsAdapter(
-                app(),
-                activity,
-                sideboard,
-                rooView).apply {
+        DeckDetailCardsAdapter(app(), activity, sideboard).apply {
             deckCardCallback = this@DeckDetailCardsFragment
         }
     }
