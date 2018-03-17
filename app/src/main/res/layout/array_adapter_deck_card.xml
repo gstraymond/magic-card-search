@@ -11,7 +11,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
-        android:layout_centerInParent="true"
+        android:layout_centerVertical="true"
         android:layout_marginLeft="8dp"
         android:src="@drawable/ic_monetization_on_white_24dp" />
 
@@ -30,8 +30,8 @@
         android:layout_height="@dimen/castingCostSize"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
-        android:layout_marginRight="32dp"
         android:layout_marginLeft="8dp"
+        android:layout_marginRight="32dp"
         android:layout_marginTop="2dp"
         tools:text="UUU" />
 

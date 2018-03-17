@@ -9,11 +9,12 @@ import android.view.ViewGroup
 import android.widget.TextView
 import fr.gstraymond.R
 import fr.gstraymond.biz.CastingCostImageGetter
-import fr.gstraymond.biz.Colors
 import fr.gstraymond.biz.DeckStats
 import fr.gstraymond.models.Deck
 import fr.gstraymond.tools.CastingCostFormatter
 import fr.gstraymond.utils.find
+import fr.gstraymond.utils.gone
+import fr.gstraymond.utils.visible
 
 class DeckListAdapter(context: Context) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
@@ -35,12 +36,15 @@ class DeckListAdapter(context: Context) : RecyclerView.Adapter<RecyclerView.View
 
         val colors = DeckStats.colorSymbols(deck.colors)
         if (colors.isEmpty()) {
-            deckColors.visibility = View.GONE
+            deckColors.gone()
         } else {
-            deckColors.visibility = View.VISIBLE
+            deckColors.visible()
             deckColors.text = Html.fromHtml(ccFormatter.format(colors), imageGetter, null)
         }
-        deckFormat.text = deck.format
+        deck.maybeFormat?.run {
+            deckFormat.visible()
+            deckFormat.text = this
+        } ?: deckFormat.gone()
         deckName.text = deck.name
         deckSize.text = "${deck.deckSize} / ${deck.sideboardSize}"
 

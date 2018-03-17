@@ -18,7 +18,6 @@ import fr.gstraymond.utils.*
 
 class ShareView(private val app: CustomApplication,
                 private val context: Context,
-                private val rootView: View,
                 private val deckId: Int?,
                 private val shareViewCallbacks: ShareViewCallbacks?) : CommonDisplayableView<AppCompatButton>(R.id.card_share) {
 
@@ -28,7 +27,7 @@ class ShareView(private val app: CustomApplication,
         view.supportBackgroundTintList = context.resources.colorStateList(R.color.colorPrimary)
         view.setOnClickListener {
             val dialogView = context.inflate(R.layout.dialog_share)
-            val clickCallbacks = WishlistCardClickCallbacks(card, context, rootView)
+            val clickCallbacks = WishlistCardClickCallbacks(card, context, dialogView)
             val wishList = app.wishList
             val shareCardDialogViews = ShareCardDialogViews(context, wishList, clickCallbacks)
             shareCardDialogViews.display(dialogView, card, 0)
@@ -58,7 +57,7 @@ class ShareView(private val app: CustomApplication,
                                 otherCardList.addOrRemove(otherDeckCard)
                                 String.format(context.resources.getString(R.string.added_to_deck), card.title, deck.name)
                             }
-                            Snackbar.make(rootView, message, Snackbar.LENGTH_LONG).show()
+                            Snackbar.make(dialogView, message, Snackbar.LENGTH_LONG).show()
                         }
                     }
 

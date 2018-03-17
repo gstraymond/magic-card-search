@@ -75,18 +75,14 @@ class ShareCardDialogViews(context: Context,
                            cards: JsonList<Card>,
                            clickCallbacks: CardClickCallbacks) : CardViews(listOf(
         TitleView(),
-        CastingCostView(context),
-        FormatView(),
-        TypePTView(),
         FavoriteView(cards, clickCallbacks, context.resources)
 ))
 
 class CardDetailViews(app: CustomApplication,
                       context: Context,
-                      rootView: View,
                       shareViewCallbacks: ShareView.ShareViewCallbacks) :
         CardViews(listOf(
-                ShareView(app, context, rootView, null, shareViewCallbacks)
+                ShareView(app, context, null, shareViewCallbacks)
         ))
 
 interface CardClickCallbacks {

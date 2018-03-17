@@ -29,7 +29,6 @@ class DeckManager(private val deckList: DeckList,
                 timestamp = Date(),
                 name = deckName,
                 colors = deckStats.colors,
-                format = deckStats.format,
                 deckSize = deckStats.deckSize,
                 sideboardSize = deckStats.sideboardSize,
                 cardsNotImported = cardsNotImported))
@@ -64,7 +63,7 @@ class DeckManager(private val deckList: DeckList,
                     if (counts.sideboard > 0) "SB:  $line"
                     else "        $line"
                 }
-        return listOf("// NAME : ${deck.name}", "// FORMAT : ${deck.format}") + lines
+        return listOf("// NAME : ${deck.name}", "// FORMAT : ${deck.maybeFormat ?: "???"}") + lines
     }
 
     private fun normalizeName(deck: Deck) =

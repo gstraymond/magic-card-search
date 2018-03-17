@@ -64,18 +64,34 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <TextView
-        android:id="@+id/toolbar_text"
-        style="@android:style/TextAppearance.Medium"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorPrimaryDark"
-        android:drawableLeft="@drawable/ic_mode_edit_white_24dp"
-        android:drawablePadding="16dp"
-        android:ellipsize="end"
-        android:maxLines="2"
-        android:padding="16dp"
-        tools:text="deck deck deck" />
+        android:background="@color/colorPrimaryDark">
+
+        <Spinner
+            android:id="@+id/format_chooser"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true" />
+
+        <TextView
+            android:id="@+id/toolbar_text"
+            style="@android:style/TextAppearance.Medium"
+            android:layout_width="256dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@id/format_chooser"
+            android:drawableLeft="@drawable/ic_mode_edit_white_24dp"
+            android:drawablePadding="16dp"
+            android:ellipsize="end"
+            android:maxLines="2"
+            android:padding="16dp"
+            tools:text="deck deck deck " />
+
+    </RelativeLayout>
 
     <android.support.design.widget.TabLayout
         android:id="@+id/sliding_tabs"

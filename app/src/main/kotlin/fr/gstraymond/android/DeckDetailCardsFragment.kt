@@ -19,16 +19,19 @@ import fr.gstraymond.android.adapter.DeckCardCallback
 import fr.gstraymond.android.adapter.DeckCardCallback.FROM.DECK
 import fr.gstraymond.android.adapter.DeckCardCallback.FROM.SB
 import fr.gstraymond.android.adapter.DeckDetailCardsAdapter
+import fr.gstraymond.biz.Formats
 import fr.gstraymond.biz.SearchOptions
+import fr.gstraymond.constants.FacetConst
 import fr.gstraymond.constants.FacetConst.FORMAT
 import fr.gstraymond.constants.FacetConst.TYPE
 import fr.gstraymond.db.json.DeckCardList
 import fr.gstraymond.models.Deck
 import fr.gstraymond.models.DeckCard
+import fr.gstraymond.models.search.response.getLocalizedTitle
 import fr.gstraymond.ocr.OcrCaptureActivity
 import fr.gstraymond.utils.*
 
-class DeckDetailCardsFragment : Fragment(), DeckCardCallback {
+class DeckDetailCardsFragment : Fragment(), DeckCardCallback, DeckDetailActivity.FormatCallback {
 
     private val REQUEST_CAMERA_CODE = 1233
 
@@ -41,6 +44,7 @@ class DeckDetailCardsFragment : Fragment(), DeckCardCallback {
     private lateinit var fabLand: FloatingActionButton
     private lateinit var fabScan: FloatingActionButton
     private lateinit var notImported: TextView
+    private lateinit var formatProblems: TextView
 
     private val deckId by lazy { activity.intent.getStringExtra(DeckDetailActivity.DECK_EXTRA) }
 
@@ -74,6 +78,7 @@ class DeckDetailCardsFragment : Fragment(), DeckCardCallback {
         fabLand = view.find(R.id.deck_detail_cards_add_land)
         fabScan = view.find(R.id.deck_detail_cards_camera_scan)
         notImported = view.find(R.id.deck_detail_cards_not_imported)
+        formatProblems = view.find(R.id.deck_detail_cards_format_problems)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -81,7 +86,12 @@ class DeckDetailCardsFragment : Fragment(), DeckCardCallback {
 
         fabAdd.setOnClickListener {
             startActivity {
-                CardListActivity.getIntent(activity, SearchOptions.START_SEARCH_OPTIONS().copy(deckId = deckId))
+                val searchOptions = deckList.getByUid(deckId)?.maybeFormat?.run {
+                    SearchOptions(facets = mapOf(FacetConst.FORMAT to listOf(this)), deckId = deckId)
+                } ?: {
+                    SearchOptions.START_SEARCH_OPTIONS().copy(deckId = deckId)
+                }()
+                CardListActivity.getIntent(activity, searchOptions)
             }
         }
 
@@ -168,15 +178,55 @@ class DeckDetailCardsFragment : Fragment(), DeckCardCallback {
                 .show()
     }
 
+    private val cardWithNoSizeRestriction = "A deck can have any number of cards named"
+
     private fun updateTotal() {
+        formatProblems.gone()
         if (cardList.isEmpty()) {
             recyclerView.gone()
             emptyText.visible()
         } else {
             recyclerView.visible()
             emptyText.gone()
+            val deck = app().deckList.getByUid(deckId)
+            deck?.maybeFormat?.apply {
+                val msgs = mutableListOf<String>()
+
+                val (minDeckSize, deckSize, maxCardOccurrence) = when (this) {
+                    Formats.COMMANDER -> Triple(100, deck.deckSize + deck.sideboardSize, 1)
+                    else -> Triple(60, deck.deckSize, 4)
+                }
+
+                if (deckSize < minDeckSize) {
+                    msgs += getText(R.string.validation_missing_cards, "${minDeckSize - deckSize}", "$minDeckSize")
+                }
+
+                cardList.filter { it.counts.deck > maxCardOccurrence }
+                        .filterNot { it.card.type.startsWith("Basic Land") }
+                        .filterNot { it.card.description.contains(cardWithNoSizeRestriction, true) }
+                        .forEach { msgs += getText(R.string.validation_max_occurrence, it.card.getLocalizedTitle(context),  "$maxCardOccurrence") }
+
+                cardList.filter { !it.card.formats.contains(this) }
+                        .forEach { msgs += getText(R.string.validation_bad_format, it.card.getLocalizedTitle(context), this)}
+
+                if (this == Formats.VINTAGE) {
+                    cardList.filter { it.card.formats.contains("Restricted") }
+                            .filter { it.counts.deck > 1 }
+                            .forEach { msgs += getText(R.string.validation_max_occurrence, it.card.getLocalizedTitle(context),  "1") }
+                }
+
+                if (msgs.isEmpty()) {
+                    formatProblems.gone()
+                } else {
+                    formatProblems.visible()
+                    formatProblems.text = msgs.joinToString("\n")
+                }
+            } ?: formatProblems.gone()
         }
     }
+
+    private fun getText(textId: Int, vararg args: String) =
+            String.format(resources.getString(textId), *args)
 
     override fun multChanged(deckCard: DeckCard,
                              from: DeckCardCallback.FROM,
@@ -210,5 +260,9 @@ class DeckDetailCardsFragment : Fragment(), DeckCardCallback {
                 startScanner()
             }
         }
+    }
+
+    override fun formatChanged() {
+        updateTotal()
     }
 }

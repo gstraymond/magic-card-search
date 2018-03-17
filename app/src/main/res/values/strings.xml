@@ -171,4 +171,21 @@
     <string name="long_press_deck_editor">Long press to add to your deck</string>
     <string name="long_press_wishlist">Long press to add to your wishlist</string>
     <string name="rules_search_hint">Type keywords</string>
+    <string name="select_format">No format</string>
+    <string name="validation_missing_cards">%1$s missing cards (min %2$s)</string>
+    <string name="validation_bad_format">%1$s is not valid in %2$s</string>
+    <string name="validation_max_occurrence">%1$s is limited to %2$s</string>
+    <string name="card_type_land">Lands (%1$s)</string>
+    <string name="card_type_creature">Creatures (%1$s)</string>
+    <string name="card_type_instant">Instants and sorceries (%1$s)</string>
+    <string name="card_type_other">Others (%1$s)</string>
+    <string name="color_black">Black</string>
+    <string name="color_blue">Blue</string>
+    <string name="color_green">Green</string>
+    <string name="color_red">Red</string>
+    <string name="color_white">White</string>
+    <string name="creature">Creature</string>
+    <string name="land">Land</string>
+    <string name="instant_sorcery">Instant/Sorc.</string>
+    <string name="other">Other</string>
 </resources>

@@ -13,14 +13,12 @@ import fr.gstraymond.android.CustomApplication
 import fr.gstraymond.android.adapter.DeckCardCallback.FROM.DECK
 import fr.gstraymond.android.adapter.DeckCardCallback.FROM.SB
 import fr.gstraymond.models.DeckCard
-import fr.gstraymond.models.search.response.Card
 import fr.gstraymond.models.search.response.getLocalizedTitle
 import fr.gstraymond.ui.adapter.DeckDetailCardViews
 import fr.gstraymond.ui.adapter.SimpleCardViews
 import fr.gstraymond.utils.colorStateList
 import fr.gstraymond.utils.find
 import fr.gstraymond.utils.inflate
-import java.util.*
 
 class DeckDetailCardsAdapter(private val app: CustomApplication,
                              private val context: Context,
@@ -51,11 +49,18 @@ class DeckDetailCardsAdapter(private val app: CustomApplication,
         val grouped = app.cardListBuilder.build(deckId).all().filter { getMult(it) > 0 }.groupBy { types(it.card.type) }
         cards = CardTypes.values().flatMap {
             grouped[it]?.run {
-                listOf("${it.name} (${sumBy { getMult(it) }})") + sortedWith(comparator)
+                val header = getText("card_type_${it.name.toLowerCase()}", "${sumBy { getMult(it) }}")
+                listOf(header) + sortedWith(comparator)
             } ?: listOf()
         }
         notifyDataSetChanged()
     }
+
+    private fun getText(textId: String, vararg args: String) =
+            String.format(context.resources.getString(getString(textId)), *args)
+
+    private fun getString(id: String) =
+            context.resources.getIdentifier(id, "string", context.packageName)
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder) {

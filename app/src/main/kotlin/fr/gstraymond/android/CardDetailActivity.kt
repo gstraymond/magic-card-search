@@ -32,7 +32,7 @@ class CardDetailActivity : CardCommonActivity(R.layout.activity_card_detail),
     private val rootView by lazy { find<View>(android.R.id.content) }
     private val picsView by lazy { find<TextView>(R.id.card_detail_pics) }
     private val ebayView by lazy { find<TextView>(R.id.card_detail_ebay) }
-    private val favoriteView by lazy { CardDetailViews(app(), this, rootView, ShareViewCallbacks()) }
+    private val favoriteView by lazy { CardDetailViews(app(), this, ShareViewCallbacks()) }
 
     private inner class ShareViewCallbacks : ShareView.ShareViewCallbacks {
 

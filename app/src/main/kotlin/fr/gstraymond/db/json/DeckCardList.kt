@@ -27,7 +27,6 @@ class DeckCardList(context: Context,
             val deckStats = DeckStats(elems)
             deckList.update(copy(
                     colors = deckStats.colors,
-                    format = deckStats.format,
                     deckSize = deckStats.deckSize,
                     sideboardSize = deckStats.sideboardSize)
             )
@@ -38,5 +37,18 @@ class DeckCardList(context: Context,
 class DeckCardListBuilder(private val context: Context,
                           private val moshi: Moshi,
                           private val deckList: DeckList) {
-    fun build(deckId: Int): DeckCardList = DeckCardList(context, moshi, "$deckId", deckList)
+
+    var cache: DeckCardListCache? = null
+
+    fun build(deckId: Int): DeckCardList =
+            if (cache?.id == deckId) {
+                cache!!.deckCardList
+            } else {
+                DeckCardList(context, moshi, "$deckId", deckList).apply {
+                    cache = DeckCardListCache(deckId, this)
+                }
+            }
 }
+
+data class DeckCardListCache(val id: Int,
+                             val deckCardList: DeckCardList)

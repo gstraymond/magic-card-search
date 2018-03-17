@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:foreground="?android:attr/selectableItemBackground"
-    android:padding="8dp">
+    android:padding="16dp">
 
     <TextView
         android:id="@+id/array_adapter_card_casting_cost"

@@ -4,6 +4,7 @@ import android.content.Context
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentStatePagerAdapter
 import fr.gstraymond.R
+import fr.gstraymond.android.DeckDetailActivity
 import fr.gstraymond.android.DeckDetailCardsFragment
 import fr.gstraymond.android.DeckDetailHandFragment
 import fr.gstraymond.android.DeckDetailStatsFragment
@@ -12,10 +13,18 @@ import fr.gstraymond.android.adapter.DeckCardCallback.FROM.SB
 import fr.gstraymond.models.DeckCard
 
 
-class DeckDetailFragmentPagerAdapter(fragmentManager: FragmentManager, context: Context) :
+class DeckDetailFragmentPagerAdapter(fragmentManager: FragmentManager,
+                                     context: Context) :
         FragmentStatePagerAdapter(fragmentManager) {
 
     var deckCardCallback: DeckCardCallback? = null
+
+    val formatCallback = object : DeckDetailActivity.FormatCallback {
+        override fun formatChanged() {
+            deckDetailCardsFragment.formatChanged()
+        }
+
+    }
 
     private val callbacks = object : DeckCardCallback {
         override fun multChanged(deckCard: DeckCard, from: DeckCardCallback.FROM, deck: Int, sideboard: Int) =
