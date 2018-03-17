@@ -18,13 +18,14 @@ abstract class CardViews(private val displayableViews: List<DisplayableView>) {
     }
 }
 
-class WishlistCardViews(context: Context) :
+class WishlistCardViews(context: Context,
+                        cards: JsonList<Card>,
+                        clickCallbacks: CardClickCallbacks) :
         CardViews(listOf(
                 TitleView(),
-                DescriptionView(context),
                 CastingCostView(context),
-                TypePTView(),
-                CostView(context)
+                CostView(context),
+                FavoriteView(cards, clickCallbacks, context.resources)
         ))
 
 class HandCardViews(context: Context) :

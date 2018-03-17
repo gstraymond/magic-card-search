@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import fr.gstraymond.R
 import fr.gstraymond.db.json.WishList
 import fr.gstraymond.models.search.response.Card
+import fr.gstraymond.ui.adapter.CardClickCallbacks
 import fr.gstraymond.ui.adapter.WishlistCardViews
 
 class WishlistAdapter(context: Context,
@@ -14,7 +15,7 @@ class WishlistAdapter(context: Context,
                       private val clickCallbacks: WishlistAdapter.ClickCallbacks) :
         RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    private val cardViews = WishlistCardViews(context)
+    private val cardViews = WishlistCardViews(context, wishList, FavoriteViewClickCallbacks())
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val view = LayoutInflater
@@ -30,6 +31,22 @@ class WishlistAdapter(context: Context,
     }
 
     override fun getItemCount() = wishList.size()
+
+    private inner class FavoriteViewClickCallbacks : CardClickCallbacks {
+
+        override fun itemAdded(position: Int) {}
+
+        override fun itemRemoved(position: Int) {
+            notifyItemRemoved(position)
+            val total = wishList.size()
+            if (position < total) {
+                notifyItemRangeChanged(position, total - position)
+            }
+            if (total == 0) {
+                clickCallbacks.onEmptyList()
+            }
+        }
+    }
 
     interface ClickCallbacks {
         fun onEmptyList()
