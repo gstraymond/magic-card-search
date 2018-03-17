@@ -117,7 +117,6 @@ class DeckDetailCardsFragment : Fragment(), DeckCardCallback, DeckDetailActivity
             if (!activity.hasPerms(Manifest.permission.CAMERA)) {
                 activity.requestPerms(REQUEST_CAMERA_CODE, Manifest.permission.CAMERA)
             } else {
-                // TODO handle sideboard
                 startScanner()
             }
         }
