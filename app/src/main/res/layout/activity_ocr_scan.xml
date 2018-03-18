@@ -10,35 +10,37 @@
         style="@android:style/TextAppearance.Medium"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
         android:ellipsize="end"
         android:maxLines="2"
+        android:padding="8dp"
         tools:text="Black lotus" />
 
     <RelativeLayout
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/array_adapter_text"
+        android:layout_centerHorizontal="true"
         android:paddingTop="16dp">
-
-        <CheckBox
-            android:id="@+id/ocr_scan_continue_checkbox"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:checked="true"
-            android:focusable="false"
-            android:focusableInTouchMode="false"
-            android:scaleX="1.5"
-            android:scaleY="1.5" />
 
         <TextView
             android:id="@+id/ocr_scan_continue_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toLeftOf="@id/ocr_scan_continue_checkbox"
             android:paddingRight="8dp"
             android:paddingTop="8dp"
             android:text="@string/ocr_continue_scan" />
+
+        <CheckBox
+            android:id="@+id/ocr_scan_continue_checkbox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/ocr_scan_continue_label"
+            android:checked="true"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            android:scaleX="1.5"
+            android:scaleY="1.5" />
 
     </RelativeLayout>
 
