@@ -191,28 +191,22 @@ class DeckDetailCardsFragment : Fragment(), DeckCardCallback, DeckDetailActivity
             deck?.maybeFormat?.apply {
                 val msgs = mutableListOf<String>()
 
-                val (minDeckSize, deckSize, maxCardOccurrence) = when (this) {
-                    Formats.COMMANDER -> Triple(100, deck.deckSize + deck.sideboardSize, 1)
-                    else -> Triple(60, deck.deckSize, 4)
+                val (minDeckSize, deckSize) = when (this) {
+                    Formats.COMMANDER -> 100 to deck.deckSize + deck.sideboardSize
+                    else -> 60 to deck.deckSize
                 }
 
                 if (deckSize < minDeckSize) {
                     msgs += getText(R.string.validation_missing_cards, "${minDeckSize - deckSize}", "$minDeckSize")
                 }
 
-                cardList.filter { it.counts.deck > maxCardOccurrence }
-                        .filterNot { it.card.type.startsWith("Basic Land") }
-                        .filterNot { it.card.description.contains(cardWithNoSizeRestriction, true) }
-                        .forEach { msgs += getText(R.string.validation_max_occurrence, it.card.getLocalizedTitle(context),  "$maxCardOccurrence") }
+                cardList.filter { it.counts.deck > 1 }
+                        .map { it to FormatValidator.getMaxOccurrence(it.card, this) }
+                        .filter { it.first.counts.deck > it.second }
+                        .forEach { msgs += getText(R.string.validation_max_occurrence, it.first.card.getLocalizedTitle(context), "${it.second}") }
 
                 cardList.filter { !it.card.formats.contains(this) }
-                        .forEach { msgs += getText(R.string.validation_bad_format, it.card.getLocalizedTitle(context), this)}
-
-                if (this == Formats.VINTAGE) {
-                    cardList.filter { it.card.formats.contains("Restricted") }
-                            .filter { it.counts.deck > 1 }
-                            .forEach { msgs += getText(R.string.validation_max_occurrence, it.card.getLocalizedTitle(context),  "1") }
-                }
+                        .forEach { msgs += getText(R.string.validation_bad_format, it.card.getLocalizedTitle(context), this) }
 
                 if (msgs.isEmpty()) {
                     formatProblems.gone()

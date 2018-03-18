@@ -12,13 +12,13 @@ import fr.gstraymond.R
 import fr.gstraymond.android.CustomApplication
 import fr.gstraymond.android.adapter.DeckCardCallback.FROM.DECK
 import fr.gstraymond.android.adapter.DeckCardCallback.FROM.SB
+import fr.gstraymond.android.adapter.DeckDetailCardsAdapter.CardTypes.*
+import fr.gstraymond.android.adapter.DeckDetailCardsAdapter.ItemTypes.*
 import fr.gstraymond.models.DeckCard
 import fr.gstraymond.models.search.response.getLocalizedTitle
 import fr.gstraymond.ui.adapter.DeckDetailCardViews
 import fr.gstraymond.ui.adapter.SimpleCardViews
-import fr.gstraymond.utils.colorStateList
-import fr.gstraymond.utils.find
-import fr.gstraymond.utils.inflate
+import fr.gstraymond.utils.*
 
 class DeckDetailCardsAdapter(private val app: CustomApplication,
                              private val context: Context,
@@ -29,18 +29,18 @@ class DeckDetailCardsAdapter(private val app: CustomApplication,
 
     private lateinit var cards: List<Any>
 
-    private val cardViews by lazy { SimpleCardViews(context) }
+    private val cardViews = SimpleCardViews()
 
     enum class ItemTypes { HEADER, CARD, EMPTY }
 
     enum class CardTypes { LAND, CREATURE, INSTANT, OTHER }
 
     private fun types(type: String) = when {
-        type.contains("creature", ignoreCase = true) -> CardTypes.CREATURE
-        type.contains("land", ignoreCase = true) -> CardTypes.LAND
-        type.contains("instant", ignoreCase = true) -> CardTypes.INSTANT
-        type.contains("sorcery", ignoreCase = true) -> CardTypes.INSTANT
-        else -> CardTypes.OTHER
+        type.contains("creature", ignoreCase = true) -> CREATURE
+        type.contains("land", ignoreCase = true) -> LAND
+        type.contains("instant", ignoreCase = true) -> INSTANT
+        type.contains("sorcery", ignoreCase = true) -> INSTANT
+        else -> OTHER
     }
 
     private val comparator = compareBy<DeckCard>({ it.card.convertedManaCost }, { it.card.getLocalizedTitle(context) })
@@ -83,17 +83,23 @@ class DeckDetailCardsAdapter(private val app: CustomApplication,
                         text = deckCard.counts.sideboard.toString()
                     }
 
+                    val maxOccurrence = FormatValidator.getMaxOccurrence(card, app.deckList.getByUid("$deckId")?.maybeFormat)
+
                     listOf("card", "sb").forEach { line ->
                         val multView = view.find<TextView>(getId("array_adapter_deck_${line}_mult"))
-                        listOf("add", "remove").forEach { action ->
+                        val buttonMap = listOf("add", "remove").map {
+                            it to view.find<AppCompatButton>(getId("array_adapter_deck_${line}_${it}_1"))
+                        }.toMap()
+                        updateVisibility(multView.text.toString().toInt(), buttonMap, maxOccurrence)
+                        buttonMap.forEach { (action, button) ->
                             val coef = if (action == "add") 1 else -1
-                            listOf(1, 4).forEach { mult ->
-                                view.find<AppCompatButton>(getId("array_adapter_deck_${line}_${action}_$mult")).apply {
-                                    supportBackgroundTintList = context.resources.colorStateList(R.color.colorPrimary)
-                                    setOnClickListener {
-                                        val m = multView.text.toString().toInt()
-                                        multView.text = Math.min(99, Math.max(0, m + mult * coef)).toString()
-                                    }
+                            button.apply {
+                                supportBackgroundTintList = context.resources.colorStateList(R.color.colorPrimary)
+                                setOnClickListener {
+                                    val currentMult = multView.text.toString().toInt()
+                                    val newMult = currentMult + coef
+                                    multView.text = newMult.toString()
+                                    updateVisibility(newMult, buttonMap, maxOccurrence)
                                 }
                             }
                         }
@@ -122,6 +128,18 @@ class DeckDetailCardsAdapter(private val app: CustomApplication,
         }
     }
 
+    private fun updateVisibility(newMult: Int,
+                                 buttonMap: Map<String, AppCompatButton>,
+                                 maxOccurrence: Int) {
+        buttonMap["remove"]?.apply {
+            if (newMult == 0) invisible() else visible()
+        }
+
+        buttonMap["add"]?.apply {
+            if (newMult == maxOccurrence) invisible() else visible()
+        }
+    }
+
     private fun getId(id: String) =
             context.resources.getIdentifier(id, "id", context.packageName)
 
@@ -134,19 +152,19 @@ class DeckDetailCardsAdapter(private val app: CustomApplication,
     override fun getItemCount() = cards.size + FAB_TOTAL_SIZE
 
     override fun getItemViewType(position: Int) =
-            if (position >= cards.size) ItemTypes.EMPTY.ordinal
+            if (position >= cards.size) EMPTY.ordinal
             else {
                 when (cards[position]) {
-                    is DeckCard -> ItemTypes.CARD
-                    else -> ItemTypes.HEADER
+                    is DeckCard -> CARD
+                    else -> HEADER
                 }.ordinal
             }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
             LayoutInflater.from(parent.context).run {
                 when (viewType) {
-                    ItemTypes.CARD.ordinal -> CardViewHolder(inflate(R.layout.array_adapter_deck_card, parent, false))
-                    ItemTypes.HEADER.ordinal -> HeaderViewHolder(inflate(R.layout.array_adapter_deck_header, parent, false))
+                    CARD.ordinal -> CardViewHolder(inflate(R.layout.array_adapter_deck_card, parent, false))
+                    HEADER.ordinal -> HeaderViewHolder(inflate(R.layout.array_adapter_deck_header, parent, false))
                     else -> object : RecyclerView.ViewHolder(inflate(R.layout.array_adapter_deck_header, parent, false)) {}
                 }
             }

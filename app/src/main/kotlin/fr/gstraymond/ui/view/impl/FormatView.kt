@@ -6,7 +6,7 @@ import fr.gstraymond.biz.Formats
 import fr.gstraymond.models.search.response.Card
 import fr.gstraymond.ui.view.CommonDisplayableView
 
-class FormatView : CommonDisplayableView<TextView>(R.id.array_adapter_card_format) {
+class FormatView : CommonDisplayableView<TextView>(0/*R.id.array_adapter_card_format*/) {
 
     override fun setValue(view: TextView, card: Card, position: Int) {
         view.text = card.formats.maxBy { Formats.ordered.indexOf(it) }

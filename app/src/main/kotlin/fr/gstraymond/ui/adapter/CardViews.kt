@@ -65,11 +65,8 @@ class DeckDetailCardViews(context: Context) : CardViews(listOf(
         CostView(context)
 ))
 
-class SimpleCardViews(context: Context) : CardViews(listOf(
-        TitleView(),
-        CastingCostView(context),
-        FormatView(),
-        TypePTView()
+class SimpleCardViews : CardViews(listOf(
+        TitleView()
 ))
 
 class ShareCardDialogViews(context: Context,

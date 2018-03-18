@@ -156,7 +156,7 @@
     <string name="select_format">Pas de format</string>
     <string name="validation_missing_cards">%1$s cartes manquantes (%2$s min)</string>
     <string name="validation_bad_format">%1$s n\'est pas valide en %2$s</string>
-    <string name="validation_max_occurrence">%1$s est limitée à %2$s</string>
+    <string name="validation_max_occurrence">%1$s est limité à %2$s</string>
     <string name="card_type_land">Terrains (%1$s)</string>
     <string name="card_type_creature">Créatures (%1$s)</string>
     <string name="card_type_instant">Ephémères et rituels (%1$s)</string>
