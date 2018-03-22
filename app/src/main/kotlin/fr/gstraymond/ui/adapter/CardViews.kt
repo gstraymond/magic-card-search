@@ -3,9 +3,9 @@ package fr.gstraymond.ui.adapter
 import android.content.Context
 import android.view.View
 import fr.gstraymond.android.CustomApplication
+import fr.gstraymond.android.adapter.DeckCardCallback
 import fr.gstraymond.api.ui.view.DisplayableView
 import fr.gstraymond.db.json.JsonList
-import fr.gstraymond.models.DeckCard
 import fr.gstraymond.models.search.response.Card
 import fr.gstraymond.ui.view.impl.*
 
@@ -47,22 +47,28 @@ class FavoriteCardViews(context: Context,
         ))
 
 class DeckCardViews(context: Context,
-                    cards: JsonList<DeckCard>,
-                    clickCallbacks: CardClickCallbacks,
-                    addToSideboard: Boolean) :
+                    app: CustomApplication,
+                    deckId: Int,
+                    addToSideboard: Boolean,
+                    deckCardCallback: DeckCardCallback) :
         CardViews(listOf(
                 TitleView(),
                 DescriptionView(context),
                 CastingCostView(context),
                 TypePTView(),
-                DeckItemView(cards, clickCallbacks, context.resources, addToSideboard),
+                QuantityView(context, app, deckId, addToSideboard, deckCardCallback),
                 CostView(context)
         ))
 
-class DeckDetailCardViews(context: Context) : CardViews(listOf(
+class DeckDetailCardViews(context: Context,
+                          app: CustomApplication,
+                          deckId: Int,
+                          sideboard: Boolean,
+                          deckCardCallback: DeckCardCallback?) : CardViews(listOf(
         TitleView(),
         CastingCostView(context),
-        CostView(context)
+        CostView(context),
+        QuantityView(context, app, deckId, sideboard, deckCardCallback)
 ))
 
 class SimpleCardViews : CardViews(listOf(

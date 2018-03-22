@@ -55,7 +55,7 @@ class DeckDetailActivity : CustomActivity(R.layout.activity_deck_detail) {
     private val perms = arrayOf(READ_EXTERNAL_STORAGE, WRITE_EXTERNAL_STORAGE)
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+        super.onCreate(null) // avoid fragment pager adapter to restore old fragment
 
         deckId = intent.getStringExtra(DECK_EXTRA)
         deck = app().deckList.getByUid(deckId)!!
@@ -123,7 +123,7 @@ class DeckDetailActivity : CustomActivity(R.layout.activity_deck_detail) {
     }
 
     private val deckCardCallback = object : DeckCardCallback {
-        override fun multChanged(deckCard: DeckCard, from: DeckCardCallback.FROM, deck: Int, sideboard: Int) = setTabsText()
+        override fun multChanged(from: DeckCardCallback.FROM, position: Int) = setTabsText()
 
         override fun cardClick(deckCard: DeckCard) {}
     }

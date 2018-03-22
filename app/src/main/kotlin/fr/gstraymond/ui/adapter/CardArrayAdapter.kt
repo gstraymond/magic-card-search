@@ -9,7 +9,9 @@ import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.view.ViewGroup
 import fr.gstraymond.R
+import fr.gstraymond.android.CustomApplication
 import fr.gstraymond.android.DataUpdater
+import fr.gstraymond.android.adapter.DeckCardCallback
 import fr.gstraymond.db.json.JsonList
 import fr.gstraymond.models.Deck
 import fr.gstraymond.models.DeckCard
@@ -44,7 +46,14 @@ class LinearCardArrayAdapter(private val view: View,
 
     private val cardViews = data.cards?.run {
         FavoriteCardViews(context, this, FavoriteViewClickCallbacks())
-    } ?: DeckCardViews(context, data.deck!!.second, FavoriteViewClickCallbacks(), dataUpdater.getCurrentSearch().addToSideboard)
+    } ?: {
+        DeckCardViews(
+                context,
+                view.context.applicationContext as CustomApplication,
+                data.deck!!.first.id,
+                dataUpdater.getCurrentSearch().addToSideboard,
+                DeckCardClickCallbacks())
+    }()
 
     private inner class FavoriteViewClickCallbacks : CardClickCallbacks {
 
@@ -59,6 +68,11 @@ class LinearCardArrayAdapter(private val view: View,
             showMessage(message)
             cardClickCallbacks.itemRemoved(position)
         }
+    }
+
+    private inner class DeckCardClickCallbacks : DeckCardCallback {
+        override fun multChanged(from: DeckCardCallback.FROM, position: Int) = notifyItemChanged(position)
+        override fun cardClick(deckCard: DeckCard) {}
     }
 
     private fun getMessage(add: Boolean, cardName: String): String = if (data.deck != null) {

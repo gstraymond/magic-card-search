@@ -16,8 +16,6 @@ import com.github.clans.fab.FloatingActionButton
 import com.github.clans.fab.FloatingActionMenu
 import fr.gstraymond.R
 import fr.gstraymond.android.adapter.DeckCardCallback
-import fr.gstraymond.android.adapter.DeckCardCallback.FROM.DECK
-import fr.gstraymond.android.adapter.DeckCardCallback.FROM.SB
 import fr.gstraymond.android.adapter.DeckDetailCardsAdapter
 import fr.gstraymond.biz.Formats
 import fr.gstraymond.biz.SearchOptions
@@ -52,7 +50,7 @@ class DeckDetailCardsFragment : Fragment(), DeckCardCallback, DeckDetailActivity
     var sideboard: Boolean = false
 
     private val deckDetailAdapter by lazy {
-        DeckDetailCardsAdapter(app(), activity, sideboard).apply {
+        DeckDetailCardsAdapter(app(), activity, sideboard, deckId.toInt()).apply {
             deckCardCallback = this@DeckDetailCardsFragment
         }
     }
@@ -87,7 +85,7 @@ class DeckDetailCardsFragment : Fragment(), DeckCardCallback, DeckDetailActivity
         fabAdd.setOnClickListener {
             startActivity {
                 val searchOptions = deckList.getByUid(deckId)?.maybeFormat?.run {
-                    SearchOptions(facets = mapOf(FacetConst.FORMAT to listOf(this)), deckId = deckId)
+                    SearchOptions(facets = mapOf(FacetConst.FORMAT to listOf(this)), deckId = deckId, addToSideboard = sideboard)
                 } ?: {
                     SearchOptions.START_SEARCH_OPTIONS().copy(deckId = deckId)
                 }()
@@ -119,10 +117,6 @@ class DeckDetailCardsFragment : Fragment(), DeckCardCallback, DeckDetailActivity
             } else {
                 startScanner()
             }
-        }
-
-        deckDetailAdapter.let {
-            it.deckId = deckId.toInt()
         }
     }
 
@@ -221,20 +215,8 @@ class DeckDetailCardsFragment : Fragment(), DeckCardCallback, DeckDetailActivity
     private fun getText(textId: Int, vararg args: String) =
             String.format(resources.getString(textId), *args)
 
-    override fun multChanged(deckCard: DeckCard,
-                             from: DeckCardCallback.FROM,
-                             deck: Int,
-                             sideboard: Int) {
-        if (from == SB && this@DeckDetailCardsFragment.sideboard ||
-                from == DECK && !this@DeckDetailCardsFragment.sideboard) {
-            val updatedDeckCard = deckCard.setDeckCount(deck).setSBCount(sideboard)
-            when (updatedDeckCard.total()) {
-                0 -> cardList.delete(updatedDeckCard)
-                else -> cardList.update(updatedDeckCard)
-            }
-            updateTotal()
-            deckCardCallback?.multChanged(deckCard, from, deck, sideboard)
-        }
+    override fun multChanged(from: DeckCardCallback.FROM, position: Int) {
+        updateTotal()
         deckDetailAdapter.updateDeckList()
     }
 
