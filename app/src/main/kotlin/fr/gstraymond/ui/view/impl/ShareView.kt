@@ -39,10 +39,8 @@ class ShareView(private val app: CustomApplication,
                 spinner.visible()
                 spinner.adapter = ArrayAdapter(
                         context,
-                        android.R.layout.simple_spinner_item,
-                        listOf(context.getString(R.string.add_card_to_deck)) + otherDecks.map { it.name }).apply {
-                    setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-                }
+                        android.R.layout.simple_spinner_dropdown_item,
+                        listOf(context.getString(R.string.add_card_to_deck)) + otherDecks.map { it.name })
                 spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
                     override fun onNothingSelected(parent: AdapterView<*>?) = Unit
 

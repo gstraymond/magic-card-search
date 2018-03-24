@@ -94,7 +94,7 @@ class DeckDetailActivity : CustomActivity(R.layout.activity_deck_detail) {
 
         formatChooser.adapter = ArrayAdapter(
                 this,
-                android.R.layout.simple_spinner_item,
+                android.R.layout.simple_spinner_dropdown_item,
                 listOf(getString(R.string.select_format)) + Formats.ordered
         )
 
