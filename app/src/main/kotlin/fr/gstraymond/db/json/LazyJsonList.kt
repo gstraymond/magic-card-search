@@ -28,9 +28,11 @@ abstract class LazyJsonList<A>(context: Context,
 
     fun registerLoading(callback: LoadingCallback) = callbacks.add(callback)
 
+    fun unregisterLoading(callback: LoadingCallback) = callbacks.remove(callback)
+
     fun isLoaded() = loaded.get()
 
-    fun setLoaded() {
+    open fun setLoaded() {
         if (loaded.compareAndSet(false, true)) {
             log.d("loadComplete: $listName is loaded - ${elems.size} elems in ${Date().time - initTime}ms")
             callbacks.forEach { it.loaded() }

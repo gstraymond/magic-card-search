@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="wrap_content"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:divider="@color/transparent"
     android:dividerPadding="16dp"
@@ -9,161 +9,104 @@
     android:padding="8dp"
     android:showDividers="middle">
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <TextView
-            android:id="@+id/array_adapter_card_casting_cost"
-            android:layout_width="wrap_content"
-            android:layout_height="@dimen/castingCostSize"
-            android:layout_marginRight="8dp"
-            android:layout_marginTop="2dp"
-            tools:text="UUU" />
-
-        <TextView
-            android:id="@+id/array_adapter_text"
-            style="@android:style/TextAppearance.Medium"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toRightOf="@id/array_adapter_card_casting_cost"
-            android:ellipsize="end"
-            android:maxLines="2"
-            tools:text="Black lotus" />
-
-        <TextView
-            android:id="@+id/array_adapter_card_format"
-            style="@android:style/TextAppearance.Medium"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/array_adapter_text"
-            android:layout_marginRight="8dp"
-            android:textColor="@android:color/darker_gray"
-            tools:text="Standard" />
-
-        <TextView
-            android:id="@+id/array_adapter_card_type_pt"
-            style="@android:style/TextAppearance.Medium"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toRightOf="@id/array_adapter_text"
-            android:ellipsize="end"
-            android:maxLines="1"
-            tools:text=" - Sorcery" />
-
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:layout_width="match_parent"
+    <TextView
+        android:id="@+id/array_adapter_text"
+        style="@android:style/TextAppearance.Medium"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:paddingRight="8dp">
+        android:layout_gravity="center"
+        android:ellipsize="end"
+        android:gravity="center"
+        android:maxLines="2"
+        android:padding="8dp"
+        tools:text="Black lotus" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:text="@string/mult_deck" />
-
-        <TextView
-            android:id="@+id/array_adapter_deck_card_mult"
-            style="@android:style/TextAppearance.Medium"
-            android:layout_width="24dp"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:gravity="center"
-            android:textStyle="bold"
-            tools:text="2" />
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:orientation="vertical"
+        android:paddingTop="8dp">
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_gravity="right"
             android:layout_marginRight="8dp"
-            android:layout_toLeftOf="@id/array_adapter_deck_card_mult"
             android:orientation="horizontal">
 
-            <Button
-                android:id="@+id/array_adapter_deck_card_add_1"
-                android:layout_width="42dp"
+            <TextView
+                style="@android:style/TextAppearance.Medium"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="+1" />
-
-            <Button
-                android:id="@+id/array_adapter_deck_card_add_4"
-                android:layout_width="42dp"
-                android:layout_height="wrap_content"
-                android:text="+4" />
+                android:layout_centerVertical="true"
+                android:paddingRight="8dp"
+                android:text="@string/mult_deck" />
 
             <Button
                 android:id="@+id/array_adapter_deck_card_remove_1"
+                style="@android:style/TextAppearance.Large"
                 android:layout_width="42dp"
                 android:layout_height="wrap_content"
-                android:text="-1" />
+                android:text="-" />
+
+            <TextView
+                android:id="@+id/array_adapter_deck_card_mult"
+                style="@android:style/TextAppearance.Medium"
+                android:layout_width="24dp"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textStyle="bold"
+                tools:text="2" />
 
             <Button
-                android:id="@+id/array_adapter_deck_card_remove_4"
+                android:id="@+id/array_adapter_deck_card_add_1"
+                style="@android:style/TextAppearance.Large"
                 android:layout_width="42dp"
                 android:layout_height="wrap_content"
-                android:text="-4" />
+                android:text="+" />
 
         </LinearLayout>
-
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingRight="8dp">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:text="@string/mult_sideboard" />
-
-        <TextView
-            android:id="@+id/array_adapter_deck_sb_mult"
-            style="@android:style/TextAppearance.Medium"
-            android:layout_width="24dp"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:gravity="center"
-            android:textStyle="bold"
-            tools:text="12" />
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_gravity="right"
             android:layout_marginRight="8dp"
-            android:layout_toLeftOf="@id/array_adapter_deck_sb_mult"
             android:orientation="horizontal">
 
-            <Button
-                android:id="@+id/array_adapter_deck_sb_add_1"
-                android:layout_width="42dp"
+            <TextView
+                style="@android:style/TextAppearance.Medium"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="+1" />
-
-            <Button
-                android:id="@+id/array_adapter_deck_sb_add_4"
-                android:layout_width="42dp"
-                android:layout_height="wrap_content"
-                android:text="+4" />
+                android:layout_centerVertical="true"
+                android:paddingRight="8dp"
+                android:text="@string/mult_sideboard" />
 
             <Button
                 android:id="@+id/array_adapter_deck_sb_remove_1"
+                style="@android:style/TextAppearance.Large"
                 android:layout_width="42dp"
                 android:layout_height="wrap_content"
-                android:text="-1" />
+                android:text="-" />
+
+            <TextView
+                android:id="@+id/array_adapter_deck_sb_mult"
+                style="@android:style/TextAppearance.Medium"
+                android:layout_width="24dp"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textStyle="bold"
+                tools:text="12" />
 
             <Button
-                android:id="@+id/array_adapter_deck_sb_remove_4"
+                android:id="@+id/array_adapter_deck_sb_add_1"
+                style="@android:style/TextAppearance.Large"
                 android:layout_width="42dp"
                 android:layout_height="wrap_content"
-                android:text="-4" />
+                android:text="+" />
         </LinearLayout>
-
-    </RelativeLayout>
+    </LinearLayout>
 </LinearLayout>

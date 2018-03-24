@@ -42,7 +42,7 @@ abstract class CardListView<out A>(private val cards: JsonList<A>,
 
     private fun updateState(card: Card, view: AppCompatButton) {
         val contains = cards.contains(getElem(card))
-        log.d("contains %s -> %s [%s]", card, contains, view.javaClass)
+        log.d("contains $card -> $contains [${view.javaClass}]")
         if (contains) {
             view.setCompoundDrawablesWithIntrinsicBounds(iconEnabled, null, null, null)
             view.supportBackgroundTintList = colorEnabled

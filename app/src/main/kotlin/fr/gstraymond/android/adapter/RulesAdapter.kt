@@ -6,6 +6,7 @@ import android.support.v7.widget.RecyclerView
 import android.text.Html
 import android.text.SpannableStringBuilder
 import android.text.method.LinkMovementMethod
+import android.text.style.BackgroundColorSpan
 import android.text.style.ClickableSpan
 import android.text.style.URLSpan
 import android.view.LayoutInflater
@@ -14,27 +15,29 @@ import android.view.ViewGroup
 import android.widget.TextView
 import com.magic.card.search.commons.log.Log
 import fr.gstraymond.R
-import fr.gstraymond.db.json.RuleList
+import fr.gstraymond.models.search.response.Rule
+import fr.gstraymond.utils.color
 import fr.gstraymond.utils.find
 import fr.gstraymond.utils.gone
 import fr.gstraymond.utils.visible
 
-class RulesAdapter(private val context: Context,
-                   private val ruleList: RuleList) :
+class RulesAdapter(private val context: Context) :
         RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private val log = Log(javaClass)
 
-    private val contentsId = ruleList.all().indexOfFirst { it.text == "Contents" }
-    private val creditsId = ruleList.all().indexOfFirst { it.text == "Credits" }
-    private val glossaryId = ruleList.all().indexOfLast { it.text == "Glossary" }
+    var rules = listOf<Rule>()
 
-    private val spacingRange = (contentsId + 1)..creditsId
-    private val ruleRange = (creditsId + 1) until glossaryId
+    private val contentsId by lazy { rules.indexOfFirst { it.text == "Contents" } }
+    private val creditsId by lazy { rules.indexOfFirst { it.text == "Credits" } }
+    private val glossaryId by lazy { rules.indexOfLast { it.text == "Glossary" } }
+    private val spacingRange by lazy { (contentsId + 1)..creditsId }
+    private val ruleRange by lazy { (creditsId + 1) until glossaryId }
 
     private val urlRegex = Regex("""([\da-z.-]+)\.([a-z.]{2,6})([/\w-]*)*/?""", RegexOption.IGNORE_CASE)
 
     var rulesCallback: RulesCallback? = null
+    var highlightWords = listOf<String>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val view = LayoutInflater
@@ -46,7 +49,7 @@ class RulesAdapter(private val context: Context,
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val textView = holder.itemView.find<TextView>(R.id.array_adapter_rule_text)
         val idTextView = holder.itemView.find<TextView>(R.id.array_adapter_rule_id)
-        val rule = ruleList[position]
+        val rule = rules[position]
 
         val (style, underline) = when (rule.level) {
             1 -> android.R.style.TextAppearance_Large to true
@@ -76,7 +79,30 @@ class RulesAdapter(private val context: Context,
         }
     }
 
-    private fun makeLinkClickable(spannableBuilder: SpannableStringBuilder, span: URLSpan) {
+    private fun setTextViewHTML(text: TextView,
+                                html: String) {
+        val spanned = Html.fromHtml(html)
+        val spannableBuilder = SpannableStringBuilder(spanned)
+        spannableBuilder.getSpans(0, spanned.length, URLSpan::class.java)
+                .forEach { makeLinkClickable(spannableBuilder, it) }
+
+        if (highlightWords.all { spannableBuilder.contains(it, true) }) {
+            highlightWords.forEach {
+                Regex(it, RegexOption.IGNORE_CASE).findAll(spannableBuilder).forEach {
+                    spannableBuilder.setSpan(
+                            BackgroundColorSpan(context.resources.color(R.color.colorPrimaryDark)),
+                            it.range.start,
+                            it.range.endInclusive + 1,
+                            0)
+                }
+            }
+        }
+        text.text = spannableBuilder
+        text.movementMethod = LinkMovementMethod.getInstance()
+    }
+
+    private fun makeLinkClickable(spannableBuilder: SpannableStringBuilder,
+                                  span: URLSpan) {
         val start = spannableBuilder.getSpanStart(span)
         val end = spannableBuilder.getSpanEnd(span)
         val flags = spannableBuilder.getSpanFlags(span)
@@ -85,7 +111,7 @@ class RulesAdapter(private val context: Context,
                 val link = span.url
                 log.d("link: $link")
                 if (link.first().isDigit()) {
-                    val pos = ruleList.all().indexOfFirst { it.id == link }
+                    val pos = rules.indexOfFirst { it.id == link }
                     rulesCallback?.scrollTo(pos)
                 } else {
                     rulesCallback?.browse(link)
@@ -96,16 +122,7 @@ class RulesAdapter(private val context: Context,
         spannableBuilder.removeSpan(span)
     }
 
-    private fun setTextViewHTML(text: TextView, html: String) {
-        val spanned = Html.fromHtml(html)
-        val spannableBuilder = SpannableStringBuilder(spanned)
-        spannableBuilder.getSpans(0, spanned.length, URLSpan::class.java)
-                .forEach { makeLinkClickable(spannableBuilder, it) }
-        text.text = spannableBuilder
-        text.movementMethod = LinkMovementMethod.getInstance()
-    }
-
-    override fun getItemCount() = ruleList.size()
+    override fun getItemCount() = rules.size
 }
 
 

@@ -17,7 +17,8 @@ class DeckManager(private val deckList: DeckList,
     fun createEmptyDeck() = createDeck("Deck ${deckList.size() + 1}")
 
     fun createDeck(deckName: String,
-                   results: List<ImportResult> = listOf()): Int {
+                   results: List<ImportResult> = listOf(),
+                   maybeFormat: String? = null): Int {
         val deckId = deckList.getLastId() + 1
         val cards = results.filter { it is DeckLine }.map { it as DeckLine }
         val mergedCards = CardListMigrator.toDeckCardList(cards)
@@ -28,8 +29,8 @@ class DeckManager(private val deckList: DeckList,
                 id = deckId,
                 timestamp = Date(),
                 name = deckName,
+                maybeFormat = maybeFormat,
                 colors = deckStats.colors,
-                format = deckStats.format,
                 deckSize = deckStats.deckSize,
                 sideboardSize = deckStats.sideboardSize,
                 cardsNotImported = cardsNotImported))
@@ -64,7 +65,7 @@ class DeckManager(private val deckList: DeckList,
                     if (counts.sideboard > 0) "SB:  $line"
                     else "        $line"
                 }
-        return listOf("// NAME : ${deck.name}", "// FORMAT : ${deck.format}") + lines
+        return listOf("// NAME : ${deck.name}", "// FORMAT : ${deck.maybeFormat ?: "???"}") + lines
     }
 
     private fun normalizeName(deck: Deck) =

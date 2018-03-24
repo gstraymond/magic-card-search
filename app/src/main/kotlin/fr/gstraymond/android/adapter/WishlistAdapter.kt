@@ -3,23 +3,19 @@ package fr.gstraymond.android.adapter
 import android.content.Context
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import fr.gstraymond.R
-import fr.gstraymond.android.CustomApplication
 import fr.gstraymond.db.json.WishList
 import fr.gstraymond.models.search.response.Card
+import fr.gstraymond.ui.adapter.CardClickCallbacks
 import fr.gstraymond.ui.adapter.WishlistCardViews
-import fr.gstraymond.ui.view.impl.ShareView
 
-class WishlistAdapter(app: CustomApplication,
-                      context: Context,
-                      rootView: View,
+class WishlistAdapter(context: Context,
                       private val wishList: WishList,
                       private val clickCallbacks: WishlistAdapter.ClickCallbacks) :
         RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    private val cardViews = WishlistCardViews(app, context, rootView, ShareViewCallbacks())
+    private val cardViews = WishlistCardViews(context, wishList, FavoriteViewClickCallbacks())
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val view = LayoutInflater
@@ -36,9 +32,11 @@ class WishlistAdapter(app: CustomApplication,
 
     override fun getItemCount() = wishList.size()
 
-    private inner class ShareViewCallbacks : ShareView.ShareViewCallbacks {
+    private inner class FavoriteViewClickCallbacks : CardClickCallbacks {
 
-        override fun wishlistChanged(position: Int) {
+        override fun itemAdded(position: Int) {}
+
+        override fun itemRemoved(position: Int) {
             notifyItemRemoved(position)
             val total = wishList.size()
             if (position < total) {

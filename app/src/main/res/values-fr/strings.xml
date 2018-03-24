@@ -150,6 +150,24 @@
     <string name="rules_title">Règles</string>
     <string name="top">Haut</string>
     <string name="back">Précèdent</string>
-    <string name="long_press_deck_editor">Long press to add to your deck</string>
-    <string name="long_press_wishlist">Long press to add to your wishlist</string>
+    <string name="long_press_deck_editor">Appui long pour ajouter à votre deck</string>
+    <string name="long_press_wishlist">Appui long pour ajouter à votre wishlist</string>
+    <string name="rules_search_hint">Mots-clés</string>
+    <string name="select_format">Pas de format</string>
+    <string name="validation_missing_cards">%1$s cartes manquantes (%2$s min)</string>
+    <string name="validation_bad_format">%1$s n\'est pas valide en %2$s</string>
+    <string name="validation_max_occurrence">%1$s est limité à %2$s</string>
+    <string name="card_type_land">Terrains (%1$s)</string>
+    <string name="card_type_creature">Créatures (%1$s)</string>
+    <string name="card_type_instant">Ephémères et rituels (%1$s)</string>
+    <string name="card_type_other">Autres (%1$s)</string>
+    <string name="color_black">Noir</string>
+    <string name="color_blue">Bleu</string>
+    <string name="color_green">Vert</string>
+    <string name="color_red">Rouge</string>
+    <string name="color_white">Blanc</string>
+    <string name="creature">Créature</string>
+    <string name="land">Terrain</string>
+    <string name="instant_sorcery">Eph./Rituel</string>
+    <string name="other">Autre</string>
 </resources>

@@ -12,19 +12,22 @@ import android.support.design.widget.Snackbar.LENGTH_LONG
 import android.support.design.widget.TabLayout
 import android.support.v4.view.ViewPager
 import android.support.v7.widget.Toolbar
-import android.widget.EditText
-import android.widget.TextView
+import android.view.View
+import android.view.inputmethod.InputMethodManager
+import android.widget.*
 import android.widget.TextView.BufferType.EDITABLE
 import fr.gstraymond.R
 import fr.gstraymond.analytics.Tracker
 import fr.gstraymond.android.adapter.DeckCardCallback
 import fr.gstraymond.android.adapter.DeckDetailFragmentPagerAdapter
+import fr.gstraymond.biz.Formats
 import fr.gstraymond.models.Deck
 import fr.gstraymond.models.DeckCard
 import fr.gstraymond.utils.*
 import net.rdrei.android.dirchooser.DirectoryChooserActivity
 import net.rdrei.android.dirchooser.DirectoryChooserActivity.*
 import net.rdrei.android.dirchooser.DirectoryChooserConfig
+
 
 class DeckDetailActivity : CustomActivity(R.layout.activity_deck_detail) {
 
@@ -42,17 +45,19 @@ class DeckDetailActivity : CustomActivity(R.layout.activity_deck_detail) {
 
     private lateinit var deckId: String
     private lateinit var deck: Deck
+    private lateinit var pagerAdapter: DeckDetailFragmentPagerAdapter
 
     private val deckTitle by lazy { find<TextView>(R.id.toolbar_text) }
     private val delete by lazy { find<TextView>(R.id.toolbar_delete) }
     private val export by lazy { find<TextView>(R.id.toolbar_export) }
     private val refresh by lazy { find<TextView>(R.id.toolbar_refresh) }
     private val tabLayout by lazy { find<TabLayout>(R.id.sliding_tabs) }
+    private val formatChooser by lazy { find<Spinner>(R.id.format_chooser) }
 
     private val perms = arrayOf(READ_EXTERNAL_STORAGE, WRITE_EXTERNAL_STORAGE)
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+        super.onCreate(null) // avoid fragment pager adapter to restore old fragment
 
         deckId = intent.getStringExtra(DECK_EXTRA)
         deck = app().deckList.getByUid(deckId)!!
@@ -70,10 +75,10 @@ class DeckDetailActivity : CustomActivity(R.layout.activity_deck_detail) {
         }
 
         val viewPager = find<ViewPager>(R.id.viewpager)
-        viewPager.adapter = DeckDetailFragmentPagerAdapter(supportFragmentManager, this).apply {
+        pagerAdapter = DeckDetailFragmentPagerAdapter(supportFragmentManager, this).apply {
             deckCardCallback = this@DeckDetailActivity.deckCardCallback
         }
-
+        viewPager.adapter = pagerAdapter
 
         tabLayout.setupWithViewPager(viewPager)
 
@@ -88,6 +93,30 @@ class DeckDetailActivity : CustomActivity(R.layout.activity_deck_detail) {
 
         refresh.setOnClickListener { createRefreshDialog() }
         setTabsText()
+
+        formatChooser.adapter = ArrayAdapter(
+                this,
+                android.R.layout.simple_spinner_dropdown_item,
+                listOf(getString(R.string.select_format)) + Formats.ordered
+        )
+
+        deck.maybeFormat?.apply {
+            formatChooser.setSelection(Formats.ordered.indexOf(this) + 1, false)
+        }
+        
+        formatChooser.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onNothingSelected(parent: AdapterView<*>) = Unit
+
+            override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
+                val maybeFormat = when(position) {
+                    0 -> null
+                    else -> Formats.ordered[position - 1]
+                }
+                deck = deck.copy(maybeFormat = maybeFormat)
+                app().deckList.update(deck)
+                pagerAdapter.formatCallback.formatChanged()
+            }
+        }
     }
 
     override fun onResume() {
@@ -96,7 +125,7 @@ class DeckDetailActivity : CustomActivity(R.layout.activity_deck_detail) {
     }
 
     private val deckCardCallback = object : DeckCardCallback {
-        override fun multChanged(deckCard: DeckCard, from: DeckCardCallback.FROM, deck: Int, sideboard: Int) = setTabsText()
+        override fun multChanged(from: DeckCardCallback.FROM, position: Int) = setTabsText()
 
         override fun cardClick(deckCard: DeckCard) {}
     }
@@ -123,8 +152,15 @@ class DeckDetailActivity : CustomActivity(R.layout.activity_deck_detail) {
 
     private fun createTitleDialog() {
         val view = inflate(R.layout.activity_deck_detail_title)
-        val editText = view.find<EditText>(R.id.deck_detail_title)
-        editText.setText(deck.name, EDITABLE)
+        val editText = view.find<EditText>(R.id.deck_detail_title).apply {
+            setText(deck.name, EDITABLE)
+            post {
+                setSelection(deck.name.length)
+                requestFocus()
+                val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                imm.showSoftInput(this, InputMethodManager.SHOW_IMPLICIT)
+            }
+        }
         AlertDialog.Builder(this)
                 .setView(view)
                 .setPositiveButton(android.R.string.ok, { _, _ ->
@@ -154,7 +190,7 @@ class DeckDetailActivity : CustomActivity(R.layout.activity_deck_detail) {
                 .setPositiveButton(getString(R.string.deckdetails_refresh_ok)) { _, _ ->
                     startActivity {
                         val deckList = app().deckManager.export(deck).joinToString("\n")
-                        DeckImportProgressActivity.getIntentForDeckList(this, deckList)
+                        DeckImportProgressActivity.getIntentForDeckList(this, deckList, deck.maybeFormat)
                     }
                     finish()
                     app().deckManager.delete(deck)
@@ -191,5 +227,9 @@ class DeckDetailActivity : CustomActivity(R.layout.activity_deck_detail) {
                 }
             }
         }
+    }
+
+    interface FormatCallback {
+        fun formatChanged()
     }
 }

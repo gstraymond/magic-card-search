@@ -7,16 +7,33 @@
     android:foreground="?android:attr/selectableItemBackground"
     android:padding="8dp">
 
-    <Button
-        android:id="@+id/card_favorite"
-        android:layout_width="42dp"
+    <RelativeLayout
+        android:id="@+id/action_button"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_centerVertical="true"
-        android:layout_marginLeft="4dp"
-        android:drawableLeft="@drawable/ic_star_white_18dp"
-        android:focusable="false"
-        android:text="" />
+        android:layout_alignParentRight="true">
+
+        <Button
+            android:id="@+id/card_favorite"
+            android:layout_width="42dp"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="4dp"
+            android:drawableLeft="@drawable/ic_star_white_18dp"
+            android:focusable="false"
+            android:text=""
+            android:visibility="gone" />
+
+        <Button
+            android:id="@+id/array_adapter_deck_card_mult"
+            style="@android:style/TextAppearance.Medium"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="8dp"
+            android:visibility="gone"
+            tools:text="4" />
+    </RelativeLayout>
 
     <ImageView
         android:id="@+id/array_adapter_card_price"
@@ -24,7 +41,7 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:layout_marginLeft="8dp"
-        android:layout_toLeftOf="@id/card_favorite"
+        android:layout_toLeftOf="@id/action_button"
         android:src="@drawable/ic_monetization_on_white_24dp" />
 
     <RelativeLayout

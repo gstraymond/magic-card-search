@@ -14,7 +14,7 @@ import fr.gstraymond.android.fragment.CardDetailFragment
 import fr.gstraymond.models.search.response.Card
 import fr.gstraymond.models.search.response.getLocalizedTitle
 import fr.gstraymond.ui.adapter.CardDetailViews
-import fr.gstraymond.utils.WishlistCardClickCallbacks
+import fr.gstraymond.ui.view.impl.ShareView
 import fr.gstraymond.utils.app
 import fr.gstraymond.utils.find
 import fr.gstraymond.utils.startActivity
@@ -29,11 +29,15 @@ class CardDetailActivity : CardCommonActivity(R.layout.activity_card_detail),
                 }
     }
 
-    private val rooView by lazy { find<View>(android.R.id.content) }
+    private val rootView by lazy { find<View>(android.R.id.content) }
     private val picsView by lazy { find<TextView>(R.id.card_detail_pics) }
     private val ebayView by lazy { find<TextView>(R.id.card_detail_ebay) }
-    private val favoriteView by lazy { CardDetailViews(this, app().wishList, cardClickCallbacks) }
-    private val cardClickCallbacks by lazy { WishlistCardClickCallbacks(card, this, rooView) }
+    private val favoriteView by lazy { CardDetailViews(app(), this, ShareViewCallbacks()) }
+
+    private inner class ShareViewCallbacks : ShareView.ShareViewCallbacks {
+
+        override fun wishlistChanged(position: Int) {}
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -63,7 +67,7 @@ class CardDetailActivity : CardCommonActivity(R.layout.activity_card_detail),
 
     override fun onResume() {
         super.onResume()
-        favoriteView.display(rooView, card, 0)
+        favoriteView.display(rootView, card, 0)
     }
 
     override fun onItemSelected(id: Int) = startActivity {

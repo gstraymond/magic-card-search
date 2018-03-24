@@ -26,9 +26,7 @@ class WishListActivity : CustomActivity(R.layout.activity_wishlist) {
         }
     }
 
-    private val rootView by lazy { findViewById(android.R.id.content) }
-
-    private val wishlistAdapter by lazy { WishlistAdapter(app(), this, rootView, app().wishList, clickCallbacks) }
+    private val wishlistAdapter by lazy { WishlistAdapter(this, app().wishList, clickCallbacks) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

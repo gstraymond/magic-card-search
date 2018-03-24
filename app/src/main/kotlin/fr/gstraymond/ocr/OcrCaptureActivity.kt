@@ -163,7 +163,7 @@ class OcrCaptureActivity : CustomActivity(R.layout.ocr_capture), OcrDetectorProc
         }
     }
 
-    private val cardViews by lazy { SimpleCardViews(this) }
+    private val cardViews = SimpleCardViews()
 
     private fun createScanDialog(deckId: String,
                                  card: Card,

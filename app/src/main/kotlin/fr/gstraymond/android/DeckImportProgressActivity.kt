@@ -17,17 +17,19 @@ import fr.gstraymond.utils.startActivity
 class DeckImportProgressActivity : CustomActivity(R.layout.activity_deck_import_progress) {
 
     companion object {
-        private val FILE_PATH = "FILE_PATH"
-        private val DECK_LIST = "DECK_LIST"
+        private const val FILE_PATH = "FILE_PATH"
+        private const val DECK_LIST = "DECK_LIST"
+        private const val FORMAT = "FORMAT"
 
         fun getIntent(context: Context, filePath: String) =
                 Intent(context, DeckImportProgressActivity::class.java).apply {
                     putExtra(FILE_PATH, filePath)
                 }
 
-        fun getIntentForDeckList(context: Context, deckList: String) =
+        fun getIntentForDeckList(context: Context, deckList: String, maybeFormat: String?) =
                 Intent(context, DeckImportProgressActivity::class.java).apply {
                     putExtra(DECK_LIST, deckList)
+                    maybeFormat?.let { putExtra(FORMAT, it) }
                 }
     }
 
@@ -52,7 +54,7 @@ class DeckImportProgressActivity : CustomActivity(R.layout.activity_deck_import_
         urlOrDeck = intent.getStringExtra(FILE_PATH)?.run {
             logView.text = String.format(getString(R.string.import_deck), split("/").last())
             "file://$this"
-        } ?: intent.getStringExtra (DECK_LIST).apply {
+        } ?: intent.getStringExtra(DECK_LIST).apply {
             logView.text = getString(R.string.refreshing)
         }
     }
@@ -63,11 +65,12 @@ class DeckImportProgressActivity : CustomActivity(R.layout.activity_deck_import_
                 contentResolver,
                 app().deckResolver,
                 app().deckManager,
-                process
+                process,
+                intent.getStringExtra(FORMAT)
         ).execute(urlOrDeck)
     }
 
-    val process = object : DeckImporterTask.ImporterProcess {
+    private val process = object : DeckImporterTask.ImporterProcess {
 
         override fun readUrl(nbCards: Int, result: Boolean) {
             if (!result) {

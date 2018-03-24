@@ -16,19 +16,21 @@ import com.github.clans.fab.FloatingActionButton
 import com.github.clans.fab.FloatingActionMenu
 import fr.gstraymond.R
 import fr.gstraymond.android.adapter.DeckCardCallback
-import fr.gstraymond.android.adapter.DeckCardCallback.FROM.DECK
-import fr.gstraymond.android.adapter.DeckCardCallback.FROM.SB
+import fr.gstraymond.android.adapter.DeckCardCallback.FROM
 import fr.gstraymond.android.adapter.DeckDetailCardsAdapter
+import fr.gstraymond.biz.Formats
 import fr.gstraymond.biz.SearchOptions
+import fr.gstraymond.constants.FacetConst
 import fr.gstraymond.constants.FacetConst.FORMAT
 import fr.gstraymond.constants.FacetConst.TYPE
 import fr.gstraymond.db.json.DeckCardList
 import fr.gstraymond.models.Deck
 import fr.gstraymond.models.DeckCard
+import fr.gstraymond.models.search.response.getLocalizedTitle
 import fr.gstraymond.ocr.OcrCaptureActivity
 import fr.gstraymond.utils.*
 
-class DeckDetailCardsFragment : Fragment(), DeckCardCallback {
+class DeckDetailCardsFragment : Fragment(), DeckCardCallback, DeckDetailActivity.FormatCallback {
 
     private val REQUEST_CAMERA_CODE = 1233
 
@@ -41,19 +43,15 @@ class DeckDetailCardsFragment : Fragment(), DeckCardCallback {
     private lateinit var fabLand: FloatingActionButton
     private lateinit var fabScan: FloatingActionButton
     private lateinit var notImported: TextView
+    private lateinit var formatProblems: TextView
 
-    private val rooView by lazy { activity.find<View>(android.R.id.content) }
     private val deckId by lazy { activity.intent.getStringExtra(DeckDetailActivity.DECK_EXTRA) }
 
     var deckCardCallback: DeckCardCallback? = null
     var sideboard: Boolean = false
 
     private val deckDetailAdapter by lazy {
-        DeckDetailCardsAdapter(
-                app(),
-                activity,
-                sideboard,
-                rooView).apply {
+        DeckDetailCardsAdapter(app(), activity, sideboard, deckId.toInt()).apply {
             deckCardCallback = this@DeckDetailCardsFragment
         }
     }
@@ -79,6 +77,7 @@ class DeckDetailCardsFragment : Fragment(), DeckCardCallback {
         fabLand = view.find(R.id.deck_detail_cards_add_land)
         fabScan = view.find(R.id.deck_detail_cards_camera_scan)
         notImported = view.find(R.id.deck_detail_cards_not_imported)
+        formatProblems = view.find(R.id.deck_detail_cards_format_problems)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -86,7 +85,12 @@ class DeckDetailCardsFragment : Fragment(), DeckCardCallback {
 
         fabAdd.setOnClickListener {
             startActivity {
-                CardListActivity.getIntent(activity, SearchOptions.START_SEARCH_OPTIONS().copy(deckId = deckId))
+                val searchOptions = deckList.getByUid(deckId)?.maybeFormat?.run {
+                    SearchOptions(facets = mapOf(FacetConst.FORMAT to listOf(this)), deckId = deckId, addToSideboard = sideboard)
+                } ?: {
+                    SearchOptions.START_SEARCH_OPTIONS().copy(deckId = deckId)
+                }()
+                CardListActivity.getIntent(activity, searchOptions)
             }
         }
 
@@ -112,13 +116,8 @@ class DeckDetailCardsFragment : Fragment(), DeckCardCallback {
             if (!activity.hasPerms(Manifest.permission.CAMERA)) {
                 activity.requestPerms(REQUEST_CAMERA_CODE, Manifest.permission.CAMERA)
             } else {
-                // TODO handle sideboard
                 startScanner()
             }
-        }
-
-        deckDetailAdapter.let {
-            it.deckId = deckId.toInt()
         }
     }
 
@@ -173,31 +172,55 @@ class DeckDetailCardsFragment : Fragment(), DeckCardCallback {
                 .show()
     }
 
+    private val cardWithNoSizeRestriction = "A deck can have any number of cards named"
+
     private fun updateTotal() {
+        formatProblems.gone()
         if (cardList.isEmpty()) {
             recyclerView.gone()
             emptyText.visible()
         } else {
             recyclerView.visible()
             emptyText.gone()
+            val deck = app().deckList.getByUid(deckId)
+            deck?.maybeFormat?.apply {
+                val msgs = mutableListOf<String>()
+
+                val (minDeckSize, deckSize) = when (this) {
+                    Formats.COMMANDER -> 100 to deck.deckSize + deck.sideboardSize
+                    else -> 60 to deck.deckSize
+                }
+
+                if (deckSize < minDeckSize) {
+                    msgs += getText(R.string.validation_missing_cards, "${minDeckSize - deckSize}", "$minDeckSize")
+                }
+
+                cardList.filter { it.counts.deck > 1 }
+                        .map { it to FormatValidator.getMaxOccurrence(it.card, this) }
+                        .filter { it.first.counts.deck > it.second }
+                        .forEach { msgs += getText(R.string.validation_max_occurrence, it.first.card.getLocalizedTitle(context), "${it.second}") }
+
+                cardList.filter { !it.card.formats.contains(this) }
+                        .forEach { msgs += getText(R.string.validation_bad_format, it.card.getLocalizedTitle(context), this) }
+
+                if (msgs.isEmpty()) {
+                    formatProblems.gone()
+                } else {
+                    formatProblems.visible()
+                    formatProblems.text = msgs.joinToString("\n")
+                }
+            } ?: formatProblems.gone()
         }
     }
 
-    override fun multChanged(deckCard: DeckCard,
-                             from: DeckCardCallback.FROM,
-                             deck: Int,
-                             sideboard: Int) {
-        if (from == SB && this@DeckDetailCardsFragment.sideboard ||
-                from == DECK && !this@DeckDetailCardsFragment.sideboard) {
-            val updatedDeckCard = deckCard.setDeckCount(deck).setSBCount(sideboard)
-            when (updatedDeckCard.total()) {
-                0 -> cardList.delete(updatedDeckCard)
-                else -> cardList.update(updatedDeckCard)
-            }
-            updateTotal()
-            deckCardCallback?.multChanged(deckCard, from, deck, sideboard)
-        }
+    private fun getText(textId: Int, vararg args: String) =
+            String.format(resources.getString(textId), *args)
+
+    override fun multChanged(from: DeckCardCallback.FROM, position: Int) {
+        updateTotal()
         deckDetailAdapter.updateDeckList()
+        if (FROM.DECK == from && !sideboard || FROM.SB == from && sideboard)
+            deckCardCallback?.multChanged(from, position)
     }
 
     override fun cardClick(deckCard: DeckCard) {
@@ -215,5 +238,9 @@ class DeckDetailCardsFragment : Fragment(), DeckCardCallback {
                 startScanner()
             }
         }
+    }
+
+    override fun formatChanged() {
+        updateTotal()
     }
 }

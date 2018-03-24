@@ -4,22 +4,41 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/deck_detail_cards_not_imported"
-        style="@android:style/TextAppearance.Medium"
+    <LinearLayout
+        android:id="@+id/deck_detail_cards_msg"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
-        android:layout_marginTop="16dp"
-        android:background="@color/colorPrimaryDark"
-        android:padding="8dp" />
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/deck_detail_cards_not_imported"
+            style="@android:style/TextAppearance.Medium"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginTop="16dp"
+            android:background="@color/colorPrimaryDark"
+            android:padding="8dp" />
+
+        <TextView
+            android:id="@+id/deck_detail_cards_format_problems"
+            style="@android:style/TextAppearance.Small"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/counter_border_active"
+            android:padding="8dp" />
+
+    </LinearLayout>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/deck_detail_cards_recyclerview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/deck_detail_cards_not_imported" />
+        android:layout_below="@id/deck_detail_cards_msg" />
 
     <TextView
         android:id="@+id/deck_detail_cards_empty"

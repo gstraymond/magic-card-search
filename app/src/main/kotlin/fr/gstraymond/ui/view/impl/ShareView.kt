@@ -15,21 +15,19 @@ import fr.gstraymond.models.search.response.Card
 import fr.gstraymond.ui.adapter.ShareCardDialogViews
 import fr.gstraymond.ui.view.CommonDisplayableView
 import fr.gstraymond.utils.*
-import java.util.*
 
 class ShareView(private val app: CustomApplication,
                 private val context: Context,
-                private val rootView: View,
                 private val deckId: Int?,
                 private val shareViewCallbacks: ShareViewCallbacks?) : CommonDisplayableView<AppCompatButton>(R.id.card_share) {
 
     override fun display(view: AppCompatButton, card: Card) = true
 
     override fun setValue(view: AppCompatButton, card: Card, position: Int) {
-        view.supportBackgroundTintList = context.resources.colorStateList(R.color.colorPrimaryDark)
+        view.supportBackgroundTintList = context.resources.colorStateList(R.color.colorPrimary)
         view.setOnClickListener {
             val dialogView = context.inflate(R.layout.dialog_share)
-            val clickCallbacks = WishlistCardClickCallbacks(card, context, rootView)
+            val clickCallbacks = WishlistCardClickCallbacks(card, context, dialogView)
             val wishList = app.wishList
             val shareCardDialogViews = ShareCardDialogViews(context, wishList, clickCallbacks)
             shareCardDialogViews.display(dialogView, card, 0)
@@ -41,10 +39,8 @@ class ShareView(private val app: CustomApplication,
                 spinner.visible()
                 spinner.adapter = ArrayAdapter(
                         context,
-                        android.R.layout.simple_spinner_item,
-                        listOf(context.getString(R.string.add_card_to_deck)) + otherDecks.map { it.name }).apply {
-                    setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-                }
+                        android.R.layout.simple_spinner_dropdown_item,
+                        listOf(context.getString(R.string.add_card_to_deck)) + otherDecks.map { it.name })
                 spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
                     override fun onNothingSelected(parent: AdapterView<*>?) = Unit
 
@@ -59,7 +55,7 @@ class ShareView(private val app: CustomApplication,
                                 otherCardList.addOrRemove(otherDeckCard)
                                 String.format(context.resources.getString(R.string.added_to_deck), card.title, deck.name)
                             }
-                            Snackbar.make(rootView, message, Snackbar.LENGTH_LONG).show()
+                            Snackbar.make(dialogView, message, Snackbar.LENGTH_LONG).show()
                         }
                     }
 

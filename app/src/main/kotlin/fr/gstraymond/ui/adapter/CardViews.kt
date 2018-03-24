@@ -3,9 +3,9 @@ package fr.gstraymond.ui.adapter
 import android.content.Context
 import android.view.View
 import fr.gstraymond.android.CustomApplication
+import fr.gstraymond.android.adapter.DeckCardCallback
 import fr.gstraymond.api.ui.view.DisplayableView
 import fr.gstraymond.db.json.JsonList
-import fr.gstraymond.models.DeckCard
 import fr.gstraymond.models.search.response.Card
 import fr.gstraymond.ui.view.impl.*
 
@@ -18,25 +18,20 @@ abstract class CardViews(private val displayableViews: List<DisplayableView>) {
     }
 }
 
-class WishlistCardViews(app: CustomApplication,
-                        context: Context,
-                        rootView: View,
-                        sharedViewCallbacks: ShareView.ShareViewCallbacks) :
+class WishlistCardViews(context: Context,
+                        cards: JsonList<Card>,
+                        clickCallbacks: CardClickCallbacks) :
         CardViews(listOf(
                 TitleView(),
-                DescriptionView(context),
                 CastingCostView(context),
-                TypePTView(),
-                ShareView(app, context, rootView, null, sharedViewCallbacks),
-                CostView(context)
+                CostView(context),
+                FavoriteView(cards, clickCallbacks, context.resources)
         ))
 
 class HandCardViews(context: Context) :
         CardViews(listOf(
                 TitleView(),
-                DescriptionView(context),
-                CastingCostView(context),
-                TypePTView()
+                CastingCostView(context)
         ))
 
 class FavoriteCardViews(context: Context,
@@ -52,51 +47,46 @@ class FavoriteCardViews(context: Context,
         ))
 
 class DeckCardViews(context: Context,
-                    cards: JsonList<DeckCard>,
-                    clickCallbacks: CardClickCallbacks,
-                    addToSideboard: Boolean) :
+                    app: CustomApplication,
+                    deckId: Int,
+                    addToSideboard: Boolean,
+                    deckCardCallback: DeckCardCallback) :
         CardViews(listOf(
                 TitleView(),
                 DescriptionView(context),
                 CastingCostView(context),
                 TypePTView(),
-                DeckItemView(cards, clickCallbacks, context.resources, addToSideboard),
+                QuantityView(context, app, deckId, addToSideboard, deckCardCallback),
                 CostView(context)
         ))
 
-class DeckDetailCardViews(app: CustomApplication,
-                          context: Context,
-                          rootView: View,
-                          deckId: Int) : CardViews(listOf(
+class DeckDetailCardViews(context: Context,
+                          app: CustomApplication,
+                          deckId: Int,
+                          sideboard: Boolean,
+                          deckCardCallback: DeckCardCallback?) : CardViews(listOf(
         TitleView(),
         CastingCostView(context),
-        FormatView(),
-        TypePTView(),
-        ShareView(app, context, rootView, deckId, null)
+        CostView(context),
+        QuantityView(context, app, deckId, sideboard, deckCardCallback)
 ))
 
-class SimpleCardViews(context: Context) : CardViews(listOf(
-        TitleView(),
-        CastingCostView(context),
-        FormatView(),
-        TypePTView()
+class SimpleCardViews : CardViews(listOf(
+        TitleView()
 ))
 
 class ShareCardDialogViews(context: Context,
                            cards: JsonList<Card>,
                            clickCallbacks: CardClickCallbacks) : CardViews(listOf(
         TitleView(),
-        CastingCostView(context),
-        FormatView(),
-        TypePTView(),
         FavoriteView(cards, clickCallbacks, context.resources)
 ))
 
-class CardDetailViews(context: Context,
-                      cards: JsonList<Card>,
-                      clickCallbacks: CardClickCallbacks) :
+class CardDetailViews(app: CustomApplication,
+                      context: Context,
+                      shareViewCallbacks: ShareView.ShareViewCallbacks) :
         CardViews(listOf(
-                FavoriteView(cards, clickCallbacks, context.resources)
+                ShareView(app, context, null, shareViewCallbacks)
         ))
 
 interface CardClickCallbacks {

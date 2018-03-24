@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.text.Html
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,9 +13,7 @@ import fr.gstraymond.android.DeckDetailActivity.Companion.DECK_EXTRA
 import fr.gstraymond.android.adapter.DeckDetailStatsAdapter
 import fr.gstraymond.android.adapter.IntChart
 import fr.gstraymond.android.adapter.StringChart
-import fr.gstraymond.biz.CastingCostImageGetter
 import fr.gstraymond.biz.DeckStats
-import fr.gstraymond.tools.CastingCostFormatter
 import fr.gstraymond.utils.app
 import fr.gstraymond.utils.find
 import fr.gstraymond.utils.gone
@@ -25,8 +22,6 @@ import fr.gstraymond.utils.visible
 class DeckDetailStatsFragment : Fragment() {
 
     private val deckDetailStatsAdapter by lazy { DeckDetailStatsAdapter(context) }
-    private val imageGetter by lazy { CastingCostImageGetter.large(context) }
-    private val ccFormatter = CastingCostFormatter()
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var emptyText: TextView
@@ -55,6 +50,7 @@ class DeckDetailStatsFragment : Fragment() {
         if (activity == null) return
 
         val deckId = activity.intent.getStringExtra(DECK_EXTRA)
+        val deck = activity.app().deckList.getByUid(deckId)
         val cardList = activity.app().cardListBuilder.build(deckId.toInt())
         if (cardList.isEmpty()) {
             recyclerView.gone()
@@ -64,31 +60,21 @@ class DeckDetailStatsFragment : Fragment() {
             emptyText.gone()
             val deckStats = DeckStats(cardList.all())
             deckDetailStatsAdapter.apply {
-                val formatColor = getText(R.string.stats_colors, ccFormatter.format(deckStats.colorSymbols))
-                val typeCount = deckStats.typeCount
-                val typeCountsCharts = typeCount.filterNot { it.secondaryTypes.isEmpty() }.map {
-                    StringChart("Type: ${it.type} (${it.count})", it.secondaryTypes)
-                } + typeCount.filter { it.secondaryTypes.isEmpty() }.map {
-                    "Type: ${it.type} (${it.count})"
-                }
                 val abilitiesCharts = deckStats.abilitiesCount.run {
                     if (isEmpty()) listOf()
                     else listOf(StringChart(getText(R.string.abilities).toString(), this))
                 }
 
-                val text = listOf(
-                        getText(R.string.stats_format, deckStats.format),
-                        formatColor,
-                        getText(R.string.stats_total_cards, "${deckStats.deckSize}", "${deckStats.sideboardSize}"),
-                        getText(R.string.stats_total_price, "${deckStats.totalPrice}")
-                ).joinToString("<br>".repeat(2))
+                val colorDistribution =
+                        if (deck?.colors?.size ?: 0 < 2) listOf()
+                        else listOf(StringChart(resources.getString(R.string.stats_color_distribution), deckStats.colorDistribution(context)))
+
+                val typeDistribution = listOf(StringChart(resources.getString(R.string.stats_type_distribution), deckStats.typeDistribution(context)))
 
                 elements = listOf(
-                        Html.fromHtml(text, imageGetter, null),
-                        IntChart(resources.getString(R.string.stats_mana_curve), deckStats.manaCurve),
-                        StringChart(resources.getString(R.string.stats_color_distribution), deckStats.colorDistribution),
-                        StringChart(resources.getString(R.string.stats_type_distribution), deckStats.typeDistribution)
-                ) + abilitiesCharts + typeCountsCharts
+                        getText(R.string.stats_total_price, "${deckStats.totalPrice}"),
+                        IntChart(resources.getString(R.string.stats_mana_curve), deckStats.manaCurve)
+                ) + colorDistribution + typeDistribution + abilitiesCharts
 
                 notifyDataSetChanged()
             }
