@@ -13,6 +13,7 @@ import android.support.design.widget.TabLayout
 import android.support.v4.view.ViewPager
 import android.support.v7.widget.Toolbar
 import android.view.View
+import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import android.widget.TextView.BufferType.EDITABLE
 import fr.gstraymond.R
@@ -26,6 +27,9 @@ import fr.gstraymond.utils.*
 import net.rdrei.android.dirchooser.DirectoryChooserActivity
 import net.rdrei.android.dirchooser.DirectoryChooserActivity.*
 import net.rdrei.android.dirchooser.DirectoryChooserConfig
+import android.view.inputmethod.InputMethodManager.SHOW_IMPLICIT
+
+
 
 class DeckDetailActivity : CustomActivity(R.layout.activity_deck_detail) {
 
@@ -150,8 +154,15 @@ class DeckDetailActivity : CustomActivity(R.layout.activity_deck_detail) {
 
     private fun createTitleDialog() {
         val view = inflate(R.layout.activity_deck_detail_title)
-        val editText = view.find<EditText>(R.id.deck_detail_title)
-        editText.setText(deck.name, EDITABLE)
+        val editText = view.find<EditText>(R.id.deck_detail_title).apply {
+            setText(deck.name, EDITABLE)
+            post {
+                setSelection(deck.name.length)
+                requestFocus()
+                val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                imm.showSoftInput(this, InputMethodManager.SHOW_IMPLICIT)
+            }
+        }
         AlertDialog.Builder(this)
                 .setView(view)
                 .setPositiveButton(android.R.string.ok, { _, _ ->
