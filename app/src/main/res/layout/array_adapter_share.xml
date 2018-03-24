@@ -36,6 +36,7 @@
         android:layout_height="@dimen/castingCostSize"
         android:layout_centerVertical="true"
         android:layout_gravity="bottom"
+        android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
         android:layout_toLeftOf="@id/array_adapter_card_price"
         tools:text="UUU" />
