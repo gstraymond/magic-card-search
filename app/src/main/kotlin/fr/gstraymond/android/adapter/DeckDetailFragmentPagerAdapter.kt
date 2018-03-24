@@ -12,7 +12,6 @@ import fr.gstraymond.android.adapter.DeckCardCallback.FROM.DECK
 import fr.gstraymond.android.adapter.DeckCardCallback.FROM.SB
 import fr.gstraymond.models.DeckCard
 
-
 class DeckDetailFragmentPagerAdapter(fragmentManager: FragmentManager,
                                      context: Context) :
         FragmentPagerAdapter(fragmentManager) {
@@ -31,7 +30,7 @@ class DeckDetailFragmentPagerAdapter(fragmentManager: FragmentManager,
     }
 
     private fun onMultChanged(from: DeckCardCallback.FROM, position: Int) {
-        DeckDetailStatsFragment().updateStats()
+        deckDetailStatsFragment.updateStats()
         when (from) {
             DECK -> deckDetailSideboardFragment.multChanged(from, position)
             SB -> deckDetailCardsFragment.multChanged(from, position)
@@ -40,6 +39,7 @@ class DeckDetailFragmentPagerAdapter(fragmentManager: FragmentManager,
     }
 
     private val pageTitles = listOf("", "", context.getString(R.string.deck_tab_stats), context.getString(R.string.deck_tab_hand))
+    private val deckDetailStatsFragment = DeckDetailStatsFragment()
     private val deckDetailCardsFragment = DeckDetailCardsFragment().apply { deckCardCallback = callbacks }
     private val deckDetailSideboardFragment = DeckDetailCardsFragment().apply {
         deckCardCallback = callbacks
@@ -49,7 +49,7 @@ class DeckDetailFragmentPagerAdapter(fragmentManager: FragmentManager,
     private val fragments = listOf(
             deckDetailCardsFragment,
             deckDetailSideboardFragment,
-            DeckDetailStatsFragment(),
+            deckDetailStatsFragment,
             DeckDetailHandFragment()
     )
 

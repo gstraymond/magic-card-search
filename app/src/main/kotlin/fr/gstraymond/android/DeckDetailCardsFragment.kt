@@ -16,6 +16,7 @@ import com.github.clans.fab.FloatingActionButton
 import com.github.clans.fab.FloatingActionMenu
 import fr.gstraymond.R
 import fr.gstraymond.android.adapter.DeckCardCallback
+import fr.gstraymond.android.adapter.DeckCardCallback.FROM
 import fr.gstraymond.android.adapter.DeckDetailCardsAdapter
 import fr.gstraymond.biz.Formats
 import fr.gstraymond.biz.SearchOptions
@@ -218,6 +219,8 @@ class DeckDetailCardsFragment : Fragment(), DeckCardCallback, DeckDetailActivity
     override fun multChanged(from: DeckCardCallback.FROM, position: Int) {
         updateTotal()
         deckDetailAdapter.updateDeckList()
+        if (FROM.DECK == from && !sideboard || FROM.SB == from && sideboard)
+            deckCardCallback?.multChanged(from, position)
     }
 
     override fun cardClick(deckCard: DeckCard) {

@@ -27,8 +27,6 @@ import fr.gstraymond.utils.*
 import net.rdrei.android.dirchooser.DirectoryChooserActivity
 import net.rdrei.android.dirchooser.DirectoryChooserActivity.*
 import net.rdrei.android.dirchooser.DirectoryChooserConfig
-import android.view.inputmethod.InputMethodManager.SHOW_IMPLICIT
-
 
 
 class DeckDetailActivity : CustomActivity(R.layout.activity_deck_detail) {
