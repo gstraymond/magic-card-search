@@ -181,7 +181,7 @@ class DeckDetailActivity : CustomActivity(R.layout.activity_deck_detail) {
                 .setPositiveButton(getString(R.string.deckdetails_refresh_ok)) { _, _ ->
                     startActivity {
                         val deckList = app().deckManager.export(deck).joinToString("\n")
-                        DeckImportProgressActivity.getIntentForDeckList(this, deckList)
+                        DeckImportProgressActivity.getIntentForDeckList(this, deckList, deck.maybeFormat)
                     }
                     finish()
                     app().deckManager.delete(deck)

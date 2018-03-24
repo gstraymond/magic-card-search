@@ -8,7 +8,8 @@ import java.net.URL
 class DeckImporterTask(private val contentResolver: ContentResolver,
                        private val deckResolver: DeckResolver,
                        private val deckManager: DeckManager,
-                       private val importerProcess: ImporterProcess) : AsyncTask<String, DeckImporterTask.Progress, Int>() {
+                       private val importerProcess: ImporterProcess,
+                       private val maybeFormat: String?) : AsyncTask<String, DeckImporterTask.Progress, Int>() {
 
     data class Progress(val task: String, val result: Int)
 
@@ -29,7 +30,7 @@ class DeckImporterTask(private val contentResolver: ContentResolver,
         publishProgress(Progress(URL_TASK, importedDeck?.lines?.size ?: -1))
         return importedDeck?.let { deck ->
             val cards = deckResolver.resolve(deck, this)
-            deckManager.createDeck(deck.name, cards)
+            deckManager.createDeck(deck.name, cards, maybeFormat)
         }
     }
 
