@@ -22,17 +22,17 @@
             android:drawableLeft="@drawable/ic_star_white_18dp"
             android:focusable="false"
             android:text=""
-            android:visibility="gone"/>
+            android:visibility="gone" />
 
         <Button
             android:id="@+id/array_adapter_deck_card_mult"
             style="@android:style/TextAppearance.Medium"
-            android:layout_width="42dp"
-            android:layout_height="wrap_content"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
             android:layout_centerVertical="true"
             android:layout_marginLeft="8dp"
-            tools:text="4"
-            android:visibility="gone" />
+            android:visibility="gone"
+            tools:text="4" />
     </RelativeLayout>
 
     <ImageView

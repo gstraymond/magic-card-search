@@ -5,7 +5,6 @@ import android.content.Context
 import android.support.v7.widget.AppCompatButton
 import android.view.View
 import android.widget.TextView
-import com.magic.card.search.commons.log.Log
 import fr.gstraymond.R
 import fr.gstraymond.android.CustomApplication
 import fr.gstraymond.android.adapter.DeckCardCallback
@@ -24,10 +23,6 @@ class QuantityView(private val context: Context,
 
     private val cardViews = SimpleCardViews()
 
-    init {
-        Log(javaClass).w("sideboard: $sideboard")
-    }
-
     override fun setValue(view: AppCompatButton, card: Card, position: Int) {
         val cardList = app.cardListBuilder.build(deckId)
         val deckCard = cardList.getByUid(card.getId())
@@ -36,18 +31,18 @@ class QuantityView(private val context: Context,
             view.supportBackgroundTintList = context.resources.colorStateList(R.color.colorAccent)
             view.text = "${getMult(this)}"
         } ?: {
-            view.setCompoundDrawablesWithIntrinsicBounds(context.resources.drawable(R.drawable.ic_bookmark_border_white_18dp), null, null, null)
+            view.setCompoundDrawablesWithIntrinsicBounds(context.resources.drawable(R.drawable.ic_bookmark_border_white_24dp), null, null, null)
             view.supportBackgroundTintList = context.resources.colorStateList(R.color.colorPrimaryDark)
             view.text = null
         }()
 
         view.setOnClickListener {
-            val view = context.inflate(R.layout.array_adapter_deck_card_mult)
-            cardViews.display(view, card, position)
-            val deckCount = view.find<TextView>(R.id.array_adapter_deck_card_mult).apply {
+            val multView = context.inflate(R.layout.array_adapter_deck_card_mult)
+            cardViews.display(multView, card, position)
+            val deckCount = multView.find<TextView>(R.id.array_adapter_deck_card_mult).apply {
                 text = deckCard?.counts?.deck?.toString() ?: "0"
             }
-            val sbCount = view.find<TextView>(R.id.array_adapter_deck_sb_mult).apply {
+            val sbCount = multView.find<TextView>(R.id.array_adapter_deck_sb_mult).apply {
                 text = deckCard?.counts?.sideboard?.toString() ?: "0"
             }
 
@@ -55,23 +50,23 @@ class QuantityView(private val context: Context,
 
             val megamap: Map<String, Map<String, View>> = listOf("card", "sb").map { line ->
                 line to (listOf("add", "remove").map {
-                    it to view.find<AppCompatButton>(getId("array_adapter_deck_${line}_${it}_1"))
-                }.toMap() + mapOf("mult" to view.find<TextView>(getId("array_adapter_deck_${line}_mult"))))
+                    it to multView.find<AppCompatButton>(getId("array_adapter_deck_${line}_${it}_1"))
+                }.toMap() + mapOf("mult" to multView.find<TextView>(getId("array_adapter_deck_${line}_mult"))))
             }.toMap()
 
             megamap.forEach { (line, buttonMap) ->
-                val multView = buttonMap["mult"] as TextView
+                val multTextView = buttonMap["mult"] as TextView
                 val otherMap = megamap[megamap.keys.filterNot { it == line }.first()]!!
                 val otherMultView = otherMap["mult"] as TextView
-                updateVisibility(multView.text.toString().toInt(), otherMultView.text.toString().toInt(), buttonMap, maxOccurrence)
+                updateVisibility(multTextView.text.toString().toInt(), otherMultView.text.toString().toInt(), buttonMap, maxOccurrence)
                 buttonMap.filter { it.value is AppCompatButton }.forEach { (action, button) ->
                     val coef = if (action == "add") 1 else -1
                     (button as AppCompatButton).apply {
                         supportBackgroundTintList = context.resources.colorStateList(R.color.colorPrimary)
                         setOnClickListener {
-                            val currentMult = multView.text.toString().toInt()
+                            val currentMult = multTextView.text.toString().toInt()
                             val newMult = currentMult + coef
-                            multView.text = newMult.toString()
+                            multTextView.text = newMult.toString()
                             val otherMult = otherMultView.text.toString().toInt()
                             updateVisibility(newMult, otherMult, buttonMap, maxOccurrence)
                             updateVisibility(otherMult, newMult, otherMap, maxOccurrence)
@@ -81,7 +76,7 @@ class QuantityView(private val context: Context,
             }
 
             AlertDialog.Builder(context)
-                    .setView(view)
+                    .setView(multView)
                     .setPositiveButton(android.R.string.ok, { _, _ ->
                         val pickerDeckMult = deckCount.text.toString().toInt()
                         val pickerSbMult = sbCount.text.toString().toInt()
