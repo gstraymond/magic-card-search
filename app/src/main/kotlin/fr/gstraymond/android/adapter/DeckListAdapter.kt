@@ -17,7 +17,7 @@ import fr.gstraymond.utils.find
 import fr.gstraymond.utils.gone
 import fr.gstraymond.utils.visible
 
-class DeckListAdapter(context: Context) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class DeckListAdapter(private val context: Context) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private val imageGetter = CastingCostImageGetter.large(context)
     private val ccFormatter = CastingCostFormatter()
@@ -26,7 +26,7 @@ class DeckListAdapter(context: Context) : RecyclerView.Adapter<RecyclerView.View
 
     var decks: List<Deck> = listOf()
         set(value) {
-            items = value.groupBy { it.maybeFormat ?: "undefined" }
+            items = value.groupBy { it.maybeFormat ?: context.getString(R.string.select_format) }
                     .toList()
                     .fold(listOf<Any>()) { acc, (headers, decks) ->
                         acc + listOf("$headers (${decks.size})") + decks
