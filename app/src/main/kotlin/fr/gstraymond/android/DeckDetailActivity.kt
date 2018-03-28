@@ -79,6 +79,7 @@ class DeckDetailActivity : CustomActivity(R.layout.activity_deck_detail) {
             deckCardCallback = this@DeckDetailActivity.deckCardCallback
         }
         viewPager.adapter = pagerAdapter
+        viewPager.offscreenPageLimit = pagerAdapter.count
 
         tabLayout.setupWithViewPager(viewPager)
 

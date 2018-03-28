@@ -47,8 +47,6 @@ class DeckDetailCardsFragment : Fragment(), DeckCardCallback, DeckDetailActivity
     private lateinit var notImported: TextView
     private lateinit var formatProblems: TextView
 
-    private var viewCreated = false
-
     private val deckId by lazy { activity.intent.getStringExtra(DeckDetailActivity.DECK_EXTRA) }
 
     var deckCardCallback: DeckCardCallback? = null
@@ -82,8 +80,6 @@ class DeckDetailCardsFragment : Fragment(), DeckCardCallback, DeckDetailActivity
         fabScan = view.find(R.id.deck_detail_cards_camera_scan)
         notImported = view.find(R.id.deck_detail_cards_not_imported)
         formatProblems = view.find(R.id.deck_detail_cards_format_problems)
-
-        viewCreated = true
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -179,8 +175,6 @@ class DeckDetailCardsFragment : Fragment(), DeckCardCallback, DeckDetailActivity
     }
 
     private fun updateTotal() {
-        if (!viewCreated) return
-
         formatProblems.gone()
         if (cardList.isEmpty()) {
             recyclerView.gone()
@@ -235,7 +229,6 @@ class DeckDetailCardsFragment : Fragment(), DeckCardCallback, DeckDetailActivity
             String.format(resources.getString(textId), *args)
 
     override fun multChanged(from: DeckCardCallback.FROM, position: Int) {
-        if (!viewCreated) return
         updateTotal()
         deckDetailAdapter.updateDeckList()
         if (FROM.DECK == from && !sideboard || FROM.SB == from && sideboard)
