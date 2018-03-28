@@ -18,7 +18,9 @@ import fr.gstraymond.R
 import fr.gstraymond.android.adapter.DeckCardCallback
 import fr.gstraymond.android.adapter.DeckCardCallback.FROM
 import fr.gstraymond.android.adapter.DeckDetailCardsAdapter
-import fr.gstraymond.biz.Formats
+import fr.gstraymond.biz.Formats.BRAWL
+import fr.gstraymond.biz.Formats.COMMANDER
+import fr.gstraymond.biz.Formats.STANDARD
 import fr.gstraymond.biz.SearchOptions
 import fr.gstraymond.constants.FacetConst
 import fr.gstraymond.constants.FacetConst.FORMAT
@@ -90,7 +92,7 @@ class DeckDetailCardsFragment : Fragment(), DeckCardCallback, DeckDetailActivity
         fabAdd.setOnClickListener {
             startActivity {
                 val searchOptions = deckList.getByUid(deckId)?.maybeFormat?.run {
-                    SearchOptions(facets = mapOf(FacetConst.FORMAT to listOf(this)), deckId = deckId, addToSideboard = sideboard)
+                    SearchOptions(facets = mapOf(FacetConst.FORMAT to listOf(getFormat())), deckId = deckId, addToSideboard = sideboard)
                 } ?: {
                     SearchOptions.START_SEARCH_OPTIONS().copy(deckId = deckId)
                 }()
@@ -190,13 +192,23 @@ class DeckDetailCardsFragment : Fragment(), DeckCardCallback, DeckDetailActivity
             deck?.maybeFormat?.apply {
                 val msgs = mutableListOf<String>()
 
-                val (minDeckSize, deckSize) = when (this) {
-                    Formats.COMMANDER -> 100 to deck.deckSize + deck.sideboardSize
-                    else -> 60 to deck.deckSize
+                val (targetDeckSize, deckSize) = when (this) {
+                    COMMANDER -> SpecificSize(100) to deck.deckSize + deck.sideboardSize
+                    BRAWL -> SpecificSize(60) to deck.deckSize + deck.sideboardSize
+                    else -> MinSize(60) to deck.deckSize
                 }
 
-                if (deckSize < minDeckSize) {
-                    msgs += getText(R.string.validation_missing_cards, "${minDeckSize - deckSize}", "$minDeckSize")
+                when (targetDeckSize) {
+                    is MinSize -> {
+                        val size = targetDeckSize.size
+                        if (deckSize < size)
+                            msgs += getText(R.string.validation_missing_cards, "${size - deckSize}", "$size")
+                    }
+                    is SpecificSize -> {
+                        val size = targetDeckSize.size
+                        if (deckSize != size)
+                            msgs += getText(R.string.validation_specific_cards, "$size")
+                    }
                 }
 
                 cardList.filter { it.counts.deck > 1 }
@@ -204,7 +216,7 @@ class DeckDetailCardsFragment : Fragment(), DeckCardCallback, DeckDetailActivity
                         .filter { it.first.counts.deck > it.second }
                         .forEach { msgs += getText(R.string.validation_max_occurrence, it.first.card.getLocalizedTitle(context), "${it.second}") }
 
-                cardList.filter { !it.card.formats.contains(this) }
+                cardList.filter { !it.card.formats.contains(getFormat()) }
                         .forEach { msgs += getText(R.string.validation_bad_format, it.card.getLocalizedTitle(context), this) }
 
                 if (msgs.isEmpty()) {
@@ -216,6 +228,8 @@ class DeckDetailCardsFragment : Fragment(), DeckCardCallback, DeckDetailActivity
             } ?: formatProblems.gone()
         }
     }
+
+    private fun String.getFormat() = if (equals(BRAWL)) STANDARD else this
 
     private fun getText(textId: Int, vararg args: String) =
             String.format(resources.getString(textId), *args)
@@ -249,3 +263,8 @@ class DeckDetailCardsFragment : Fragment(), DeckCardCallback, DeckDetailActivity
         updateTotal()
     }
 }
+
+sealed class TargetDeckSize
+
+data class SpecificSize(val size: Int) : TargetDeckSize()
+data class MinSize(val size: Int) : TargetDeckSize()

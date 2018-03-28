@@ -1,5 +1,6 @@
 package fr.gstraymond.utils
 
+import fr.gstraymond.biz.Formats.BRAWL
 import fr.gstraymond.biz.Formats.COMMANDER
 import fr.gstraymond.biz.Formats.VINTAGE
 import fr.gstraymond.models.search.response.Card
@@ -15,6 +16,7 @@ object FormatValidator {
             isBasicLand(card) -> 99
             isUnlimited(card) -> 99
             format == COMMANDER -> 1
+            format == BRAWL -> 1
             isRestricted(card, format) -> 1
             else -> 4
         }

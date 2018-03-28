@@ -114,10 +114,11 @@ object Colors {
 }
 
 object Formats {
-    val STANDARD = "Standard"
-    val MODERN = "Modern"
-    val LEGACY = "Legacy"
-    val VINTAGE = "Vintage"
-    val COMMANDER = "Commander"
-    val ordered = listOf(STANDARD, MODERN, LEGACY, VINTAGE, COMMANDER)
+    const val STANDARD = "Standard"
+    const val MODERN = "Modern"
+    const val LEGACY = "Legacy"
+    const val VINTAGE = "Vintage"
+    const val COMMANDER = "Commander"
+    const val BRAWL = "Brawl"
+    val ordered = listOf(STANDARD, MODERN, LEGACY, VINTAGE, COMMANDER, BRAWL)
 }
