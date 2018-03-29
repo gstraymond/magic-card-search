@@ -2,6 +2,7 @@ package fr.gstraymond.android
 
 import android.Manifest
 import android.app.AlertDialog
+import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.support.v4.app.Fragment
@@ -64,6 +65,7 @@ class DeckDetailCardsFragment : Fragment(), DeckCardCallback, DeckDetailActivity
                               container: ViewGroup?,
                               savedInstanceState: Bundle?): View =
             inflater.inflate(R.layout.fragment_deck_detail_cards, container, false)
+                    .apply { savedInstanceState?.apply { sideboard = getBoolean("sideboard") } }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -134,6 +136,11 @@ class DeckDetailCardsFragment : Fragment(), DeckCardCallback, DeckDetailActivity
         }
     }
 
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        deckCardCallback = context as DeckCardCallback
+    }
+
     override fun onResume() {
         super.onResume()
         cardList = activity.app().cardListBuilder.build(deckId.toInt())
@@ -182,44 +189,47 @@ class DeckDetailCardsFragment : Fragment(), DeckCardCallback, DeckDetailActivity
         } else {
             recyclerView.visible()
             emptyText.gone()
-            val deck = app().deckList.getByUid(deckId)
-            deck?.maybeFormat?.apply {
-                val msgs = mutableListOf<String>()
 
-                val (targetDeckSize, deckSize) = when (this) {
-                    COMMANDER -> SpecificSize(100) to deck.deckSize + deck.sideboardSize
-                    BRAWL -> SpecificSize(60) to deck.deckSize + deck.sideboardSize
-                    else -> MinSize(60) to deck.deckSize
-                }
+            if (!sideboard) {
+                val deck = app().deckList.getByUid(deckId)
+                deck?.maybeFormat?.apply {
+                    val msgs = mutableListOf<String>()
 
-                when (targetDeckSize) {
-                    is MinSize -> {
-                        val size = targetDeckSize.size
-                        if (deckSize < size)
-                            msgs += getText(R.string.validation_missing_cards, "${size - deckSize}", "$size")
+                    val (targetDeckSize, deckSize) = when (this) {
+                        COMMANDER -> SpecificSize(100) to deck.deckSize + deck.sideboardSize
+                        BRAWL -> SpecificSize(60) to deck.deckSize + deck.sideboardSize
+                        else -> MinSize(60) to deck.deckSize
                     }
-                    is SpecificSize -> {
-                        val size = targetDeckSize.size
-                        if (deckSize != size)
-                            msgs += getText(R.string.validation_specific_cards, "$size")
+
+                    when (targetDeckSize) {
+                        is MinSize -> {
+                            val size = targetDeckSize.size
+                            if (deckSize < size)
+                                msgs += getText(R.string.validation_missing_cards, "${size - deckSize}", "$size")
+                        }
+                        is SpecificSize -> {
+                            val size = targetDeckSize.size
+                            if (deckSize != size)
+                                msgs += getText(R.string.validation_specific_cards, "$size")
+                        }
                     }
-                }
 
-                cardList.filter { it.counts.deck > 1 }
-                        .map { it to FormatValidator.getMaxOccurrence(it.card, this) }
-                        .filter { it.first.counts.deck > it.second }
-                        .forEach { msgs += getText(R.string.validation_max_occurrence, it.first.card.getLocalizedTitle(context), "${it.second}") }
+                    cardList.filter { it.counts.deck > 1 }
+                            .map { it to FormatValidator.getMaxOccurrence(it.card, this) }
+                            .filter { it.first.counts.deck > it.second }
+                            .forEach { msgs += getText(R.string.validation_max_occurrence, it.first.card.getLocalizedTitle(context), "${it.second}") }
 
-                cardList.filter { !it.card.formats.contains(getFormat()) }
-                        .forEach { msgs += getText(R.string.validation_bad_format, it.card.getLocalizedTitle(context), this) }
+                    cardList.filter { !it.card.formats.contains(getFormat()) }
+                            .forEach { msgs += getText(R.string.validation_bad_format, it.card.getLocalizedTitle(context), this) }
 
-                if (msgs.isEmpty()) {
-                    formatProblems.gone()
-                } else {
-                    formatProblems.visible()
-                    formatProblems.text = msgs.joinToString("\n")
-                }
-            } ?: formatProblems.gone()
+                    if (msgs.isEmpty()) {
+                        formatProblems.gone()
+                    } else {
+                        formatProblems.visible()
+                        formatProblems.text = msgs.joinToString("\n")
+                    }
+                } ?: formatProblems.gone()
+            }
         }
     }
 
@@ -254,6 +264,11 @@ class DeckDetailCardsFragment : Fragment(), DeckCardCallback, DeckDetailActivity
 
     override fun formatChanged() {
         updateTotal()
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putBoolean("sideboard", sideboard)
     }
 }
 
