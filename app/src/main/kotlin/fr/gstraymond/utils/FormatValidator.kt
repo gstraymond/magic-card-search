@@ -1,6 +1,8 @@
 package fr.gstraymond.utils
 
-import fr.gstraymond.biz.Formats
+import fr.gstraymond.biz.Formats.BRAWL
+import fr.gstraymond.biz.Formats.COMMANDER
+import fr.gstraymond.biz.Formats.VINTAGE
 import fr.gstraymond.models.search.response.Card
 
 object FormatValidator {
@@ -10,12 +12,17 @@ object FormatValidator {
     fun getMaxOccurrence(card: Card,
                          format: String?) =
         when {
+            format == null -> 99
             isBasicLand(card) -> 99
             isUnlimited(card) -> 99
-            format == Formats.COMMANDER -> 1
-            card.formats.contains("Restricted") -> 1
+            format == COMMANDER -> 1
+            format == BRAWL -> 1
+            isRestricted(card, format) -> 1
             else -> 4
         }
+
+    private fun isRestricted(card: Card, format: String?) =
+            card.formats.contains("Restricted") && format == VINTAGE
 
     private fun isUnlimited(card: Card) =
             card.description.contains(cardWithNoSizeRestriction, true)

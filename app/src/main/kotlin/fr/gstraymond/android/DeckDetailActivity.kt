@@ -29,7 +29,7 @@ import net.rdrei.android.dirchooser.DirectoryChooserActivity.*
 import net.rdrei.android.dirchooser.DirectoryChooserConfig
 
 
-class DeckDetailActivity : CustomActivity(R.layout.activity_deck_detail) {
+class DeckDetailActivity : CustomActivity(R.layout.activity_deck_detail), DeckCardCallback {
 
     companion object {
         const val DECK_EXTRA = "deck"
@@ -57,7 +57,7 @@ class DeckDetailActivity : CustomActivity(R.layout.activity_deck_detail) {
     private val perms = arrayOf(READ_EXTERNAL_STORAGE, WRITE_EXTERNAL_STORAGE)
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(null) // avoid fragment pager adapter to restore old fragment
+        super.onCreate(savedInstanceState)
 
         deckId = intent.getStringExtra(DECK_EXTRA)
         deck = app().deckList.getByUid(deckId)!!
@@ -75,10 +75,9 @@ class DeckDetailActivity : CustomActivity(R.layout.activity_deck_detail) {
         }
 
         val viewPager = find<ViewPager>(R.id.viewpager)
-        pagerAdapter = DeckDetailFragmentPagerAdapter(supportFragmentManager, this).apply {
-            deckCardCallback = this@DeckDetailActivity.deckCardCallback
-        }
+        pagerAdapter = DeckDetailFragmentPagerAdapter(supportFragmentManager, this)
         viewPager.adapter = pagerAdapter
+        viewPager.offscreenPageLimit = pagerAdapter.count
 
         tabLayout.setupWithViewPager(viewPager)
 
@@ -103,18 +102,18 @@ class DeckDetailActivity : CustomActivity(R.layout.activity_deck_detail) {
         deck.maybeFormat?.apply {
             formatChooser.setSelection(Formats.ordered.indexOf(this) + 1, false)
         }
-        
+
         formatChooser.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onNothingSelected(parent: AdapterView<*>) = Unit
 
             override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
-                val maybeFormat = when(position) {
+                val maybeFormat = when (position) {
                     0 -> null
                     else -> Formats.ordered[position - 1]
                 }
                 deck = deck.copy(maybeFormat = maybeFormat)
                 app().deckList.update(deck)
-                pagerAdapter.formatCallback.formatChanged()
+                pagerAdapter.formatChanged()
             }
         }
     }
@@ -124,11 +123,12 @@ class DeckDetailActivity : CustomActivity(R.layout.activity_deck_detail) {
         setTabsText()
     }
 
-    private val deckCardCallback = object : DeckCardCallback {
-        override fun multChanged(from: DeckCardCallback.FROM, position: Int) = setTabsText()
-
-        override fun cardClick(deckCard: DeckCard) {}
+    override fun multChanged(from: DeckCardCallback.FROM, position: Int) {
+        pagerAdapter.onMultChanged(from, position)
+        setTabsText()
     }
+
+    override fun cardClick(deckCard: DeckCard) {}
 
     private fun setTabsText() {
         app().deckList.getByUid(deckId)?.apply {

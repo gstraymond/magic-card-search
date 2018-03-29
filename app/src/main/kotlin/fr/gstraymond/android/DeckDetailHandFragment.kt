@@ -14,6 +14,7 @@ import fr.gstraymond.models.search.response.Card
 import fr.gstraymond.models.search.response.getLocalizedTitle
 import fr.gstraymond.utils.app
 import fr.gstraymond.utils.find
+import fr.gstraymond.utils.getId
 import fr.gstraymond.utils.startActivity
 
 class DeckDetailHandFragment : Fragment(), DeckDetailHandAdapter.ClickCallbacks {
@@ -45,20 +46,22 @@ class DeckDetailHandFragment : Fragment(), DeckDetailHandAdapter.ClickCallbacks 
             displayHand()
         }
 
-        savedInstanceState?.getParcelableArrayList<Card>(CARDS)?.apply {
-            deckDetailHandAdapter.cards = this
-            deckDetailHandAdapter.notifyDataSetChanged()
-        } ?:  displayHand()
+        displayHand(savedInstanceState?.getStringArrayList(CARDS))
     }
 
-    private fun displayHand() {
+    private fun displayHand(ids: List<String>? = null) {
         val deckId = activity.intent.getStringExtra(DeckDetailActivity.DECK_EXTRA)
         val cardList = activity.app().cardListBuilder.build(deckId.toInt())
         val cards = cardList.flatMap { deckCard -> (1..deckCard.counts.deck).map { deckCard.card } }
 
         if (cards.size < 7) return
 
-        deckDetailHandAdapter.cards = cards.shuffled().take(7).sortedWith(comparator)
+        deckDetailHandAdapter.cards = ids?.run {
+            map { id -> cards.first { it.getId() == id } }
+        } ?: {
+            cards.shuffled().take(7).sortedWith(comparator)
+        }()
+
         deckDetailHandAdapter.notifyDataSetChanged()
     }
 
@@ -67,7 +70,7 @@ class DeckDetailHandFragment : Fragment(), DeckDetailHandAdapter.ClickCallbacks 
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
-        outState.putParcelableArrayList(CARDS, ArrayList(deckDetailHandAdapter.cards))
+        outState.putStringArrayList(CARDS, ArrayList(deckDetailHandAdapter.cards.map { it.getId() }))
         super.onSaveInstanceState(outState)
     }
 }
