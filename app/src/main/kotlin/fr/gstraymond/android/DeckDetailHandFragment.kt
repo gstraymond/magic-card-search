@@ -56,11 +56,12 @@ class DeckDetailHandFragment : Fragment(), DeckDetailHandAdapter.ClickCallbacks 
 
         if (cards.size < 7) return
 
-        deckDetailHandAdapter.cards = ids?.run {
-            map { id -> cards.first { it.getId() == id } }
-        } ?: {
-            cards.shuffled().take(7).sortedWith(comparator)
-        }()
+        deckDetailHandAdapter.cards =
+                if (ids != null && ids.all { cards.map { it.getId() }.contains(it) }) {
+                    ids.map { id -> cards.first { it.getId() == id } }
+                } else {
+                    cards.shuffled().take(7).sortedWith(comparator)
+                }
 
         deckDetailHandAdapter.notifyDataSetChanged()
     }
