@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import com.github.mikephil.charting.charts.BarChart
 import com.github.mikephil.charting.components.AxisBase
+import com.github.mikephil.charting.components.Description
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.BarData
 import com.github.mikephil.charting.data.BarDataSet
@@ -53,11 +54,15 @@ class DeckDetailStatsAdapter(context: Context) : RecyclerView.Adapter<RecyclerVi
                         val data = element.data.toList().sortedBy { -it.second }.take(5)
                         val keys = data.map { it.first }
                         val entries = data.map { (k, v) -> BarEntry(keys.indexOf(k).toFloat(), v.toFloat()) }
+
+                        val colors =
+                                if (keys.all { colorMap.containsKey(it) }) keys.map { colorMap[it]!! }
+                                else listOf()
                         barChart.data = BarData(BarDataSet(entries, element.name).apply {
-                            styleDataSet(this, position)
+                            styleDataSet(this, position, colors)
                             setValueFormatter { fl, _, _, _ -> "${fl.toInt()}" }
                         })
-                        styleChart(barChart) { fl, _ -> keys.elementAtOrNull(fl.toInt()) ?: "" }
+                        styleChart(barChart, colors) { fl, _ -> keys.elementAtOrNull(fl.toInt()) ?: "" }
                     }
                     is IntChart -> {
                         val entries = element.data.map { (k, v) -> BarEntry(k.toFloat(), v.toFloat()) }
@@ -78,6 +83,19 @@ class DeckDetailStatsAdapter(context: Context) : RecyclerView.Adapter<RecyclerVi
         }
     }
 
+    private val colorMap = mapOf(
+            "Black" to R.color.black,
+            "Blue" to R.color.blue,
+            "Green" to R.color.green,
+            "Red" to R.color.red,
+            "White" to R.color.white,
+            "Noir" to R.color.black,
+            "Bleu" to R.color.blue,
+            "Vert" to R.color.green,
+            "Rouge" to R.color.red,
+            "Blanc" to R.color.white
+    )
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (viewType) {
             TEXT.ordinal ->
@@ -96,7 +114,9 @@ class DeckDetailStatsAdapter(context: Context) : RecyclerView.Adapter<RecyclerVi
 
     private val CHART_TEXT_SIZE = 16f
 
-    private fun styleChart(chart: BarChart, f: (Float, AxisBase) -> String) {
+    private fun styleChart(chart: BarChart,
+                           colors: List<Int> = listOf(),
+                           f: (Float, AxisBase) -> String) {
         chart.description = null
         chart.isDoubleTapToZoomEnabled = false
         chart.setPinchZoom(false)
@@ -107,6 +127,7 @@ class DeckDetailStatsAdapter(context: Context) : RecyclerView.Adapter<RecyclerVi
             setDrawGridLines(false)
             granularity = 1.0f
             isGranularityEnabled = true
+            isEnabled = colors.isEmpty()
             textColor = resources.color(android.R.color.white)
             textSize = CHART_TEXT_SIZE
             position = XAxis.XAxisPosition.BOTTOM
@@ -126,9 +147,15 @@ class DeckDetailStatsAdapter(context: Context) : RecyclerView.Adapter<RecyclerVi
         }
     }
 
-    private fun styleDataSet(dataSet: BarDataSet, position: Int) {
-        dataSet.color = resources.color(if (position % 2 == 0) R.color.gold else R.color.colorPrimary)
-        dataSet.valueTextColor = resources.color(android.R.color.white)
+    private fun styleDataSet(dataSet: BarDataSet, position: Int, colors: List<Int> = listOf()) {
+        if (colors.isNotEmpty()) {
+            val coloIds = colors.map { resources.color(it) }
+            dataSet.colors = coloIds
+            dataSet.setValueTextColors(coloIds)
+        } else {
+            dataSet.color = resources.color(if (position % 2 == 0) R.color.gold else R.color.colorPrimary)
+            dataSet.valueTextColor = resources.color(android.R.color.white)
+        }
         dataSet.valueTextSize = CHART_TEXT_SIZE
     }
 }
