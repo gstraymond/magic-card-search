@@ -1,10 +1,12 @@
 package fr.gstraymond.android.adapter
 
 import android.content.Context
+import android.support.v7.widget.AppCompatButton
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.TextView
 import fr.gstraymond.R
 import fr.gstraymond.android.CustomApplication
@@ -13,7 +15,10 @@ import fr.gstraymond.android.adapter.DeckDetailCardsAdapter.ItemTypes.*
 import fr.gstraymond.models.DeckCard
 import fr.gstraymond.models.search.response.getLocalizedTitle
 import fr.gstraymond.ui.adapter.DeckDetailCardViews
+import fr.gstraymond.utils.colorStateList
+import fr.gstraymond.utils.drawable
 import fr.gstraymond.utils.find
+import fr.gstraymond.utils.visible
 
 class DeckDetailCardsAdapter(private val app: CustomApplication,
                              private val context: Context,
@@ -44,7 +49,18 @@ class DeckDetailCardsAdapter(private val app: CustomApplication,
         else -> OTHER
     }
 
-    private val comparator = compareBy<DeckCard>({ it.card.convertedManaCost }, { it.card.getLocalizedTitle(context) })
+    private val cmcComparator = compareBy<DeckCard>(
+            { it.card.convertedManaCost },
+            { it.card.getLocalizedTitle(context) }
+    )
+    
+    private val colorComparator = compareBy<DeckCard>(
+            { it.card.colors.sorted().joinToString() },
+            { it.card.land.sorted().joinToString() },
+            { it.card.getLocalizedTitle(context) }
+    )
+
+    private var comparator = cmcComparator
 
     fun updateDeckList() {
         val grouped = app.cardListBuilder.build(deckId).all().filter { getMult(it) > 0 }.groupBy { types(it.card.type) }
@@ -75,6 +91,21 @@ class DeckDetailCardsAdapter(private val app: CustomApplication,
             is HeaderViewHolder -> {
                 val header = cards[position] as String
                 holder.itemView.find<TextView>(R.id.array_adapter_deck_header).text = header
+                holder.itemView.find<AppCompatButton>(R.id.array_adapter_deck_header_sort).apply {
+                    visible()
+                    setCompoundDrawablesWithIntrinsicBounds(context.resources.drawable(R.drawable.ic_sort_white_18dp), null, null, null)
+                    supportBackgroundTintList = when (comparator) {
+                        cmcComparator -> resources.colorStateList(R.color.colorPrimaryDark)
+                        else -> resources.colorStateList(R.color.colorAccent)
+                    }
+                    setOnClickListener {
+                        comparator = when (comparator) {
+                            cmcComparator -> colorComparator
+                            else -> cmcComparator
+                        }
+                        updateDeckList()
+                    }
+                }
             }
         }
     }
