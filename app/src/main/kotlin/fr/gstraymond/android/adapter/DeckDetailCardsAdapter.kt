@@ -6,7 +6,6 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.TextView
 import fr.gstraymond.R
 import fr.gstraymond.android.CustomApplication
@@ -53,7 +52,7 @@ class DeckDetailCardsAdapter(private val app: CustomApplication,
             { it.card.convertedManaCost },
             { it.card.getLocalizedTitle(context) }
     )
-    
+
     private val colorComparator = compareBy<DeckCard>(
             { it.card.colors.sorted().joinToString() },
             { it.card.land.sorted().joinToString() },
@@ -99,11 +98,13 @@ class DeckDetailCardsAdapter(private val app: CustomApplication,
                         else -> resources.colorStateList(R.color.colorAccent)
                     }
                     setOnClickListener {
-                        comparator = when (comparator) {
-                            cmcComparator -> colorComparator
-                            else -> cmcComparator
+                        synchronized(this@DeckDetailCardsAdapter) {
+                            comparator = when (comparator) {
+                                cmcComparator -> colorComparator
+                                else -> cmcComparator
+                            }
+                            updateDeckList()
                         }
-                        updateDeckList()
                     }
                 }
             }
