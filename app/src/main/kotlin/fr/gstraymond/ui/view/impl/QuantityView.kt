@@ -19,7 +19,8 @@ class QuantityView(private val context: Context,
                    private val app: CustomApplication,
                    private val deckId: Int,
                    private val sideboard: Boolean,
-                   private val deckCardCallback: DeckCardCallback?) : CommonDisplayableView<AppCompatButton>(R.id.array_adapter_deck_card_mult) {
+                   private val deckCardCallback: DeckCardCallback?,
+                   private val deckEditor: Boolean) : CommonDisplayableView<AppCompatButton>(R.id.array_adapter_deck_card_mult) {
 
     private val cardViews = SimpleCardViews()
 
@@ -28,7 +29,9 @@ class QuantityView(private val context: Context,
         val deckCard = cardList.getByUid(card.getId())
         deckCard?.apply {
             view.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null)
-            view.supportBackgroundTintList = context.resources.colorStateList(R.color.colorAccent)
+            view.supportBackgroundTintList = context.resources.colorStateList(
+                    if (deckEditor) R.color.colorPrimaryDark else R.color.colorAccent
+            )
             view.text = "${getMult(this)}"
         } ?: {
             view.setCompoundDrawablesWithIntrinsicBounds(context.resources.drawable(R.drawable.ic_bookmark_border_white_24dp), null, null, null)

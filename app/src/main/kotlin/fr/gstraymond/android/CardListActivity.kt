@@ -12,6 +12,7 @@ import android.support.v4.view.GravityCompat
 import android.support.v4.widget.DrawerLayout
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.widget.*
+import android.view.View
 import android.widget.ExpandableListView
 import android.widget.Switch
 import android.widget.TextView
@@ -64,7 +65,7 @@ class CardListActivity : CustomActivity(R.layout.activity_card_list),
     private val emptyTextView by lazy { find<TextView>(R.id.search_empty_text) }
     private val leftNavigationView by lazy { find<NavigationView>(R.id.left_drawer) }
     private val scanButton by lazy { find<AppCompatButton>(R.id.scan_card) }
-    private val rootView by lazy { findViewById(R.id.root_view) }
+    private val rootView by lazy { find<View>(R.id.root_view) }
 
     private lateinit var cardArrayAdapter: CardArrayAdapter
     private lateinit var cardLayoutManager: LinearLayoutManager
@@ -119,7 +120,6 @@ class CardListActivity : CustomActivity(R.layout.activity_card_list),
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val rootView = findViewById(R.id.root_view)
         val toolbar = find<Toolbar>(R.id.toolbar)
 
         setSupportActionBar(toolbar)
@@ -321,7 +321,7 @@ class CardListActivity : CustomActivity(R.layout.activity_card_list),
 
     override fun onResume() {
         super.onResume()
-        findViewById(R.id.root_view).requestFocus()
+        rootView.requestFocus()
         cardArrayAdapter.notifyDataSetChanged()
 
         if (presenter.getCurrentSearch().deckId == null) {

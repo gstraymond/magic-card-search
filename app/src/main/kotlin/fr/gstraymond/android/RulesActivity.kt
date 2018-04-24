@@ -90,21 +90,24 @@ class RulesActivity : CustomActivity(R.layout.activity_rules), RulesCallback, La
         searchView.setOnQueryTextListener(
                 object : SearchView.OnQueryTextListener {
                     override fun onQueryTextChange(text: String): Boolean {
-                        val tokens = text.toLowerCase().split(" ").filter { it.isNotBlank() }
-                        searchResults = tokens.foldIndexed(setOf<Int>()) { index, acc, word ->
-                            when (index) {
-                                0 -> ruleList.trie.get(word)
-                                else -> acc.intersect(ruleList.trie.get(word))
+                        synchronized(this@RulesActivity) {
+                            val tokens = text.toLowerCase().split(" ").filter { it.isNotBlank() }
+                            searchResults = tokens.foldIndexed(setOf<Int>()) { index, acc, word ->
+                                when (index) {
+                                    0 -> ruleList.trie.get(word)
+                                    else -> acc.intersect(ruleList.trie.get(word))
+                                }
+                            }.sorted()
+                            searchPosition = 0
+                            updateResult()
+                            adapter.highlightWords = listOf()
+                            searchResults.firstOrNull()?.apply {
+                                scroll(this)
+                                adapter.highlightWords = tokens
                             }
-                        }.sorted()
-                        searchPosition = 0
-                        updateResult()
-                        adapter.highlightWords = listOf()
-                        searchResults.firstOrNull()?.apply {
-                            scroll(this)
-                            adapter.highlightWords = tokens
+                            adapter.notifyDataSetChanged()
                         }
-                        adapter.notifyDataSetChanged()
+
                         return true
                     }
 

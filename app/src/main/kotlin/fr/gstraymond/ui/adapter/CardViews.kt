@@ -56,7 +56,7 @@ class DeckCardViews(context: Context,
                 DescriptionView(context),
                 CastingCostView(context),
                 TypePTView(),
-                QuantityView(context, app, deckId, addToSideboard, deckCardCallback),
+                QuantityView(context, app, deckId, addToSideboard, deckCardCallback, deckEditor = false),
                 CostView(context)
         ))
 
@@ -68,7 +68,7 @@ class DeckDetailCardViews(context: Context,
         TitleView(),
         CastingCostView(context),
         CostView(context),
-        QuantityView(context, app, deckId, sideboard, deckCardCallback)
+        QuantityView(context, app, deckId, sideboard, deckCardCallback, deckEditor = true)
 ))
 
 class SimpleCardViews : CardViews(listOf(

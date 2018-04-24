@@ -5,7 +5,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.support.v7.widget.Toolbar
 import android.view.View
 import com.github.clans.fab.FloatingActionMenu
 import fr.gstraymond.R
@@ -37,11 +36,11 @@ class DecksActivity : CustomActivity(R.layout.activity_decks) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        setSupportActionBar(find<Toolbar>(R.id.toolbar))
+        setSupportActionBar(find(R.id.toolbar))
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         setTitle(R.string.decks_title)
 
-        findViewById(R.id.decks_fab_add).let {
+        find<View>(R.id.decks_fab_add).let {
             it.setOnClickListener {
                 startActivity {
                     Tracker.addRemoveDeck(added = true)
@@ -51,7 +50,7 @@ class DecksActivity : CustomActivity(R.layout.activity_decks) {
             }
         }
 
-        findViewById(R.id.decks_fab_import).let {
+        find<View>(R.id.decks_fab_import).let {
             it.setOnClickListener {
                 startActivity {
                     DeckImporterActivity.getIntent(this)
