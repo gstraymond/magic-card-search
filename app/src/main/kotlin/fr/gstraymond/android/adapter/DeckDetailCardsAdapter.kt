@@ -11,6 +11,7 @@ import fr.gstraymond.R
 import fr.gstraymond.android.CustomApplication
 import fr.gstraymond.android.adapter.DeckDetailCardsAdapter.CardTypes.*
 import fr.gstraymond.android.adapter.DeckDetailCardsAdapter.ItemTypes.*
+import fr.gstraymond.android.prefs
 import fr.gstraymond.models.DeckCard
 import fr.gstraymond.models.search.response.getLocalizedTitle
 import fr.gstraymond.ui.adapter.DeckDetailCardViews
@@ -59,7 +60,7 @@ class DeckDetailCardsAdapter(private val app: CustomApplication,
             { it.card.getLocalizedTitle(context) }
     )
 
-    private var comparator = cmcComparator
+    private var comparator = if (prefs.deckCardSort) colorComparator else cmcComparator
 
     fun updateDeckList() {
         val grouped = app.cardListBuilder.build(deckId).all().filter { getMult(it) > 0 }.groupBy { types(it.card.type) }
@@ -103,6 +104,7 @@ class DeckDetailCardsAdapter(private val app: CustomApplication,
                                 cmcComparator -> colorComparator
                                 else -> cmcComparator
                             }
+                            prefs.deckCardSort = !prefs.deckCardSort
                             updateDeckList()
                         }
                     }
