@@ -28,7 +28,6 @@ import net.rdrei.android.dirchooser.DirectoryChooserActivity
 import net.rdrei.android.dirchooser.DirectoryChooserActivity.*
 import net.rdrei.android.dirchooser.DirectoryChooserConfig
 
-
 class DeckDetailActivity : CustomActivity(R.layout.activity_deck_detail), DeckCardCallback {
 
     companion object {
@@ -114,6 +113,7 @@ class DeckDetailActivity : CustomActivity(R.layout.activity_deck_detail), DeckCa
                 deck = deck.copy(maybeFormat = maybeFormat)
                 app().deckList.update(deck)
                 pagerAdapter.formatChanged()
+                setTabsText()
             }
         }
     }
@@ -132,8 +132,15 @@ class DeckDetailActivity : CustomActivity(R.layout.activity_deck_detail), DeckCa
 
     private fun setTabsText() {
         app().deckList.getByUid(deckId)?.apply {
+            val isCommander = when (maybeFormat) {
+                Formats.BRAWL, Formats.COMMANDER -> true
+                else -> false
+            }
+            val sideboardOrCommander =
+                    if (isCommander) getString(R.string.deck_tab_commander)
+                    else getString(R.string.deck_tab_sideboard)
             tabLayout.getTabAt(0)?.text = String.format(getString(R.string.deck_tab_cards), deckSize)
-            tabLayout.getTabAt(1)?.text = String.format(getString(R.string.deck_tab_sideboard), sideboardSize)
+            tabLayout.getTabAt(1)?.text = String.format(sideboardOrCommander, sideboardSize)
         }
     }
 
