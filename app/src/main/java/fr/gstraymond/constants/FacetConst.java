@@ -16,6 +16,8 @@ public class FacetConst {
     public static final String ARTIST = "artists.exact";
     public static final String CMC = "convertedManaCost";
     public static final String COLOR = "colors.exact";
+    public static final String DUAL_COLOR = "dualColors.exact";
+    public static final String TRIPLE_COLOR = "tripleColors.exact";
     public static final String DEVOTION = "devotions";
     public static final String SET = "editions.exact";
     public static final String FORMAT = "formats.exact";
@@ -37,6 +39,8 @@ public class FacetConst {
         facetNames.put(ABILITY, R.string.facet_ability);
         facetNames.put(ARTIST, R.string.facet_artist);
         facetNames.put(COLOR, R.string.facet_color);
+        facetNames.put(DUAL_COLOR, R.string.facet_dual_color);
+        facetNames.put(TRIPLE_COLOR, R.string.facet_triple_color);
         facetNames.put(CMC, R.string.facet_cmc);
         facetNames.put(DEVOTION, R.string.facet_devotion);
         facetNames.put(FORMAT, R.string.facet_format);
@@ -53,6 +57,8 @@ public class FacetConst {
 
         facetOrder = new ArrayList<>();
         facetOrder.add(COLOR);
+        facetOrder.add(DUAL_COLOR);
+        facetOrder.add(TRIPLE_COLOR);
         facetOrder.add(TYPE);
         facetOrder.add(LAND);
         facetOrder.add(LAYOUT);
@@ -81,6 +87,8 @@ public class FacetConst {
         putInFacets(facets, ARTIST);
         putInFacets(facets, BLOCK);
         putInFacets(facets, COLOR);
+        putInFacets(facets, DUAL_COLOR);
+        putInFacets(facets, TRIPLE_COLOR);
         putInFacets(facets, CMC);
         putInFacets(facets, DEVOTION);
         putInFacets(facets, FORMAT);

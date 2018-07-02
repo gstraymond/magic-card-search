@@ -48,6 +48,8 @@
     <string name="facet_ability">Capacité</string>
     <string name="facet_artist">Artiste</string>
     <string name="facet_color">Couleur</string>
+    <string name="facet_dual_color">Deck bicolore</string>
+    <string name="facet_triple_color">Deck tricolore</string>
     <string name="facet_cmc">Coût converti de mana</string>
     <string name="facet_devotion">Dévotion</string>
     <string name="facet_format">Format</string>
