@@ -28,5 +28,6 @@ object FormatValidator {
             card.description.contains(cardWithNoSizeRestriction, true)
 
     private fun isBasicLand(card: Card) =
-            card.type.startsWith("basic land", true)
+            card.type.startsWith("basic land", true) ||
+                card.type.startsWith("basic snow land", true)
 }

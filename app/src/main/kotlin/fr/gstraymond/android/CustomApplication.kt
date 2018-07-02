@@ -56,6 +56,7 @@ class CustomApplication : BaseApplication() {
     private fun fetchRules() {
         thread {
             RulesFetcher(searchService) {
+                ruleList.clear()
                 ruleList.save(it)
                 ruleList.setLoaded()
             }.fetch()
