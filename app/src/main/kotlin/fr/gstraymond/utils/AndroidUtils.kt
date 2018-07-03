@@ -73,10 +73,10 @@ fun Resources.colorStateList(id: Int): ColorStateList = ResourcesCompat.getColor
 
 fun Resources.color(id: Int): Int = ResourcesCompat.getColor(this, id, null)
 
-fun Fragment.app(): CustomApplication = activity.app()
+fun Fragment.app(): CustomApplication = activity!!.app()
 
 fun Fragment.startActivity(buildIntent: () -> Intent) {
-    activity.startActivity(buildIntent)
+    activity!!.startActivity(buildIntent)
 }
 
 fun Context.inflate(layoutId: Int): View = LayoutInflater.from(this).inflate(layoutId, null)

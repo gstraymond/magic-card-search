@@ -216,6 +216,9 @@ class CardListActivity : CustomActivity(R.layout.activity_card_list),
                     R.string.drawer_close)
             drawerToggle = actionBarDrawerToggle
             drawerLayout.addDrawerListener(actionBarDrawerToggle)
+            drawerLayout.addDrawerListener(object : DrawerLayout.SimpleDrawerListener() {
+                override fun onDrawerOpened(drawerView: View) = searchView.clearFocus()
+            })
 
             leftNavigationView.let {
                 val headerView = it.getHeaderView(0)

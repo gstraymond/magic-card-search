@@ -21,7 +21,7 @@ import fr.gstraymond.utils.visible
 
 class DeckDetailStatsFragment : Fragment() {
 
-    private val deckDetailStatsAdapter by lazy { DeckDetailStatsAdapter(context) }
+    private val deckDetailStatsAdapter by lazy { DeckDetailStatsAdapter(context!!) }
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var emptyText: TextView
@@ -49,9 +49,9 @@ class DeckDetailStatsFragment : Fragment() {
     fun updateStats() {
         if (activity == null) return
 
-        val deckId = activity.intent.getStringExtra(DECK_EXTRA)
-        val deck = activity.app().deckList.getByUid(deckId)
-        val cardList = activity.app().cardListBuilder.build(deckId.toInt())
+        val deckId = activity!!.intent.getStringExtra(DECK_EXTRA)
+        val deck = activity!!.app().deckList.getByUid(deckId)
+        val cardList = activity!!.app().cardListBuilder.build(deckId.toInt())
         if (cardList.isEmpty()) {
             recyclerView.gone()
             emptyText.visible()
@@ -67,9 +67,9 @@ class DeckDetailStatsFragment : Fragment() {
 
                 val colorDistribution =
                         if (deck?.colors?.size ?: 0 < 2) listOf()
-                        else listOf(StringChart(resources.getString(R.string.stats_color_distribution), deckStats.colorDistribution(context)))
+                        else listOf(StringChart(resources.getString(R.string.stats_color_distribution), deckStats.colorDistribution(context!!)))
 
-                val typeDistribution = listOf(StringChart(resources.getString(R.string.stats_type_distribution), deckStats.typeDistribution(context)))
+                val typeDistribution = listOf(StringChart(resources.getString(R.string.stats_type_distribution), deckStats.typeDistribution(context!!)))
 
                 elements = listOf(
                         getText(R.string.stats_total_price, "${deckStats.totalPrice}"),
