@@ -78,12 +78,22 @@
             android:orientation="horizontal">
 
             <TextView
+                android:id="@+id/array_adapter_deck_sideboard"
                 style="@android:style/TextAppearance.Medium"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:paddingRight="8dp"
                 android:text="@string/mult_sideboard" />
+
+            <TextView
+                android:id="@+id/array_adapter_deck_commander"
+                style="@android:style/TextAppearance.Medium"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:paddingRight="8dp"
+                android:text="@string/mult_commander" />
 
             <Button
                 android:id="@+id/array_adapter_deck_sb_remove_1"

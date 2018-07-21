@@ -87,7 +87,6 @@
     <string name="decks_title">Decks</string>
     <string name="decks_title_number">Decks (%1$s)</string>
     <string name="quantity">Quantity</string>
-    <string name="sideboard">Sideboard</string>
 
     <string name="deckdetails_menu_add">Add</string>
     <string name="deckdetails_delete_title">Delete deck?</string>
@@ -97,7 +96,6 @@
 
     <string name="stats_format">Format \"%1$s\"</string>
     <string name="stats_colors">Colors %1$s</string>
-    <string name="stats_total_cards">%1$s cards (%2$s cards in sideboard)</string>
     <string name="stats_total_price">Total price $%1$s</string>
     <string name="stats_mana_curve">Mana Curve</string>
     <string name="stats_color_distribution">Color distribution</string>
@@ -167,6 +165,7 @@
     <string name="close">Close</string>
     <string name="mult_deck">Deck</string>
     <string name="mult_sideboard">Sideboard</string>
+    <string name="mult_commander">Commander</string>
     <string name="rules_empty_text">No rules found, check your internet connection and restart the application</string>
     <string name="rules_title">Rules</string>
     <string name="top">Top</string>
