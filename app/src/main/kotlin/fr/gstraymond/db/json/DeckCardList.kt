@@ -24,7 +24,7 @@ class DeckCardList(context: Context,
 
     private fun updateDeck() {
         deckList.getByUid(deckId)?.apply {
-            val deckStats = DeckStats(elems)
+            val deckStats = DeckStats(elems, isCommander())
             deckList.update(copy(
                     colors = deckStats.colors,
                     deckSize = deckStats.deckSize,

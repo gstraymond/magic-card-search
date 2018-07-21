@@ -50,7 +50,7 @@ class DeckDetailStatsFragment : Fragment() {
         if (activity == null) return
 
         val deckId = activity!!.intent.getStringExtra(DECK_EXTRA)
-        val deck = activity!!.app().deckList.getByUid(deckId)
+        val deck = activity!!.app().deckList.getByUid(deckId)!!
         val cardList = activity!!.app().cardListBuilder.build(deckId.toInt())
         if (cardList.isEmpty()) {
             recyclerView.gone()
@@ -58,7 +58,7 @@ class DeckDetailStatsFragment : Fragment() {
         } else {
             recyclerView.visible()
             emptyText.gone()
-            val deckStats = DeckStats(cardList.all())
+            val deckStats = DeckStats(cardList.all(), deck.isCommander())
             deckDetailStatsAdapter.apply {
                 val abilitiesCharts = deckStats.abilitiesCount.run {
                     if (isEmpty()) listOf()
@@ -66,7 +66,7 @@ class DeckDetailStatsFragment : Fragment() {
                 }
 
                 val colorDistribution =
-                        if (deck?.colors?.size ?: 0 < 2) listOf()
+                        if (deck.colors.size < 2) listOf()
                         else listOf(StringChart(resources.getString(R.string.stats_color_distribution), deckStats.colorDistribution(context!!)))
 
                 val typeDistribution = listOf(StringChart(resources.getString(R.string.stats_type_distribution), deckStats.typeDistribution(context!!)))

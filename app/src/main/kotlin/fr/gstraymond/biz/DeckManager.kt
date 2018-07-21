@@ -24,7 +24,7 @@ class DeckManager(private val deckList: DeckList,
         val mergedCards = CardListMigrator.toDeckCardList(cards)
         val cardsNotImported = results.filter { it is CardNotImported }.map { it as CardNotImported }
         cardListBuilder.build(deckId).save(mergedCards)
-        val deckStats = DeckStats(mergedCards)
+        val deckStats = DeckStats(mergedCards, Deck.isCommander(maybeFormat))
         deckList.addOrRemove(Deck(
                 id = deckId,
                 timestamp = Date(),

@@ -9,7 +9,6 @@ import fr.gstraymond.R
 import fr.gstraymond.android.CustomApplication
 import fr.gstraymond.android.adapter.DeckCardCallback
 import fr.gstraymond.android.adapter.DeckCardCallback.FROM
-import fr.gstraymond.biz.Formats
 import fr.gstraymond.models.DeckCard
 import fr.gstraymond.models.search.response.Card
 import fr.gstraymond.ui.adapter.SimpleCardViews
@@ -44,11 +43,7 @@ class QuantityView(private val context: Context,
             val multView = context.inflate(R.layout.array_adapter_deck_card_mult)
             cardViews.display(multView, card, position)
 
-            val format = app.deckList.getByUid("$deckId")?.maybeFormat
-            val isCommander = when (format) {
-                Formats.BRAWL, Formats.COMMANDER -> true
-                else -> false
-            }
+            val isCommander = app.deckList.getByUid("$deckId")!!.isCommander()
             val sideboardView = multView.find<View>(R.id.array_adapter_deck_sideboard)
             if (isCommander) sideboardView.gone()
             val commanderView = multView.find<View>(R.id.array_adapter_deck_commander)
