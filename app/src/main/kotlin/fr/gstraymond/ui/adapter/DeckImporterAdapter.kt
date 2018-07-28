@@ -12,7 +12,7 @@ class DeckImporterAdapter(private val context: Context) : RecyclerView.Adapter<R
 
     private val lines = mutableListOf<String>()
 
-    override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): RecyclerView.ViewHolder =
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder =
             context.inflate(R.layout.array_adapter_deck_importer)
                     .run { object : RecyclerView.ViewHolder(this) {} }
 

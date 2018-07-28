@@ -1,6 +1,7 @@
 package fr.gstraymond.models
 
-import java.util.Date
+import fr.gstraymond.biz.Formats
+import java.util.*
 
 data class Deck(val id: Int = 0,
                 val timestamp: Date,
@@ -9,4 +10,14 @@ data class Deck(val id: Int = 0,
                 val deckSize: Int,
                 val sideboardSize: Int,
                 val cardsNotImported: List<CardNotImported>,
-                val maybeFormat: String? = null)
+                val maybeFormat: String? = null) {
+    fun isCommander() = isCommander(maybeFormat)
+
+    companion object {
+        fun isCommander(maybeFormat: String?) = when (maybeFormat) {
+            Formats.BRAWL, Formats.COMMANDER -> true
+            else -> false
+        }
+    }
+}
+

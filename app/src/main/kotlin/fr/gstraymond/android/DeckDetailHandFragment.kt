@@ -23,10 +23,10 @@ class DeckDetailHandFragment : Fragment(), DeckDetailHandAdapter.ClickCallbacks 
         private const val CARDS = "cards"
     }
 
-    private val deckDetailHandAdapter by lazy { DeckDetailHandAdapter(activity, this) }
+    private val deckDetailHandAdapter by lazy { DeckDetailHandAdapter(activity!!, this) }
 
     private lateinit var recyclerView: RecyclerView
-    private val comparator = compareBy<Card>({ it.convertedManaCost }, { it.getLocalizedTitle(context) })
+    private val comparator = compareBy<Card>({ it.convertedManaCost }, { it.getLocalizedTitle(context!!) })
 
     override fun onCreateView(inflater: LayoutInflater,
                               container: ViewGroup?,
@@ -50,8 +50,8 @@ class DeckDetailHandFragment : Fragment(), DeckDetailHandAdapter.ClickCallbacks 
     }
 
     private fun displayHand(ids: List<String>? = null) {
-        val deckId = activity.intent.getStringExtra(DeckDetailActivity.DECK_EXTRA)
-        val cardList = activity.app().cardListBuilder.build(deckId.toInt())
+        val deckId = activity!!.intent.getStringExtra(DeckDetailActivity.DECK_EXTRA)
+        val cardList = activity!!.app().cardListBuilder.build(deckId.toInt())
         val cards = cardList.flatMap { deckCard -> (1..deckCard.counts.deck).map { deckCard.card } }
 
         if (cards.size < 7) return
@@ -67,7 +67,7 @@ class DeckDetailHandFragment : Fragment(), DeckDetailHandAdapter.ClickCallbacks 
     }
 
     override fun cardClicked(card: Card) = startActivity {
-        CardDetailActivity.getIntent(activity, card)
+        CardDetailActivity.getIntent(activity!!, card)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

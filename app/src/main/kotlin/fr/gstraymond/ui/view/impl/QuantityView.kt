@@ -42,6 +42,13 @@ class QuantityView(private val context: Context,
         view.setOnClickListener {
             val multView = context.inflate(R.layout.array_adapter_deck_card_mult)
             cardViews.display(multView, card, position)
+
+            val isCommander = app.deckList.getByUid("$deckId")!!.isCommander()
+            val sideboardView = multView.find<View>(R.id.array_adapter_deck_sideboard)
+            if (isCommander) sideboardView.gone()
+            val commanderView = multView.find<View>(R.id.array_adapter_deck_commander)
+            if (!isCommander) commanderView.gone()
+
             val deckCount = multView.find<TextView>(R.id.array_adapter_deck_card_mult).apply {
                 text = deckCard?.counts?.deck?.toString() ?: "0"
             }
@@ -80,7 +87,7 @@ class QuantityView(private val context: Context,
 
             AlertDialog.Builder(context)
                     .setView(multView)
-                    .setPositiveButton(android.R.string.ok, { _, _ ->
+                    .setPositiveButton(android.R.string.ok) { _, _ ->
                         val pickerDeckMult = deckCount.text.toString().toInt()
                         val pickerSbMult = sbCount.text.toString().toInt()
 
@@ -97,8 +104,8 @@ class QuantityView(private val context: Context,
                             }
                         }()
                         deckCardCallback?.multChanged(if (sideboard) FROM.SB else FROM.DECK, position)
-                    })
-                    .setNegativeButton(android.R.string.cancel, { _, _ -> })
+                    }
+                    .setNegativeButton(android.R.string.cancel) { _, _ -> }
                     .create()
                     .show()
         }

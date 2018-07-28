@@ -21,7 +21,6 @@ import fr.gstraymond.analytics.Tracker
 import fr.gstraymond.android.adapter.DeckCardCallback
 import fr.gstraymond.android.adapter.DeckDetailFragmentPagerAdapter
 import fr.gstraymond.biz.Formats
-import fr.gstraymond.models.Deck
 import fr.gstraymond.models.DeckCard
 import fr.gstraymond.utils.*
 import net.rdrei.android.dirchooser.DirectoryChooserActivity
@@ -43,7 +42,6 @@ class DeckDetailActivity : CustomActivity(R.layout.activity_deck_detail), DeckCa
     }
 
     private lateinit var deckId: String
-    private lateinit var deck: Deck
     private lateinit var pagerAdapter: DeckDetailFragmentPagerAdapter
 
     private val deckTitle by lazy { find<TextView>(R.id.toolbar_text) }
@@ -55,11 +53,12 @@ class DeckDetailActivity : CustomActivity(R.layout.activity_deck_detail), DeckCa
 
     private val perms = arrayOf(READ_EXTERNAL_STORAGE, WRITE_EXTERNAL_STORAGE)
 
+    private fun deck() = app().deckList.getByUid(deckId)!!
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         deckId = intent.getStringExtra(DECK_EXTRA)
-        deck = app().deckList.getByUid(deckId)!!
 
         val toolbar = find<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
@@ -69,7 +68,7 @@ class DeckDetailActivity : CustomActivity(R.layout.activity_deck_detail), DeckCa
         }
 
         deckTitle.apply {
-            text = deck.name
+            text = deck().name
             setOnClickListener { createTitleDialog() }
         }
 
@@ -98,7 +97,7 @@ class DeckDetailActivity : CustomActivity(R.layout.activity_deck_detail), DeckCa
                 listOf(getString(R.string.select_format)) + Formats.ordered
         )
 
-        deck.maybeFormat?.apply {
+        deck().maybeFormat?.apply {
             formatChooser.setSelection(Formats.ordered.indexOf(this) + 1, false)
         }
 
@@ -110,7 +109,7 @@ class DeckDetailActivity : CustomActivity(R.layout.activity_deck_detail), DeckCa
                     0 -> null
                     else -> Formats.ordered[position - 1]
                 }
-                deck = deck.copy(maybeFormat = maybeFormat)
+                val deck = app().deckList.getByUid(deckId)!!.copy(maybeFormat = maybeFormat)
                 app().deckList.update(deck)
                 pagerAdapter.formatChanged()
                 setTabsText()
@@ -132,12 +131,8 @@ class DeckDetailActivity : CustomActivity(R.layout.activity_deck_detail), DeckCa
 
     private fun setTabsText() {
         app().deckList.getByUid(deckId)?.apply {
-            val isCommander = when (maybeFormat) {
-                Formats.BRAWL, Formats.COMMANDER -> true
-                else -> false
-            }
             val sideboardOrCommander =
-                    if (isCommander) getString(R.string.deck_tab_commander)
+                    if (isCommander()) getString(R.string.deck_tab_commander)
                     else getString(R.string.deck_tab_sideboard)
             tabLayout.getTabAt(0)?.text = String.format(getString(R.string.deck_tab_cards), deckSize)
             tabLayout.getTabAt(1)?.text = String.format(sideboardOrCommander, sideboardSize)
@@ -160,9 +155,10 @@ class DeckDetailActivity : CustomActivity(R.layout.activity_deck_detail), DeckCa
     private fun createTitleDialog() {
         val view = inflate(R.layout.activity_deck_detail_title)
         val editText = view.find<EditText>(R.id.deck_detail_title).apply {
-            setText(deck.name, EDITABLE)
+            val deckName = deck().name
+            setText(deckName, EDITABLE)
             post {
-                setSelection(deck.name.length)
+                setSelection(deckName.length)
                 requestFocus()
                 val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
                 imm.showSoftInput(this, InputMethodManager.SHOW_IMPLICIT)
@@ -170,10 +166,10 @@ class DeckDetailActivity : CustomActivity(R.layout.activity_deck_detail), DeckCa
         }
         AlertDialog.Builder(this)
                 .setView(view)
-                .setPositiveButton(android.R.string.ok, { _, _ ->
+                .setPositiveButton(android.R.string.ok) { _, _ ->
                     updateDeckName(editText.text.toString())
-                })
-                .setNegativeButton(android.R.string.cancel, { _, _ -> })
+                }
+                .setNegativeButton(android.R.string.cancel) { _, _ -> }
                 .create()
                 .show()
     }
@@ -182,7 +178,7 @@ class DeckDetailActivity : CustomActivity(R.layout.activity_deck_detail), DeckCa
         AlertDialog.Builder(this)
                 .setTitle(getString(R.string.deckdetails_delete_title))
                 .setPositiveButton(getString(R.string.deckdetails_delete_ok)) { _, _ ->
-                    app().deckManager.delete(deck)
+                    app().deckManager.delete(deck())
                     Tracker.addRemoveDeck(added = false)
                     finish()
                 }
@@ -195,6 +191,7 @@ class DeckDetailActivity : CustomActivity(R.layout.activity_deck_detail), DeckCa
                 .setTitle(getString(R.string.deckdetails_refresh_title))
                 .setMessage(getString(R.string.deckdetails_refresh_message))
                 .setPositiveButton(getString(R.string.deckdetails_refresh_ok)) { _, _ ->
+                    val deck = deck()
                     startActivity {
                         val deckList = app().deckManager.export(deck).joinToString("\n")
                         DeckImportProgressActivity.getIntentForDeckList(this, deckList, deck.maybeFormat)
@@ -207,8 +204,7 @@ class DeckDetailActivity : CustomActivity(R.layout.activity_deck_detail), DeckCa
     }
 
     private fun updateDeckName(deckName: String) {
-        deck = deck.copy(name = deckName)
-        app().deckList.update(deck)
+        app().deckList.update(deck().copy(name = deckName))
         deckTitle.text = deckName
     }
 
@@ -227,6 +223,7 @@ class DeckDetailActivity : CustomActivity(R.layout.activity_deck_detail), DeckCa
             DIR_PICKER_CODE -> when (resultCode) {
                 RESULT_CODE_DIR_SELECTED -> {
                     val path = data!!.getStringExtra(RESULT_SELECTED_DIR)
+                    val deck = deck()
                     val exportPath = app().deckManager.export(deck, path)
                     val rootView = find<View>(android.R.id.content)
                     val message = String.format(resources.getString(R.string.deck_exported), deck.name, exportPath)

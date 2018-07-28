@@ -48,18 +48,18 @@ class DeckDetailCardsFragment : Fragment(), DeckCardCallback, DeckDetailActivity
     private lateinit var notImported: TextView
     private lateinit var formatProblems: TextView
 
-    private val deckId by lazy { activity.intent.getStringExtra(DeckDetailActivity.DECK_EXTRA) }
+    private val deckId by lazy { activity!!.intent.getStringExtra(DeckDetailActivity.DECK_EXTRA) }
 
     var deckCardCallback: DeckCardCallback? = null
     var sideboard: Boolean = false
 
     private val deckDetailAdapter by lazy {
-        DeckDetailCardsAdapter(app(), activity, sideboard, deckId.toInt()).apply {
+        DeckDetailCardsAdapter(app(), activity!!, sideboard, deckId.toInt()).apply {
             deckCardCallback = this@DeckDetailCardsFragment
         }
     }
 
-    private val deckList by lazy { activity.app().deckList }
+    private val deckList by lazy { activity!!.app().deckList }
 
     override fun onCreateView(inflater: LayoutInflater,
                               container: ViewGroup?,
@@ -94,13 +94,13 @@ class DeckDetailCardsFragment : Fragment(), DeckCardCallback, DeckDetailActivity
                 } ?: {
                     SearchOptions.START_SEARCH_OPTIONS().copy(deckId = deckId)
                 }()
-                CardListActivity.getIntent(activity, searchOptions)
+                CardListActivity.getIntent(activity!!, searchOptions)
             }
         }
 
         fabHistory.setOnClickListener {
             startActivity {
-                HistoryActivity.getIntent(activity, deckId, sideboard)
+                HistoryActivity.getIntent(activity!!, deckId, sideboard)
             }
         }
 
@@ -111,14 +111,14 @@ class DeckDetailCardsFragment : Fragment(), DeckCardCallback, DeckDetailActivity
             fabLand.setOnClickListener {
                 startActivity {
                     val facets = mapOf(TYPE to listOf("land", "basic"), FORMAT to listOf("Standard"))
-                    CardListActivity.getIntent(activity, SearchOptions(deckId = deckId, facets = facets, addToSideboard = sideboard))
+                    CardListActivity.getIntent(activity!!, SearchOptions(deckId = deckId, facets = facets, addToSideboard = sideboard))
                 }
             }
         }
 
         fabScan.setOnClickListener {
-            if (!activity.hasPerms(Manifest.permission.CAMERA)) {
-                activity.requestPerms(REQUEST_CAMERA_CODE, Manifest.permission.CAMERA)
+            if (!activity!!.hasPerms(Manifest.permission.CAMERA)) {
+                activity!!.requestPerms(REQUEST_CAMERA_CODE, Manifest.permission.CAMERA)
             } else {
                 startScanner()
             }
@@ -128,7 +128,7 @@ class DeckDetailCardsFragment : Fragment(), DeckCardCallback, DeckDetailActivity
     private fun startScanner() {
         startActivity {
             OcrCaptureActivity.getIntent(
-                    activity,
+                    activity!!,
                     autoFocus = true,
                     useFlash = false,
                     deckId = deckId,
@@ -143,7 +143,7 @@ class DeckDetailCardsFragment : Fragment(), DeckCardCallback, DeckDetailActivity
 
     override fun onResume() {
         super.onResume()
-        cardList = activity.app().cardListBuilder.build(deckId.toInt())
+        cardList = activity!!.app().cardListBuilder.build(deckId.toInt())
 
         floatingMenu.close(false)
         val deck = deckList.getByUid(deckId)
@@ -217,10 +217,10 @@ class DeckDetailCardsFragment : Fragment(), DeckCardCallback, DeckDetailActivity
                     cardList.filter { it.counts.deck > 1 }
                             .map { it to FormatValidator.getMaxOccurrence(it.card, this) }
                             .filter { it.first.counts.deck > it.second }
-                            .forEach { msgs += getText(R.string.validation_max_occurrence, it.first.card.getLocalizedTitle(context), "${it.second}") }
+                            .forEach { msgs += getText(R.string.validation_max_occurrence, it.first.card.getLocalizedTitle(context!!), "${it.second}") }
 
                     cardList.filter { !it.card.formats.contains(getFormat()) }
-                            .forEach { msgs += getText(R.string.validation_bad_format, it.card.getLocalizedTitle(context), this) }
+                            .forEach { msgs += getText(R.string.validation_bad_format, it.card.getLocalizedTitle(context!!), this) }
 
                     if (msgs.isEmpty()) {
                         formatProblems.gone()
@@ -247,7 +247,7 @@ class DeckDetailCardsFragment : Fragment(), DeckCardCallback, DeckDetailActivity
 
     override fun cardClick(deckCard: DeckCard) {
         startActivity {
-            CardDetailActivity.getIntent(context, deckCard.card)
+            CardDetailActivity.getIntent(context!!, deckCard.card)
         }
         deckCardCallback?.cardClick(deckCard)
     }

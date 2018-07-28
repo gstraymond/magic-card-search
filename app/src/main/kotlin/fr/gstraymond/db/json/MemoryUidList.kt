@@ -35,7 +35,7 @@ abstract class MemoryUidList<A> : UidList<A> {
         val appended = !contains(elem)
         if (appended) {
             elems.add(elem)
-            index.put(elem.uid(), elem)
+            index[elem.uid()] = elem
         }
         log.d("append $elem appended? $appended")
         return appended
@@ -55,7 +55,7 @@ abstract class MemoryUidList<A> : UidList<A> {
             val uid = elem.uid()
             elems.remove(getByUid(uid))
             elems.add(elem)
-            index.put(uid, elem)
+            index[uid] = elem
         }
     }
 
@@ -66,7 +66,7 @@ abstract class MemoryUidList<A> : UidList<A> {
         elems.addAll(clone)
         index.clear()
         elems.forEach {
-            index.put(it.uid(), it)
+            index[it.uid()] = it
         }
     }
 
