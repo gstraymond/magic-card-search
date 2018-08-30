@@ -191,4 +191,10 @@
     <string name="land">Land</string>
     <string name="instant_sorcery">Instant/Sorc.</string>
     <string name="other">Other</string>
+    <string name="wishlist_menu_export">Export</string>
+    <string name="wishlist_menu_import">Import</string>
+    <string name="wishlist_import_title">Import wishlist from file ?</string>
+    <string name="wishlist_import_message">This will replace your current wishlist.</string>
+    <string name="wishlist_import_ok">ok</string>
+    <string name="wishlist_import_cancel">cancel</string>
 </resources>

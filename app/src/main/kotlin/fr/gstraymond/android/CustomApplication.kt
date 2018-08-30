@@ -5,6 +5,7 @@ import com.magic.card.search.commons.json.MapperUtil
 import fr.gstraymond.biz.DeckManager
 import fr.gstraymond.biz.ElasticSearchClient
 import fr.gstraymond.biz.RulesFetcher
+import fr.gstraymond.biz.WishlistManager
 import fr.gstraymond.db.json.*
 import fr.gstraymond.impex.DeckResolver
 import fr.gstraymond.models.search.request.Request
@@ -42,6 +43,7 @@ class CustomApplication : BaseApplication() {
     val cardListBuilder by lazy { DeckCardListBuilder(this, objectMapper, deckList) }
     val deckResolver by lazy { DeckResolver(searchService) }
     val deckManager by lazy { DeckManager(deckList, cardListBuilder) }
+    val wishlistManager by lazy { WishlistManager(wishList) }
 
     override fun onCreate() {
         super.onCreate()

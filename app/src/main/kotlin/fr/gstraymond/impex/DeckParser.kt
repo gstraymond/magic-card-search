@@ -7,12 +7,16 @@ class DeckParser {
 
     private val log = Log(this)
 
-    val formats = listOf(
+    private val deckFormats = listOf(
             MagicWizardDeckFormat(),
             MTGODeckFormat(),
             MagicWorkstationDeckFormat())
 
-    fun parse(deckList: String, resolvedURL: URL?): ImportedDeck? {
+    private val wishlistFormats = listOf(WishlistDeckFormat())
+
+    fun parse(deckList: String,
+              resolvedURL: URL?,
+              wishlist: Boolean): ImportedDeck? {
         log.d("DeckParser.parse:\n$deckList")
 
         val lines = deckList.split("\n")
@@ -22,7 +26,7 @@ class DeckParser {
 
         return when {
             lines.isEmpty() || lines.all(String::isEmpty) -> null
-            else -> formats
+            else -> (if(wishlist) wishlistFormats else deckFormats)
                     .find { it.detectFormat(lines) }
                     ?.run {
                         log.d("Formatter found:$this")
