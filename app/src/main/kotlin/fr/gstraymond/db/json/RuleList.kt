@@ -24,7 +24,7 @@ class RuleList(context: Context,
                     .split(" ")
                     .map { it.filter { it.isLetterOrDigit() } }
                     .filter { rangeSize.contains(it.length) }
-                    .fold(trie) { acc, t -> acc.apply { add(t, index) } }
+                    .forEach { trie.add(it, index) }
         }
         super.setLoaded()
     }

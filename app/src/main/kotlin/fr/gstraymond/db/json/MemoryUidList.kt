@@ -61,11 +61,11 @@ abstract class MemoryUidList<A> : UidList<A> {
 
     override fun save(elements: List<A>) {
         val clone = ArrayList(elements) // be sure to have another instance
-        log.d("save $clone")
+        log.d("save $javaClass / ${clone.size}")
         elems.clear()
         elems.addAll(clone)
         index.clear()
-        elems.forEach {
+        clone.forEach { // elems could be accessed from another thread
             index[it.uid()] = it
         }
     }
