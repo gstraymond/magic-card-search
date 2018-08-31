@@ -20,10 +20,14 @@ class DeckImportProgressActivity : CustomActivity(R.layout.activity_deck_import_
         private const val FILE_PATH = "FILE_PATH"
         private const val DECK_LIST = "DECK_LIST"
         private const val FORMAT = "FORMAT"
+        private const val WISHLIST = "WISHLIST"
 
-        fun getIntent(context: Context, filePath: String) =
+        const val WISHLIST_RESULT = -1
+
+        fun getIntent(context: Context, filePath: String, wishlist: Boolean) =
                 Intent(context, DeckImportProgressActivity::class.java).apply {
                     putExtra(FILE_PATH, filePath)
+                    putExtra(WISHLIST, wishlist)
                 }
 
         fun getIntentForDeckList(context: Context, deckList: String, maybeFormat: String?) =
@@ -65,8 +69,10 @@ class DeckImportProgressActivity : CustomActivity(R.layout.activity_deck_import_
                 contentResolver,
                 app().deckResolver,
                 app().deckManager,
+                app().wishlistManager,
                 process,
-                intent.getStringExtra(FORMAT)
+                intent.getStringExtra(FORMAT),
+                intent.getBooleanExtra(WISHLIST, false)
         ).execute(urlOrDeck)
     }
 
@@ -93,12 +99,20 @@ class DeckImportProgressActivity : CustomActivity(R.layout.activity_deck_import_
         override fun finished(deckId: Int) {
             button.apply {
                 isEnabled = true
-                setText(R.string.go_to_deck)
-                setOnClickListener {
-                    startActivity {
-                        DeckDetailActivity.getIntent(this@DeckImportProgressActivity, "$deckId")
+                when (deckId) {
+                    WISHLIST_RESULT -> {
+                        setText(R.string.close)
+                        setOnClickListener { finish() }
                     }
-                    finish()
+                    else -> {
+                        setText(R.string.go_to_deck)
+                        setOnClickListener {
+                            startActivity {
+                                DeckDetailActivity.getIntent(this@DeckImportProgressActivity, "$deckId")
+                            }
+                            finish()
+                        }
+                    }
                 }
             }
         }

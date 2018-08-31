@@ -40,8 +40,8 @@ class MagicWorkstationDeckFormat : DeckFormat {
 
     private fun extractNameFromComments(lines: List<String>): String? {
         val nameComment = lines
-                .find { it.startsWith(COMMENT + " NAME : ") }
-                ?.replace(COMMENT + " NAME : ", "")
+                .find { it.startsWith("$COMMENT NAME : ") }
+                ?.replace("$COMMENT NAME : ", "")
         return nameComment ?: lines.find { it.startsWith(COMMENT) }?.replace(COMMENT, "")
     }
 }

@@ -78,6 +78,7 @@ abstract class JsonList<A>(private val context: Context,
     private fun writeAll() {
         thread {
             synchronized(this) {
+                log.d("write $javaClass")
                 write(MODE_PRIVATE) { stream ->
                     elems.map { stream.write(it) }
                 }
@@ -86,7 +87,6 @@ abstract class JsonList<A>(private val context: Context,
     }
 
     private fun FileOutputStream.write(elem: A) {
-        log.d("write $elem")
         write("${mapperUtil.asJsonString(elem)}\n".toByteArray())
     }
 }

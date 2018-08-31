@@ -2,14 +2,18 @@ package fr.gstraymond.impex
 
 import android.content.ContentResolver
 import android.os.AsyncTask
+import fr.gstraymond.android.DeckImportProgressActivity
 import fr.gstraymond.biz.DeckManager
+import fr.gstraymond.biz.WishlistManager
 import java.net.URL
 
 class DeckImporterTask(private val contentResolver: ContentResolver,
                        private val deckResolver: DeckResolver,
                        private val deckManager: DeckManager,
+                       private val wishlistManager: WishlistManager,
                        private val importerProcess: ImporterProcess,
-                       private val maybeFormat: String?) : AsyncTask<String, DeckImporterTask.Progress, Int>() {
+                       private val maybeFormat: String?,
+                       private val wishlist: Boolean) : AsyncTask<String, DeckImporterTask.Progress, Int>() {
 
     data class Progress(val task: String, val result: Int)
 
@@ -24,13 +28,19 @@ class DeckImporterTask(private val contentResolver: ContentResolver,
     override fun doInBackground(vararg strings: String): Int? {
         val string = strings.first()
         val importedDeck = when {
-            string.startsWith("file:") -> DeckImporter(contentResolver).importFromUri(URL(string))
-            else -> DeckImporter(contentResolver).importFromText(string)
+            string.startsWith("file:") -> DeckImporter(contentResolver, wishlist).importFromUri(URL(string))
+            else -> DeckImporter(contentResolver, wishlist).importFromText(string)
         }
         publishProgress(Progress(URL_TASK, importedDeck?.lines?.size ?: -1))
         return importedDeck?.let { deck ->
             val cards = deckResolver.resolve(deck, this)
-            deckManager.createDeck(deck.name, cards, maybeFormat)
+            when (wishlist) {
+                true -> {
+                    wishlistManager.replace(cards)
+                    DeckImportProgressActivity.WISHLIST_RESULT // expect a deck id
+                }
+                else -> deckManager.createDeck(deck.name, cards, maybeFormat)
+            }
         }
     }
 

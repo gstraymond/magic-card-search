@@ -12,7 +12,8 @@ data class ImportedDeck(val name: String, val lines: List<DeckTextLine>)
 
 data class DeckTextLine(val mult: Int, val title: String, val isSideboard: Boolean)
 
-class DeckImporter(private val contentResolver: ContentResolver) {
+class DeckImporter(private val contentResolver: ContentResolver,
+                   private val wishlist: Boolean) {
 
     private val log = Log(this)
 
@@ -31,11 +32,11 @@ class DeckImporter(private val contentResolver: ContentResolver) {
 
     private fun parse(deckList: String, url: URL?): ImportedDeck? {
         val resolvedUri = when (url?.protocol) {
-            "fle" -> resolveFileURL(url)
+            "file" -> resolveFileURL(url)
             else -> url
         }
 
-        return deckParser.parse(deckList, resolvedUri)?.apply {
+        return deckParser.parse(deckList, resolvedUri, wishlist)?.apply {
             log.d("imported: ")
             log.d(name)
             log.d(lines.joinToString("\n"))

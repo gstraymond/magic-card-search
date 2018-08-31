@@ -5,7 +5,6 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
-import android.support.v7.widget.Toolbar
 import android.widget.Button
 import com.nbsp.materialfilepicker.MaterialFilePicker
 import com.nbsp.materialfilepicker.ui.FilePickerActivity.RESULT_FILE_PATH
@@ -29,8 +28,7 @@ class DeckImporterActivity : CustomActivity(R.layout.activity_deck_importer) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val toolbar = findViewById(R.id.toolbar) as Toolbar
-        setSupportActionBar(toolbar)
+        setSupportActionBar(find(R.id.toolbar))
         supportActionBar?.apply {
             setDisplayHomeAsUpEnabled(true)
             title = getString(R.string.import_deck)
@@ -68,7 +66,7 @@ class DeckImporterActivity : CustomActivity(R.layout.activity_deck_importer) {
             FILE_PICKER_CODE -> when (resultCode) {
                 RESULT_OK -> startActivity {
                     val path = "file://${data!!.getStringExtra(RESULT_FILE_PATH)}"
-                    DeckImportProgressActivity.getIntent(this, path)
+                    DeckImportProgressActivity.getIntent(this, path, false)
                 }
             }
         }
