@@ -6,7 +6,6 @@ import android.content.Context.MODE_PRIVATE
 import com.magic.card.search.commons.json.MapperUtil
 import java.io.FileNotFoundException
 import java.io.FileOutputStream
-import kotlin.concurrent.thread
 
 abstract class JsonList<A>(private val context: Context,
                            private val mapperUtil: MapperUtil<A>,
@@ -62,9 +61,7 @@ abstract class JsonList<A>(private val context: Context,
     }
 
     override fun append(elem: A) = super.append(elem).apply {
-        synchronized(this) {
-            write(MODE_APPEND) { it.write(elem) }
-        }
+        write(MODE_APPEND) { it.write(elem) }
     }
 
     private fun write(mode: Int, f: (FileOutputStream) -> Unit) {
@@ -76,13 +73,9 @@ abstract class JsonList<A>(private val context: Context,
     }
 
     private fun writeAll() {
-        thread {
-            synchronized(this) {
-                log.d("write $javaClass")
-                write(MODE_PRIVATE) { stream ->
-                    elems.map { stream.write(it) }
-                }
-            }
+        log.d("write $javaClass")
+        write(MODE_PRIVATE) { stream ->
+            elems.map { stream.write(it) }
         }
     }
 

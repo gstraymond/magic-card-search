@@ -17,7 +17,6 @@ repositories {
 
 android {
     compileSdkVersion 25
-    buildToolsVersion '27.0.3'
 
     defaultConfig {
         applicationId "com.magic.card.search.browser"

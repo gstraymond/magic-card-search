@@ -11,7 +11,7 @@ class Publication (val edition: String,
                    val rarityCode: String,
                    val image: String?,
                    val editionImage: String?,
-                   val price: Double = 0.toDouble(),
+                   val price: Double = 0.0,
                    val editionReleaseDate: Date?) : Parcelable {
 
     constructor(source: Parcel) : this(
