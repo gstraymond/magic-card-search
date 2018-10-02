@@ -7,6 +7,8 @@ import fr.gstraymond.R
 import fr.gstraymond.biz.SetImageGetter
 import fr.gstraymond.models.search.response.Publication
 import fr.gstraymond.utils.find
+import fr.gstraymond.utils.gone
+import fr.gstraymond.utils.visible
 import java.math.BigDecimal
 import java.math.MathContext
 import java.math.RoundingMode
@@ -27,12 +29,12 @@ class PublicationView(context: Context) : View<Publication>(context, R.layout.ca
         val setDrawable = setImageGetter.getDrawable(card)
 
         if (setDrawable == null) {
-            publicationImage.visibility = android.view.View.GONE
-            publicationImageAlt.visibility = android.view.View.VISIBLE
+            publicationImage.gone()
+            publicationImageAlt.visible()
             publicationImageAlt.text = "?"
         } else {
-            publicationImageAlt.visibility = android.view.View.GONE
-            publicationImage.visibility = android.view.View.VISIBLE
+            publicationImageAlt.gone()
+            publicationImage.visible()
             publicationImage.setImageDrawable(setDrawable)
         }
         if (card.editionReleaseDate != null) {
@@ -41,21 +43,23 @@ class PublicationView(context: Context) : View<Publication>(context, R.layout.ca
             publicationYear.text = ""
         }
         publicationText.text = card.edition
-        val price = formatPrice(card)
-        if (price == "") {
-            publicationPrice.visibility = android.view.View.GONE
+        val price = formatPrice(card.price)
+        val foilPrice = formatPrice(card.foilPrice, foil = true)
+        if (price == "" && foilPrice == "") {
+            publicationPrice.gone()
         } else {
-            publicationPrice.visibility = android.view.View.VISIBLE
-            publicationPrice.text = price
+            publicationPrice.visible()
+            publicationPrice.text = sequenceOf(price, foilPrice).filter { it != "" }.joinToString("\n")
         }
 
         return view
     }
 
-    private fun formatPrice(publication: Publication) = when (publication.price) {
+    private fun formatPrice(price: Double,
+                            foil: Boolean = false) = when (price) {
         0.0 -> ""
-        else -> BigDecimal(publication.price)
+        else -> BigDecimal(price)
                 .round(MathContext(2, RoundingMode.HALF_EVEN))
-                .run { "$" + toPlainString() }
+                .run { "$" + toPlainString() + (if (foil) " *" else "") }
     }
 }

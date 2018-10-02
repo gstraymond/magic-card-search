@@ -179,4 +179,5 @@
     <string name="wishlist_import_message">Cela remplacera votre wishlist actuelle.</string>
     <string name="wishlist_import_ok">ok</string>
     <string name="wishlist_import_cancel">annuler</string>
+    <string name="foil_price_hint">prix premium *</string>
 </resources>
