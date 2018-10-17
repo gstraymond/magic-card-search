@@ -19,7 +19,7 @@ data class DeckLine(val card: Card,
 
 data class DeckCard(val card: Card,
                     val cardTimestamp: Long = Date().time,
-                    val counts: Counts = Counts(1, 0)) : ImportResult() {
+                    val counts: Counts = Counts(1, 0)) {
     fun id() = card.getId()
 
     data class Counts(val deck: Int, val sideboard: Int)

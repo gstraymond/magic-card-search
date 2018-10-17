@@ -71,4 +71,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textIsSelectable="true" />
+
+    <TextView
+        android:id="@+id/card_textview_foil_hint"
+        style="@android:style/TextAppearance.Medium"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:text="@string/foil_price_hint"
+        android:textColor="@color/gold" />
 </LinearLayout>

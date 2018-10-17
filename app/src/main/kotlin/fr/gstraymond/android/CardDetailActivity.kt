@@ -47,7 +47,7 @@ class CardDetailActivity : CardCommonActivity(R.layout.activity_card_detail),
         actionBarSetDisplayHomeAsUpEnabled(true)
 
         val title = find<TextView>(R.id.toolbar_title)
-        title.text = card.getLocalizedTitle(this, Card::title, { c, ft -> "$ft (${c.title})" })
+        title.text = card.getLocalizedTitle(this, Card::title) { c, ft -> "$ft (${c.title})" }
 
         replaceFragment(CardDetailFragment(), R.id.card_detail_container, getBundle())
 

@@ -4,28 +4,30 @@ import android.os.Parcel
 import android.os.Parcelable
 import java.util.*
 
-class Publication (val edition: String,
-                   val editionCode: String,
-                   val stdEditionCode: String?,
-                   val rarity: String,
-                   val rarityCode: String,
-                   val image: String?,
-                   val editionImage: String?,
-                   val price: Double = 0.toDouble(),
-                   val editionReleaseDate: Date?) : Parcelable {
+class Publication(val edition: String,
+                  val editionCode: String,
+                  val stdEditionCode: String?,
+                  val rarity: String,
+                  val rarityCode: String,
+                  val image: String?,
+                  val editionImage: String?,
+                  val price: Double = 0.0,
+                  val editionReleaseDate: Date?,
+                  val foilPrice: Double = 0.0) : Parcelable {
 
     constructor(source: Parcel) : this(
-        edition = source.readString(),
-        editionCode = source.readString(),
-        stdEditionCode = source.readString(),
-        rarity = source.readString(),
-        rarityCode = source.readString(),
-        image = source.readString(),
-        editionImage = source.readString(),
-        price = source.readDouble(),
-        editionReleaseDate = source.readLong().run {
-            if (this != 0L) Date(this) else null
-        }
+            edition = source.readString(),
+            editionCode = source.readString(),
+            stdEditionCode = source.readString(),
+            rarity = source.readString(),
+            rarityCode = source.readString(),
+            image = source.readString(),
+            editionImage = source.readString(),
+            price = source.readDouble(),
+            editionReleaseDate = source.readLong().run {
+                if (this != 0L) Date(this) else null
+            },
+            foilPrice = source.readDouble()
     )
 
     override fun describeContents() = 0
@@ -40,6 +42,7 @@ class Publication (val edition: String,
         dest.writeString(editionImage)
         dest.writeDouble(price)
         dest.writeLong(editionReleaseDate?.time ?: 0)
+        dest.writeDouble(foilPrice)
     }
 
     companion object {

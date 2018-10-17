@@ -1,5 +1,5 @@
 buildscript {
-    ext.kotlin_version = '1.2.50'
+    ext.kotlin_version = '1.2.51'
 
     repositories {
         mavenCentral()
@@ -27,15 +27,14 @@ repositories {
 }
 
 android {
-    compileSdkVersion 27
-    buildToolsVersion '27.0.3'
+    compileSdkVersion 28
 
     defaultConfig {
         applicationId "mtg.magic.search.deck.builder"
         minSdkVersion 14
-        targetSdkVersion 27
-        versionCode 69
-        versionName "3.4.0"
+        targetSdkVersion 28
+        versionCode 70
+        versionName "3.5.0"
 
         javaCompileOptions {
             annotationProcessorOptions {

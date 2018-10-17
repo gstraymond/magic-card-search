@@ -39,6 +39,7 @@ class CardView(val context: Context,
         val rulingView = view.find<TextView>(R.id.card_textview_ruling)
         val formatsView = view.find<TextView>(R.id.card_textview_formats)
         val altView = view.find<Button>(R.id.card_alt)
+        val foilHintView = view.find<TextView>(R.id.card_textview_foil_hint)
 
         val ccpt = formatCCPT(card)
         if (ccpt.toString().isEmpty()) ccptView.visibility = android.view.View.GONE
@@ -55,39 +56,44 @@ class CardView(val context: Context,
         if (url != null) CardLoader(url, card, pictureView).load(context)
         else pictureView.visibility = android.view.View.GONE
 
-        val finalPosition = urlPosition
-        pictureView.setOnClickListener { callbacks.onImageClick(finalPosition) }
+        pictureView.setOnClickListener { callbacks.onImageClick(urlPosition) }
 
         formatsView.text = formatFormatter.format(card)
 
         val desc = descFormatter.format(card, true)
-        if (desc.isEmpty()) descView.visibility = android.view.View.GONE
+        if (desc.isEmpty()) descView.gone()
         else descView.text = Html.fromHtml(desc, imageGetter, null)
 
-        if (card.ruling.isEmpty()) {
-            firstRulingView.gone()
-            rulingView.gone()
-        } else if (card.ruling.size == 1) {
-            firstRulingView.gone()
-            rulingView.visible()
-            val ruling = card.ruling.first()
-            rulingView.text = Html.fromHtml(formatRuling(ruling))
-        } else {
-            firstRulingView.visible()
-            val ruling = card.ruling.first()
-            val rulingText = String.format(context.resources.getString(R.string.deck_detail_ruling), formatRuling(ruling), card.ruling.size - 1)
-            firstRulingView.text = Html.fromHtml(rulingText)
-            firstRulingView.setOnFocusChangeListener { _, _ ->
-                rulingView.visible()
+        when {
+            card.ruling.isEmpty() -> {
                 firstRulingView.gone()
+                rulingView.gone()
             }
-            rulingView.gone()
-            rulingView.text = Html.fromHtml(
-                    card.ruling.zip(listOf(Ruling("", "")) + card.ruling).map { (ruling, prevRuling) ->
-                        if (ruling.date == prevRuling.date) ruling.text
-                        else formatRuling(ruling)
-                    }.joinToString("<br><br>")
-            )
+
+            card.ruling.size == 1 -> {
+                firstRulingView.gone()
+                rulingView.visible()
+                val ruling = card.ruling.first()
+                rulingView.text = Html.fromHtml(formatRuling(ruling))
+            }
+
+            else -> {
+                firstRulingView.visible()
+                val ruling = card.ruling.first()
+                val rulingText = String.format(context.resources.getString(R.string.deck_detail_ruling), formatRuling(ruling), card.ruling.size - 1)
+                firstRulingView.text = Html.fromHtml(rulingText)
+                firstRulingView.setOnFocusChangeListener { _, _ ->
+                    rulingView.visible()
+                    firstRulingView.gone()
+                }
+                rulingView.gone()
+                rulingView.text = Html.fromHtml(
+                        card.ruling.zip(listOf(Ruling("", "")) + card.ruling).map { (ruling, prevRuling) ->
+                            if (ruling.date == prevRuling.date) ruling.text
+                            else formatRuling(ruling)
+                        }.joinToString("<br><br>")
+                )
+            }
         }
 
         if (card.altTitles.isEmpty()) {
@@ -103,6 +109,9 @@ class CardView(val context: Context,
                 }
             }
         }
+
+        if (card.publications.any { it.foilPrice > 0 }) foilHintView.visible()
+        else foilHintView.gone()
 
         return view
     }
