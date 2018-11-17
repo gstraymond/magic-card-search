@@ -9,7 +9,6 @@ import android.view.View
 import android.widget.TextView
 import fr.gstraymond.R
 import fr.gstraymond.affiliate.ebay.LinkGenerator
-import fr.gstraymond.analytics.Tracker
 import fr.gstraymond.android.fragment.CardDetailFragment
 import fr.gstraymond.models.search.response.Card
 import fr.gstraymond.models.search.response.getLocalizedTitle
@@ -61,7 +60,6 @@ class CardDetailActivity : CardCommonActivity(R.layout.activity_card_detail),
                     data = Uri.parse(LinkGenerator.generate(card.title))
                 }
             }
-            Tracker.ebayCart(card)
         }
     }
 

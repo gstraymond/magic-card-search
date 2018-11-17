@@ -17,7 +17,6 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import android.widget.TextView.BufferType.EDITABLE
 import fr.gstraymond.R
-import fr.gstraymond.analytics.Tracker
 import fr.gstraymond.android.adapter.DeckCardCallback
 import fr.gstraymond.android.adapter.DeckDetailFragmentPagerAdapter
 import fr.gstraymond.biz.Formats
@@ -179,7 +178,6 @@ class DeckDetailActivity : CustomActivity(R.layout.activity_deck_detail), DeckCa
                 .setTitle(getString(R.string.deckdetails_delete_title))
                 .setPositiveButton(getString(R.string.deckdetails_delete_ok)) { _, _ ->
                     app().deckManager.delete(deck())
-                    Tracker.addRemoveDeck(added = false)
                     finish()
                 }
                 .setNegativeButton(getString(R.string.deckdetails_delete_cancel)) { _, _ -> }

@@ -8,7 +8,6 @@ import android.support.v7.widget.RecyclerView
 import android.view.View
 import com.github.clans.fab.FloatingActionMenu
 import fr.gstraymond.R
-import fr.gstraymond.analytics.Tracker
 import fr.gstraymond.android.adapter.DeckListAdapter
 import fr.gstraymond.models.Deck
 import fr.gstraymond.utils.*
@@ -43,7 +42,6 @@ class DecksActivity : CustomActivity(R.layout.activity_decks) {
         find<View>(R.id.decks_fab_add).let {
             it.setOnClickListener {
                 startActivity {
-                    Tracker.addRemoveDeck(added = true)
                     val deckId = app().deckManager.createEmptyDeck()
                     DeckDetailActivity.getIntent(this, "$deckId")
                 }

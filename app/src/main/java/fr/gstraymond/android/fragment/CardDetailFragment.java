@@ -23,7 +23,7 @@ public class CardDetailFragment extends CustomListFragment {
 
     private Callbacks callbacks = dummyCallbacks;
     private List<Object> objects;
-    private String CARD = CardCommonActivity.Companion.getCARD_EXTRA();
+    private String CARD = CardCommonActivity.CARD_EXTRA;
 
     public interface Callbacks {
         void onItemSelected(int id);

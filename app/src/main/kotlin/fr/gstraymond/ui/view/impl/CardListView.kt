@@ -5,7 +5,6 @@ import android.graphics.drawable.Drawable
 import android.support.v7.widget.AppCompatButton
 import com.magic.card.search.commons.log.Log
 import fr.gstraymond.R
-import fr.gstraymond.analytics.Tracker
 import fr.gstraymond.db.json.JsonList
 import fr.gstraymond.models.search.response.Card
 import fr.gstraymond.ui.adapter.CardClickCallbacks
@@ -29,10 +28,8 @@ abstract class CardListView<out A>(private val cards: JsonList<A>,
         view.setOnClickListener {
             if (cards.addOrRemove(getElem(card))) {
                 clickCallbacks.itemAdded(position)
-                Tracker.addRemoveCard(listName, card, true)
             } else {
                 clickCallbacks.itemRemoved(position)
-                Tracker.addRemoveCard(listName, card, false)
             }
             updateState(card, view)
         }

@@ -13,7 +13,6 @@ import java.util.List;
 import java.util.Map;
 
 import fr.gstraymond.R;
-import fr.gstraymond.analytics.Tracker;
 import fr.gstraymond.android.CardListActivity;
 import fr.gstraymond.android.CustomActivity;
 import fr.gstraymond.android.HistoryActivity;
@@ -81,7 +80,6 @@ public class HistoryListFragment extends CustomListFragment {
 
         Intent intent = CardListActivity.Companion.getIntent(getActivity(), currentSearch);
         startActivity(intent);
-        Tracker.INSTANCE.historySearch(history);
         getActivity().finish();
     }
 }
