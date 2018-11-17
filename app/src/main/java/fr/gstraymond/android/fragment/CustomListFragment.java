@@ -1,7 +1,7 @@
 package fr.gstraymond.android.fragment;
 
-import android.app.ListFragment;
 import android.os.Bundle;
+import android.support.v4.app.ListFragment;
 
 public class CustomListFragment extends ListFragment {
 

@@ -1,7 +1,5 @@
 package com.magic.card.search.commons.log;
 
-import com.crashlytics.android.Crashlytics;
-
 public class Log {
 
     private Class caller;
@@ -39,12 +37,12 @@ public class Log {
     }
 
     public void e(String msg, Throwable t) {
-        Crashlytics.logException(t);
+        //Crashlytics.logException(t);
         android.util.Log.e(caller.getCanonicalName(), msg, t);
     }
 
     public static void error(String msg, Throwable t, Class<?> callerClass) {
-        Crashlytics.logException(t);
+        //Crashlytics.logException(t);
         android.util.Log.e(callerClass.getCanonicalName(), msg, t);
     }
 }

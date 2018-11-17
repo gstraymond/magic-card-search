@@ -1,6 +1,5 @@
 package fr.gstraymond.ocr.ui.camera
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.ImageFormat
 import android.graphics.SurfaceTexture
