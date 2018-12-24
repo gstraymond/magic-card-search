@@ -1,13 +1,11 @@
 package fr.gstraymond.android
 
-import android.app.Fragment
 import android.content.res.Configuration
 import android.os.Bundle
+import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
 import android.view.MenuItem
-import com.crashlytics.android.answers.ContentViewEvent
 import com.squareup.moshi.Moshi
-import fr.gstraymond.analytics.Tracker
 import fr.gstraymond.utils.app
 
 abstract class CustomActivity(private val layoutId: Int) : AppCompatActivity() {
@@ -27,7 +25,7 @@ abstract class CustomActivity(private val layoutId: Int) : AppCompatActivity() {
 
     fun replaceFragment(fragment: Fragment, id: Int, bundle: Bundle?) {
         bundle?.apply { fragment.arguments = this }
-        fragmentManager.beginTransaction().replace(id, fragment).commitAllowingStateLoss()
+        supportFragmentManager.beginTransaction().replace(id, fragment).commitAllowingStateLoss()
     }
 
     protected fun actionBarSetDisplayHomeAsUpEnabled(bool: Boolean) {
@@ -42,20 +40,9 @@ abstract class CustomActivity(private val layoutId: Int) : AppCompatActivity() {
         supportActionBar?.setTitle(titleId)
     }
 
-    protected open fun buildContentViewEvent(): ContentViewEvent =
-            ContentViewEvent()
-                    .putContentName(javaClass.simpleName)
-                    .putCustomAttribute("isTablet", isTablet.toString() + "")
-                    .putCustomAttribute("wishlist_size", app().wishList.size())
-
     private val isTablet by lazy {
         resources.configuration.screenLayout and
                 Configuration.SCREENLAYOUT_SIZE_MASK >= Configuration.SCREENLAYOUT_SIZE_LARGE
-    }
-
-    override fun onPostCreate(savedInstanceState: Bundle?) {
-        super.onPostCreate(savedInstanceState)
-        Tracker.track(buildContentViewEvent())
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

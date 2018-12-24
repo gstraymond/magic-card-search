@@ -1,7 +1,7 @@
 package fr.gstraymond.android.fragment;
 
-import android.app.Fragment;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.PagerAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,7 +18,7 @@ public class CardPagerFragment extends Fragment {
 
     private int position = 0;
 
-    private String CARD = CardCommonActivity.Companion.getCARD_EXTRA();
+    private String CARD = CardCommonActivity.CARD_EXTRA;
     private String POSITION = CardPagerActivity.Companion.getPOSITION_EXTRA();
 
     @Override

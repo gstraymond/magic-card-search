@@ -4,7 +4,6 @@ import android.os.AsyncTask
 import com.magic.card.search.commons.json.MapperUtil
 import com.magic.card.search.commons.log.Log
 import com.squareup.moshi.Moshi
-import fr.gstraymond.analytics.Tracker
 import fr.gstraymond.models.autocomplete.request.AutocompleteRequest
 import fr.gstraymond.models.autocomplete.response.AutocompleteResult
 import fr.gstraymond.models.autocomplete.response.Option
@@ -20,7 +19,6 @@ class AutocompleteProcessor(private val mapperUtil: MapperUtil<AutocompleteReque
         val query = strings[0]
         val q = mapperUtil.asJsonString(AutocompleteRequest.withQuery(query))
         val result = searchService.autocomplete(q) ?: return AutocompleteResult.empty()
-        Tracker.autocompleteSearch(query, result)
         return result.elem
     }
 

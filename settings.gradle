@@ -1,1 +1,1 @@
-include ':app', ':browser-app', ':commons'
+include ':app', ':commons'

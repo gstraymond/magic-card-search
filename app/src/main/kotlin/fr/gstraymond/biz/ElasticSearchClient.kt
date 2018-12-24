@@ -2,7 +2,6 @@ package fr.gstraymond.biz
 
 import com.magic.card.search.commons.json.MapperUtil
 import com.magic.card.search.commons.log.Log
-import fr.gstraymond.analytics.Tracker
 import fr.gstraymond.db.json.HistoryList
 import fr.gstraymond.models.search.request.Request
 import fr.gstraymond.models.search.response.SearchResult
@@ -19,13 +18,10 @@ class ElasticSearchClient(private val elasticSearchService: ElasticSearchService
         val queryAsJson = mapperUtil.asJsonString(Request.fromOptions(options))
 
         if (options.addToHistory) {
-            log.i("add to history : " + options)
+            log.i("add to history : $options")
             historyDataSource.appendHistory(options)
         }
 
-        return elasticSearchService.search(queryAsJson)?.let {
-            Tracker.search(options, it)
-            it.elem
-        }
+        return elasticSearchService.search(queryAsJson)?.elem
     }
 }

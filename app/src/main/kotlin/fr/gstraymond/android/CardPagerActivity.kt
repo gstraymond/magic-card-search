@@ -1,9 +1,9 @@
 package fr.gstraymond.android
 
-import android.app.Fragment
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.support.v4.app.Fragment
 import android.support.v7.widget.Toolbar
 import fr.gstraymond.R
 import fr.gstraymond.android.fragment.CardPagerFragment
@@ -40,7 +40,7 @@ class CardPagerActivity : CardCommonActivity(R.layout.activity_card_pager) {
     }
 
     override fun replaceFragment(fragment: Fragment, id: Int) {
-        if (fragmentManager.findFragmentById(id) == null) {
+        if (supportFragmentManager.findFragmentById(id) == null) {
             super.replaceFragment(fragment, id)
         }
     }

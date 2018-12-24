@@ -53,7 +53,7 @@ class CardListActivity : CustomActivity(R.layout.activity_card_list),
     private lateinit var drawerLayout: DrawerLayout
 
     private val autocompleteProcessor by lazy { AutocompleteProcessorBuilder(app().objectMapper, app().searchService, this) }
-    private val searchProcessor by lazy { SearchProcessorBuilder(presenter, app().elasticSearchClient, this, findViewById(android.R.id.content)) }
+    private val searchProcessor by lazy { SearchProcessorBuilder(presenter, app().elasticSearchClient, this, findViewById(android.R.id.content)!!) }
     private val suggestionListener by lazy { SuggestionListener(searchView, listOf()) }
     private val searchViewCursorAdapter by lazy { SearchViewCursorAdapter.empty(this) }
 

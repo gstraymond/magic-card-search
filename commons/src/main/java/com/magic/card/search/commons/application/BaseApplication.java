@@ -3,7 +3,6 @@ package com.magic.card.search.commons.application;
 import android.app.Application;
 
 import com.crashlytics.android.Crashlytics;
-import com.crashlytics.android.answers.Answers;
 import com.squareup.moshi.FromJson;
 import com.squareup.moshi.Moshi;
 import com.squareup.moshi.ToJson;
@@ -19,7 +18,7 @@ public class BaseApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        Fabric.with(this, new Crashlytics(), new Answers());
+        Fabric.with(this, new Crashlytics());
         this.moshi = new Moshi.Builder().add(getDateAdapter()).build();
     }
 
