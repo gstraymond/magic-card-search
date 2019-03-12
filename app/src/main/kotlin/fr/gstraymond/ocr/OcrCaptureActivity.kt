@@ -138,7 +138,6 @@ class OcrCaptureActivity : CustomActivity(R.layout.ocr_capture), OcrDetectorProc
                 createScanDialog(deckId, card, intent.getBooleanExtra(ADD_TO_SIDEBOARD, false))
             }
         } ?: startActivity {
-            finish()
             CardDetailActivity.getIntent(this@OcrCaptureActivity, card)
         }
     }
