@@ -22,9 +22,9 @@ class GraphicOverlay<T : GraphicOverlay.Graphic>(context: Context, attrs: Attrib
 
         abstract fun contains(x: Float, y: Float): Boolean
 
-        fun scaleX(horizontal: Float) = horizontal * overlay.widthScaleFactor
+        private fun scaleX(horizontal: Float) = horizontal * overlay.widthScaleFactor
 
-        fun scaleY(vertical: Float) = vertical * overlay.heightScaleFactor
+        private fun scaleY(vertical: Float) = vertical * overlay.heightScaleFactor
 
         fun translateX(x: Float) = when (overlay.facing) {
             CameraSource.CAMERA_FACING_FRONT -> overlay.width - scaleX(x)

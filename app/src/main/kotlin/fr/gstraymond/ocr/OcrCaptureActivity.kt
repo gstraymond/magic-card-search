@@ -73,7 +73,7 @@ class OcrCaptureActivity : CustomActivity(R.layout.ocr_capture), OcrDetectorProc
     }
 
     private fun createCameraSource(autoFocus: Boolean, useFlash: Boolean) {
-        val textRecognizer = TextRecognizer.Builder(applicationContext).build()
+        val textRecognizer = TextRecognizer.Builder(this).build()
         textRecognizer.setProcessor(OcrDetectorProcessor(graphicOverlay, this, app().searchService))
 
         if (!textRecognizer.isOperational) {
@@ -110,6 +110,12 @@ class OcrCaptureActivity : CustomActivity(R.layout.ocr_capture), OcrDetectorProc
     override fun onDestroy() {
         super.onDestroy()
         preview.release()
+    }
+
+    override fun onRestart() {
+        super.onRestart()
+        // ugly hack to be sure everything is correctly when user is coming back
+        this@OcrCaptureActivity.recreate()
     }
 
     private fun startCameraSource() {
@@ -172,13 +178,13 @@ class OcrCaptureActivity : CustomActivity(R.layout.ocr_capture), OcrDetectorProc
         cardViews.display(view, card, 0)
         AlertDialog.Builder(this)
                 .setView(view)
-                .setPositiveButton("Add", { _, _ ->
+                .setPositiveButton("Add") { _, _ ->
                     addCardToDeck(deckId, card, addToSideboard)
                     finishScan(continueScan.isChecked)
-                })
-                .setNegativeButton("Discard", { _, _ ->
+                }
+                .setNegativeButton("Discard") { _, _ ->
                     finishScan(continueScan.isChecked)
-                })
+                }
                 .create()
                 .show()
     }

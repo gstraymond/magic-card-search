@@ -47,7 +47,7 @@ class CameraSourcePreview(context: Context,
     }
 
     fun stop() {
-        cameraSource?.apply { stop() }
+        cameraSource?.stop()
     }
 
     fun release() {

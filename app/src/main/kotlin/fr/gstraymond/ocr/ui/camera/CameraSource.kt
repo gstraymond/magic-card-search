@@ -2,14 +2,11 @@ package fr.gstraymond.ocr.ui.camera
 
 import android.content.Context
 import android.graphics.ImageFormat
-import android.graphics.SurfaceTexture
 import android.hardware.Camera
 import android.hardware.Camera.CameraInfo
-import android.os.Build
 import android.os.SystemClock
 import android.view.Surface
 import android.view.SurfaceHolder
-import android.view.SurfaceView
 import android.view.WindowManager
 import com.google.android.gms.common.images.Size
 import com.google.android.gms.vision.Detector
@@ -18,7 +15,7 @@ import com.magic.card.search.commons.log.Log
 import java.nio.ByteBuffer
 import java.util.*
 
-class CameraSource() {
+class CameraSource {
 
     private val log = Log(javaClass)
     private var context: Context? = null
@@ -37,12 +34,8 @@ class CameraSource() {
     private var requestedPreviewWidth = 1024
     private var requestedPreviewHeight = 768
 
-
     private var focusMode: String? = null
     private var flashMode: String? = null
-
-    private var dummySurfaceView: SurfaceView? = null
-    private var dummySurfaceTexture: SurfaceTexture? = null
 
     private var processingThread: Thread? = null
     private var frameProcessor: FrameProcessingRunnable? = null
@@ -55,7 +48,7 @@ class CameraSource() {
 
         fun setRequestedFps(fps: Float): Builder {
             if (fps <= 0) {
-                throw IllegalArgumentException("Invalid fps: " + fps)
+                throw IllegalArgumentException("Invalid fps: $fps")
             }
             cameraSource.requestedFps = fps
             return this
@@ -83,7 +76,7 @@ class CameraSource() {
 
         fun setFacing(facing: Int): Builder {
             if (facing != CAMERA_FACING_BACK && facing != CAMERA_FACING_FRONT) {
-                throw IllegalArgumentException("Invalid camera: " + facing)
+                throw IllegalArgumentException("Invalid camera: $facing")
             }
             cameraSource.cameraFacing = facing
             return this
@@ -95,51 +88,11 @@ class CameraSource() {
         }
     }
 
-    interface ShutterCallback {
-        fun onShutter()
-    }
-
-    interface PictureCallback {
-        fun onPictureTaken(data: ByteArray)
-    }
-
-    interface AutoFocusCallback {
-        fun onAutoFocus(success: Boolean)
-    }
-
-    interface AutoFocusMoveCallback {
-        fun onAutoFocusMoving(start: Boolean)
-    }
-
     fun release() {
         synchronized(cameraLock) {
             stop()
             frameProcessor!!.release()
         }
-    }
-
-    fun start(): CameraSource {
-        synchronized(cameraLock) {
-            if (camera != null) {
-                return this
-            }
-
-            camera = createCamera().apply {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-                    dummySurfaceTexture = SurfaceTexture(DUMMY_TEXTURE_NAME)
-                    setPreviewTexture(dummySurfaceTexture)
-                } else {
-                    dummySurfaceView = SurfaceView(context)
-                    setPreviewDisplay(dummySurfaceView!!.holder)
-                }
-                startPreview()
-            }
-
-            processingThread = Thread(frameProcessor)
-            frameProcessor!!.setActive(true)
-            processingThread!!.start()
-        }
-        return this
     }
 
     fun start(surfaceHolder: SurfaceHolder): CameraSource {
@@ -179,13 +132,9 @@ class CameraSource() {
                 stopPreview()
                 setPreviewCallbackWithBuffer(null)
                 try {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-                        setPreviewTexture(null)
-                    } else {
-                        setPreviewDisplay(null)
-                    }
+                    setPreviewTexture(null)
                 } catch (e: Exception) {
-                    log.e("Failed to clear camera preview: " + e, e)
+                    log.e("Failed to clear camera preview: $e", e)
                 }
 
                 release()
@@ -201,11 +150,13 @@ class CameraSource() {
         }
         val camera = Camera.open(requestedCameraId)
 
-        val sizePair = selectSizePair(camera, requestedPreviewWidth, requestedPreviewHeight) ?: throw RuntimeException("Could not find suitable preview size.")
+        val sizePair = selectSizePair(camera, requestedPreviewWidth, requestedPreviewHeight)
+                ?: throw RuntimeException("Could not find suitable preview size.")
         val pictureSize = sizePair.pictureSize()
         previewSize = sizePair.previewSize()
 
-        val previewFpsRange = selectPreviewFpsRange(camera, requestedFps) ?: throw RuntimeException("Could not find suitable preview frames per second range.")
+        val previewFpsRange = selectPreviewFpsRange(camera, requestedFps)
+                ?: throw RuntimeException("Could not find suitable preview frames per second range.")
 
         val parameters = camera.parameters
 
@@ -223,8 +174,7 @@ class CameraSource() {
         setRotation(camera, parameters, requestedCameraId)
 
         if (focusMode != null) {
-            if (parameters.supportedFocusModes.contains(
-                    focusMode)) {
+            if (parameters.supportedFocusModes.contains(focusMode)) {
                 parameters.focusMode = focusMode
             } else {
                 log.i("Camera focus mode: $focusMode is not supported on this device.")
@@ -329,7 +279,7 @@ class CameraSource() {
 
         val byteArray = ByteArray(bufferSize)
         val buffer = ByteBuffer.wrap(byteArray)
-        if (!buffer.hasArray() || buffer.array() != byteArray) {
+        if (!buffer.hasArray() || !buffer.array()!!.contentEquals(byteArray)) {
             throw IllegalStateException("Failed to create valid buffer for camera source.")
         }
 
@@ -355,7 +305,7 @@ class CameraSource() {
 
         internal fun release() {
             // FIXME chelou assert(processingThread!!.state == State.TERMINATED)
-            detector!!.release()
+            detector?.release()
             detector = null
         }
 
@@ -387,8 +337,8 @@ class CameraSource() {
         }
 
         override fun run() {
-            var outputFrame: Frame? = null
-            var data: ByteBuffer? = null
+            var outputFrame: Frame?
+            var data: ByteBuffer?
 
             while (true) {
                 synchronized(lock) {
@@ -419,7 +369,7 @@ class CameraSource() {
                 }
 
                 try {
-                    detector!!.receiveFrame(outputFrame)
+                    detector?.receiveFrame(outputFrame)
                 } catch (t: Throwable) {
                     log.e("Exception thrown from receiver.", t)
                 } finally {
@@ -430,15 +380,14 @@ class CameraSource() {
     }
 
     companion object {
-        val CAMERA_FACING_BACK = CameraInfo.CAMERA_FACING_BACK
-        val CAMERA_FACING_FRONT = CameraInfo.CAMERA_FACING_FRONT
+        const val CAMERA_FACING_BACK = CameraInfo.CAMERA_FACING_BACK
+        const val CAMERA_FACING_FRONT = CameraInfo.CAMERA_FACING_FRONT
 
-        private val DUMMY_TEXTURE_NAME = 100
-        private val ASPECT_RATIO_TOLERANCE = 0.01f
+        private const val ASPECT_RATIO_TOLERANCE = 0.01f
 
         private fun getIdForRequestedCamera(facing: Int): Int {
             val cameraInfo = CameraInfo()
-            for (i in 0..Camera.getNumberOfCameras() - 1) {
+            for (i in 0 until Camera.getNumberOfCameras()) {
                 Camera.getCameraInfo(i, cameraInfo)
                 if (cameraInfo.facing == facing) {
                     return i
