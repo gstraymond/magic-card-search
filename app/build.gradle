@@ -35,8 +35,8 @@ android {
         applicationId "mtg.magic.search.deck.builder"
         minSdkVersion 14
         targetSdkVersion 28
-        versionCode 74
-        versionName "3.5.4"
+        versionCode 75
+        versionName "3.6.0"
 
         javaCompileOptions {
             annotationProcessorOptions {
@@ -91,10 +91,10 @@ android {
 
 ext {
     glideVersion = '3.+'
-    supportLibVersion = '28.+'
+    supportLibVersion = '28.0.0'
     retrofitVersion = '2.1+'
     retrofitLoggingVersion = '3.3+'
-    androidChartVersion = 'v3.+'
+    androidChartVersion = 'v3.0.3'
     floatingactionbuttonVersion = '1.6.+'
     fileChooserVersion = '1.+'
     dirChooserVersion = '3.+'

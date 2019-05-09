@@ -109,6 +109,7 @@
     <string name="deck_detail_cards_camera_scan">Ajouter une carte via l´appareil photo</string>
     <string name="decks_add">Créer un deck vide</string>
     <string name="decks_import">Importer un deck depuis un fichier</string>
+    <string name="decks_paste">Importer un deck depuis le presse-papier</string>
     <string name="import_deck">Importer un deck</string>
     <string name="select_file">Selectionner un ficher</string>
     <string name="deck_importer_text_why">Vous pouvez importer un deck depuis un fichier sur votre appareil.\n\nSinon, vous pouvez télécharger un deck depuis un de ces sites :</string>
@@ -180,4 +181,12 @@
     <string name="wishlist_import_ok">ok</string>
     <string name="wishlist_import_cancel">annuler</string>
     <string name="foil_price_hint">prix premium *</string>
+    <string name="deck_detail_export_deck">Veuillez choisir un format pour l\'export</string>
+    <string name="deck_detail_export_deck_file">- en tant que fichier (format Magic Workstation)</string>
+    <string name="deck_detail_export_deck_clipboard">- copier dans le presse-papier (format MTG Arena)</string>
+    <string name="deck_detail_export_deck_clipboard_completed">%1$s a été ajouté au presse-papiers</string>
+    <string name="deck_detail_export_deck_clipboard_failed">Echec de l\'export %1$s: veuillez mettre à jour le deck</string>
+    <string name="paste_from_clipboard">Copier depuis le press-papiers</string>
+    <string name="paste_import">Importer</string>
+    <string name="paste_clear">Effacer</string>
 </resources>

@@ -8,6 +8,7 @@ class DeckParser {
     private val log = Log(this)
 
     private val deckFormats = listOf(
+            MtgArenaDeckFormat(),
             MagicWizardDeckFormat(),
             MTGODeckFormat(),
             MagicWorkstationDeckFormat())
@@ -30,6 +31,7 @@ class DeckParser {
                     .find { it.detectFormat(lines) }
                     ?.run {
                         log.d("Formatter found:$this")
+                        println("Formatter found:$this")
                         ImportedDeck(name = extractName(resolvedURL, lines),
                                      lines = parseLines(lines))
                     }

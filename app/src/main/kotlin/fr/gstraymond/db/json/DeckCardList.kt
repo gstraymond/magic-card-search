@@ -38,7 +38,7 @@ class DeckCardListBuilder(private val context: Context,
                           private val moshi: Moshi,
                           private val deckList: DeckList) {
 
-    var cache: DeckCardListCache? = null
+    private var cache: DeckCardListCache? = null
 
     fun build(deckId: Int): DeckCardList =
             if (cache?.id == deckId) {

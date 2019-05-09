@@ -70,6 +70,16 @@
                 app:fab_label="@string/decks_import"
                 app:fab_size="mini" />
 
+            <com.github.clans.fab.FloatingActionButton
+                android:id="@+id/decks_fab_paste"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_content_paste_white_24dp"
+                app:fab_colorNormal="@color/colorPrimary"
+                app:fab_colorPressed="@color/colorPrimary"
+                app:fab_label="@string/decks_paste"
+                app:fab_size="mini" />
+
         </com.github.clans.fab.FloatingActionMenu>
     </RelativeLayout>
 </LinearLayout>
