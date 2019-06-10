@@ -9,7 +9,6 @@ import android.view.ViewGroup
 import android.widget.TextView
 import com.github.mikephil.charting.charts.BarChart
 import com.github.mikephil.charting.components.AxisBase
-import com.github.mikephil.charting.components.Description
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.BarData
 import com.github.mikephil.charting.data.BarDataSet
@@ -62,7 +61,9 @@ class DeckDetailStatsAdapter(context: Context) : RecyclerView.Adapter<RecyclerVi
                             styleDataSet(this, position, colors)
                             setValueFormatter { fl, _, _, _ -> "${fl.toInt()}" }
                         })
-                        styleChart(barChart, colors) { fl, _ -> keys.elementAtOrNull(fl.toInt()) ?: "" }
+                        styleChart(barChart, colors) { fl, _ ->
+                            keys.elementAtOrNull(fl.toInt()) ?: ""
+                        }
                     }
                     is IntChart -> {
                         val entries = element.data.map { (k, v) -> BarEntry(k.toFloat(), v.toFloat()) }

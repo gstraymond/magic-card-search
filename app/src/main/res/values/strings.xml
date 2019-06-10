@@ -86,6 +86,7 @@
     <string name="added_to_clipboard">Copied to clipboard !</string>
     <string name="decks_title">Decks</string>
     <string name="decks_title_number">Decks (%1$s)</string>
+    <string name="decks_paste">Import deck from clipboard</string>
     <string name="quantity">Quantity</string>
 
     <string name="deckdetails_menu_add">Add</string>
@@ -198,4 +199,12 @@
     <string name="wishlist_import_ok">ok</string>
     <string name="wishlist_import_cancel">cancel</string>
     <string name="foil_price_hint">foil price *</string>
+    <string name="deck_detail_export_deck">Please choose format for export</string>
+    <string name="deck_detail_export_deck_file">- as a file (Magic Workstation format)</string>
+    <string name="deck_detail_export_deck_clipboard">- copy to clipboard (MTG Arena format)</string>
+    <string name="deck_detail_export_deck_clipboard_completed">%1$s has been added to the clipboard</string>
+    <string name="deck_detail_export_deck_clipboard_failed">%1$s export failed: please refresh the deck</string>
+    <string name="paste_from_clipboard">Paste from clipboard</string>
+    <string name="paste_import">Import</string>
+    <string name="paste_clear">Clear</string>
 </resources>

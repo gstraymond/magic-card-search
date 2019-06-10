@@ -1,8 +1,6 @@
 package fr.gstraymond.impex
 
-import org.junit.Assert.assertEquals
-import org.junit.Assert.assertTrue
-import org.junit.Assert.fail
+import org.junit.Assert.*
 import org.junit.Test
 import java.net.URL
 
@@ -22,15 +20,15 @@ class DeckParserTest {
 
     @Test
     fun should_import_mtgo_format_decks_3() {
-        testUrl("https://www.mtggoldfish.com/deck/download/542503",
-                "542503",
+        testUrl("https://www.mtggoldfish.com/deck/download/1884848",
+                "1884848",
                 deckSize = 100,
                 sideboardSize = 0)
     }
 
     @Test
     fun should_import_mtgo_format_decks_4() {
-        testUrl("https://mtgdecks.net/archetypes/analysis/3584/all/txt",
+        testUrl("https://mtgdecks.net/Modern/affinity-analysis-3584/2017-01-20/txt",
                 "txt",
                 sideboardSize = 16)
     }
@@ -49,14 +47,14 @@ class DeckParserTest {
 
     @Test
     fun should_import_magic_workstation_format_decks() {
-        testUrl("http://mtgtop8.com/export_files/deck281503.mwDeck",
+        testUrl("https://mtgtop8.com/dec?d=326201&f=Standard_Azorius_Aggro_by_5647382910",
                 "Azorius Aggro")
     }
 
     @Test
     fun should_import_magic_workstation_format_decks_2() {
         testUrl("https://www.mtgdecks.net/decks/view/660419/dec",
-                "Azorius Flash a Standard deck by Misplacedginger")
+                "Azorius Flash a Standard deck by Misplacedginger (dec) Version")
     }
 
     @Test
@@ -89,8 +87,8 @@ class DeckParserTest {
 2 Declaration in Stone"""
 
         testDeck(deck,
-                 URL("http://www.mtgdecks.net/decks/view/660419/dec"),
-                 "dec")
+                URL("http://www.mtgdecks.net/decks/view/660419/dec"),
+                "dec")
     }
 
     @Test
@@ -128,22 +126,82 @@ SB: 4 Ruinous Path
 SB: 4 Transgress the Mind"""
 
         testDeck(deck,
-                 URL("http://www.mtgdecks.net/decks/view/660419/dec"),
-                 "Artifact (10)",
-                 sideboardSize = 14)
+                URL("http://www.mtgdecks.net/decks/view/660419/dec"),
+                "Artifact (10)",
+                sideboardSize = 14)
+    }
+
+
+    @Test
+    fun should_import_mtgarena_format_decks() {
+
+        val deck = """4 Dragonskull Summit (XLN) 252
+8 Swamp (RIX) 194
+8 Mountain (RIX) 195
+1 Midnight Reaper (GRN) 77
+3 Gutterbones (RNA) 76
+4 Priest of Forgotten Gods (RNA) 83
+2 Rix Maadi Reveler (RNA) 109
+4 Judith, the Scourge Diva (RNA) 185
+3 Footlight Fiend (RNA) 216
+4 Blood Crypt (RNA) 245
+3 Lazotep Reaver (WAR) 96
+2 Liliana, Dreadhorde General (WAR) 97
+4 Grim Initiate (WAR) 130
+4 Dreadhorde Butcher (WAR) 194
+2 Ravenous Chupacabra (RIX) 82
+4 Rekindling Phoenix (RIX) 111
+"""
+
+        testDeck(deck,
+                URL("http://https://mtgadecks.net/deck/3380"),
+                "3380",
+                sideboardSize = 0)
+    }
+
+    @Test
+    fun should_import_mtgarena_format_decks_2() {
+        val deck = """4 Concealed Courtyard (KLD) 245
+2 Cultivator's Caravan (KLD) 203
+1 Gideon of the Trials (AKH) 14
+4 Gideon, Ally of Zendikar (BFZ) 29
+4 Heart of Kiran (AER) 153
+4 Inspiring Vantage (KLD) 246
+4 Mountain (WAR) 261
+6 Plains (WAR) 252
+4 Scrapheap Scrounger (KLD) 231
+1 Skysovereign, Consul Flagship (KLD) 234
+2 Smoldering Marsh (BFZ) 247
+1 Spire of Industry (AER) 184
+1 Swamp (WAR) 258
+4 Thraben Inspector (SOI) 44
+4 Toolcraft Exemplar (KLD) 32
+4 Unlicensed Disintegration (F17) 5
+2 Veteran Motorist (KLD) 188
+1 Ribbons (AKH) 223
+3 Archangel Avacyn (V17) 1
+3 Glorybringer (AKH) 134
+2 Nahiri, the Harbinger (MED) WS7
+3 Needle Spires (OGW) 175
+"""
+        testDeck(deck,
+                URL("http://https://mtgadecks.net/deck/3381"),
+                "3381",
+                deckSize = 64,
+                sideboardSize = 0)
     }
 
     @Test
     fun should_handle_bad_url() {
         val uri = URL("http://google.com/test")
-        val result = DeckParser().parse(uri.fetch() ?: "", uri)
+        val result = DeckParser().parse(uri.fetch() ?: "", uri, false)
         assertTrue("deck must be null", result == null)
     }
 
     @Test
     fun should_handle_image() {
         val url = URL("https://www.google.com/s2/favicons?domain=www.google.com")
-        val result = DeckParser().parse(url.fetch() ?: "", url)
+        val result = DeckParser().parse(url.fetch() ?: "", url, false)
         assertTrue("deck must be null", result == null)
     }
 
@@ -153,11 +211,12 @@ SB: 4 Transgress the Mind"""
     }
 
     private fun testDeck(deck: String, url: URL, expectedName: String, deckSize: Int = 60, sideboardSize: Int = 15) {
-        println("testDeck deck\n$deck")
-        DeckParser().parse(deck, url)?.run {
+        println("testDeck deck:\n$deck")
+        DeckParser().parse(deck, url, false)?.run {
+            println("testDeck parsed:\n$this")
             assertEquals(deckSize, lines.filterNot { it.isSideboard }.map { it.mult }.sum())
             assertEquals(sideboardSize, lines.filter { it.isSideboard }.map { it.mult }.sum())
             assertEquals(expectedName, name)
-        } ?: fail()
+        } ?: fail("unable to parse deck")
     }
 }

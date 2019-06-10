@@ -8,6 +8,7 @@ class DeckParser {
     private val log = Log(this)
 
     private val deckFormats = listOf(
+            MtgArenaDeckFormat(),
             MagicWizardDeckFormat(),
             MTGODeckFormat(),
             MagicWorkstationDeckFormat())

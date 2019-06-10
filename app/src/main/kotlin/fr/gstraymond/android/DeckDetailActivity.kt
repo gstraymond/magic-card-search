@@ -3,12 +3,13 @@ package fr.gstraymond.android
 import android.Manifest.permission.READ_EXTERNAL_STORAGE
 import android.Manifest.permission.WRITE_EXTERNAL_STORAGE
 import android.app.AlertDialog
+import android.content.ClipData
+import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
-import android.support.design.widget.Snackbar
-import android.support.design.widget.Snackbar.LENGTH_LONG
+import android.support.design.widget.Snackbar.*
 import android.support.design.widget.TabLayout
 import android.support.v4.view.ViewPager
 import android.support.v7.widget.Toolbar
@@ -19,12 +20,15 @@ import android.widget.TextView.BufferType.EDITABLE
 import fr.gstraymond.R
 import fr.gstraymond.android.adapter.DeckCardCallback
 import fr.gstraymond.android.adapter.DeckDetailFragmentPagerAdapter
+import fr.gstraymond.biz.ExportFormat.MAGIC_WORKSTATION
+import fr.gstraymond.biz.ExportFormat.MTG_ARENA
 import fr.gstraymond.biz.Formats
 import fr.gstraymond.models.DeckCard
 import fr.gstraymond.utils.*
 import net.rdrei.android.dirchooser.DirectoryChooserActivity
 import net.rdrei.android.dirchooser.DirectoryChooserActivity.*
 import net.rdrei.android.dirchooser.DirectoryChooserConfig
+
 
 class DeckDetailActivity : CustomActivity(R.layout.activity_deck_detail), DeckCardCallback {
 
@@ -49,6 +53,7 @@ class DeckDetailActivity : CustomActivity(R.layout.activity_deck_detail), DeckCa
     private val refresh by lazy { find<TextView>(R.id.toolbar_refresh) }
     private val tabLayout by lazy { find<TabLayout>(R.id.sliding_tabs) }
     private val formatChooser by lazy { find<Spinner>(R.id.format_chooser) }
+    private val clipboardManager by lazy { getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager }
 
     private val perms = arrayOf(READ_EXTERNAL_STORAGE, WRITE_EXTERNAL_STORAGE)
 
@@ -79,12 +84,38 @@ class DeckDetailActivity : CustomActivity(R.layout.activity_deck_detail), DeckCa
         tabLayout.setupWithViewPager(viewPager)
 
         delete.setOnClickListener { createDeleteDialog() }
+        val exportOptions = arrayOf(
+                getString(R.string.deck_detail_export_deck_file),
+                getString(R.string.deck_detail_export_deck_clipboard)
+        )
         export.setOnClickListener {
-            if (!hasPerms(*perms)) {
-                requestPerms(REQUEST_STORAGE_CODE, *perms)
-            } else {
-                startDirPicker()
-            }
+            val builder = AlertDialog.Builder(this)
+            builder.setTitle(getString(R.string.deck_detail_export_deck))
+                    .setItems(exportOptions) { _, which ->
+                        when (which) {
+                            0 -> {
+                                if (!hasPerms(*perms)) {
+                                    requestPerms(REQUEST_STORAGE_CODE, *perms)
+                                } else {
+                                    startDirPicker()
+                                }
+                            }
+                            1 -> {
+                                val deck = deck()
+                                val exportLines = app().deckManager.export(deck, MTG_ARENA)
+                                val deckLines = app().cardListBuilder.build(deck.id).filter { it.counts.deck > 0 }.size
+                                val message = if (exportLines.size < deckLines) {
+                                    getString(R.string.deck_detail_export_deck_clipboard_failed)
+                                } else {
+                                    clipboardManager.primaryClip = ClipData.newPlainText("Deck", exportLines.joinToString("\n"))
+                                    getString(R.string.deck_detail_export_deck_clipboard_completed)
+                                }
+                                make(find(android.R.id.content), String.format(message, deck.name), LENGTH_LONG).show()
+                            }
+                        }
+                    }
+            builder.create().show()
+
         }
 
         refresh.setOnClickListener { createRefreshDialog() }
@@ -108,7 +139,7 @@ class DeckDetailActivity : CustomActivity(R.layout.activity_deck_detail), DeckCa
                     0 -> null
                     else -> Formats.ordered[position - 1]
                 }
-                val deck = app().deckList.getByUid(deckId)!!.copy(maybeFormat = maybeFormat)
+                val deck = deck().copy(maybeFormat = maybeFormat)
                 app().deckList.update(deck)
                 pagerAdapter.formatChanged()
                 setTabsText()
@@ -191,7 +222,7 @@ class DeckDetailActivity : CustomActivity(R.layout.activity_deck_detail), DeckCa
                 .setPositiveButton(getString(R.string.deckdetails_refresh_ok)) { _, _ ->
                     val deck = deck()
                     startActivity {
-                        val deckList = app().deckManager.export(deck).joinToString("\n")
+                        val deckList = app().deckManager.export(deck, MAGIC_WORKSTATION).joinToString("\n")
                         DeckImportProgressActivity.getIntentForDeckList(this, deckList, deck.maybeFormat)
                     }
                     finish()
@@ -225,7 +256,7 @@ class DeckDetailActivity : CustomActivity(R.layout.activity_deck_detail), DeckCa
                     val exportPath = app().deckManager.export(deck, path)
                     val rootView = find<View>(android.R.id.content)
                     val message = String.format(resources.getString(R.string.deck_exported), deck.name, exportPath)
-                    Snackbar.make(rootView, message, LENGTH_LONG).show()
+                    make(rootView, message, LENGTH_LONG).show()
                 }
             }
         }

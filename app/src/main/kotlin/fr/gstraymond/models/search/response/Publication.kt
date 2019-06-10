@@ -13,7 +13,8 @@ class Publication(val edition: String,
                   val editionImage: String?,
                   val price: Double = 0.0,
                   val editionReleaseDate: Date?,
-                  val foilPrice: Double = 0.0) : Parcelable {
+                  val foilPrice: Double = 0.0,
+                  val collectorNumber: String?) : Parcelable {
 
     constructor(source: Parcel) : this(
             edition = source.readString(),
@@ -27,7 +28,8 @@ class Publication(val edition: String,
             editionReleaseDate = source.readLong().run {
                 if (this != 0L) Date(this) else null
             },
-            foilPrice = source.readDouble()
+            foilPrice = source.readDouble(),
+            collectorNumber = source.readString()
     )
 
     override fun describeContents() = 0
@@ -43,6 +45,7 @@ class Publication(val edition: String,
         dest.writeDouble(price)
         dest.writeLong(editionReleaseDate?.time ?: 0)
         dest.writeDouble(foilPrice)
+        dest.writeString(collectorNumber)
     }
 
     companion object {

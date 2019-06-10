@@ -1,5 +1,7 @@
 package fr.gstraymond.biz
 
+import fr.gstraymond.biz.ExportFormat.MAGIC_WORKSTATION
+import fr.gstraymond.biz.ExportFormat.MTG_ARENA
 import fr.gstraymond.db.json.CardListMigrator
 import fr.gstraymond.db.json.DeckCardListBuilder
 import fr.gstraymond.db.json.DeckList
@@ -7,6 +9,7 @@ import fr.gstraymond.models.CardNotImported
 import fr.gstraymond.models.Deck
 import fr.gstraymond.models.DeckLine
 import fr.gstraymond.models.ImportResult
+import fr.gstraymond.models.search.response.Publication
 import java.io.File
 import java.text.Normalizer
 import java.util.*
@@ -47,26 +50,44 @@ class DeckManager(private val deckList: DeckList,
         val deckName = findUniqueName(files, normalizeName(deck))
         val targetPath = "$path/$deckName"
         File(targetPath).printWriter().use {
-            export(deck).forEach { line -> it.write(line + "\n") }
+            export(deck, MAGIC_WORKSTATION).forEach { line -> it.write(line + "\n") }
         }
         return targetPath
     }
 
-    fun export(deck: Deck): List<String> {
-        val lines = cardListBuilder.build(deck.id).all()
-                .flatMap { card ->
-                    if (card.counts.deck > 0 && card.counts.sideboard > 0) {
-                        listOf(card.setDeckCount(0), card.setSBCount(0))
-                    } else listOf(card)
+    fun export(deck: Deck,
+               format: ExportFormat): List<String> {
+        val all = cardListBuilder.build(deck.id).all()
+        when (format) {
+            MAGIC_WORKSTATION -> {
+                val lines = all
+                        .flatMap { card ->
+                            if (card.counts.deck > 0 && card.counts.sideboard > 0) {
+                                listOf(card.setDeckCount(0), card.setSBCount(0))
+                            } else listOf(card)
+                        }
+                        .sortedBy { it.counts.sideboard < 0 }
+                        .map { (card, _, counts) ->
+                            val line = "${counts.deck + counts.sideboard} [] ${card.title}"
+                            if (counts.sideboard > 0) "SB:  $line"
+                            else "        $line"
+                        }
+                return listOf("// NAME : ${deck.name}", "// FORMAT : ${deck.maybeFormat ?: "???"}") + lines
+            }
+            MTG_ARENA -> {
+                return all.filter { it.counts.deck > 0 }.flatMap {
+                    it.card.publications
+                            .filter { it.editionCode.length == 3 && it.collectorNumber != null }
+                            .sortedBy(Publication::editionReleaseDate)
+                            .lastOrNull()
+                            ?.run { listOf("${it.counts.deck} ${it.card.title} (${mtgaSetMapping[editionCode] ?: editionCode}) $collectorNumber") }
+                            ?: listOf()
                 }
-                .sortedBy { it.counts.sideboard < 0 }
-                .map { (card, _, counts) ->
-                    val line = "${counts.deck + counts.sideboard} [] ${card.title}"
-                    if (counts.sideboard > 0) "SB:  $line"
-                    else "        $line"
-                }
-        return listOf("// NAME : ${deck.name}", "// FORMAT : ${deck.maybeFormat ?: "???"}") + lines
+            }
+        }
     }
+
+    private val mtgaSetMapping = mapOf("DOM" to "DAR")
 
     private fun normalizeName(deck: Deck) =
             Normalizer
@@ -87,4 +108,8 @@ class DeckManager(private val deckList: DeckList,
             targetName
         }
     }
+}
+
+enum class ExportFormat {
+    MAGIC_WORKSTATION, MTG_ARENA
 }

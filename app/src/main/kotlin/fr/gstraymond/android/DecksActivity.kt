@@ -56,6 +56,14 @@ class DecksActivity : CustomActivity(R.layout.activity_decks) {
             }
         }
 
+        find<View>(R.id.decks_fab_paste).let {
+            it.setOnClickListener {
+                startActivity {
+                    DeckPasteActivity.getIntent(this)
+                }
+            }
+        }
+
         find<RecyclerView>(R.id.decks_recyclerview).let {
             it.setHasFixedSize(true)
             it.layoutManager = LinearLayoutManager(this)
