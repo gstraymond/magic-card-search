@@ -6,7 +6,7 @@ import java.net.URL
 
 class MtgArenaDeckFormat : DeckFormat {
 
-    private val lineRegex = Regex("^(\\d+) (.+) \\(\\w+\\) \\d+$")
+    private val lineRegex = Regex("^(\\d+) (.+) \\(\\w+\\) \\w+$")
 
     override fun detectFormat(lines: List<String>): Boolean =
             lines.filter { it.isNotBlank() }.all(lineRegex::matches)

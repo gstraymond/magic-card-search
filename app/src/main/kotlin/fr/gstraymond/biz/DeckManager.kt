@@ -80,7 +80,7 @@ class DeckManager(private val deckList: DeckList,
                             .filter { it.editionCode.length == 3 && it.collectorNumber != null }
                             .sortedBy(Publication::editionReleaseDate)
                             .lastOrNull()
-                            ?.run { listOf("${it.total()} ${it.card.title} (${mtgaSetMapping[editionCode] ?: editionCode}) $collectorNumber") }
+                            ?.run { listOf("${it.counts.deck} ${it.card.title} (${mtgaSetMapping[editionCode] ?: editionCode}) $collectorNumber") }
                             ?: listOf()
                 }
             }

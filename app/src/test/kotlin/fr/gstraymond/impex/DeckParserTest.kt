@@ -132,7 +132,6 @@ SB: 4 Transgress the Mind"""
     }
 
 
-
     @Test
     fun should_import_mtgarena_format_decks() {
 
@@ -157,6 +156,38 @@ SB: 4 Transgress the Mind"""
         testDeck(deck,
                 URL("http://https://mtgadecks.net/deck/3380"),
                 "3380",
+                sideboardSize = 0)
+    }
+
+    @Test
+    fun should_import_mtgarena_format_decks_2() {
+        val deck = """4 Concealed Courtyard (KLD) 245
+2 Cultivator's Caravan (KLD) 203
+1 Gideon of the Trials (AKH) 14
+4 Gideon, Ally of Zendikar (BFZ) 29
+4 Heart of Kiran (AER) 153
+4 Inspiring Vantage (KLD) 246
+4 Mountain (WAR) 261
+6 Plains (WAR) 252
+4 Scrapheap Scrounger (KLD) 231
+1 Skysovereign, Consul Flagship (KLD) 234
+2 Smoldering Marsh (BFZ) 247
+1 Spire of Industry (AER) 184
+1 Swamp (WAR) 258
+4 Thraben Inspector (SOI) 44
+4 Toolcraft Exemplar (KLD) 32
+4 Unlicensed Disintegration (F17) 5
+2 Veteran Motorist (KLD) 188
+1 Ribbons (AKH) 223
+3 Archangel Avacyn (V17) 1
+3 Glorybringer (AKH) 134
+2 Nahiri, the Harbinger (MED) WS7
+3 Needle Spires (OGW) 175
+"""
+        testDeck(deck,
+                URL("http://https://mtgadecks.net/deck/3381"),
+                "3381",
+                deckSize = 64,
                 sideboardSize = 0)
     }
 
