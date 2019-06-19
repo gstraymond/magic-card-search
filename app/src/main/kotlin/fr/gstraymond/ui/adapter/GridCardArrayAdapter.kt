@@ -7,7 +7,6 @@ import android.widget.ImageView
 import fr.gstraymond.R
 import fr.gstraymond.android.presenter.CardListPresenter
 import fr.gstraymond.constants.FacetConst
-import fr.gstraymond.db.json.JsonList
 import fr.gstraymond.glide.CardLoader
 import fr.gstraymond.models.DeckCard
 import fr.gstraymond.models.search.response.Card
@@ -37,7 +36,7 @@ class GridCardArrayAdapter(private val context: Context,
 
         setBackground(pictureView, contains(card))
 
-        if (url != null) CardLoader(url, card, pictureView).load(context)
+        if (url != null) CardLoader(url, card, pictureView).load(context, 2)
     }
 
     private fun setBackground(pictureView: ImageView,

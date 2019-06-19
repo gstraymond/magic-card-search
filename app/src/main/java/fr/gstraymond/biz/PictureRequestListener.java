@@ -1,13 +1,15 @@
 package fr.gstraymond.biz;
 
-import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import android.graphics.drawable.Drawable;
+import android.support.annotation.Nullable;
+
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.magic.card.search.commons.log.Log;
 
-import java.io.IOException;
-
-public class PictureRequestListener implements RequestListener<String, GlideDrawable> {
+public class PictureRequestListener implements RequestListener<Drawable> {
 
     public interface Callbacks {
         void onDownloadComplete();
@@ -24,17 +26,22 @@ public class PictureRequestListener implements RequestListener<String, GlideDraw
     }
 
     @Override
-    public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
-        if (e instanceof IOException) {
+    public boolean onLoadFailed(@Nullable GlideException e,
+                                Object model,
+                                Target<Drawable> target,
+                                boolean isFirstResource) {
+        if (e != null) {
             log.w("error downloading: %s %s", url, e.getMessage());
-        } else  {
-            log.e("error downloading: " + url, e);
         }
         return false;
     }
 
     @Override
-    public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
+    public boolean onResourceReady(Drawable resource,
+                                   Object model,
+                                   Target<Drawable> target,
+                                   DataSource dataSource,
+                                   boolean isFirstResource) {
         callbacks.onDownloadComplete();
         return false;
     }
