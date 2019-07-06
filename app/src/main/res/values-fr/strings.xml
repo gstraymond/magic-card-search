@@ -189,4 +189,5 @@
     <string name="paste_from_clipboard">Copier depuis le press-papiers</string>
     <string name="paste_import">Importer</string>
     <string name="paste_clear">Effacer</string>
+    <string name="french_enabled">Titre des cartes</string>
 </resources>

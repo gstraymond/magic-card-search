@@ -6,6 +6,7 @@ class Prefs(context: Context) {
     private val filename = "mtg.search.prefs"
 
     private val galleryModeParam = "gallery_mode"
+    private val frenchEnabledParam = "french_enabled"
     private val rulesVersionParam = "rules_version"
     private val deckCardSortParam = "deck_card_sort"
 
@@ -14,6 +15,10 @@ class Prefs(context: Context) {
     var galleryMode: Boolean
         get() = prefs.getBoolean(galleryModeParam, false)
         set(value) = prefs.edit().putBoolean(galleryModeParam, value).apply()
+
+    var frenchEnabled: Boolean
+        get() = prefs.getBoolean(frenchEnabledParam, true)
+        set(value) = prefs.edit().putBoolean(frenchEnabledParam, value).apply()
 
     var rulesVersion: String
         get() = prefs.getString(rulesVersionParam, "")
