@@ -23,7 +23,6 @@ public class CardDetailFragment extends CustomListFragment {
 
     private Callbacks callbacks = dummyCallbacks;
     private List<Object> objects;
-    private String CARD = CardCommonActivity.CARD_EXTRA;
 
     public interface Callbacks {
         void onItemSelected(int id);
@@ -45,7 +44,7 @@ public class CardDetailFragment extends CustomListFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Card card = getArguments().getParcelable(CARD);
+        Card card = getArguments().getParcelable(CardCommonActivity.CARD_EXTRA);
 
         CustomActivity activity = (CustomActivity) getActivity();
         final CustomApplication customApplication = (CustomApplication) activity.getApplication();
