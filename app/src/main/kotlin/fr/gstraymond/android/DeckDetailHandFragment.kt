@@ -11,7 +11,6 @@ import android.view.ViewGroup
 import fr.gstraymond.R
 import fr.gstraymond.android.adapter.DeckDetailHandAdapter
 import fr.gstraymond.models.search.response.Card
-import fr.gstraymond.models.search.response.getLocalizedTitle
 import fr.gstraymond.utils.app
 import fr.gstraymond.utils.find
 import fr.gstraymond.utils.getId
@@ -26,7 +25,6 @@ class DeckDetailHandFragment : Fragment(), DeckDetailHandAdapter.ClickCallbacks 
     private val deckDetailHandAdapter by lazy { DeckDetailHandAdapter(activity!!, this) }
 
     private lateinit var recyclerView: RecyclerView
-    private val comparator = compareBy<Card>({ it.convertedManaCost }, { it.getLocalizedTitle(context!!) })
 
     override fun onCreateView(inflater: LayoutInflater,
                               container: ViewGroup?,
@@ -60,7 +58,7 @@ class DeckDetailHandFragment : Fragment(), DeckDetailHandAdapter.ClickCallbacks 
                 if (ids != null && ids.all { cards.map { it.getId() }.contains(it) }) {
                     ids.map { id -> cards.first { it.getId() == id } }
                 } else {
-                    cards.shuffled().take(7).sortedWith(comparator)
+                    cards.shuffled()
                 }
 
         deckDetailHandAdapter.notifyDataSetChanged()

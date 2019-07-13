@@ -7,6 +7,16 @@
     android:padding="16dp">
 
     <TextView
+        android:id="@+id/array_adapter_position"
+        style="@android:style/TextAppearance.Medium"
+        android:layout_width="40dp"
+        android:layout_height="@dimen/castingCostSize"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="8dp"
+        tools:text="100." />
+
+    <TextView
         android:id="@+id/array_adapter_card_casting_cost"
         android:layout_width="wrap_content"
         android:layout_height="@dimen/castingCostSize"
@@ -21,9 +31,9 @@
         style="@android:style/TextAppearance.Medium"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
         android:layout_centerVertical="true"
         android:layout_toLeftOf="@id/array_adapter_card_casting_cost"
+        android:layout_toRightOf="@id/array_adapter_position"
         android:ellipsize="end"
         android:maxLines="2"
         tools:text="Abandon de l'espoir, foo" />
