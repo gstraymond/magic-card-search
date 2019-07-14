@@ -191,5 +191,5 @@
     <string name="paste_clear">Effacer</string>
     <string name="french_enabled">Titre des cartes</string>
     <string name="decks_sort_spinner_format">Groupé par format</string>
-    <string name="decks_sort_spinner_alpha">Trié alphabétiquement</string>
+    <string name="decks_sort_spinner_alpha">Trié par nom</string>
 </resources>

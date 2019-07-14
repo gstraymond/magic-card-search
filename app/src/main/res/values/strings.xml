@@ -209,5 +209,5 @@
     <string name="paste_clear">Clear</string>
     <string name="french_enabled">French enabled</string>
     <string name="decks_sort_spinner_format">Group by format</string>
-    <string name="decks_sort_spinner_alpha">Sort alphabetically</string>
+    <string name="decks_sort_spinner_alpha">Sort by name</string>
 </resources>
