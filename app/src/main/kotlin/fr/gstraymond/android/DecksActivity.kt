@@ -42,8 +42,8 @@ class DecksActivity : CustomActivity(R.layout.activity_decks) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        savedInstanceState?.getStringArrayList("colors_filters")?.toMutableList()?.apply {
-            deckListAdapter.colorFilters = this
+        savedInstanceState?.getStringArrayList("colors_filters")?.apply {
+            deckListAdapter.colorFilters = toMutableList()
         }
 
         setSupportActionBar(find(R.id.toolbar))
