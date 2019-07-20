@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import fr.gstraymond.R
+import fr.gstraymond.android.DecksActivity.*
 import fr.gstraymond.android.adapter.DeckListAdapter.ItemTypes.*
 import fr.gstraymond.biz.CastingCostImageGetter
 import fr.gstraymond.biz.DeckStats
@@ -24,13 +25,27 @@ class DeckListAdapter(private val context: Context) : RecyclerView.Adapter<Recyc
 
     private var items: List<Any> = listOf()
 
+    var sort: SortTypes = SortTypes.Format
+
+    var colorFilters: MutableList<String> = mutableListOf()
+
     var decks: List<Deck> = listOf()
         set(value) {
-            items = value.groupBy { it.maybeFormat ?: context.getString(R.string.select_format) }
-                    .toList()
-                    .fold(listOf<Any>()) { acc, (headers, decks) ->
-                        acc + listOf("$headers (${decks.size})") + decks
-                    }
+            val filteredDecks = value.filter { deck ->
+                colorFilters.all { deck.colors.contains(it) }
+            }
+            items = when (sort) {
+                SortTypes.Format -> filteredDecks.groupBy {
+                    it.maybeFormat ?: context.getString(R.string.select_format)
+                }
+                        .toList()
+                        .fold(listOf()) { acc, (headers, decks) ->
+                            acc + listOf("$headers (${decks.size})") + decks
+                        }
+                SortTypes.Alpha -> filteredDecks.sortedBy { it.name.toLowerCase() }
+            }
+
+            field = filteredDecks
         }
 
     var onClickListener: (String) -> View.OnClickListener? = { _ -> null }

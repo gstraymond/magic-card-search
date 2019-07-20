@@ -207,4 +207,7 @@
     <string name="paste_from_clipboard">Paste from clipboard</string>
     <string name="paste_import">Import</string>
     <string name="paste_clear">Clear</string>
+    <string name="french_enabled">French enabled</string>
+    <string name="decks_sort_spinner_format">Group by format</string>
+    <string name="decks_sort_spinner_alpha">Sort by name</string>
 </resources>

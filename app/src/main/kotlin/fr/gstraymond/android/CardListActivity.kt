@@ -29,6 +29,7 @@ import fr.gstraymond.models.search.response.Card
 import fr.gstraymond.models.search.response.SearchResult
 import fr.gstraymond.models.search.response.getLocalizedTitle
 import fr.gstraymond.ocr.OcrCaptureActivity
+import fr.gstraymond.tools.LanguageUtil
 import fr.gstraymond.tools.VersionUtils
 import fr.gstraymond.ui.EndScrollListener
 import fr.gstraymond.ui.SuggestionListener
@@ -222,6 +223,7 @@ class CardListActivity : CustomActivity(R.layout.activity_card_list),
 
             leftNavigationView.let {
                 val headerView = it.getHeaderView(0)
+                it.itemIconTintList = null
                 headerView.find<TextView>(R.id.nav_header_app_name).text = VersionUtils.getAppName(this)
                 headerView.find<TextView>(R.id.nav_header_app_version).text = VersionUtils.getAppVersion()
                 it.setNavigationItemSelectedListener { item ->
@@ -246,11 +248,21 @@ class CardListActivity : CustomActivity(R.layout.activity_card_list),
                     }
                     true
                 }
-                val item = it.menu.findItem(R.id.menu_gallery_mode)
-                item.actionView.find<Switch>(R.id.switch_gallery_mode).apply {
+                val galleryMode = it.menu.findItem(R.id.menu_gallery_mode)
+                galleryMode.actionView.find<Switch>(R.id.switch_gallery_mode).apply {
                     isChecked = prefs.galleryMode
                     setOnCheckedChangeListener { _, b ->
                         prefs.galleryMode = b
+                        switchAdapter()
+                    }
+                }
+
+                val frenchEnabled = it.menu.findItem(R.id.menu_french_enabled)
+                frenchEnabled.isVisible = LanguageUtil.isLocaleFrench(this)
+                frenchEnabled.actionView.find<Switch>(R.id.switch_french_enabled).apply {
+                    isChecked = prefs.frenchEnabled
+                    setOnCheckedChangeListener { _, b ->
+                        prefs.frenchEnabled = b
                         switchAdapter()
                     }
                 }

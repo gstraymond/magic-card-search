@@ -30,6 +30,7 @@ class WishlistCardViews(context: Context,
 
 class HandCardViews(context: Context) :
         CardViews(listOf(
+                PositionView(context.resources),
                 TitleView(),
                 CastingCostView(context)
         ))

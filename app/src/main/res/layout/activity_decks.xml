@@ -21,6 +21,70 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimaryDark">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="12dp"
+            android:divider="@drawable/empty_veritical_divider"
+            android:dividerPadding="8dp"
+            android:showDividers="middle">
+
+            <ImageButton
+                android:id="@+id/color_filter_white"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:background="?selectableItemBackgroundBorderless"
+                android:scaleType="fitXY"
+                android:src="@drawable/mana_white" />
+
+            <ImageButton
+                android:id="@+id/color_filter_blue"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:background="?selectableItemBackgroundBorderless"
+                android:scaleType="fitXY"
+                android:src="@drawable/mana_blue" />
+
+            <ImageButton
+                android:id="@+id/color_filter_black"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:background="?selectableItemBackgroundBorderless"
+                android:scaleType="fitXY"
+                android:src="@drawable/mana_black" />
+
+            <ImageButton
+                android:id="@+id/color_filter_red"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:background="?selectableItemBackgroundBorderless"
+                android:scaleType="fitXY"
+                android:src="@drawable/mana_red" />
+
+            <ImageButton
+                android:id="@+id/color_filter_green"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:background="?selectableItemBackgroundBorderless"
+                android:scaleType="fitXY"
+                android:src="@drawable/mana_green" />
+        </LinearLayout>
+
+        <Spinner
+            android:id="@+id/sort_chooser"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <android.support.v7.widget.RecyclerView
@@ -42,8 +106,8 @@
             android:id="@+id/decks_floating_menu"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
             android:layout_alignParentRight="true"
+            android:layout_alignParentBottom="true"
             android:layout_margin="10dp"
             app:menu_colorNormal="@color/colorAccent"
             app:menu_colorPressed="@color/colorAccent"
