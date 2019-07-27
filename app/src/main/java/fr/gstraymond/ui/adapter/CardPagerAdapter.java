@@ -2,9 +2,9 @@ package fr.gstraymond.ui.adapter;
 
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentStatePagerAdapter;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentStatePagerAdapter;
 
 import fr.gstraymond.models.search.response.Card;
 import fr.gstraymond.models.search.response.Publication;

@@ -2,15 +2,15 @@ package fr.gstraymond.ui;
 
 import android.app.Activity;
 import android.content.Context;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.view.ViewPager;
+import androidx.fragment.app.FragmentActivity;
+import androidx.viewpager.widget.ViewPager;
 import android.util.AttributeSet;
 
 import fr.gstraymond.R;
 import fr.gstraymond.android.fragment.CardPagerFragment;
 import fr.gstraymond.models.search.response.Card;
 import fr.gstraymond.models.search.response.Publication;
-import android.support.v4.app.Fragment;
+import androidx.fragment.app.Fragment;
 
 public class CardViewPager extends ViewPager {
 

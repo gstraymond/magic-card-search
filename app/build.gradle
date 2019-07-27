@@ -98,13 +98,13 @@ ext {
     floatingactionbuttonVersion = '1.6.+'
     fileChooserVersion = '1.+'
     dirChooserVersion = '3.+'
-    gmsVisionVersion = '16+'
+    gmsVisionVersion = '18.0.0'
 }
 
 dependencies {
     implementation project(':commons')
     implementation "com.github.bumptech.glide:glide:$glideVersion"
-    implementation "com.android.support:design:$supportLibVersion"
+    implementation 'com.google.android.material:material:1.0.0'
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     implementation "com.squareup.retrofit2:retrofit:$retrofitVersion"
     implementation "com.squareup.retrofit2:converter-moshi:$retrofitVersion"
@@ -114,7 +114,7 @@ dependencies {
     implementation "com.nbsp:library:$fileChooserVersion"
     implementation ("net.rdrei.android.dirchooser:library:$dirChooserVersion@aar") { transitive = true }
     implementation "com.google.android.gms:play-services-vision:$gmsVisionVersion"
-    implementation 'com.android.support:multidex:1.0.3'
+    implementation 'androidx.multidex:multidex:2.0.0'
     kapt 'com.google.auto.value:auto-value:1.5.2'
     testImplementation 'junit:junit:4.12'
     testImplementation 'io.kotlintest:kotlintest:2.0.7'

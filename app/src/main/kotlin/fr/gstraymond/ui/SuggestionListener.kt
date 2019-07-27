@@ -1,6 +1,6 @@
 package fr.gstraymond.ui
 
-import android.support.v7.widget.SearchView
+import androidx.appcompat.widget.SearchView
 import fr.gstraymond.models.autocomplete.response.Option
 import fr.gstraymond.ui.TextListener.Companion.SEP
 

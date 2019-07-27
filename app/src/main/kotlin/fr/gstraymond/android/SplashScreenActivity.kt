@@ -1,7 +1,7 @@
 package fr.gstraymond.android
 
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 import fr.gstraymond.biz.SearchOptions
 import fr.gstraymond.utils.startActivity
 

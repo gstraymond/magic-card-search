@@ -2,7 +2,7 @@ package fr.gstraymond.ui.view.impl
 
 import android.content.res.ColorStateList
 import android.graphics.drawable.Drawable
-import android.support.v7.widget.AppCompatButton
+import androidx.appcompat.widget.AppCompatButton
 import com.magic.card.search.commons.log.Log
 import fr.gstraymond.R
 import fr.gstraymond.db.json.JsonList

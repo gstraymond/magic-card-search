@@ -2,7 +2,7 @@ package fr.gstraymond.biz
 
 import android.content.Context
 import android.os.AsyncTask
-import android.support.design.widget.Snackbar
+import com.google.android.material.snackbar.Snackbar
 import android.view.View
 import com.magic.card.search.commons.log.Log
 import fr.gstraymond.R

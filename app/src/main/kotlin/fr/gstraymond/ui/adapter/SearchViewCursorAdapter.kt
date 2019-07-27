@@ -3,8 +3,8 @@ package fr.gstraymond.ui.adapter
 import android.content.Context
 import android.database.Cursor
 import android.database.MatrixCursor
-import android.support.v4.content.res.ResourcesCompat
-import android.support.v4.widget.CursorAdapter
+import androidx.core.content.res.ResourcesCompat
+import androidx.cursoradapter.widget.CursorAdapter
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView

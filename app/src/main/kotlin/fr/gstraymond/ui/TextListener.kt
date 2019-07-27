@@ -1,6 +1,6 @@
 package fr.gstraymond.ui
 
-import android.support.v7.widget.SearchView
+import androidx.appcompat.widget.SearchView
 import com.magic.card.search.commons.log.Log
 import fr.gstraymond.android.DataUpdater
 import fr.gstraymond.biz.AutocompleteProcessor.Callbacks
