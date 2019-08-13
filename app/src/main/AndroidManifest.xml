@@ -111,7 +111,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".android.CardListActivity" />
         </activity>
-
         <activity
             android:name=".android.DeckPasteActivity"
             android:parentActivityName=".android.DecksActivity"
@@ -120,7 +119,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".android.DecksActivity" />
         </activity>
-
         <activity
             android:name=".android.DeckImportProgressActivity"
             android:parentActivityName=".android.DeckImporterActivity"
@@ -129,7 +127,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".android.DeckImporterActivity" />
         </activity>
-
         <activity
             android:name=".android.DeckDetailActivity"
             android:parentActivityName=".android.DecksActivity"
@@ -138,8 +135,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".android.DecksActivity" />
         </activity>
-
-
         <activity
             android:name="net.rdrei.android.dirchooser.DirectoryChooserActivity"
             android:parentActivityName=".android.DeckDetailActivity"
@@ -148,12 +143,9 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".android.DeckDetailActivity" />
         </activity>
-
-
         <activity
             android:name=".ocr.OcrCaptureActivity"
             android:theme="@style/AppTheme.NoActionBar" />
-
         <activity
             android:name=".android.RulesActivity"
             android:parentActivityName=".android.CardListActivity"

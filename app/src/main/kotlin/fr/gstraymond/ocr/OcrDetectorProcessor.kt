@@ -7,6 +7,8 @@ import fr.gstraymond.network.ElasticSearchService
 import fr.gstraymond.ocr.ui.camera.GraphicOverlay
 import fr.gstraymond.utils.levenshtein
 import java.text.Normalizer
+import kotlin.math.abs
+import kotlin.math.min
 
 class OcrDetectorProcessor(private val graphicOverlay: GraphicOverlay<OcrGraphic>,
                            private val cardDetector: CardDetector,
@@ -17,19 +19,20 @@ class OcrDetectorProcessor(private val graphicOverlay: GraphicOverlay<OcrGraphic
         fun isPaused(): Boolean
     }
 
-    private val expectedTypes = listOf(
-            "artifact", "instant", "sorcery", "creature", "enchant", "enchantment", "land", "summon", "planeswalker",
-            "artefact", "ephemere", "rituel", "creature", "enchantement", "terrain", "invoquer")
-
     private val convertedTypes = mapOf(
             "summon" to "creature",
             "artefact" to "artifact",
+            "interrupt" to "instant",
             "ephemere" to "instant",
             "rituel" to "sorcery",
             "enchant" to "enchantment",
             "enchantement" to "enchantment",
             "terrain" to "land",
             "invoquer" to "creature")
+
+    private val expectedTypes = listOf(
+            "artifact", "interrupt", "instant", "sorcery", "creature", "enchant", "enchantment", "land", "summon", "planeswalker",
+            "artefact", "ephemere", "rituel", "creature", "enchantement", "terrain", "invoquer")
 
     private fun queryTemplate(query: String, type: String) = """
 {
@@ -54,18 +57,26 @@ class OcrDetectorProcessor(private val graphicOverlay: GraphicOverlay<OcrGraphic
   }
 }"""
 
-    private val norm = Regex("\\p{M}")
+    private val norm = Regex("""\p{M}""")
 
     override fun receiveDetections(detections: Detector.Detections<TextBlock>) {
         graphicOverlay.clear()
         if (cardDetector.isPaused()) return
 
         val items = detections.detectedItems
-        val textBlocks = (0 until items.size()).map { items.valueAt(it) }.filter { it.components.size == 1 }
+        val allTextBlocks = (0 until items.size()).map { items.valueAt(it) }
+
+//        allTextBlocks.map {
+//            OcrGraphic(graphicOverlay, it, Color.RED)
+//        }.forEach {
+//            graphicOverlay.add(it)
+//        }
+
+        val textBlocks = allTextBlocks.filter { it.components.size == 1 }
 
         if (textBlocks.size > 1) {
             textBlocks.filter {
-                normTypes(it).any { expectedTypes.contains(it) }
+                it.value.length < 100 && normTypes(it).any(expectedTypes::contains)
             }.minBy {
                 it.boundingBox.top
             }?.let { detectedType ->
@@ -73,12 +84,11 @@ class OcrDetectorProcessor(private val graphicOverlay: GraphicOverlay<OcrGraphic
                 textBlocks
                         .filterNot { it == detectedType }
                         .filter { it.boundingBox.bottom < detectedType.boundingBox.top }
-                        .sortedBy { Math.abs(it.boundingBox.left - detectedType.boundingBox.left) }
-                        .firstOrNull()
+                        .minBy { abs(it.boundingBox.left - detectedType.boundingBox.left) }
                         ?.let { detectedTitle ->
 
                             listOf(detectedTitle, detectedType).map {
-                                OcrGraphic(graphicOverlay, it)
+                                OcrGraphic(graphicOverlay, it /* , Color.GREEN */)
                             }.forEach {
                                 graphicOverlay.add(it)
                             }
@@ -90,7 +100,7 @@ class OcrDetectorProcessor(private val graphicOverlay: GraphicOverlay<OcrGraphic
                             val trimmedTitle = detectedTitle.value.trim()
                             val result = searchService.search(queryTemplate(trimmedTitle, normalizedType))
                             result?.elem?.hits?.hits?.map {
-                                it to Math.min(
+                                it to min(
                                         it._source.title.levenshtein(trimmedTitle),
                                         it._source.frenchTitle?.levenshtein(trimmedTitle) ?: Int.MAX_VALUE)
                             }?.filter {

@@ -8,14 +8,11 @@ import com.google.android.gms.vision.text.TextBlock
 import fr.gstraymond.ocr.ui.camera.GraphicOverlay
 
 class OcrGraphic(overlay: GraphicOverlay<*>,
-                 val textBlock: TextBlock) : GraphicOverlay.Graphic(overlay) {
-
-    companion object {
-        private val TEXT_COLOR = Color.WHITE
-    }
+                 private val textBlock: TextBlock,
+                 private val textColor: Int = Color.WHITE) : GraphicOverlay.Graphic(overlay) {
 
     private val rectPaint = Paint().apply {
-        color = TEXT_COLOR
+        color = textColor
         style = Paint.Style.FILL
         alpha = 128
         postInvalidate()
