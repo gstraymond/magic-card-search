@@ -6,7 +6,7 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.hardware.Camera
 import android.os.Bundle
-import android.support.design.widget.Snackbar
+import com.google.android.material.snackbar.Snackbar
 import android.widget.CheckBox
 import android.widget.Toast
 import com.google.android.gms.common.ConnectionResult

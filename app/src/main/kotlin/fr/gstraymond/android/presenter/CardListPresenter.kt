@@ -1,7 +1,7 @@
 package fr.gstraymond.android.presenter
 
 import android.content.Context
-import android.support.design.widget.Snackbar
+import com.google.android.material.snackbar.Snackbar
 import android.text.Html
 import android.view.View
 import android.widget.ExpandableListView

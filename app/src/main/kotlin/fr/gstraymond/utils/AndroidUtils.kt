@@ -7,10 +7,10 @@ import android.content.pm.PackageManager
 import android.content.res.ColorStateList
 import android.content.res.Resources
 import android.graphics.drawable.Drawable
-import android.support.v4.app.ActivityCompat
-import android.support.v4.app.Fragment
-import android.support.v4.content.ContextCompat
-import android.support.v4.content.res.ResourcesCompat
+import androidx.core.app.ActivityCompat
+import androidx.fragment.app.Fragment
+import androidx.core.content.ContextCompat
+import androidx.core.content.res.ResourcesCompat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.*

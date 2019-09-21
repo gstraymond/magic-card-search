@@ -1,7 +1,7 @@
 package fr.gstraymond.ui.adapter
 
 import android.content.Context
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView
 import android.view.ViewGroup
 import android.widget.ImageView
 import fr.gstraymond.R

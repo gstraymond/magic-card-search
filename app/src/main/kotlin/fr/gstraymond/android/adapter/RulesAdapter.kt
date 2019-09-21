@@ -2,7 +2,7 @@ package fr.gstraymond.android.adapter
 
 import android.content.Context
 import android.graphics.Paint.UNDERLINE_TEXT_FLAG
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView
 import android.text.Html
 import android.text.SpannableStringBuilder
 import android.text.method.LinkMovementMethod

@@ -6,8 +6,9 @@ import fr.gstraymond.R
 import fr.gstraymond.models.DeckCard
 import java.math.BigDecimal
 import java.math.RoundingMode
+import kotlin.math.min
 
-class DeckStats(cards: List<DeckCard>,
+class DeckStats(private val cards: List<DeckCard>,
                 private val isCommander: Boolean) {
 
     private val log = Log(javaClass)
@@ -16,27 +17,31 @@ class DeckStats(cards: List<DeckCard>,
         fun colorSymbols(colors: List<String>) = colors.map { Colors.mainColorsMap[it] }.sortedBy { it }.joinToString(" ")
     }
 
-    private fun getDeckCount(card: DeckCard) =
-            if (isCommander) card.total()
-            else card.counts.deck
+    private fun getCount(card: DeckCard, isSideboard: Boolean) = when {
+        isCommander && !isSideboard -> card.total()
+        isCommander -> 0
+        isSideboard -> card.counts.sideboard
+        else -> card.counts.deck
+    }
+
+    private fun getDeckCount(card: DeckCard) = getCount(card, isSideboard = false)
 
     val deck by lazy { cards.filter { getDeckCount(it) > 0 } }
 
-    val sideboard by lazy {
-        cards.filter { it.counts.sideboard > 0 }
-    }
+    val sideboard by lazy { cards.filter { getCount(it, isSideboard = true) > 0 } }
 
     val colors by lazy { deck.flatMap { it.card.colors }.distinct().filter { Colors.mainColors.contains(it) } }
 
-    val colorSymbols by lazy { DeckStats.colorSymbols(colors) }
+    val colorSymbols by lazy { colorSymbols(colors) }
 
-    val totalPrice by lazy {
-        cards.fold(BigDecimal(0)) { acc, it ->
-            val minPrice = BigDecimal((it.card.publications.map { it.price }.filter { it > 0 }.min()
-                    ?: 0.0))
-            acc + minPrice * BigDecimal(getDeckCount(it))
-        }.setScale(2, RoundingMode.CEILING).toDouble()
-    }
+    val deckPrice by lazy { computePrice(isSideboard = false) }
+
+    val sideboardPrice by lazy { computePrice(isSideboard = true) }
+
+    private fun computePrice(isSideboard: Boolean) = cards.fold(BigDecimal(0)) { acc, it ->
+        val minPrice = (it.card.publications.map { it.price }.filter { it > 0 }.min() ?: 0.0)
+        acc + BigDecimal(minPrice) * BigDecimal(getCount(it, isSideboard))
+    }.setScale(2, RoundingMode.CEILING).toDouble()
 
     val deckSize by lazy { deck.sumBy { it.counts.deck } }
     val sideboardSize by lazy { sideboard.sumBy { it.counts.sideboard } }
@@ -44,7 +49,7 @@ class DeckStats(cards: List<DeckCard>,
     val manaCurve by lazy {
         deck
                 .filterNot { it.card.type.run { startsWith("Land") || contains(" Land") } }
-                .groupBy { Math.min(it.card.convertedManaCost, 7) }
+                .groupBy { min(it.card.convertedManaCost, 7) }
                 .mapValues { it.value.sumBy { getDeckCount(it) } }
     }
 

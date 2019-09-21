@@ -3,9 +3,9 @@ package fr.gstraymond.ui.adapter
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context.CLIPBOARD_SERVICE
-import android.support.design.widget.Snackbar
-import android.support.design.widget.Snackbar.LENGTH_LONG
-import android.support.v7.widget.RecyclerView
+import com.google.android.material.snackbar.Snackbar
+import com.google.android.material.snackbar.Snackbar.LENGTH_LONG
+import androidx.recyclerview.widget.RecyclerView
 import android.view.View
 import android.view.ViewGroup
 import fr.gstraymond.R

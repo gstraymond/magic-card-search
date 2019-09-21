@@ -1,9 +1,9 @@
 package fr.gstraymond.android
 
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
+import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -71,10 +71,13 @@ class DeckDetailStatsFragment : Fragment() {
 
                 val typeDistribution = listOf(StringChart(resources.getString(R.string.stats_type_distribution), deckStats.typeDistribution(context!!)))
 
-                elements = listOf(
-                        getText(R.string.stats_total_price, "${deckStats.totalPrice}"),
-                        IntChart(resources.getString(R.string.stats_mana_curve), deckStats.manaCurve)
-                ) + colorDistribution + typeDistribution + abilitiesCharts
+                elements = listOf(getText(R.string.stats_total_price, "${deckStats.deckPrice}")) +
+                        (if (deck.isCommander()) listOf()
+                        else listOf(getText(R.string.stats_sideboard_price, "${deckStats.sideboardPrice}"))) +
+                        listOf(IntChart(resources.getString(R.string.stats_mana_curve), deckStats.manaCurve)) +
+                        colorDistribution +
+                        typeDistribution +
+                        abilitiesCharts
 
                 notifyDataSetChanged()
             }

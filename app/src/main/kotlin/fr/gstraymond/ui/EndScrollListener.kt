@@ -1,7 +1,7 @@
 package fr.gstraymond.ui
 
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.magic.card.search.commons.log.Log
 import fr.gstraymond.android.DataUpdater
 import fr.gstraymond.biz.SearchProcessorBuilder

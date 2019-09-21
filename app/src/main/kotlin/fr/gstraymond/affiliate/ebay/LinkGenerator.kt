@@ -4,7 +4,7 @@ import java.net.URLEncoder
 
 object LinkGenerator {
 
-    private val host = "http://rover.ebay.com/rover/1/711-53200-19255-0/1"
+    private const val host = "https://rover.ebay.com/rover/1/711-53200-19255-0/1"
 
     private val defaultParams = mapOf(
             "icep_ff3" to "9",

@@ -2,8 +2,8 @@ package fr.gstraymond.ui.view.impl
 
 import android.app.AlertDialog
 import android.content.Context
-import android.support.design.widget.Snackbar
-import android.support.v7.widget.AppCompatButton
+import com.google.android.material.snackbar.Snackbar
+import androidx.appcompat.widget.AppCompatButton
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter

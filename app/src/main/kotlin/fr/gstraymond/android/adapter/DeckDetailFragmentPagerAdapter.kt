@@ -1,8 +1,8 @@
 package fr.gstraymond.android.adapter
 
 import android.content.Context
-import android.support.v4.app.FragmentManager
-import android.support.v4.app.FragmentPagerAdapter
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentPagerAdapter
 import android.view.ViewGroup
 import fr.gstraymond.R
 import fr.gstraymond.android.DeckDetailCardsFragment
