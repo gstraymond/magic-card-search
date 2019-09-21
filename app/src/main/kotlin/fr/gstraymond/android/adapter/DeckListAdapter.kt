@@ -1,14 +1,14 @@
 package fr.gstraymond.android.adapter
 
 import android.content.Context
-import androidx.recyclerview.widget.RecyclerView
 import android.text.Html
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.recyclerview.widget.RecyclerView
 import fr.gstraymond.R
-import fr.gstraymond.android.DecksActivity.*
+import fr.gstraymond.android.DecksActivity.SortTypes
 import fr.gstraymond.android.adapter.DeckListAdapter.ItemTypes.*
 import fr.gstraymond.biz.CastingCostImageGetter
 import fr.gstraymond.biz.DeckStats
@@ -70,7 +70,10 @@ class DeckListAdapter(private val context: Context) : RecyclerView.Adapter<Recyc
                     deckColors.text = Html.fromHtml(ccFormatter.format(colors), imageGetter, null)
                 }
                 deckName.text = deck.name
-                deckSize.text = "${deck.deckSize} / ${deck.sideboardSize}"
+                deckSize.text = when {
+                    deck.isCommander() -> "${deck.deckSize + deck.sideboardSize}"
+                    else -> "${deck.deckSize} / ${deck.sideboardSize}"
+                }
 
                 view.setOnClickListener(onClickListener(deck.id.toString()))
             }

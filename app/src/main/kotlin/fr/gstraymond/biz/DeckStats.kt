@@ -18,8 +18,6 @@ class DeckStats(private val cards: List<DeckCard>,
     }
 
     private fun getCount(card: DeckCard, isSideboard: Boolean) = when {
-        isCommander && !isSideboard -> card.total()
-        isCommander -> 0
         isSideboard -> card.counts.sideboard
         else -> card.counts.deck
     }
@@ -32,11 +30,19 @@ class DeckStats(private val cards: List<DeckCard>,
 
     val colors by lazy { deck.flatMap { it.card.colors }.distinct().filter { Colors.mainColors.contains(it) } }
 
-    val colorSymbols by lazy { colorSymbols(colors) }
+    val deckPrice by lazy {
+        when {
+            isCommander -> computePrice(isSideboard = false) + computePrice(isSideboard = true)
+            else -> computePrice(isSideboard = false)
+        }
+    }
 
-    val deckPrice by lazy { computePrice(isSideboard = false) }
-
-    val sideboardPrice by lazy { computePrice(isSideboard = true) }
+    val sideboardPrice by lazy {
+        when {
+            isCommander -> 0
+            else -> computePrice(isSideboard = true)
+        }
+    }
 
     private fun computePrice(isSideboard: Boolean) = cards.fold(BigDecimal(0)) { acc, it ->
         val minPrice = (it.card.publications.map { it.price }.filter { it > 0 }.min() ?: 0.0)

@@ -238,7 +238,7 @@ class DeckDetailCardsFragment : Fragment(), DeckCardCallback, DeckDetailActivity
     private fun getText(textId: Int, vararg args: String) =
             String.format(resources.getString(textId), *args)
 
-    override fun multChanged(from: DeckCardCallback.FROM, position: Int) {
+    override fun multChanged(from: FROM, position: Int) {
         updateTotal()
         deckDetailAdapter.updateDeckList()
         if (FROM.DECK == from && !sideboard || FROM.SB == from && sideboard)
