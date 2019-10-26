@@ -182,7 +182,10 @@
     <string name="validation_max_occurrence">%1$s is limited to %2$s</string>
     <string name="card_type_land">Lands (%1$s)</string>
     <string name="card_type_creature">Creatures (%1$s)</string>
-    <string name="card_type_instant">Instants and sorceries (%1$s)</string>
+    <string name="card_type_instant">Spells (%1$s)</string>
+    <string name="card_type_artifact">Artifacts (%1$s)</string>
+    <string name="card_type_planeswalker">Planeswalker (%1$s)</string>
+    <string name="card_type_enchantment">Enchantments (%1$s)</string>
     <string name="card_type_other">Others (%1$s)</string>
     <string name="color_black">Black</string>
     <string name="color_blue">Blue</string>
@@ -191,7 +194,7 @@
     <string name="color_white">White</string>
     <string name="creature">Creature</string>
     <string name="land">Land</string>
-    <string name="instant_sorcery">Instant/Sorc.</string>
+    <string name="instant_sorcery">Spells</string>
     <string name="other">Other</string>
     <string name="wishlist_menu_export">Export</string>
     <string name="wishlist_menu_import">Import</string>

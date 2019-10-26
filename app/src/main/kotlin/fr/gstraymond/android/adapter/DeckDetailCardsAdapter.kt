@@ -39,13 +39,16 @@ class DeckDetailCardsAdapter(private val app: CustomApplication,
 
     enum class ItemTypes { HEADER, CARD, EMPTY }
 
-    enum class CardTypes { LAND, CREATURE, INSTANT, OTHER }
+    enum class CardTypes { LAND, CREATURE, INSTANT, ARTIFACT, PLANESWALKER, ENCHANTMENT, OTHER }
 
     private fun types(type: String) = when {
         type.contains("creature", ignoreCase = true) -> CREATURE
         type.contains("land", ignoreCase = true) -> LAND
         type.contains("instant", ignoreCase = true) -> INSTANT
         type.contains("sorcery", ignoreCase = true) -> INSTANT
+        type.contains("artifact", ignoreCase = true) -> ARTIFACT
+        type.contains("planeswalker", ignoreCase = true) -> PLANESWALKER
+        type.contains("enchantment", ignoreCase = true) -> ENCHANTMENT
         else -> OTHER
     }
 
