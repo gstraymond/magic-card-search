@@ -135,10 +135,11 @@ object Colors {
 object Formats {
     const val STANDARD = "Standard"
     const val MODERN = "Modern"
+    const val PIONEER = "Pioneer"
     const val LEGACY = "Legacy"
     const val VINTAGE = "Vintage"
     const val COMMANDER = "Commander"
     const val BRAWL = "Brawl"
     const val PAUPER = "Pauper"
-    val ordered = listOf(STANDARD, MODERN, LEGACY, VINTAGE, COMMANDER, BRAWL, PAUPER)
+    val ordered = listOf(STANDARD, PIONEER, MODERN, LEGACY, VINTAGE, COMMANDER, BRAWL, PAUPER)
 }
