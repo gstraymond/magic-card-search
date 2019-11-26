@@ -164,7 +164,10 @@
     <string name="validation_max_occurrence">%1$s est limité à %2$s</string>
     <string name="card_type_land">Terrains (%1$s)</string>
     <string name="card_type_creature">Créatures (%1$s)</string>
-    <string name="card_type_instant">Ephémères et rituels (%1$s)</string>
+    <string name="card_type_instant">Sorts (%1$s)</string>
+    <string name="card_type_artifact">Artefacts (%1$s)</string>
+    <string name="card_type_planeswalker">Planeswalker (%1$s)</string>
+    <string name="card_type_enchantment">Enchantements (%1$s)</string>
     <string name="card_type_other">Autres (%1$s)</string>
     <string name="color_black">Noir</string>
     <string name="color_blue">Bleu</string>
@@ -173,7 +176,7 @@
     <string name="color_white">Blanc</string>
     <string name="creature">Créature</string>
     <string name="land">Terrain</string>
-    <string name="instant_sorcery">Eph./Rituel</string>
+    <string name="instant_sorcery">Sorts</string>
     <string name="other">Autre</string>
     <string name="wishlist_menu_export">Exporter</string>
     <string name="wishlist_menu_import">Importer</string>

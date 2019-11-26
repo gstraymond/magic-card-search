@@ -4,8 +4,6 @@ import android.content.Context
 import com.magic.card.search.commons.log.Log
 import fr.gstraymond.R
 import fr.gstraymond.models.DeckCard
-import java.math.BigDecimal
-import java.math.RoundingMode
 import kotlin.math.min
 
 class DeckStats(private val cards: List<DeckCard>,
@@ -44,10 +42,12 @@ class DeckStats(private val cards: List<DeckCard>,
         }
     }
 
-    private fun computePrice(isSideboard: Boolean) = cards.fold(BigDecimal(0)) { acc, it ->
-        val minPrice = (it.card.publications.map { it.price }.filter { it > 0 }.min() ?: 0.0)
-        acc + BigDecimal(minPrice) * BigDecimal(getCount(it, isSideboard))
-    }.setScale(2, RoundingMode.CEILING).toDouble()
+    private fun computePrice(isSideboard: Boolean): String {
+        val price = cards.map {
+            (it.card.publications.map { it.price }.filter { it > 0 }.min() ?: 0.0) * getCount(it, isSideboard)
+        }.sum()
+        return "%.2f".format(price)
+    }
 
     val deckSize by lazy { deck.sumBy { it.counts.deck } }
     val sideboardSize by lazy { sideboard.sumBy { it.counts.sideboard } }
@@ -135,10 +135,11 @@ object Colors {
 object Formats {
     const val STANDARD = "Standard"
     const val MODERN = "Modern"
+    const val PIONEER = "Pioneer"
     const val LEGACY = "Legacy"
     const val VINTAGE = "Vintage"
     const val COMMANDER = "Commander"
     const val BRAWL = "Brawl"
     const val PAUPER = "Pauper"
-    val ordered = listOf(STANDARD, MODERN, LEGACY, VINTAGE, COMMANDER, BRAWL, PAUPER)
+    val ordered = listOf(STANDARD, PIONEER, MODERN, LEGACY, VINTAGE, COMMANDER, BRAWL, PAUPER)
 }
