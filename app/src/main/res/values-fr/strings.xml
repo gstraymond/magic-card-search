@@ -166,7 +166,7 @@
     <string name="card_type_creature">Créatures (%1$s)</string>
     <string name="card_type_instant">Sorts (%1$s)</string>
     <string name="card_type_artifact">Artefacts (%1$s)</string>
-    <string name="card_type_planeswalker">Planeswalker (%1$s)</string>
+    <string name="card_type_planeswalker">Planeswalkers (%1$s)</string>
     <string name="card_type_enchantment">Enchantements (%1$s)</string>
     <string name="card_type_other">Autres (%1$s)</string>
     <string name="color_black">Noir</string>
