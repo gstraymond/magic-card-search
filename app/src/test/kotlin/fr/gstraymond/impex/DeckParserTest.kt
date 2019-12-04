@@ -9,19 +9,22 @@ class DeckParserTest {
     @Test
     fun should_import_mtgo_format_decks() {
         testUrl("http://mtgtop8.com/mtgo?d=281503&f=Standard_Azorius_Aggro_by_Brad_Carpenter",
-                "Standard_Azorius_Aggro_by_Brad_Carpenter")
+                "Standard_Azorius_Aggro_by_Brad_Carpenter",
+                "Gideon, Ally of Zendikar")
     }
 
     @Test
     fun should_import_mtgo_format_decks_2() {
         testUrl("https://www.mtgdecks.net/decks/view/660419/txt",
-                "txt")
+                "txt",
+                "Archangel Avacyn")
     }
 
     @Test
     fun should_import_mtgo_format_decks_3() {
         testUrl("https://www.mtggoldfish.com/deck/download/1884848",
                 "1884848",
+                "Acidic Slime",
                 deckSize = 100,
                 sideboardSize = 0)
     }
@@ -30,31 +33,36 @@ class DeckParserTest {
     fun should_import_mtgo_format_decks_4() {
         testUrl("https://mtgdecks.net/Modern/affinity-analysis-3584/2017-01-20/txt",
                 "txt",
+                "Ornithopter",
                 sideboardSize = 16)
     }
 
     @Test
     fun should_import_mtgo_format_decks_5() {
         testUrl("https://www.mtggoldfish.com/deck/download/615706",
-                "615706")
+                "615706",
+                "Aether Hub")
     }
 
     @Test
     fun should_import_mtgo_format_decks_6() {
         testUrl("https://www.mtggoldfish.com/deck/download/625122",
-                "625122")
+                "625122",
+                "Aether Hub")
     }
 
     @Test
     fun should_import_magic_workstation_format_decks() {
         testUrl("https://mtgtop8.com/dec?d=326201&f=Standard_Azorius_Aggro_by_5647382910",
-                "Azorius Aggro")
+                "Azorius Aggro",
+                "Thopter Arrest")
     }
 
     @Test
     fun should_import_magic_workstation_format_decks_2() {
         testUrl("https://www.mtgdecks.net/decks/view/660419/dec",
-                "Azorius Flash a Standard deck by Misplacedginger (dec) Version")
+                "Azorius Flash a Standard deck by Misplacedginger (dec) Version",
+                "Archangel Avacyn")
     }
 
     @Test
@@ -88,7 +96,8 @@ class DeckParserTest {
 
         testDeck(deck,
                 URL("http://www.mtgdecks.net/decks/view/660419/dec"),
-                "dec")
+                "dec",
+                "Gideon, Ally of Zendikar")
     }
 
     @Test
@@ -128,6 +137,7 @@ SB: 4 Transgress the Mind"""
         testDeck(deck,
                 URL("http://www.mtgdecks.net/decks/view/660419/dec"),
                 "Artifact (10)",
+                "Animation Module",
                 sideboardSize = 14)
     }
 
@@ -156,6 +166,7 @@ SB: 4 Transgress the Mind"""
         testDeck(deck,
                 URL("http://https://mtgadecks.net/deck/3380"),
                 "3380",
+                "Dragonskull Summit",
                 sideboardSize = 0)
     }
 
@@ -187,7 +198,86 @@ SB: 4 Transgress the Mind"""
         testDeck(deck,
                 URL("http://https://mtgadecks.net/deck/3381"),
                 "3381",
+                "Concealed Courtyard",
                 deckSize = 64,
+                sideboardSize = 0)
+    }
+
+    @Test
+    fun should_import_mtgarena_format_decks_3() {
+        val deck = """1 Aether Spellbomb (MMA) 196
+1 Aetherflux Reservoir (KLD) 192
+1 Altar of Dementia (MH1) 218
+1 Altar of the Brood (KTK) 216
+1 Arcane Denial (A25) 41
+1 Ashnod's Altar (EMA) 218
+1 Blinkmoth Urn (C18) 197
+1 Blue Sun's Zenith (A25) 44
+1 Cathodion (MM2) 203
+1 Chakram Retriever (BBD) 15
+1 Chromatic Sphere (MRD)
+1 Codex Shredder (RTR)
+1 Commander's Sphere (C19) 212
+1 Corridor Monitor (ELD) 41
+1 Darksteel Citadel (C18) 241
+1 Diligent Excavator (DAR) 51
+1 Echo Storm (C18) 7
+1 Efficient Construction (AER) 33
+1 Emry, Lurker of the Loch (ELD) 43
+1 Etherium Sculptor (C18) 90
+1 Everflowing Chalice (C16) 253
+1 Foundry Inspector (KLD) 215
+1 Freed from the Real (A25) 58
+1 Ichor Wellspring (DDU) 54
+34 Island (GN2) 57
+1 Jace, Wielder of Mysteries (WAR) 54
+1 Jhoira's Familiar (DAR) 220
+1 Junk Diver (C14) 244
+1 Krark-Clan Ironworks (5DN)
+1 Laboratory Maniac (ISD)
+1 Leyline of Anticipation (M20) 64
+1 Lightning Greaves (C19) 217
+1 Memnite (SOM) 174
+1 Mind Stone (C18) 210
+1 Mirran Spy (MBS)
+1 Mirrodin Besieged (MH1) 57
+1 Myr Moonvessel (DST)
+1 Myr Retriever (C16) 264
+1 Ornithopter (AER) 167
+1 Padeem, Consul of Innovation (KLD) 59
+1 Palladium Myr (IMA) 224
+1 Reality Shift (C19) 92
+1 Riddlesmith (DDU) 39
+1 Sage of Lat-Nam (DAR) 64
+1 Salvaging Station (5DN)
+1 Scrap Trawler (AER) 175
+1 Seat of the Synod (C18) 278
+1 Secrets of the Dead (C19) 95
+1 Semblance Anvil (SOM)
+1 Shield Sphere (MED)
+1 Silver Myr (SOM)
+1 Sol Ring (C19) 221
+1 Spellbook (M10)
+1 Swan Song (C16) 98
+1 Swiftfoot Boots (C18) 225
+1 Tale's End (M20) 77
+1 Thirst for Knowledge (C18) 106
+1 Thopter Spy Network (C18) 107
+1 Thornbite Staff (MOR)
+1 Thoughtcast (MM2)
+1 Tormod's Crypt (C14) 278
+1 Tribute Mage (MH1) 73
+1 Trinket Mage (DDU) 41
+1 Trophy Mage (DDU) 42
+1 Ugin, the Ineffable (WAR) 2
+1 Voltaic Key (M11) 219
+1 Wayfarer's Bauble (CM2) 229
+"""
+        testDeck(deck,
+                URL("http://https://mtgadecks.net/deck/3381"),
+                "3381",
+                "Aether Spellbomb",
+                deckSize = 100,
                 sideboardSize = 0)
     }
 
@@ -205,18 +295,23 @@ SB: 4 Transgress the Mind"""
         assertTrue("deck must be null", result == null)
     }
 
-    private fun testUrl(url: String, expectedName: String, deckSize: Int = 60, sideboardSize: Int = 15) {
+    private fun testUrl(url: String, expectedName: String, firstCard: String, deckSize: Int = 60, sideboardSize: Int = 15) {
         println("testParseOk url $url")
-        testDeck(URL(url).fetch() ?: "", URL(url), expectedName, deckSize, sideboardSize)
+        testDeck(URL(url).fetch() ?: "", URL(url), expectedName, firstCard, deckSize, sideboardSize)
     }
 
-    private fun testDeck(deck: String, url: URL, expectedName: String, deckSize: Int = 60, sideboardSize: Int = 15) {
+    private fun testDeck(deck: String, url: URL,
+                         expectedName: String,
+                         firstCard: String,
+                         deckSize: Int = 60,
+                         sideboardSize: Int = 15) {
         println("testDeck deck:\n$deck")
         DeckParser().parse(deck, url, false)?.run {
             println("testDeck parsed:\n$this")
             assertEquals(deckSize, lines.filterNot { it.isSideboard }.map { it.mult }.sum())
             assertEquals(sideboardSize, lines.filter { it.isSideboard }.map { it.mult }.sum())
             assertEquals(expectedName, name)
+            assertEquals(firstCard, lines.first().title)
         } ?: fail("unable to parse deck")
     }
 }
