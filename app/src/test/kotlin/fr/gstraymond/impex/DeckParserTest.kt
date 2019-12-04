@@ -205,8 +205,8 @@ SB: 4 Transgress the Mind"""
 
     @Test
     fun should_import_mtgarena_format_decks_3() {
-        val deck = """1 Aether Spellbomb (MMA) 196
-1 Aetherflux Reservoir (KLD) 192
+        val deck = """1 Aether Spellbomb (MMA) 196 
+1 Aetherflux Reservoir (KLD) 192 
 1 Altar of Dementia (MH1) 218
 1 Altar of the Brood (KTK) 216
 1 Arcane Denial (A25) 41
