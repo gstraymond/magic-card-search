@@ -15,17 +15,19 @@ import fr.gstraymond.android.CustomApplication
 import fr.gstraymond.android.adapter.DeckDetailSpoilerAdapter.CardTypes.*
 import fr.gstraymond.biz.PictureRequestListener
 import fr.gstraymond.glide.CardLoader
+import fr.gstraymond.models.DeckCard
 import fr.gstraymond.models.search.response.Card
+import fr.gstraymond.models.search.response.getLocalizedTitle
 
 class DeckDetailSpoilerAdapter(val app: CustomApplication,
-                               private val clickCallbacks: ClickCallbacks)
+                               val context: Context,
+                               private val clickCallbacks: ClickCallbacks,
+                               private val deckId: Int)
     : RecyclerView.Adapter<RecyclerView.ViewHolder>(), PictureRequestListener.Callbacks {
 
-    var pairs = listOf<Pair<Card, Int>>()
-
+    //var pairs = listOf<Pair<Card, Int>>()
 
     private lateinit var elements: List<Any>
-
 
     enum class ItemTypes { HEADER, CARD }
 
@@ -49,11 +51,30 @@ class DeckDetailSpoilerAdapter(val app: CustomApplication,
         elements = CardTypes.values().flatMap {
             grouped[it]?.run {
                 val header = getText("card_type_${it.name.toLowerCase()}", "${sumBy { getMult(it) }}")
-                listOf(header) + sortedWith(comparator)
+                listOf(header) + sortedWith(cmcComparator)
             } ?: listOf()
         }
         notifyDataSetChanged()
     }
+
+    // FIXME dup
+    private val cmcComparator = compareBy<DeckCard>(
+            { it.card.convertedManaCost },
+            { it.card.getLocalizedTitle(context) }
+    )
+
+    // FIXME dup
+    private fun getText(textId: String, vararg args: String) =
+            String.format(context.resources.getString(getString(textId)), *args)
+
+    // FIXME dup
+    private fun getString(id: String) =
+            context.resources.getIdentifier(id, "string", context.packageName)
+
+    // FIXME dup
+    private fun getMult(deckCard: DeckCard) =
+            if (sideboard) deckCard.counts.sideboard
+            else deckCard.counts.deck
 
     private val defaultDisplay = (context as Activity).windowManager.defaultDisplay
 
@@ -70,7 +91,6 @@ class DeckDetailSpoilerAdapter(val app: CustomApplication,
             }
 
     override fun getItemCount() = pairs.size
-
 
     override fun getItemViewType(position: Int) = when {
         elements[position] is Pair<*, *> -> ItemTypes.CARD
