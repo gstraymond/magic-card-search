@@ -4,6 +4,8 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
@@ -84,6 +86,18 @@ public class CardLoader {
         }
 
         @Override
+        public int hashCode() {
+            //FIXME implement me
+            return super.hashCode();
+        }
+
+        @Override
+        public boolean equals(@Nullable Object obj) {
+            //FIXME implement me
+            return super.equals(obj);
+        }
+
+        @Override
         protected Bitmap transform(@NonNull BitmapPool pool,
                                    @NonNull Bitmap toTransform,
                                    int outWidth,
@@ -100,6 +114,7 @@ public class CardLoader {
 
         @Override
         public void updateDiskCacheKey(@NonNull MessageDigest messageDigest) {
+            //FIXME implement me
         }
     }
 }

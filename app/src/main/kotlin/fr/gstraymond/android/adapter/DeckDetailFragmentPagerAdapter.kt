@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import fr.gstraymond.R
 import fr.gstraymond.android.DeckDetailCardsFragment
 import fr.gstraymond.android.DeckDetailHandFragment
+import fr.gstraymond.android.DeckDetailSpoilerFragment
 import fr.gstraymond.android.DeckDetailStatsFragment
 import fr.gstraymond.android.adapter.DeckCardCallback.FROM.DECK
 import fr.gstraymond.android.adapter.DeckCardCallback.FROM.SB
@@ -32,7 +33,7 @@ class DeckDetailFragmentPagerAdapter(fragmentManager: FragmentManager,
         sb?.formatChanged()
     }
 
-    private val pageTitles = listOf("", "", context.getString(R.string.deck_tab_stats), context.getString(R.string.deck_tab_hand))
+    private val pageTitles = listOf("", "", context.getString(R.string.deck_tab_stats), context.getString(R.string.deck_tab_hand), "Spoiler")
 
     override fun getCount() = pageTitles.size
 
@@ -40,7 +41,8 @@ class DeckDetailFragmentPagerAdapter(fragmentManager: FragmentManager,
         0 -> DeckDetailCardsFragment()
         1 -> DeckDetailCardsFragment().apply { sideboard = true }
         2 -> DeckDetailStatsFragment()
-        else -> DeckDetailHandFragment()
+        3 -> DeckDetailHandFragment()
+        else -> DeckDetailSpoilerFragment()
     }
 
     override fun instantiateItem(container: ViewGroup, position: Int) =
@@ -52,5 +54,5 @@ class DeckDetailFragmentPagerAdapter(fragmentManager: FragmentManager,
                 }
             }
 
-    override fun getPageTitle(position: Int) = pageTitles[position]
+    override fun getPageTitle(position: Int): String = pageTitles[position]
 }

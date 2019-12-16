@@ -184,7 +184,7 @@
     <string name="card_type_creature">Creatures (%1$s)</string>
     <string name="card_type_instant">Spells (%1$s)</string>
     <string name="card_type_artifact">Artifacts (%1$s)</string>
-    <string name="card_type_planeswalker">Planeswalker (%1$s)</string>
+    <string name="card_type_planeswalker">Planeswalkers (%1$s)</string>
     <string name="card_type_enchantment">Enchantments (%1$s)</string>
     <string name="card_type_other">Others (%1$s)</string>
     <string name="color_black">Black</string>
