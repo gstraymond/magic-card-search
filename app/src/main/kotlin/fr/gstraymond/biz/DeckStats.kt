@@ -30,24 +30,22 @@ class DeckStats(private val cards: List<DeckCard>,
 
     val deckPrice by lazy {
         when {
-            isCommander -> computePrice(isSideboard = false) + computePrice(isSideboard = true)
-            else -> computePrice(isSideboard = false)
+            isCommander -> formatPrice(computePrice(isSideboard = false) + computePrice(isSideboard = true))
+            else -> formatPrice(computePrice(isSideboard = false))
         }
     }
 
     val sideboardPrice by lazy {
-        when {
-            isCommander -> 0
-            else -> computePrice(isSideboard = true)
-        }
+        formatPrice(computePrice(isSideboard = true))
     }
 
-    private fun computePrice(isSideboard: Boolean): String {
-        val price = cards.map {
-            (it.card.publications.map { it.price }.filter { it > 0 }.min() ?: 0.0) * getCount(it, isSideboard)
-        }.sum()
-        return "%.2f".format(price)
-    }
+    private fun computePrice(isSideboard: Boolean) =
+            cards.map {
+                (it.card.publications.map { it.price }.filter { it > 0 }.min()
+                        ?: 0.0) * getCount(it, isSideboard)
+            }.sum()
+
+    private fun formatPrice(double: Double) = "%.2f".format(double)
 
     val deckSize by lazy { deck.sumBy { it.counts.deck } }
     val sideboardSize by lazy { sideboard.sumBy { it.counts.sideboard } }
