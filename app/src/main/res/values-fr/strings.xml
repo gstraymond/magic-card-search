@@ -94,7 +94,7 @@
     <string name="stats_format">Format \"%1$s\"</string>
     <string name="stats_colors">Couleurs %1$s</string>
     <string name="stats_total_price">Valeur du deck %1$s $</string>
-    <string name="stats_sideboard_price">Valeur du sideboard $%1$s</string>
+    <string name="stats_sideboard_price">Valeur du sideboard %1$s $</string>
     <string name="stats_mana_curve">Courbe de mana</string>
     <string name="stats_color_distribution">Répartition des couleurs</string>
     <string name="stats_type_distribution">Répartition des types</string>
