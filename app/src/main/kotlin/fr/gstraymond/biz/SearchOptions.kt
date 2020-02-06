@@ -106,7 +106,7 @@ data class SearchOptions(var query: String = QUERY_ALL,
 
         fun START_SEARCH_OPTIONS() = SearchOptions(
                 size = 1,
-                sort = "publications.editionReleaseDate:desc,publications.collectorNumber:desc",
+                sort = "publications.editionReleaseDate:desc,publications.collectorNumber.keyword:desc",
                 addToHistory = false)
 
         @JvmField

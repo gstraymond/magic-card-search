@@ -76,7 +76,7 @@ class CardListPresenter(private val context: Context) : DataUpdater {
                     result.hits.hits.firstOrNull()?._source?.publications?.maxBy {
                         it.editionReleaseDate?.time ?: 0
                     }?.edition?.let { lastEdition ->
-                        val text = String.format(context.getString(R.string.search_last_extension), lastEdition, result.hits.total)
+                        val text = String.format(context.getString(R.string.search_last_extension), lastEdition, result.hits.total.value)
                         snackbar?.dismiss()
                         snackbar = Snackbar.make(rootView, Html.fromHtml(text), Snackbar.LENGTH_INDEFINITE).apply {
                             setAction(R.string.snackbar_show) {
@@ -95,7 +95,7 @@ class CardListPresenter(private val context: Context) : DataUpdater {
                 }
             }
 
-            val adapter = FacetListAdapter(result.facets, searchOptions, context)
+            val adapter = FacetListAdapter(result.aggregations, searchOptions, context)
             facetListView.setAdapter(adapter)
 
             val listener = FacetOnChildClickListener(adapter, searchOptions, searchProcessor)

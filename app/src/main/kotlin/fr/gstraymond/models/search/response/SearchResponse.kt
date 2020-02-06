@@ -2,14 +2,16 @@ package fr.gstraymond.models.search.response
 
 data class SearchResult(val took: Int,
                         val hits: Hits,
-                        val facets: Map<String, Facet>)
+                        val aggregations: Map<String, Aggregations>)
 
-data class Hits(val total: Int,
+data class Hits(val total: Total,
                 val hits: List<Hit>)
+
+data class Total(val value: Int)
 
 data class Hit(val _source: Card)
 
-data class Facet(val terms: MutableList<Term>)
+data class Aggregations(val buckets: MutableList<Bucket>)
 
-data class Term(val term: String,
-                val count: Int)
+data class Bucket(val key: String,
+                  val doc_count: Int)

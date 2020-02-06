@@ -139,7 +139,7 @@ class SearchViewCursorAdapter private constructor(context: Context,
                 var cardColorId: Int? = null
                 var cardType: String? = null
 
-                option.payload?.apply {
+                option._source?.apply {
                     if (stdEditionCode != null) {
                         type = FIELD_TYPE_EDITION
                         editionCode = stdEditionCode

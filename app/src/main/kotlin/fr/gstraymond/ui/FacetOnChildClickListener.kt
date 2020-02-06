@@ -3,9 +3,7 @@ package fr.gstraymond.ui
 import android.view.View
 import android.widget.ExpandableListView
 import android.widget.ExpandableListView.OnChildClickListener
-import fr.gstraymond.android.CardListActivity
 import fr.gstraymond.biz.SearchOptions
-import fr.gstraymond.biz.SearchProcessor
 import fr.gstraymond.biz.SearchProcessorBuilder
 import fr.gstraymond.ui.adapter.FacetListAdapter
 
@@ -27,11 +25,11 @@ class FacetOnChildClickListener(private val adapter: FacetListAdapter,
                 .updateSize(30)
                 .updateSort(null)
 
-        if (term.count > -1) {
+        if (term.doc_count > -1) {
             if (adapter.isTermSelected(term)) {
-                options.removeFacet(facet, term.term)
+                options.removeFacet(facet, term.key)
             } else {
-                options.addFacet(facet, term.term)
+                options.addFacet(facet, term.key)
             }
         } else {
             options.addFacetSize(facet)

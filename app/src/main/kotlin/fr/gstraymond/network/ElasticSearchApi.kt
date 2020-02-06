@@ -9,16 +9,18 @@ import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface ElasticSearchApi {
-    @GET("mtg/card/_search")
-    fun search(@Query("source") source: String): Call<SearchResult>
+    @GET("mtg/_search")
+    fun search(@Query("source") source: String,
+               @Query("source_content_type") sourceContentType: String = "application/json"): Call<SearchResult>
 
-    @GET("mtg/card/_search")
+    @GET("mtg/_search")
     fun resolve(@Query("q") query: String,
                 @Query("size") size: Int = 10): Call<SearchResult>
 
-    @GET("autocomplete/card/_search")
-    fun autocomplete(@Query("source") source: String): Call<AutocompleteResult>
+    @GET("autocomplete/_search")
+    fun autocomplete(@Query("source") source: String,
+                     @Query("source_content_type") sourceContentType: String = "application/json"): Call<AutocompleteResult>
 
-    @GET("mtg-rules/all/{document}")
+    @GET("mtg-rules/_doc/{document}")
     fun getMtgRules(@Path("document") document: String): Call<RulesResult>
 }
