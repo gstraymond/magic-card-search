@@ -16,7 +16,7 @@ class SuggestionListener(private val searchView: SearchView,
             val result = when (option._source?.type) {
                 null -> option.text
                 else -> when {
-                    option.text.contains(" ") -> """"${option.text}""""
+                    option.text.contains(" ") -> "'${option.text}'"
                     else -> option.text
                 }
             }
