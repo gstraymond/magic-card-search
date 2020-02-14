@@ -7,14 +7,15 @@ import fr.gstraymond.models.search.request.facet.Facet
 data class Request(val query: Query,
                    val from: Int,
                    val size: Int,
-                   val facets: Map<String, Facet>,
-                   val sort: Map<String, Order>) {
+                   val aggregations: Map<String, Facet>,
+                   val sort: Map<String, Order>,
+                   val track_total_hits: Boolean = true) {
     companion object {
         fun fromOptions(options: SearchOptions) =
                 Request(query = Query.fromOptions(options),
                         from = options.from,
                         size = options.size,
-                        facets = when (options.append) {
+                        aggregations = when (options.append) {
                             true -> mapOf()
                             else -> FacetConst.getFacets().apply {
                                 options.facetSize.forEach { facetSize ->
@@ -22,13 +23,13 @@ data class Request(val query: Query,
                                 }
                             }
                         },
-                        sort = when  {
+                        sort = when {
                             options.sort != null -> {
-                                options.sort!!.split(",").map { 
+                                options.sort!!.split(",").map {
                                     it.split(":").let { it[0] to Order(it[1]) }
                                 }.toMap()
                             }
-                            SearchOptions.QUERY_ALL == options.query && !options.random -> mapOf("_uid" to Order())
+                            SearchOptions.QUERY_ALL == options.query && !options.random -> mapOf("_id" to Order())
                             else -> mapOf()
                         }
                 )

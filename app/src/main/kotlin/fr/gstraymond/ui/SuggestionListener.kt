@@ -13,10 +13,10 @@ class SuggestionListener(private val searchView: SearchView,
     override fun onSuggestionClick(i: Int): Boolean {
         if (autocompleteResults.size > i) {
             val option = autocompleteResults[i]
-            val result = when (option.payload?.type) {
+            val result = when (option._source?.type) {
                 null -> option.text
                 else -> when {
-                    option.text.contains(" ") -> """"${option.text}""""
+                    option.text.contains(" ") -> "'${option.text}'"
                     else -> option.text
                 }
             }

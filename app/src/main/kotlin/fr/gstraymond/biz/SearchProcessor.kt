@@ -45,7 +45,7 @@ class SearchProcessor(private val dataUpdater: DataUpdater,
         }
 
         val cards = result.hits.hits.map(Hit::_source)
-        val totalCardCount = result.hits.total
+        val totalCardCount = result.hits.total.value
 
         val textId =
                 if (totalCardCount <= 1) R.string.progress_card_found
@@ -76,7 +76,7 @@ class SearchProcessor(private val dataUpdater: DataUpdater,
         val searchResult = elasticSearchClient.process(options)
 
         if (searchResult != null) {
-            log.i(searchResult.hits.total.toString() + " cards found in " + searchResult.took + " ms")
+            log.i(searchResult.hits.total.value.toString() + " cards found in " + searchResult.took + " ms")
         }
 
         return searchResult

@@ -8,32 +8,32 @@ import android.widget.TextView
 import fr.gstraymond.R
 import fr.gstraymond.biz.SearchOptions
 import fr.gstraymond.constants.FacetConst
-import fr.gstraymond.models.search.response.Facet
-import fr.gstraymond.models.search.response.Term
+import fr.gstraymond.models.search.response.Aggregations
+import fr.gstraymond.models.search.response.Bucket
 import fr.gstraymond.utils.find
 import fr.gstraymond.utils.gone
 import fr.gstraymond.utils.inflate
 import fr.gstraymond.utils.visible
 
 
-class FacetListAdapter(facetMap: Map<String, Facet>?,
+class FacetListAdapter(aggregationsMap: Map<String, Aggregations>?,
                        private val options: SearchOptions, context: Context) : BaseExpandableListAdapter() {
-    private val mutableFacetMap = facetMap?.toMutableMap() ?: mutableMapOf()
+    private val mutableFacetMap = aggregationsMap?.toMutableMap() ?: mutableMapOf()
     private val facetList = mutableListOf<String>()
     private val selectedFacets = mutableListOf<String>()
-    private val selectedTerms = mutableListOf<Term>()
+    private val selectedTerms = mutableListOf<Bucket>()
 
     init {
         for (facetAsString in FacetConst.getFacetOrder()) {
             val facet = mutableFacetMap[facetAsString]
 
-            if (facet == null || facet.terms.isEmpty()) {
+            if (facet == null || facet.buckets.isEmpty()) {
                 mutableFacetMap.remove(facetAsString)
                 continue
             }
 
             facetList.add(facetAsString)
-            val facetTerms = facet.terms
+            val facetTerms = facet.buckets
 
             if (!facetTerms.isEmpty()) {
                 val termsAsString = options.facets[facetAsString]
@@ -46,22 +46,22 @@ class FacetListAdapter(facetMap: Map<String, Facet>?,
 
         for ((facetAsString, facet) in mutableFacetMap) {
             if (showLoadMore(facet, facetAsString)) {
-                val loadMoreTerm = Term(context.getString(R.string.facet_more), -1)
-                facet.terms.add(loadMoreTerm)
+                val loadMoreTerm = Bucket(context.getString(R.string.facet_more), -1)
+                facet.buckets.add(loadMoreTerm)
             }
         }
     }
 
-    private fun showLoadMore(facet: Facet, facetAsString: String): Boolean {
+    private fun showLoadMore(aggregations: Aggregations, facetAsString: String): Boolean {
         val facetSizeRequested = options.facetSize[facetAsString] ?: 10
-        return facet.terms.size == facetSizeRequested
+        return aggregations.buckets.size == facetSizeRequested
     }
 
-    private fun findTerms(termsAsString: List<String>, terms: List<Term>) = termsAsString.mapNotNull { findTerm(it, terms) }
+    private fun findTerms(termsAsString: List<String>, buckets: List<Bucket>) = termsAsString.mapNotNull { findTerm(it, buckets) }
 
-    private fun findTerm(termAsString: String, terms: List<Term>) = terms.firstOrNull { it.term == termAsString }
+    private fun findTerm(termAsString: String, buckets: List<Bucket>) = buckets.firstOrNull { it.key == termAsString }
 
-    private fun getChildren(groupPosition: Int): List<Term> = mutableFacetMap[getGroup(groupPosition)]!!.terms
+    private fun getChildren(groupPosition: Int): List<Bucket> = mutableFacetMap[getGroup(groupPosition)]!!.buckets
 
     override fun getChild(groupPosition: Int, childPosition: Int) = getTerm(groupPosition, childPosition)
 
@@ -76,7 +76,7 @@ class FacetListAdapter(facetMap: Map<String, Facet>?,
 
         val term = getTerm(groupPosition, childPosition)
 
-        view.find<TextView>(R.id.drawer_child_text).text = term.term
+        view.find<TextView>(R.id.drawer_child_text).text = term.key
 
         val counterTextViewInactive = view.find<TextView>(R.id.drawer_child_counter_inactive)
         val counterTextViewActive = view.find<TextView>(R.id.drawer_child_counter_active)
@@ -91,13 +91,13 @@ class FacetListAdapter(facetMap: Map<String, Facet>?,
 
         counterTextView.visible()
         counterTextView.text =
-                if (term.count > 0) term.count.toString() + ""
+                if (term.doc_count > 0) term.doc_count.toString() + ""
                 else "?"
 
         return view
     }
 
-    fun getTerm(groupPosition: Int, childPosition: Int): Term = getChildren(groupPosition)[childPosition]
+    fun getTerm(groupPosition: Int, childPosition: Int): Bucket = getChildren(groupPosition)[childPosition]
 
     override fun getChildrenCount(groupPosition: Int): Int = getChildren(groupPosition).size
 
@@ -119,7 +119,7 @@ class FacetListAdapter(facetMap: Map<String, Facet>?,
         val selectedTextView = view.find<TextView>(R.id.drawer_group_selected_textview)
         if (selectedFacets.contains(facet)) {
             val children = getChildren(groupPosition).filter { selectedTerms.contains(it) }
-            selectedTextView.text = children.map(Term::term).joinToString()
+            selectedTextView.text = children.map(Bucket::key).joinToString()
             selectedTextView.visible()
         } else {
             selectedTextView.gone()
@@ -132,5 +132,5 @@ class FacetListAdapter(facetMap: Map<String, Facet>?,
 
     override fun isChildSelectable(groupPosition: Int, childPosition: Int) = true
 
-    fun isTermSelected(term: Term) = selectedTerms.contains(term)
+    fun isTermSelected(bucket: Bucket) = selectedTerms.contains(bucket)
 }
