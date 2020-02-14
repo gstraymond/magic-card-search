@@ -36,7 +36,7 @@ class ElasticSearchService(private val elasticSearchApi: ElasticSearchApi) {
             when (response.code()) {
                 200 -> Result(response.body(), duration)
                 else -> {
-                    log.w("process: bad response %s %s", response.code(), query)
+                    log.w("process: bad response %s %s %s", response.code(), response.errorBody().string(), query)
                     null
                 }
             }

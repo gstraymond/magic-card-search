@@ -37,8 +37,8 @@ class OcrDetectorProcessor(private val graphicOverlay: GraphicOverlay<OcrGraphic
     private fun queryTemplate(query: String, type: String) = """
 {
   "query": {
-    "filtered": {
-      "query": {
+    "bool": {
+      "must": {
         "multi_match": {
           "fields": [
             "title",
