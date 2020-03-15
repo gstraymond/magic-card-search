@@ -118,5 +118,46 @@
                 android:layout_height="wrap_content"
                 android:text="+" />
         </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_gravity="right"
+            android:layout_marginRight="8dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/array_adapter_deck_maybeboard"
+                style="@android:style/TextAppearance.Medium"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:paddingRight="8dp"
+                android:text="@string/mult_maybeboard" />
+
+            <Button
+                android:id="@+id/array_adapter_deck_mb_remove_1"
+                style="@android:style/TextAppearance.Large"
+                android:layout_width="42dp"
+                android:layout_height="wrap_content"
+                android:text="-" />
+
+            <TextView
+                android:id="@+id/array_adapter_deck_mb_mult"
+                style="@android:style/TextAppearance.Medium"
+                android:layout_width="24dp"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textStyle="bold"
+                tools:text="12" />
+
+            <Button
+                android:id="@+id/array_adapter_deck_mb_add_1"
+                style="@android:style/TextAppearance.Large"
+                android:layout_width="42dp"
+                android:layout_height="wrap_content"
+                android:text="+" />
+        </LinearLayout>
     </LinearLayout>
 </LinearLayout>

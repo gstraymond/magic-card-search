@@ -3,6 +3,8 @@ package fr.gstraymond.biz
 import android.content.Context
 import com.magic.card.search.commons.log.Log
 import fr.gstraymond.R
+import fr.gstraymond.models.Board
+import fr.gstraymond.models.Board.*
 import fr.gstraymond.models.DeckCard
 import kotlin.math.min
 
@@ -15,40 +17,44 @@ class DeckStats(private val cards: List<DeckCard>,
         fun colorSymbols(colors: List<String>) = colors.map { Colors.mainColorsMap[it] }.sortedBy { it }.joinToString(" ")
     }
 
-    private fun getCount(card: DeckCard, isSideboard: Boolean) = when {
-        isSideboard -> card.counts.sideboard
-        else -> card.counts.deck
+    private fun getCount(card: DeckCard, board: Board) = when (board) {
+        DECK -> card.counts.deck
+        SB -> card.counts.sideboard
+        MAYBE -> card.counts.maybe
     }
 
-    private fun getDeckCount(card: DeckCard) = getCount(card, isSideboard = false)
+    private fun getDeckCount(card: DeckCard) = getCount(card, DECK)
 
     val deck by lazy { cards.filter { getDeckCount(it) > 0 } }
 
-    val sideboard by lazy { cards.filter { getCount(it, isSideboard = true) > 0 } }
+    val sideboard by lazy { cards.filter { getCount(it, SB) > 0 } }
+
+    val maybeboard by lazy { cards.filter { getCount(it, MAYBE) > 0 } }
 
     val colors by lazy { deck.flatMap { it.card.colors }.distinct().filter { Colors.mainColors.contains(it) } }
 
     val deckPrice by lazy {
         when {
-            isCommander -> formatPrice(computePrice(isSideboard = false) + computePrice(isSideboard = true))
-            else -> formatPrice(computePrice(isSideboard = false))
+            isCommander -> formatPrice(computePrice(DECK) + computePrice(SB))
+            else -> formatPrice(computePrice(DECK))
         }
     }
 
     val sideboardPrice by lazy {
-        formatPrice(computePrice(isSideboard = true))
+        formatPrice(computePrice(SB))
     }
 
-    private fun computePrice(isSideboard: Boolean) =
+    private fun computePrice(board: Board) =
             cards.map {
                 (it.card.publications.map { it.price }.filter { it > 0 }.min()
-                        ?: 0.0) * getCount(it, isSideboard)
+                        ?: 0.0) * getCount(it, board)
             }.sum()
 
     private fun formatPrice(double: Double) = "%.2f".format(double)
 
     val deckSize by lazy { deck.sumBy { it.counts.deck } }
     val sideboardSize by lazy { sideboard.sumBy { it.counts.sideboard } }
+    val maybeboardSize by lazy { maybeboard.sumBy { it.counts.maybe } }
 
     val manaCurve by lazy {
         deck

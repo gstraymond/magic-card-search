@@ -1,6 +1,7 @@
 package fr.gstraymond.impex
 
 import com.magic.card.search.commons.log.Log
+import fr.gstraymond.models.Board.*
 import java.net.URL
 
 class DeckParser {
@@ -39,8 +40,9 @@ class DeckParser {
     }
 
     private fun DeckFormat.parseLines(lines: List<String>): List<DeckTextLine> {
-        val (deck, sideboard) = split(lines)
-        return deck.map { parse(it, false) } +
-                sideboard.map { parse(it, true) }
+        val (deck, sideboard, maybeboard) = split(lines)
+        return deck.map { parse(it, DECK) } +
+                sideboard.map { parse(it, SB) } +
+                maybeboard.map { parse(it, MAYBE) }
     }
 }

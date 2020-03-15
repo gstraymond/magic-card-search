@@ -3,6 +3,8 @@ package fr.gstraymond.biz
 import android.os.Parcel
 import android.os.Parcelable
 import android.text.TextUtils
+import fr.gstraymond.models.Board
+import fr.gstraymond.models.Board.*
 import fr.gstraymond.utils.FacetParcelableUtils.readFacets
 import fr.gstraymond.utils.FacetParcelableUtils.writeFacets
 
@@ -16,7 +18,7 @@ data class SearchOptions(var query: String = QUERY_ALL,
                          var facetSize: Map<String, Int> = hashMapOf(),
                          var deckId: String? = null,
                          var sort: String? = null,
-                         var addToSideboard: Boolean = false) : Parcelable {
+                         var board: Board = DECK) : Parcelable {
 
     constructor(source: Parcel) : this(
             query = source.readString(),
@@ -27,7 +29,7 @@ data class SearchOptions(var query: String = QUERY_ALL,
             facets = readFacets(source),
             deckId = source.readString(),
             sort = source.readString(),
-            addToSideboard = source.readInt() == 0
+            board = Board.values()[source.readInt()]
             // facetSize : pas de persistence de la taille des facettes
             // addToHistory : pas de persistence de l'ajout à l'historique
             // fromOkGoogle : pas de persistence
@@ -44,7 +46,7 @@ data class SearchOptions(var query: String = QUERY_ALL,
         writeFacets(dest, facets)
         dest.writeString(deckId)
         dest.writeString(sort)
-        dest.writeInt(if (addToSideboard) 0 else 1)
+        dest.writeInt(board.ordinal)
         // facetSize : pas de persistence de la taille des facettes
         // addToHistory : pas de persistence de l'ajout à l'historique
         // fromOkGoogle : pas de persistence

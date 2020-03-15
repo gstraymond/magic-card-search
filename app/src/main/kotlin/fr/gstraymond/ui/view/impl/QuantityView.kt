@@ -2,13 +2,14 @@ package fr.gstraymond.ui.view.impl
 
 import android.app.AlertDialog
 import android.content.Context
-import androidx.appcompat.widget.AppCompatButton
 import android.view.View
 import android.widget.TextView
+import androidx.appcompat.widget.AppCompatButton
 import fr.gstraymond.R
 import fr.gstraymond.android.CustomApplication
 import fr.gstraymond.android.adapter.DeckCardCallback
-import fr.gstraymond.android.adapter.DeckCardCallback.FROM
+import fr.gstraymond.models.Board
+import fr.gstraymond.models.Board.*
 import fr.gstraymond.models.DeckCard
 import fr.gstraymond.models.search.response.Card
 import fr.gstraymond.ui.adapter.SimpleCardViews
@@ -18,7 +19,7 @@ import fr.gstraymond.utils.*
 class QuantityView(private val context: Context,
                    private val app: CustomApplication,
                    private val deckId: Int,
-                   private val sideboard: Boolean,
+                   private val board: Board,
                    private val deckCardCallback: DeckCardCallback?,
                    private val deckEditor: Boolean) : CommonDisplayableView<AppCompatButton>(R.id.array_adapter_deck_card_mult) {
 
@@ -55,20 +56,24 @@ class QuantityView(private val context: Context,
             val sbCount = multView.find<TextView>(R.id.array_adapter_deck_sb_mult).apply {
                 text = deckCard?.counts?.sideboard?.toString() ?: "0"
             }
+            val mbCount = multView.find<TextView>(R.id.array_adapter_deck_mb_mult).apply {
+                text = deckCard?.counts?.maybe?.toString() ?: "0"
+            }
 
             val maxOccurrence = FormatValidator.getMaxOccurrence(card, app.deckList.getByUid("$deckId")?.maybeFormat)
 
-            val megamap: Map<String, Map<String, View>> = listOf("card", "sb").map { line ->
+            val megamap: Map<String, Map<String, View>> = listOf("card", "sb", "mb").map { line ->
                 line to (listOf("add", "remove").map {
                     it to multView.find<AppCompatButton>(getId("array_adapter_deck_${line}_${it}_1"))
                 }.toMap() + mapOf("mult" to multView.find<TextView>(getId("array_adapter_deck_${line}_mult"))))
             }.toMap()
 
             megamap.forEach { (line, buttonMap) ->
+                val maxOccForLine = if (line == "mb") 99 else maxOccurrence
                 val multTextView = buttonMap["mult"] as TextView
                 val otherMap = megamap[megamap.keys.filterNot { it == line }.first()]!!
                 val otherMultView = otherMap["mult"] as TextView
-                updateVisibility(multTextView.text.toString().toInt(), otherMultView.text.toString().toInt(), buttonMap, maxOccurrence)
+                updateVisibility(multTextView.text.toString().toInt(), otherMultView.text.toString().toInt(), buttonMap, maxOccForLine)
                 buttonMap.filter { it.value is AppCompatButton }.forEach { (action, button) ->
                     val coef = if (action == "add") 1 else -1
                     (button as AppCompatButton).apply {
@@ -78,8 +83,10 @@ class QuantityView(private val context: Context,
                             val newMult = currentMult + coef
                             multTextView.text = newMult.toString()
                             val otherMult = otherMultView.text.toString().toInt()
-                            updateVisibility(newMult, otherMult, buttonMap, maxOccurrence)
-                            updateVisibility(otherMult, newMult, otherMap, maxOccurrence)
+                            updateVisibility(newMult, otherMult, buttonMap, maxOccForLine)
+                            if (line != "mb") {
+                                updateVisibility(otherMult, newMult, otherMap, maxOccForLine)
+                            }
                         }
                     }
                 }
@@ -90,20 +97,21 @@ class QuantityView(private val context: Context,
                     .setPositiveButton(android.R.string.ok) { _, _ ->
                         val pickerDeckMult = deckCount.text.toString().toInt()
                         val pickerSbMult = sbCount.text.toString().toInt()
+                        val pickerMbMult = mbCount.text.toString().toInt()
 
                         deckCard?.apply {
-                            val updatedDeckCard = setDeckCount(pickerDeckMult).setSBCount(pickerSbMult)
+                            val updatedDeckCard = setDeckCount(pickerDeckMult).setSBCount(pickerSbMult).setMaybeCount(pickerMbMult)
                             when (updatedDeckCard.total()) {
                                 0 -> cardList.delete(updatedDeckCard)
                                 else -> cardList.update(updatedDeckCard)
                             }
                         } ?: {
-                            val newDeckCard = DeckCard(card).setDeckCount(pickerDeckMult).setSBCount(pickerSbMult)
+                            val newDeckCard = DeckCard(card).setDeckCount(pickerDeckMult).setSBCount(pickerSbMult).setMaybeCount(pickerMbMult)
                             if (newDeckCard.total() > 0) {
                                 cardList.addOrRemove(newDeckCard)
                             }
                         }()
-                        deckCardCallback?.multChanged(if (sideboard) FROM.SB else FROM.DECK, position)
+                        deckCardCallback?.multChanged(board, position)
                     }
                     .setNegativeButton(android.R.string.cancel) { _, _ -> }
                     .create()
@@ -127,9 +135,11 @@ class QuantityView(private val context: Context,
         }
     }
 
-    private fun getMult(deckCard: DeckCard) =
-            if (sideboard) deckCard.counts.sideboard
-            else deckCard.counts.deck
+    private fun getMult(deckCard: DeckCard) = when (board) {
+        DECK -> deckCard.counts.deck
+        SB -> deckCard.counts.sideboard
+        MAYBE -> deckCard.counts.maybe
+    }
 
     override fun display(view: AppCompatButton, card: Card) = true
 }

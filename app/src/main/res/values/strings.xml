@@ -134,8 +134,9 @@
     <string name="importing_deck">Importing %1$s</string>
     <string name="refreshing">Refreshing…</string>
     <string name="deck_tab_cards">Deck (%1$s)</string>
-    <string name="deck_tab_sideboard">Sideboard (%1$s)</string>
+    <string name="deck_tab_sideboard">Side (%1$s)</string>
     <string name="deck_tab_commander">Commander (%1$s)</string>
+    <string name="deck_tab_maybeboard">Swap (%1$s)</string>
     <string name="deck_tab_stats">Stats</string>
     <string name="deck_tab_hand">Starting hand</string>
     <string name="loading">Searching…</string>
@@ -166,8 +167,9 @@
     <string name="add_card_to_deck">Add this card to deck:</string>
     <string name="close">Close</string>
     <string name="mult_deck">Deck</string>
-    <string name="mult_sideboard">Sideboard</string>
+    <string name="mult_sideboard">Side</string>
     <string name="mult_commander">Commander</string>
+    <string name="mult_maybeboard">Swap</string>
     <string name="rules_empty_text">No rules found, check your internet connection and restart the application</string>
     <string name="rules_title">Rules</string>
     <string name="top">Top</string>

@@ -4,13 +4,14 @@ import android.content.ContentResolver
 import android.net.Uri
 import android.provider.MediaStore
 import com.magic.card.search.commons.log.Log
+import fr.gstraymond.models.Board
 import java.io.IOException
 import java.net.HttpURLConnection
 import java.net.URL
 
 data class ImportedDeck(val name: String, val lines: List<DeckTextLine>)
 
-data class DeckTextLine(val mult: Int, val title: String, val isSideboard: Boolean)
+data class DeckTextLine(val mult: Int, val title: String, val board: Board)
 
 class DeckImporter(private val contentResolver: ContentResolver,
                    private val wishlist: Boolean) {

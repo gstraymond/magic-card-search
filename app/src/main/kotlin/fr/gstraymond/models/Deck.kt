@@ -9,6 +9,7 @@ data class Deck(val id: Int = 0,
                 val colors: List<String>,
                 val deckSize: Int,
                 val sideboardSize: Int,
+                val maybeboardSize: Int,
                 val cardsNotImported: List<CardNotImported>,
                 val maybeFormat: String? = null) {
     fun isCommander() = isCommander(maybeFormat)

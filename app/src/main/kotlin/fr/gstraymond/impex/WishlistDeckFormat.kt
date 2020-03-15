@@ -1,5 +1,7 @@
 package fr.gstraymond.impex
 
+import fr.gstraymond.models.Board
+import fr.gstraymond.models.Board.*
 import java.net.URL
 
 class WishlistDeckFormat: DeckFormat {
@@ -7,10 +9,10 @@ class WishlistDeckFormat: DeckFormat {
             lines.all { it.isNotBlank() }
 
     override fun split(lines: List<String>) =
-            lines to listOf<String>()
+            Triple(lines, listOf<String>(), listOf<String>())
 
-    override fun parse(line: String, sideboard: Boolean) =
-            DeckTextLine(1, line, false)
+    override fun parse(line: String, board: Board) =
+            DeckTextLine(1, line, DECK)
 
     override fun extractName(url: URL?, lines: List<String>) =
             "Wishlist"
