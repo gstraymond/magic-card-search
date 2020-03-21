@@ -1,5 +1,6 @@
 package fr.gstraymond.impex
 
+import fr.gstraymond.models.Board
 import fr.gstraymond.utils.getParameters
 import fr.gstraymond.utils.getPathSegment
 import java.net.URL
@@ -14,14 +15,14 @@ class MTGODeckFormat : DeckFormat {
 
     private fun isSideboard(line: String) = line.toLowerCase().contains(SIDEBOARD)
 
-    override fun parse(line: String, sideboard: Boolean): DeckTextLine {
+    override fun parse(line: String, board: Board): DeckTextLine {
         val (occ, title) = line.split(Regex(" "), 2)
-        return DeckTextLine(occ.toInt(), title, sideboard)
+        return DeckTextLine(occ.toInt(), title, board)
     }
 
     override fun split(lines: List<String>) = lines.filter(String::isNotEmpty).run {
         indexOfFirst { isSideboard(it) }.let { index ->
-            take(index) to drop(index + 1)
+            Triple(take(index), drop(index + 1), listOf<String>())
         }
     }
 

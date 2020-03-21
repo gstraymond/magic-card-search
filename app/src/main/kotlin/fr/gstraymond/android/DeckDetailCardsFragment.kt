@@ -5,19 +5,18 @@ import android.app.AlertDialog
 import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Bundle
-import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import android.text.Html
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.github.clans.fab.FloatingActionButton
 import com.github.clans.fab.FloatingActionMenu
 import fr.gstraymond.R
 import fr.gstraymond.android.adapter.DeckCardCallback
-import fr.gstraymond.android.adapter.DeckCardCallback.FROM
 import fr.gstraymond.android.adapter.DeckDetailCardsAdapter
 import fr.gstraymond.biz.Formats.BRAWL
 import fr.gstraymond.biz.Formats.COMMANDER
@@ -27,6 +26,8 @@ import fr.gstraymond.constants.FacetConst
 import fr.gstraymond.constants.FacetConst.FORMAT
 import fr.gstraymond.constants.FacetConst.TYPE
 import fr.gstraymond.db.json.DeckCardList
+import fr.gstraymond.models.Board
+import fr.gstraymond.models.Board.*
 import fr.gstraymond.models.Deck
 import fr.gstraymond.models.DeckCard
 import fr.gstraymond.models.search.response.getLocalizedTitle
@@ -51,10 +52,10 @@ class DeckDetailCardsFragment : Fragment(), DeckCardCallback, DeckDetailActivity
     private val deckId by lazy { activity!!.intent.getStringExtra(DeckDetailActivity.DECK_EXTRA) }
 
     var deckCardCallback: DeckCardCallback? = null
-    var sideboard: Boolean = false
+    var board: Board = DECK
 
     private val deckDetailAdapter by lazy {
-        DeckDetailCardsAdapter(app(), activity!!, sideboard, deckId.toInt()).apply {
+        DeckDetailCardsAdapter(app(), activity!!, board, deckId.toInt()).apply {
             deckCardCallback = this@DeckDetailCardsFragment
         }
     }
@@ -65,7 +66,7 @@ class DeckDetailCardsFragment : Fragment(), DeckCardCallback, DeckDetailActivity
                               container: ViewGroup?,
                               savedInstanceState: Bundle?): View =
             inflater.inflate(R.layout.fragment_deck_detail_cards, container, false)
-                    .apply { savedInstanceState?.apply { sideboard = getBoolean("sideboard") } }
+                    .apply { savedInstanceState?.apply { board = values()[getInt("board")] } }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -90,7 +91,7 @@ class DeckDetailCardsFragment : Fragment(), DeckCardCallback, DeckDetailActivity
         fabAdd.setOnClickListener {
             startActivity {
                 val searchOptions = deckList.getByUid(deckId)?.maybeFormat?.run {
-                    SearchOptions(facets = mapOf(FacetConst.FORMAT to listOf(getFormat())), deckId = deckId, addToSideboard = sideboard)
+                    SearchOptions(facets = mapOf(FacetConst.FORMAT to listOf(getFormat())), deckId = deckId, board = board)
                 } ?: {
                     SearchOptions.START_SEARCH_OPTIONS().copy(deckId = deckId)
                 }()
@@ -100,18 +101,18 @@ class DeckDetailCardsFragment : Fragment(), DeckCardCallback, DeckDetailActivity
 
         fabHistory.setOnClickListener {
             startActivity {
-                HistoryActivity.getIntent(activity!!, deckId, sideboard)
+                HistoryActivity.getIntent(activity!!, deckId, board)
             }
         }
 
-        if (sideboard) {
+        if (board != DECK) {
             fabLand.gone()
         } else {
             fabLand.visible()
             fabLand.setOnClickListener {
                 startActivity {
                     val facets = mapOf(TYPE to listOf("land", "basic"), FORMAT to listOf("Standard"))
-                    CardListActivity.getIntent(activity!!, SearchOptions(deckId = deckId, facets = facets, addToSideboard = sideboard))
+                    CardListActivity.getIntent(activity!!, SearchOptions(deckId = deckId, facets = facets, board = board))
                 }
             }
         }
@@ -132,7 +133,7 @@ class DeckDetailCardsFragment : Fragment(), DeckCardCallback, DeckDetailActivity
                     autoFocus = true,
                     useFlash = false,
                     deckId = deckId,
-                    addToSideboard = sideboard)
+                    board = board)
         }
     }
 
@@ -152,9 +153,10 @@ class DeckDetailCardsFragment : Fragment(), DeckCardCallback, DeckDetailActivity
         if (cardsNotImported.isEmpty()) notImported.gone()
         else {
             val cards = cardsNotImported.map {
-                val sideboard = when (it.isSideboard) {
-                    true -> "sideboard"
-                    else -> "deck"
+                val sideboard = when (it.board) {
+                    DECK -> "deck"
+                    SB -> "sideboard"
+                    MAYBE -> "maybe"
                 }
                 """- ${it.mult} x "${it.card}" - $sideboard"""
             }.joinToString("<br>")
@@ -190,7 +192,7 @@ class DeckDetailCardsFragment : Fragment(), DeckCardCallback, DeckDetailActivity
             recyclerView.visible()
             emptyText.gone()
 
-            if (!sideboard) {
+            if (board == DECK) {
                 val deck = app().deckList.getByUid(deckId)
                 deck?.maybeFormat?.apply {
                     val msgs = mutableListOf<String>()
@@ -238,11 +240,10 @@ class DeckDetailCardsFragment : Fragment(), DeckCardCallback, DeckDetailActivity
     private fun getText(textId: Int, vararg args: String) =
             String.format(resources.getString(textId), *args)
 
-    override fun multChanged(from: FROM, position: Int) {
+    override fun multChanged(from: Board, position: Int) {
         updateTotal()
         deckDetailAdapter.updateDeckList()
-        if (FROM.DECK == from && !sideboard || FROM.SB == from && sideboard)
-            deckCardCallback?.multChanged(from, position)
+        if (from == board) deckCardCallback?.multChanged(from, position)
     }
 
     override fun cardClick(deckCard: DeckCard) {
@@ -268,7 +269,7 @@ class DeckDetailCardsFragment : Fragment(), DeckCardCallback, DeckDetailActivity
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState.putBoolean("sideboard", sideboard)
+        outState.putInt("board", board.ordinal)
     }
 }
 

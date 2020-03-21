@@ -51,8 +51,6 @@ class CustomApplication : BaseApplication() {
         registerActivityLifecycleCallbacks(LogActivityLifecycleCallbacks())
 
         fetchRules()
-        // migrate
-        CardListMigrator.migrate(this, objectMapper, deckList)
     }
 
     private fun fetchRules() {

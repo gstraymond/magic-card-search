@@ -4,12 +4,13 @@ import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import androidx.appcompat.widget.Toolbar
 import android.view.Menu
 import android.view.MenuItem
 import fr.gstraymond.R
 import fr.gstraymond.android.fragment.HistoryListFragment
 import fr.gstraymond.constants.Consts.HISTORY_LIST
+import fr.gstraymond.models.Board
+import fr.gstraymond.models.Board.DECK
 import fr.gstraymond.utils.find
 import java.util.*
 
@@ -17,21 +18,21 @@ class HistoryActivity : CustomActivity(R.layout.activity_history) {
 
     companion object {
         val DECK_ID_EXTRA = "deck_id"
-        val ADD_TO_SIDEBOARD_EXTRA = "add_to_sideboard"
+        val BOARD_EXTRA = "board"
 
         fun getIntent(context: Context,
                       deckId: String? = null,
-                      addToSideboard: Boolean = false) =
+                      board: Board = DECK) =
                 Intent(context, HistoryActivity::class.java).apply {
                     putExtra(DECK_ID_EXTRA, deckId)
-                    putExtra(ADD_TO_SIDEBOARD_EXTRA, addToSideboard)
+                    putExtra(BOARD_EXTRA, board.ordinal)
                 }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        setSupportActionBar(find<Toolbar>(R.id.toolbar))
+        setSupportActionBar(find(R.id.toolbar))
         actionBarSetDisplayHomeAsUpEnabled(true)
 
         showHistory()
@@ -67,7 +68,7 @@ class HistoryActivity : CustomActivity(R.layout.activity_history) {
             val allHistory = ArrayList(jsonHistoryDataSource.all().sortedByDescending { it.date })
             putParcelableArrayList(HISTORY_LIST, allHistory)
             putString(DECK_ID_EXTRA, intent.getStringExtra(DECK_ID_EXTRA))
-            putBoolean(ADD_TO_SIDEBOARD_EXTRA, intent.getBooleanExtra(ADD_TO_SIDEBOARD_EXTRA, false))
+            putInt(BOARD_EXTRA, intent.getIntExtra(BOARD_EXTRA, 0))
         }
 
         replaceFragment(HistoryListFragment(), R.id.history_fragment, bundle)

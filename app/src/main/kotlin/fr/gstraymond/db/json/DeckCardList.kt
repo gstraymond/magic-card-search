@@ -28,7 +28,8 @@ class DeckCardList(context: Context,
             deckList.update(copy(
                     colors = deckStats.colors,
                     deckSize = deckStats.deckSize,
-                    sideboardSize = deckStats.sideboardSize)
+                    sideboardSize = deckStats.sideboardSize,
+                    maybeboardSize = deckStats.maybeboardSize)
             )
         }
     }

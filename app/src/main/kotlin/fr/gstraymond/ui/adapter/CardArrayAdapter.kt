@@ -13,6 +13,7 @@ import fr.gstraymond.android.CustomApplication
 import fr.gstraymond.android.DataUpdater
 import fr.gstraymond.android.adapter.DeckCardCallback
 import fr.gstraymond.db.json.JsonList
+import fr.gstraymond.models.Board
 import fr.gstraymond.models.Deck
 import fr.gstraymond.models.DeckCard
 import fr.gstraymond.models.search.response.Card
@@ -51,7 +52,7 @@ class LinearCardArrayAdapter(private val view: View,
                 context,
                 view.context.applicationContext as CustomApplication,
                 data.deck!!.first.id,
-                dataUpdater.getCurrentSearch().addToSideboard,
+                dataUpdater.getCurrentSearch().board,
                 DeckCardClickCallbacks())
     }()
 
@@ -71,7 +72,7 @@ class LinearCardArrayAdapter(private val view: View,
     }
 
     private inner class DeckCardClickCallbacks : DeckCardCallback {
-        override fun multChanged(from: DeckCardCallback.FROM, position: Int) = notifyItemChanged(position)
+        override fun multChanged(from: Board, position: Int) = notifyItemChanged(position)
         override fun cardClick(deckCard: DeckCard) {}
     }
 

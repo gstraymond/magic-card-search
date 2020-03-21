@@ -12,6 +12,8 @@ import fr.gstraymond.android.CustomApplication
 import fr.gstraymond.android.adapter.DeckDetailCardsAdapter.CardTypes.*
 import fr.gstraymond.android.adapter.DeckDetailCardsAdapter.ItemTypes.*
 import fr.gstraymond.android.prefs
+import fr.gstraymond.models.Board
+import fr.gstraymond.models.Board.*
 import fr.gstraymond.models.DeckCard
 import fr.gstraymond.models.search.response.getLocalizedTitle
 import fr.gstraymond.ui.adapter.DeckDetailCardViews
@@ -22,7 +24,7 @@ import fr.gstraymond.utils.visible
 
 class DeckDetailCardsAdapter(private val app: CustomApplication,
                              private val context: Context,
-                             private val sideboard: Boolean,
+                             private val board: Board,
                              private val deckId: Int) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     var deckCardCallback: DeckCardCallback? = null
 
@@ -33,7 +35,7 @@ class DeckDetailCardsAdapter(private val app: CustomApplication,
                 context,
                 app,
                 deckId,
-                sideboard,
+                board,
                 deckCardCallback)
     }
 
@@ -116,9 +118,11 @@ class DeckDetailCardsAdapter(private val app: CustomApplication,
         }
     }
 
-    private fun getMult(deckCard: DeckCard) =
-            if (sideboard) deckCard.counts.sideboard
-            else deckCard.counts.deck
+    private fun getMult(deckCard: DeckCard) = when (board) {
+        DECK -> deckCard.counts.deck
+        SB -> deckCard.counts.sideboard
+        MAYBE -> deckCard.counts.maybe
+    }
 
     private val FAB_TOTAL_SIZE = 2
 
@@ -144,10 +148,7 @@ class DeckDetailCardsAdapter(private val app: CustomApplication,
 }
 
 interface DeckCardCallback {
-    enum class FROM {
-        DECK, SB
-    }
 
-    fun multChanged(from: DeckCardCallback.FROM, position: Int)
+    fun multChanged(from: Board, position: Int)
     fun cardClick(deckCard: DeckCard)
 }

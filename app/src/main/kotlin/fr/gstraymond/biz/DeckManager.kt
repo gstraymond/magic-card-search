@@ -5,10 +5,7 @@ import fr.gstraymond.biz.ExportFormat.MTG_ARENA
 import fr.gstraymond.db.json.CardListMigrator
 import fr.gstraymond.db.json.DeckCardListBuilder
 import fr.gstraymond.db.json.DeckList
-import fr.gstraymond.models.CardNotImported
-import fr.gstraymond.models.Deck
-import fr.gstraymond.models.DeckLine
-import fr.gstraymond.models.ImportResult
+import fr.gstraymond.models.*
 import fr.gstraymond.models.search.response.Publication
 import java.io.File
 import java.text.Normalizer
@@ -23,9 +20,9 @@ class DeckManager(private val deckList: DeckList,
                    results: List<ImportResult> = listOf(),
                    maybeFormat: String? = null): Int {
         val deckId = deckList.getLastId() + 1
-        val cards = results.filter { it is DeckLine }.map { it as DeckLine }
+        val cards = results.filterIsInstance<DeckLine>()
         val mergedCards = CardListMigrator.toDeckCardList(cards)
-        val cardsNotImported = results.filter { it is CardNotImported }.map { it as CardNotImported }
+        val cardsNotImported = results.filterIsInstance<CardNotImported>()
         cardListBuilder.build(deckId).save(mergedCards)
         val deckStats = DeckStats(mergedCards, Deck.isCommander(maybeFormat))
         deckList.addOrRemove(Deck(
@@ -36,6 +33,7 @@ class DeckManager(private val deckList: DeckList,
                 colors = deckStats.colors,
                 deckSize = deckStats.deckSize,
                 sideboardSize = deckStats.sideboardSize,
+                maybeboardSize = deckStats.maybeboardSize,
                 cardsNotImported = cardsNotImported))
         return deckId
     }
@@ -60,19 +58,11 @@ class DeckManager(private val deckList: DeckList,
         val all = cardListBuilder.build(deck.id).all()
         when (format) {
             MAGIC_WORKSTATION -> {
-                val lines = all
-                        .flatMap { card ->
-                            if (card.counts.deck > 0 && card.counts.sideboard > 0) {
-                                listOf(card.setDeckCount(0), card.setSBCount(0))
-                            } else listOf(card)
-                        }
-                        .sortedBy { it.counts.sideboard < 0 }
-                        .map { (card, _, counts) ->
-                            val line = "${counts.deck + counts.sideboard} [] ${card.title}"
-                            if (counts.sideboard > 0) "SB:  $line"
-                            else "        $line"
-                        }
-                return listOf("// NAME : ${deck.name}", "// FORMAT : ${deck.maybeFormat ?: "???"}") + lines
+                val deckLines = all.filter { it.counts.deck > 0 }.map { "      " + cc(it, it.counts.deck) }
+                val sbLines = all.filter { it.counts.sideboard > 0 }.map { "SB:  " + cc(it, it.counts.sideboard) }
+                val mbLines = all.filter { it.counts.maybe > 0 }.map { "MB:  " + cc(it, it.counts.maybe) }
+
+                return listOf("// NAME : ${deck.name}", "// FORMAT : ${deck.maybeFormat ?: "???"}") + deckLines + sbLines + mbLines
             }
             MTG_ARENA -> {
                 return all.filter { it.counts.deck > 0 }.flatMap {
@@ -86,6 +76,8 @@ class DeckManager(private val deckList: DeckList,
             }
         }
     }
+
+    private fun cc(card: DeckCard, count: Int) = "$count [] ${card.card.title}"
 
     private val mtgaSetMapping = mapOf("DOM" to "DAR")
 

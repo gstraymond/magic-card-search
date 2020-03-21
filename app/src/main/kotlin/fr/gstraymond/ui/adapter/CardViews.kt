@@ -6,6 +6,7 @@ import fr.gstraymond.android.CustomApplication
 import fr.gstraymond.android.adapter.DeckCardCallback
 import fr.gstraymond.api.ui.view.DisplayableView
 import fr.gstraymond.db.json.JsonList
+import fr.gstraymond.models.Board
 import fr.gstraymond.models.search.response.Card
 import fr.gstraymond.ui.view.impl.*
 
@@ -50,26 +51,26 @@ class FavoriteCardViews(context: Context,
 class DeckCardViews(context: Context,
                     app: CustomApplication,
                     deckId: Int,
-                    addToSideboard: Boolean,
+                    board: Board,
                     deckCardCallback: DeckCardCallback) :
         CardViews(listOf(
                 TitleView(),
                 DescriptionView(context),
                 CastingCostView(context),
                 TypePTView(),
-                QuantityView(context, app, deckId, addToSideboard, deckCardCallback, deckEditor = false),
+                QuantityView(context, app, deckId, board, deckCardCallback, deckEditor = false),
                 CostView(context)
         ))
 
 class DeckDetailCardViews(context: Context,
                           app: CustomApplication,
                           deckId: Int,
-                          sideboard: Boolean,
+                          board: Board,
                           deckCardCallback: DeckCardCallback?) : CardViews(listOf(
         TitleView(),
         CastingCostView(context),
         CostView(context),
-        QuantityView(context, app, deckId, sideboard, deckCardCallback, deckEditor = true)
+        QuantityView(context, app, deckId, board, deckCardCallback, deckEditor = true)
 ))
 
 class SimpleCardViews : CardViews(listOf(

@@ -9,20 +9,22 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
-import com.google.android.material.snackbar.Snackbar.*
-import com.google.android.material.tabs.TabLayout
-import androidx.viewpager.widget.ViewPager
-import androidx.appcompat.widget.Toolbar
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import android.widget.TextView.BufferType.EDITABLE
+import androidx.appcompat.widget.Toolbar
+import androidx.viewpager.widget.ViewPager
+import com.google.android.material.snackbar.Snackbar.LENGTH_LONG
+import com.google.android.material.snackbar.Snackbar.make
+import com.google.android.material.tabs.TabLayout
 import fr.gstraymond.R
 import fr.gstraymond.android.adapter.DeckCardCallback
 import fr.gstraymond.android.adapter.DeckDetailFragmentPagerAdapter
 import fr.gstraymond.biz.ExportFormat.MAGIC_WORKSTATION
 import fr.gstraymond.biz.ExportFormat.MTG_ARENA
 import fr.gstraymond.biz.Formats
+import fr.gstraymond.models.Board
 import fr.gstraymond.models.DeckCard
 import fr.gstraymond.utils.*
 import net.rdrei.android.dirchooser.DirectoryChooserActivity
@@ -152,7 +154,7 @@ class DeckDetailActivity : CustomActivity(R.layout.activity_deck_detail), DeckCa
         setTabsText()
     }
 
-    override fun multChanged(from: DeckCardCallback.FROM, position: Int) {
+    override fun multChanged(from: Board, position: Int) {
         pagerAdapter.onMultChanged(from, position)
         setTabsText()
     }
@@ -166,6 +168,7 @@ class DeckDetailActivity : CustomActivity(R.layout.activity_deck_detail), DeckCa
                     else getString(R.string.deck_tab_sideboard)
             tabLayout.getTabAt(0)?.text = String.format(getString(R.string.deck_tab_cards), deckSize)
             tabLayout.getTabAt(1)?.text = String.format(sideboardOrCommander, sideboardSize)
+            tabLayout.getTabAt(2)?.text = String.format(getString(R.string.deck_tab_maybeboard), maybeboardSize)
         }
     }
 

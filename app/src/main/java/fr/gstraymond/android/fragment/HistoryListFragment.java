@@ -18,6 +18,7 @@ import fr.gstraymond.android.CustomActivity;
 import fr.gstraymond.android.HistoryActivity;
 import fr.gstraymond.biz.SearchOptions;
 import fr.gstraymond.db.json.HistoryList;
+import fr.gstraymond.models.Board;
 import fr.gstraymond.models.History;
 import fr.gstraymond.ui.adapter.HistoryArrayAdapter;
 
@@ -76,7 +77,7 @@ public class HistoryListFragment extends CustomListFragment {
         if (deckId != null) {
             currentSearch.setDeckId(deckId);
         }
-        currentSearch.setAddToSideboard(getArguments().getBoolean(HistoryActivity.Companion.getADD_TO_SIDEBOARD_EXTRA()));
+        currentSearch.setBoard(Board.values()[getArguments().getInt(HistoryActivity.Companion.getBOARD_EXTRA())]);
 
         Intent intent = CardListActivity.Companion.getIntent(getActivity(), currentSearch);
         startActivity(intent);
