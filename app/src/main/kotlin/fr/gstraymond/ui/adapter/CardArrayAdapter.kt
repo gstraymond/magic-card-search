@@ -39,7 +39,7 @@ class LinearCardArrayAdapter(private val view: View,
         cardViews.display(holder.itemView, card, position)
         holder.itemView.setOnClickListener { clickCallbacks.cardClicked(card) }
         holder.itemView.setOnLongClickListener {
-            clipboard.primaryClip = ClipData.newPlainText("card title", card.getLocalizedTitle(context))
+            clipboard.setPrimaryClip(ClipData.newPlainText("card title", card.getLocalizedTitle(context)))
             showMessage(context.resources.getString(R.string.added_to_clipboard))
             true
         }

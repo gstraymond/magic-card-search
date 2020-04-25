@@ -49,7 +49,7 @@ class RulesActivity : CustomActivity(R.layout.activity_rules), RulesCallback, La
         ruleList.registerLoading(this)
 
         savedInstanceState?.apply {
-            history.addAll(getIntegerArrayList(HISTORY))
+            history.addAll(getIntegerArrayList(HISTORY)!!)
             if (history.isNotEmpty()) backTextView.visible()
         }
 

@@ -109,7 +109,7 @@ class DeckDetailActivity : CustomActivity(R.layout.activity_deck_detail), DeckCa
                                 val message = if (exportLines.size < deckLines) {
                                     getString(R.string.deck_detail_export_deck_clipboard_failed)
                                 } else {
-                                    clipboardManager.primaryClip = ClipData.newPlainText("Deck", exportLines.joinToString("\n"))
+                                    clipboardManager.setPrimaryClip(ClipData.newPlainText("Deck", exportLines.joinToString("\n")))
                                     getString(R.string.deck_detail_export_deck_clipboard_completed)
                                 }
                                 make(find(android.R.id.content), String.format(message, deck.name), LENGTH_LONG).show()

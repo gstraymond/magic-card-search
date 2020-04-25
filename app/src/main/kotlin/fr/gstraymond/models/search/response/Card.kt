@@ -25,36 +25,36 @@ class Card(val title: String,
            val land: List<String>) : Parcelable {
 
     constructor(source: Parcel) : this(
-            title = source.readString(),
+            title = source.readString()!!,
             frenchTitle = source.readString(),
-            type = source.readString(),
+            type = source.readString()!!,
             castingCost = source.readString(),
             power = source.readString(),
             toughness = source.readString(),
-            description = source.readString(),
+            description = source.readString()!!,
             publications = ArrayList<Publication>().apply {
-                source.readList(this, Publication::class.java.classLoader)
+                source.readList(this as List<*>, Publication::class.java.classLoader)
             },
             formats = ArrayList<String>().apply {
-                source.readList(this, String::class.java.classLoader)
+                source.readList(this as List<*>, String::class.java.classLoader)
             },
             colors = ArrayList<String>().apply {
-                source.readList(this, String::class.java.classLoader)
+                source.readList(this as List<*>, String::class.java.classLoader)
             },
-            layout = source.readString(),
+            layout = source.readString()!!,
             loyalty = source.readString(),
             altTitles = ArrayList<String>().apply {
-                source.readList(this, String::class.java.classLoader)
+                source.readList(this as List<*>, String::class.java.classLoader)
             },
             convertedManaCost = source.readInt() ?: 0,
             abilities = ArrayList<String>().apply {
-                source.readList(this, String::class.java.classLoader)
+                source.readList(this as List<*>, String::class.java.classLoader)
             },
             ruling = ArrayList<Ruling>().apply {
-                source.readList(this, Ruling::class.java.classLoader)
+                source.readList(this as List<*>, Ruling::class.java.classLoader)
             },
             land = ArrayList<String>().apply {
-                source.readList(this, String::class.java.classLoader)
+                source.readList(this as List<*>, String::class.java.classLoader)
             }
     )
 
