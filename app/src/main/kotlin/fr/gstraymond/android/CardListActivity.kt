@@ -6,19 +6,21 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.res.Configuration
 import android.os.Bundle
-import com.google.android.material.navigation.NavigationView
-import com.google.android.material.snackbar.Snackbar
-import androidx.core.view.GravityCompat
-import androidx.drawerlayout.widget.DrawerLayout
-import androidx.appcompat.app.ActionBarDrawerToggle
-import androidx.appcompat.widget.*
 import android.view.View
 import android.widget.ExpandableListView
 import android.widget.Switch
 import android.widget.TextView
+import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.appcompat.widget.AppCompatButton
+import androidx.appcompat.widget.SearchView
+import androidx.appcompat.widget.Toolbar
+import androidx.core.view.GravityCompat
+import androidx.drawerlayout.widget.DrawerLayout
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.navigation.NavigationView
+import com.google.android.material.snackbar.Snackbar
 import com.magic.card.search.commons.log.Log
 import fr.gstraymond.R
 import fr.gstraymond.android.presenter.CardListPresenter
@@ -26,6 +28,7 @@ import fr.gstraymond.biz.AutocompleteProcessor
 import fr.gstraymond.biz.AutocompleteProcessorBuilder
 import fr.gstraymond.biz.SearchOptions
 import fr.gstraymond.biz.SearchProcessorBuilder
+import fr.gstraymond.models.Board
 import fr.gstraymond.models.DeckCard
 import fr.gstraymond.models.autocomplete.response.Option
 import fr.gstraymond.models.search.response.Card
@@ -91,9 +94,16 @@ class CardListActivity : CustomActivity(R.layout.activity_card_list),
         override fun cardLongClicked(card: Card): Boolean {
             log.w("cardLongClicked ${card.title}")
             val title = card.getLocalizedTitle(context)
-            val message = presenter.getCurrentSearch().deckId?.run {
+            val currentSearch = presenter.getCurrentSearch()
+            val message = currentSearch.deckId?.run {
+                val initialDeckCard = DeckCard(card).setDeckCount(0)
+                val deckCard = when (currentSearch.board) {
+                    Board.DECK -> initialDeckCard.setDeckCount(1)
+                    Board.SB -> initialDeckCard.setSBCount(1)
+                    Board.MAYBE -> initialDeckCard.setMaybeCount(1)
+                }
                 val deck = app().deckList.getByUid(this)!!
-                val add = app().cardListBuilder.build(toInt()).addOrRemove(DeckCard(card))
+                val add = app().cardListBuilder.build(toInt()).addOrRemove(deckCard)
                 if (add) String.format(resources.getString(R.string.added_to_deck), title, deck.name)
                 else String.format(resources.getString(R.string.removed_from_deck), title, deck.name)
             } ?: {
