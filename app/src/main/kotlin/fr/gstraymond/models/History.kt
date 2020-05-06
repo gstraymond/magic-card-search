@@ -12,7 +12,7 @@ data class History(val query: String,
                    val date: Date) : Parcelable {
 
     constructor(source: Parcel) : this(
-            query = source.readString(),
+            query = source.readString()!!,
             date = Date(source.readLong()),
             isFavorite = source.readString() == "1",
             facets = readFacets(source)

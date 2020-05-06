@@ -21,7 +21,7 @@ data class SearchOptions(var query: String = QUERY_ALL,
                          var board: Board = DECK) : Parcelable {
 
     constructor(source: Parcel) : this(
-            query = source.readString(),
+            query = source.readString()!!,
             append = source.readInt() == 0,
             random = source.readInt() == 0,
             from = source.readInt(),

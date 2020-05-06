@@ -65,7 +65,7 @@ class DeckImporter(private val contentResolver: ContentResolver,
 
     private fun fetchContent(url: URL): String? =
             contentResolver
-                    .openInputStream(Uri.parse(url.toString()))
+                    .openInputStream(Uri.parse(url.toString()))!!
                     .bufferedReader()
                     .use { it.readText() }
 }

@@ -7,8 +7,8 @@ class Ruling(val date: String,
              val text: String) : Parcelable {
 
     constructor(source: Parcel) : this(
-            date = source.readString(),
-            text = source.readString())
+            date = source.readString()!!,
+            text = source.readString()!!)
 
     override fun describeContents() = 0
 

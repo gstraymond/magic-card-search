@@ -153,11 +153,13 @@ class DeckDetailCardsFragment : Fragment(), DeckCardCallback, DeckDetailActivity
         if (cardsNotImported.isEmpty()) notImported.gone()
         else {
             val cards = cardsNotImported.map {
-                val sideboard = when (it.board) {
-                    DECK -> "deck"
-                    SB -> "sideboard"
-                    MAYBE -> "maybe"
-                }
+                val sideboard = it.board?.run {
+                    when (this) {
+                        DECK -> "deck"
+                        SB -> "sideboard"
+                        MAYBE -> "maybe"
+                    }
+                } ?: "deck"
                 """- ${it.mult} x "${it.card}" - $sideboard"""
             }.joinToString("<br>")
 

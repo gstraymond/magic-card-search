@@ -17,11 +17,11 @@ class Publication(val edition: String,
                   val collectorNumber: String?) : Parcelable {
 
     constructor(source: Parcel) : this(
-            edition = source.readString(),
-            editionCode = source.readString(),
+            edition = source.readString()!!,
+            editionCode = source.readString()!!,
             stdEditionCode = source.readString(),
-            rarity = source.readString(),
-            rarityCode = source.readString(),
+            rarity = source.readString()!!,
+            rarityCode = source.readString()!!,
             image = source.readString(),
             editionImage = source.readString(),
             price = source.readDouble(),

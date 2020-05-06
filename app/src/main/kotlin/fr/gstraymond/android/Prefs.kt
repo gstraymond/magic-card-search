@@ -23,7 +23,7 @@ class Prefs(context: Context) {
         set(value) = prefs.edit().putBoolean(frenchEnabledParam, value).apply()
 
     var rulesVersion: String
-        get() = prefs.getString(rulesVersionParam, "")
+        get() = prefs.getString(rulesVersionParam, "")!!
         set(value) = prefs.edit().putString(rulesVersionParam, value).apply()
 
     var deckCardSort: Boolean
@@ -31,6 +31,6 @@ class Prefs(context: Context) {
         set(value) = prefs.edit().putBoolean(deckCardSortParam, value).apply()
 
     var decksSort: SortTypes
-        get() = SortTypes.valueOf(prefs.getString(decksSortParam, SortTypes.Format.name))
+        get() = SortTypes.valueOf(prefs.getString(decksSortParam, SortTypes.Format.name)!!)
         set(value) = prefs.edit().putString(decksSortParam, value.name).apply()
 }
