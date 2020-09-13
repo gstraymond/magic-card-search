@@ -216,4 +216,6 @@
     <string name="french_enabled">French enabled</string>
     <string name="decks_sort_spinner_format">Group by format</string>
     <string name="decks_sort_spinner_alpha">Sort by name</string>
+    <string name="paper_price_enabled">Paper prices</string>
+    <string name="paper_price_disabled">MTGO prices</string>
 </resources>

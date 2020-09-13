@@ -11,6 +11,7 @@ class Prefs(context: Context) {
     private val rulesVersionParam = "rules_version"
     private val deckCardSortParam = "deck_card_sort"
     private val decksSortParam = "decks_sort"
+    private val paperPriceParam = "paper_price"
 
     private val prefs = context.getSharedPreferences(filename, 0)
 
@@ -33,4 +34,8 @@ class Prefs(context: Context) {
     var decksSort: SortTypes
         get() = SortTypes.valueOf(prefs.getString(decksSortParam, SortTypes.Format.name)!!)
         set(value) = prefs.edit().putString(decksSortParam, value.name).apply()
+
+    var paperPrice: Boolean
+        get() = prefs.getBoolean(paperPriceParam, true)
+        set(value) = prefs.edit().putBoolean(paperPriceParam, value).apply()
 }

@@ -279,6 +279,18 @@ class CardListActivity : CustomActivity(R.layout.activity_card_list),
                         switchAdapter()
                     }
                 }
+
+                val paperPriceEnabled = it.menu.findItem(R.id.menu_paper_price_enabled)
+
+                fun showPrice() { paperPriceEnabled.title = getString(if (prefs.paperPrice) R.string.paper_price_enabled else R.string.paper_price_disabled) }
+                showPrice()
+                paperPriceEnabled.actionView.find<Switch>(R.id.switch_paper_price_enabled).apply {
+                    isChecked = prefs.paperPrice
+                    setOnCheckedChangeListener { _, b ->
+                        prefs.paperPrice = b
+                        showPrice()
+                    }
+                }
             }
         } else {
             supportActionBar?.setDisplayHomeAsUpEnabled(true)
