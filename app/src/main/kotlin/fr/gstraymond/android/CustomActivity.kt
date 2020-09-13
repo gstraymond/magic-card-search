@@ -10,8 +10,6 @@ import fr.gstraymond.utils.app
 
 abstract class CustomActivity(private val layoutId: Int) : AppCompatActivity() {
 
-    val objectMapper: Moshi by lazy { app().objectMapper }
-
     val jsonHistoryDataSource by lazy { app().historyList }
 
     override fun onCreate(savedInstanceState: Bundle?) {

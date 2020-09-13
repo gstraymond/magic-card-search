@@ -16,13 +16,30 @@ class CardDetailAdapter(context: Context,
                         callbacks: Callbacks) :
         ArrayAdapter<Any>(context, resource, textViewResourceId, objects) {
 
-    private val cardView = CardView(context, callbacks)
+    private val cardView = CardView(context, object : InnerCallbacks {
+        override fun onImageClick(position: Int) = callbacks.onImageClick(position)
+
+        override fun getDeck(deckId: String): Deck? = getDeck(deckId)
+
+        override fun switchPrice() {
+            publicationView.showPaper = !publicationView.showPaper
+            this@CardDetailAdapter.notifyDataSetChanged()
+        }
+    })
     private val publicationView = PublicationView(context)
 
     interface Callbacks {
         fun onImageClick(position: Int)
 
         fun getDeck(deckId: String): Deck?
+    }
+
+    interface InnerCallbacks {
+        fun onImageClick(position: Int)
+
+        fun getDeck(deckId: String): Deck?
+
+        fun switchPrice()
     }
 
     enum class ItemTypes { CARD, PUBLICATION }

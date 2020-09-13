@@ -36,4 +36,9 @@
         android:icon="@drawable/ic_list_fr"
         android:title="@string/french_enabled"
         app:actionLayout="@layout/french_enabled" />
+    <item
+        android:id="@+id/menu_paper_price_enabled"
+        android:icon="@drawable/ic_monetization_on_white_24dp"
+        android:title=""
+        app:actionLayout="@layout/paper_price_enabled" />
 </menu>

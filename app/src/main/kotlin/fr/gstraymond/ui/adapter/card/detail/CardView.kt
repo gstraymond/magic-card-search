@@ -8,6 +8,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import fr.gstraymond.R
 import fr.gstraymond.android.CardListActivity
+import fr.gstraymond.android.prefs
 import fr.gstraymond.biz.CastingCostImageGetter
 import fr.gstraymond.biz.SearchOptions
 import fr.gstraymond.constants.FacetConst.LAYOUT
@@ -21,7 +22,7 @@ import fr.gstraymond.utils.startActivity
 import fr.gstraymond.utils.visible
 
 class CardView(val context: Context,
-               val callbacks: CardDetailAdapter.Callbacks) : View<Card>(context, R.layout.card_detail) {
+               val callbacks: CardDetailAdapter.InnerCallbacks) : View<Card>(context, R.layout.card_detail) {
 
     private val castingCostFormatter = CastingCostFormatter()
     private val descFormatter = DescriptionFormatter()
@@ -29,6 +30,8 @@ class CardView(val context: Context,
     private val ptFormatter = PowerToughnessFormatter()
     private val typeFormatter = TypeFormatter()
     private val imageGetter = CastingCostImageGetter.large(context)
+
+    private var showPaper = prefs.paperPrice
 
     override fun getView(card: Card, view: android.view.View): android.view.View {
         val ccptView = view.find<TextView>(R.id.card_textview_ccpt)
@@ -40,6 +43,7 @@ class CardView(val context: Context,
         val formatsView = view.find<TextView>(R.id.card_textview_formats)
         val altView = view.find<Button>(R.id.card_alt)
         val foilHintView = view.find<TextView>(R.id.card_textview_foil_hint)
+        val showPaperView = view.find<TextView>(R.id.card_textview_show_paper)
 
         val ccpt = formatCCPT(card)
         if (ccpt.toString().isEmpty()) ccptView.visibility = android.view.View.GONE
@@ -112,6 +116,15 @@ class CardView(val context: Context,
 
         if (card.publications.any { it.foilPrice > 0 }) foilHintView.visible()
         else foilHintView.gone()
+
+        fun setPaperTitle() { showPaperView.text = context.getString(if (showPaper) R.string.paper_price_enabled else R.string.paper_price_disabled) }
+
+        setPaperTitle()
+        showPaperView.setOnClickListener {
+            callbacks.switchPrice()
+            showPaper = !showPaper
+            setPaperTitle()
+        }
 
         return view
     }

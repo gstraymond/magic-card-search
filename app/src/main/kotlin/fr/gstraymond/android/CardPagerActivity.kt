@@ -29,7 +29,7 @@ class CardPagerActivity : CardCommonActivity(R.layout.activity_card_pager) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        setSupportActionBar(find<Toolbar>(R.id.toolbar))
+        setSupportActionBar(find(R.id.toolbar))
         actionBarSetDisplayHomeAsUpEnabled(true)
 
         replaceFragment(CardPagerFragment(), R.id.card_pager_container, getBundle())
