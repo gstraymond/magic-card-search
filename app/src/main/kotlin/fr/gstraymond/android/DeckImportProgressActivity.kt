@@ -58,7 +58,7 @@ class DeckImportProgressActivity : CustomActivity(R.layout.activity_deck_import_
         urlOrDeck = intent.getStringExtra(FILE_PATH)?.run {
             logView.text = String.format(getString(R.string.import_deck), split("/").last())
             "file://$this"
-        } ?: intent.getStringExtra(DECK_LIST).apply {
+        } ?: intent.getStringExtra(DECK_LIST)!!.apply {
             logView.text = getString(R.string.refreshing)
         }
     }

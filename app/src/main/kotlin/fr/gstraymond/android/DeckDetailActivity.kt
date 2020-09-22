@@ -64,7 +64,7 @@ class DeckDetailActivity : CustomActivity(R.layout.activity_deck_detail), DeckCa
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        deckId = intent.getStringExtra(DECK_EXTRA)
+        deckId = intent.getStringExtra(DECK_EXTRA)!!
 
         val toolbar = find<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
@@ -254,7 +254,7 @@ class DeckDetailActivity : CustomActivity(R.layout.activity_deck_detail), DeckCa
         when (requestCode) {
             DIR_PICKER_CODE -> when (resultCode) {
                 RESULT_CODE_DIR_SELECTED -> {
-                    val path = data!!.getStringExtra(RESULT_SELECTED_DIR)
+                    val path = data!!.getStringExtra(RESULT_SELECTED_DIR)!!
                     val deck = deck()
                     val exportPath = app().deckManager.export(deck, path)
                     val rootView = find<View>(android.R.id.content)
