@@ -145,5 +145,6 @@ object Formats {
     const val COMMANDER = "Commander"
     const val BRAWL = "Brawl"
     const val PAUPER = "Pauper"
-    val ordered = listOf(STANDARD, PIONEER, MODERN, LEGACY, VINTAGE, COMMANDER, BRAWL, PAUPER)
+    const val PENNY = "Penny"
+    val ordered = listOf(STANDARD, PIONEER, MODERN, LEGACY, VINTAGE, COMMANDER, BRAWL, PAUPER, PENNY)
 }
