@@ -48,7 +48,7 @@ class DeckDetailHandFragment : Fragment(), DeckDetailHandAdapter.ClickCallbacks 
     }
 
     private fun displayHand(ids: List<String>? = null) {
-        val deckId = activity!!.intent.getStringExtra(DeckDetailActivity.DECK_EXTRA)
+        val deckId = activity!!.intent.getStringExtra(DeckDetailActivity.DECK_EXTRA)!!
         val cardList = activity!!.app().cardListBuilder.build(deckId.toInt())
         val cards = cardList.flatMap { deckCard -> (1..deckCard.counts.deck).map { deckCard.card } }
 

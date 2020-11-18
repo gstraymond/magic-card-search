@@ -23,9 +23,9 @@ apply plugin: 'kotlin-kapt'
 repositories {
     mavenCentral()
     maven { url 'https://maven.fabric.io/public' }
-    maven { url "http://dl.bintray.com/lukaville/maven" }
+    maven { url "https://dl.bintray.com/lukaville/maven" }
     maven { url "https://jitpack.io" }
-    maven { url 'http://guardian.github.com/maven/repo-releases' }
+    maven { url 'https://guardian.github.io/maven/repo-releases/' }
 }
 
 android {
@@ -35,14 +35,8 @@ android {
         applicationId "mtg.magic.search.deck.builder"
         minSdkVersion 14
         targetSdkVersion 29
-        versionCode 88
-        versionName "3.9.1"
-
-        javaCompileOptions {
-            annotationProcessorOptions {
-                includeCompileClasspath false
-            }
-        }
+        versionCode 89
+        versionName "3.9.2"
     }
 
     signingConfigs {

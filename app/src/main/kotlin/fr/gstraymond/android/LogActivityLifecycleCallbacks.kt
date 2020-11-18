@@ -16,7 +16,7 @@ class LogActivityLifecycleCallbacks : Application.ActivityLifecycleCallbacks {
     override fun onActivityDestroyed(activity: Activity) =
             log.d("onActivityDestroyed: $activity")
 
-    override fun onActivitySaveInstanceState(activity: Activity, bundle: Bundle?) =
+    override fun onActivitySaveInstanceState(activity: Activity, bundle: Bundle) =
             log.d("onActivitySaveInstanceState: $activity / $bundle")
 
     override fun onActivityStopped(activity: Activity) =

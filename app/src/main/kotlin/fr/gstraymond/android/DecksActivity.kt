@@ -159,8 +159,8 @@ class DecksActivity : CustomActivity(R.layout.activity_decks) {
         }
     }
 
-    override fun onSaveInstanceState(outState: Bundle?) {
-        outState?.putStringArrayList("colors_filters", ArrayList(deckListAdapter.colorFilters))
+    override fun onSaveInstanceState(outState: Bundle) {
+        outState.putStringArrayList("colors_filters", ArrayList(deckListAdapter.colorFilters))
         super.onSaveInstanceState(outState)
     }
 

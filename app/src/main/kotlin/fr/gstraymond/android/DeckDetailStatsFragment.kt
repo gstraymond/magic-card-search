@@ -49,7 +49,7 @@ class DeckDetailStatsFragment : Fragment() {
     fun updateStats() {
         if (activity == null) return
 
-        val deckId = activity!!.intent.getStringExtra(DECK_EXTRA)
+        val deckId = activity!!.intent.getStringExtra(DECK_EXTRA)!!
         val deck = activity!!.app().deckList.getByUid(deckId)!!
         val cardList = activity!!.app().cardListBuilder.build(deckId.toInt())
         if (cardList.isEmpty()) {

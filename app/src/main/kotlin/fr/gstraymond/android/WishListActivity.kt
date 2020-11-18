@@ -137,7 +137,7 @@ class WishListActivity : CustomActivity(R.layout.activity_wishlist) {
         when (requestCode) {
             DIR_PICKER_CODE -> when (resultCode) {
                 DirectoryChooserActivity.RESULT_CODE_DIR_SELECTED -> {
-                    val path = data!!.getStringExtra(DirectoryChooserActivity.RESULT_SELECTED_DIR)
+                    val path = data!!.getStringExtra(DirectoryChooserActivity.RESULT_SELECTED_DIR)!!
                     val exportPath = app().wishlistManager.export(path)
                     val message = String.format(resources.getString(R.string.deck_exported), "Wishlist", exportPath)
                     Snackbar.make(find(android.R.id.content), message, Snackbar.LENGTH_LONG).show()

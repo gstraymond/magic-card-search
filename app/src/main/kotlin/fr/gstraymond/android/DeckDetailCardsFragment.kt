@@ -49,7 +49,7 @@ class DeckDetailCardsFragment : Fragment(), DeckCardCallback, DeckDetailActivity
     private lateinit var notImported: TextView
     private lateinit var formatProblems: TextView
 
-    private val deckId by lazy { activity!!.intent.getStringExtra(DeckDetailActivity.DECK_EXTRA) }
+    private val deckId by lazy { activity!!.intent.getStringExtra(DeckDetailActivity.DECK_EXTRA)!! }
 
     var deckCardCallback: DeckCardCallback? = null
     var board: Board = DECK

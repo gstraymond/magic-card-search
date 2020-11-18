@@ -14,7 +14,7 @@ abstract class CardCommonActivity(layoutId: Int) : CustomActivity(layoutId) {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        card = intent.getParcelableExtra(CARD_EXTRA)
+        card = intent.getParcelableExtra(CARD_EXTRA)!!
         title = card.getLocalizedTitle(this)
     }
 
