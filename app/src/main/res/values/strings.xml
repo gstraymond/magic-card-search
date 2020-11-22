@@ -80,7 +80,7 @@
 
     <string name="decklist_title">Deck Manager</string>
     <string name="decklist_menu_import">Import</string>
-    <string name="decklist_menu_delete">Delete</string>
+    <string name="decklist_menu_delete">Del.</string>
     <string name="decklist_menu_create">Create</string>
 
     <string name="added_to_clipboard">Copied to clipboard !</string>
@@ -91,8 +91,11 @@
 
     <string name="deckdetails_menu_add">Add</string>
     <string name="deckdetails_delete_title">Delete deck?</string>
+    <string name="deckdetails_clone_title">Clone deck?</string>
     <string name="deckdetails_delete_ok">Delete</string>
     <string name="deckdetails_delete_cancel">Cancel</string>
+    <string name="deckdetails_clone_ok">Clone</string>
+    <string name="deckdetails_clone_cancel">Cancel</string>
     <string name="deckdetails_cards_empty">Deck is empty.\n\nAdd any card with the DECK button on search results.</string>
 
     <string name="stats_format">Format \"%1$s\"</string>
@@ -126,6 +129,7 @@
     <string name="deck_exported">%1$s has been exported to: %2$s</string>
     <string name="snackbar_show">Browse</string>
     <string name="decklist_menu_refresh">Refresh</string>
+    <string name="decklist_menu_duplicate">Clone</string>
     <string name="abilities">Abilities</string>
     <string name="deckdetails_refresh_title">Refresh deck data?</string>
     <string name="deckdetails_refresh_message">Decks are stored on device. This will synchronize and update data like card prices, formats validity.</string>
@@ -218,4 +222,5 @@
     <string name="decks_sort_spinner_alpha">Sort by name</string>
     <string name="paper_price_enabled">Paper prices</string>
     <string name="paper_price_disabled">MTGO prices</string>
+    <string name="deck_detail_clone_deck_success">%1$s has been added to your decks</string>
 </resources>

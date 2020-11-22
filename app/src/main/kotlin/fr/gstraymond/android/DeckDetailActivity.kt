@@ -15,6 +15,7 @@ import android.widget.*
 import android.widget.TextView.BufferType.EDITABLE
 import androidx.appcompat.widget.Toolbar
 import androidx.viewpager.widget.ViewPager
+import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.snackbar.Snackbar.LENGTH_LONG
 import com.google.android.material.snackbar.Snackbar.make
 import com.google.android.material.tabs.TabLayout
@@ -26,6 +27,7 @@ import fr.gstraymond.biz.ExportFormat.MTG_ARENA
 import fr.gstraymond.biz.Formats
 import fr.gstraymond.models.Board
 import fr.gstraymond.models.DeckCard
+import fr.gstraymond.models.DeckLine
 import fr.gstraymond.utils.*
 import net.rdrei.android.dirchooser.DirectoryChooserActivity
 import net.rdrei.android.dirchooser.DirectoryChooserActivity.*
@@ -53,6 +55,7 @@ class DeckDetailActivity : CustomActivity(R.layout.activity_deck_detail), DeckCa
     private val delete by lazy { find<TextView>(R.id.toolbar_delete) }
     private val export by lazy { find<TextView>(R.id.toolbar_export) }
     private val refresh by lazy { find<TextView>(R.id.toolbar_refresh) }
+    private val duplicate by lazy { find<TextView>(R.id.toolbar_duplicate) }
     private val tabLayout by lazy { find<TabLayout>(R.id.sliding_tabs) }
     private val formatChooser by lazy { find<Spinner>(R.id.format_chooser) }
     private val clipboardManager by lazy { getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager }
@@ -86,6 +89,9 @@ class DeckDetailActivity : CustomActivity(R.layout.activity_deck_detail), DeckCa
         tabLayout.setupWithViewPager(viewPager)
 
         delete.setOnClickListener { createDeleteDialog() }
+
+        duplicate.setOnClickListener { createCloneDialog() }
+
         val exportOptions = arrayOf(
                 getString(R.string.deck_detail_export_deck_file),
                 getString(R.string.deck_detail_export_deck_clipboard)
@@ -215,6 +221,31 @@ class DeckDetailActivity : CustomActivity(R.layout.activity_deck_detail), DeckCa
                     finish()
                 }
                 .setNegativeButton(getString(R.string.deckdetails_delete_cancel)) { _, _ -> }
+                .show()
+    }
+
+    private fun createCloneDialog() {
+        val view = inflate(R.layout.activity_deck_detail_clone)
+        val editText = view.find<EditText>(R.id.deck_detail_clone).apply {
+            val deckName = deck().name
+            setText(deckName, EDITABLE)
+            post {
+                setSelection(deckName.length)
+                requestFocus()
+                val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                imm.showSoftInput(this, InputMethodManager.SHOW_IMPLICIT)
+            }
+        }
+        AlertDialog.Builder(this)
+                .setView(view)
+                .setTitle(getString(R.string.deckdetails_clone_title))
+                .setPositiveButton(getString(R.string.deckdetails_clone_ok)) { _, _ ->
+                    val newName = editText.text.toString()
+                    app().deckManager.clone(deck(), newName)
+                    val message = String.format(getString(R.string.deck_detail_clone_deck_success), newName)
+                    make(find(android.R.id.content), message, LENGTH_LONG).show()
+                }
+                .setNegativeButton(getString(R.string.deckdetails_clone_cancel)) { _, _ -> }
                 .show()
     }
 
