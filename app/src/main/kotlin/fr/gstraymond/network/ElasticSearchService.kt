@@ -21,8 +21,9 @@ class ElasticSearchService(private val elasticSearchApi: ElasticSearchApi) {
         elasticSearchApi.autocomplete(it)
     }
 
-    fun resolve(query: String): Result<SearchResult>? = execute(query) {
-        elasticSearchApi.resolve(it)
+    fun resolve(query: String,
+                size: Int): Result<SearchResult>? = execute(query) {
+        elasticSearchApi.resolve(it.replace("!", ""), size)
     }
 
     fun getMtgRules(document: String): Result<RulesResult>? = execute(document) {
