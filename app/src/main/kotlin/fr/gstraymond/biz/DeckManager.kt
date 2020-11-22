@@ -38,6 +38,23 @@ class DeckManager(private val deckList: DeckList,
         return deckId
     }
 
+    fun clone(deck: Deck, name: String) {
+        val deckId = deckList.getLastId() + 1
+        val cards = cardListBuilder.build(deck.id).all()
+        cardListBuilder.build(deckId).save(cards)
+        val deckStats = DeckStats(cards, Deck.isCommander(deck.maybeFormat))
+        deckList.addOrRemove(Deck(
+                id = deckId,
+                timestamp = Date(),
+                name = name,
+                maybeFormat = deck.maybeFormat,
+                colors = deckStats.colors,
+                deckSize = deckStats.deckSize,
+                sideboardSize = deckStats.sideboardSize,
+                maybeboardSize = deckStats.maybeboardSize,
+                cardsNotImported = deck.cardsNotImported))
+    }
+
     fun delete(deck: Deck) {
         cardListBuilder.build(deck.id).clear()
         deckList.delete(deck)
