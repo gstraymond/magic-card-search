@@ -4,29 +4,30 @@ import java.net.URLEncoder
 
 object LinkGenerator {
 
-    private const val host = "https://rover.ebay.com/rover/1/711-53200-19255-0/1"
+    private const val host = "https://www.ebay.com/sch/i.html"
 
     private val defaultParams = mapOf(
-            "icep_ff3" to "9",
-            "pub" to "5575261879",
-            "toolid" to "10001",
+            "LH_CAds" to "",
+            "_ex_kw" to "",
+            "_fpos" to "",
+            "_fspt" to "1",
+            "_mPrRngCbx" to "1",
+            "_sacat" to "38292",
+            "_sadis" to "",
+            "_sop" to "12",
+            "_udhi" to "",
+            "_udlo" to "",
+            "_fosrp" to "1",
+            "mkrid" to "711-53200-19255-0",
+            "siteid" to "0",
+            "mkcid" to "1",
             "campid" to "5338021458",
-            "customid" to "",
-            "icep_sellerId" to "",
-            "icep_ex_kw" to "",
-            "icep_sortBy" to "12",
-            "icep_catId" to "38292",
-            "icep_minPrice" to "",
-            "icep_maxPrice" to "",
-            "ipn" to "psmain",
-            "icep_vectorid" to "229466",
-            "kwid" to "902099",
-            "mtid" to "824",
-            "kw" to "lg"
+            "toolid" to "10001",
+            "mkevt" to "1",
     )
 
     fun generate(keywords: String): String {
-        val allParams = defaultParams + ("icep_uq" to URLEncoder.encode(keywords, "utf-8"))
+        val allParams = defaultParams + ("_nkw" to URLEncoder.encode(keywords, "utf-8"))
 
         val params = allParams
                 .map { "${it.key}=${it.value}" }
