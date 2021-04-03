@@ -223,4 +223,7 @@
     <string name="paper_price_enabled">Paper prices</string>
     <string name="paper_price_disabled">MTGO prices</string>
     <string name="deck_detail_clone_deck_success">%1$s has been added to your decks</string>
+    <string name="card_deck_empty_text">This card is not in your decks</string>
+    <string name="card_deck_legend">Deck / Side / Swap</string>
+    <string name="card_deck_count">This card is in %1$s of your decks</string>
 </resources>
