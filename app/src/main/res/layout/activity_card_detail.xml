@@ -71,6 +71,19 @@
             android:textColor="@android:color/white"
             android:textStyle="bold" />
 
+        <TextView
+            android:id="@+id/card_detail_deck"
+            style="@android:style/TextAppearance.Medium"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="16dp"
+            android:layout_toLeftOf="@id/card_detail_ebay"
+            android:text="DECK"
+            android:textAllCaps="true"
+            android:textColor="@android:color/white"
+            android:textStyle="bold" />
+
     </RelativeLayout>
 
     <FrameLayout

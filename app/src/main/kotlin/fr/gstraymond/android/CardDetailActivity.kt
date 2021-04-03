@@ -1,14 +1,18 @@
 package fr.gstraymond.android
 
+import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import android.widget.TextView
+import com.magic.card.search.commons.json.MapperUtil
 import fr.gstraymond.R
 import fr.gstraymond.affiliate.ebay.LinkGenerator
 import fr.gstraymond.android.fragment.CardDetailFragment
+import fr.gstraymond.biz.ExportFormat
+import fr.gstraymond.models.DeckCard
 import fr.gstraymond.models.search.response.Card
 import fr.gstraymond.models.search.response.getLocalizedTitle
 import fr.gstraymond.ui.adapter.CardDetailViews
@@ -30,6 +34,7 @@ class CardDetailActivity : CardCommonActivity(R.layout.activity_card_detail),
     private val rootView by lazy { find<View>(android.R.id.content) }
     private val picsView by lazy { find<TextView>(R.id.card_detail_pics) }
     private val ebayView by lazy { find<TextView>(R.id.card_detail_ebay) }
+    private val deckView by lazy { find<TextView>(R.id.card_detail_deck) }
     private val favoriteView by lazy { CardDetailViews(app(), this, ShareViewCallbacks()) }
 
     private inner class ShareViewCallbacks : ShareView.ShareViewCallbacks {
@@ -58,6 +63,10 @@ class CardDetailActivity : CardCommonActivity(R.layout.activity_card_detail),
                     data = Uri.parse(LinkGenerator.generate(card.title))
                 }
             }
+        }
+
+        deckView.setOnClickListener {
+            startActivity { CardDeckActivity.getIntent(this, card) }
         }
     }
 
