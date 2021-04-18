@@ -1,13 +1,10 @@
 package fr.gstraymond.android
 
-import android.Manifest.permission.READ_EXTERNAL_STORAGE
-import android.Manifest.permission.WRITE_EXTERNAL_STORAGE
 import android.app.AlertDialog
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.View
 import android.view.inputmethod.InputMethodManager
@@ -15,7 +12,6 @@ import android.widget.*
 import android.widget.TextView.BufferType.EDITABLE
 import androidx.appcompat.widget.Toolbar
 import androidx.viewpager.widget.ViewPager
-import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.snackbar.Snackbar.LENGTH_LONG
 import com.google.android.material.snackbar.Snackbar.make
 import com.google.android.material.tabs.TabLayout
@@ -27,12 +23,10 @@ import fr.gstraymond.biz.ExportFormat.MTG_ARENA
 import fr.gstraymond.biz.Formats
 import fr.gstraymond.models.Board
 import fr.gstraymond.models.DeckCard
-import fr.gstraymond.models.DeckLine
-import fr.gstraymond.utils.*
-import net.rdrei.android.dirchooser.DirectoryChooserActivity
-import net.rdrei.android.dirchooser.DirectoryChooserActivity.*
-import net.rdrei.android.dirchooser.DirectoryChooserConfig
-
+import fr.gstraymond.utils.app
+import fr.gstraymond.utils.find
+import fr.gstraymond.utils.inflate
+import fr.gstraymond.utils.startActivity
 
 class DeckDetailActivity : CustomActivity(R.layout.activity_deck_detail), DeckCardCallback {
 
@@ -44,7 +38,6 @@ class DeckDetailActivity : CustomActivity(R.layout.activity_deck_detail), DeckCa
                     putExtra(DECK_EXTRA, deckId)
                 }
 
-        private const val REQUEST_STORAGE_CODE = 2000
         private const val DIR_PICKER_CODE = 2001
     }
 
@@ -59,8 +52,6 @@ class DeckDetailActivity : CustomActivity(R.layout.activity_deck_detail), DeckCa
     private val tabLayout by lazy { find<TabLayout>(R.id.sliding_tabs) }
     private val formatChooser by lazy { find<Spinner>(R.id.format_chooser) }
     private val clipboardManager by lazy { getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager }
-
-    private val perms = arrayOf(READ_EXTERNAL_STORAGE, WRITE_EXTERNAL_STORAGE)
 
     private fun deck() = app().deckList.getByUid(deckId)!!
 
@@ -101,13 +92,7 @@ class DeckDetailActivity : CustomActivity(R.layout.activity_deck_detail), DeckCa
             builder.setTitle(getString(R.string.deck_detail_export_deck))
                     .setItems(exportOptions) { _, which ->
                         when (which) {
-                            0 -> {
-                                if (!hasPerms(*perms)) {
-                                    requestPerms(REQUEST_STORAGE_CODE, *perms)
-                                } else {
-                                    startDirPicker()
-                                }
-                            }
+                            0 -> startDirPicker()
                             1 -> {
                                 val deck = deck()
                                 val exportLines = app().deckManager.export(deck, MTG_ARENA)
@@ -179,16 +164,12 @@ class DeckDetailActivity : CustomActivity(R.layout.activity_deck_detail), DeckCa
     }
 
     private fun startDirPicker() {
-        val chooserIntent = Intent(this, DirectoryChooserActivity::class.java).apply {
-            val config = DirectoryChooserConfig.builder()
-                    .newDirectoryName("decks")
-                    .allowNewDirectoryNameModification(true)
-                    .build()
-
-            putExtra(EXTRA_CONFIG, config)
+        val intent = Intent(Intent.ACTION_CREATE_DOCUMENT).apply {
+            addCategory(Intent.CATEGORY_OPENABLE)
+            type = "text/plain"
+            putExtra(Intent.EXTRA_TITLE, app().deckManager.normalizeName(deck()) + ".txt")
         }
-
-        startActivityForResult(chooserIntent, DIR_PICKER_CODE)
+        startActivityForResult(intent, DIR_PICKER_CODE)
     }
 
     private fun createTitleDialog() {
@@ -257,7 +238,7 @@ class DeckDetailActivity : CustomActivity(R.layout.activity_deck_detail), DeckCa
                     val deck = deck()
                     startActivity {
                         val deckList = app().deckManager.export(deck, MAGIC_WORKSTATION).joinToString("\n")
-                        DeckImportProgressActivity.getIntentForDeckList(this, deckList, deck.maybeFormat)
+                        DeckImportProgressActivity.getIntent(this, deckList, deck.maybeFormat, false)
                     }
                     finish()
                     app().deckManager.delete(deck)
@@ -271,23 +252,14 @@ class DeckDetailActivity : CustomActivity(R.layout.activity_deck_detail), DeckCa
         deckTitle.text = deckName
     }
 
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
-        when (requestCode) {
-            REQUEST_STORAGE_CODE -> if (grantResults.all { it == PackageManager.PERMISSION_GRANTED }) {
-                startDirPicker()
-            }
-        }
-    }
-
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
         when (requestCode) {
-            DIR_PICKER_CODE -> when (resultCode) {
-                RESULT_CODE_DIR_SELECTED -> {
-                    val path = data!!.getStringExtra(RESULT_SELECTED_DIR)!!
+            DIR_PICKER_CODE -> {
+                data?.data?.let { path ->
                     val deck = deck()
-                    val exportPath = app().deckManager.export(deck, path)
+                    val exportPath = app().deckManager.export(deck, path, contentResolver, this)
                     val rootView = find<View>(android.R.id.content)
                     val message = String.format(resources.getString(R.string.deck_exported), deck.name, exportPath)
                     make(rootView, message, LENGTH_LONG).show()

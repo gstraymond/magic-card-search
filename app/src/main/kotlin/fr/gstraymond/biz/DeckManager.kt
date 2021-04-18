@@ -1,5 +1,9 @@
 package fr.gstraymond.biz
 
+import android.content.ContentResolver
+import android.content.Context
+import android.net.Uri
+import androidx.documentfile.provider.DocumentFile
 import fr.gstraymond.biz.ExportFormat.MAGIC_WORKSTATION
 import fr.gstraymond.biz.ExportFormat.MTG_ARENA
 import fr.gstraymond.db.json.CardListMigrator
@@ -7,7 +11,7 @@ import fr.gstraymond.db.json.DeckCardListBuilder
 import fr.gstraymond.db.json.DeckList
 import fr.gstraymond.models.*
 import fr.gstraymond.models.search.response.Publication
-import java.io.File
+import java.nio.charset.Charset
 import java.text.Normalizer
 import java.util.*
 
@@ -60,14 +64,11 @@ class DeckManager(private val deckList: DeckList,
         deckList.delete(deck)
     }
 
-    fun export(deck: Deck, path: String): String {
-        val files = File(path).listFiles().map { it.name }
-        val deckName = findUniqueName(files, normalizeName(deck))
-        val targetPath = "$path/$deckName"
-        File(targetPath).printWriter().use {
+    fun export(deck: Deck, path: Uri, contentResolver: ContentResolver, context: Context): String {
+        contentResolver.openOutputStream(path)!!.writer(Charset.defaultCharset()).use {
             export(deck, MAGIC_WORKSTATION).forEach { line -> it.write(line + "\n") }
         }
-        return targetPath
+        return DocumentFile.fromSingleUri(context, path)?.name ?: ""
     }
 
     fun export(deck: Deck,
@@ -98,25 +99,12 @@ class DeckManager(private val deckList: DeckList,
 
     private val mtgaSetMapping = mapOf("DOM" to "DAR")
 
-    private fun normalizeName(deck: Deck) =
+    fun normalizeName(deck: Deck) =
             Normalizer
                     .normalize(deck.name.toLowerCase(), Normalizer.Form.NFD)
                     .replace(" ", "_")
                     .replace("-", "_")
                     .replace("[^A-Za-z0-9_]".toRegex(), "")
-
-    private fun findUniqueName(files: List<String>, deckName: String): String {
-        val targetName = "$deckName.mwdeck"
-        return if (files.contains(targetName)) {
-            if (deckName.last().isDigit() && deckName.contains("_")) {
-                val rootName = deckName.dropLastWhile { it != '_' }
-                val counter = deckName.takeLastWhile { it != '_' }.toInt() + 1
-                findUniqueName(files, "$rootName$counter")
-            } else findUniqueName(files, "${deckName}_1")
-        } else {
-            targetName
-        }
-    }
 }
 
 enum class ExportFormat {
