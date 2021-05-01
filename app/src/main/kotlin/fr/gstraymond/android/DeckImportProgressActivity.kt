@@ -24,15 +24,10 @@ class DeckImportProgressActivity : CustomActivity(R.layout.activity_deck_import_
 
         const val WISHLIST_RESULT = -1
 
-        fun getIntent(context: Context, filePath: String, wishlist: Boolean) =
-                Intent(context, DeckImportProgressActivity::class.java).apply {
-                    putExtra(FILE_PATH, filePath)
-                    putExtra(WISHLIST, wishlist)
-                }
-
-        fun getIntentForDeckList(context: Context, deckList: String, maybeFormat: String?) =
+        fun getIntent(context: Context, deckList: String, maybeFormat: String?, wishlist: Boolean) =
                 Intent(context, DeckImportProgressActivity::class.java).apply {
                     putExtra(DECK_LIST, deckList)
+                    putExtra(WISHLIST, wishlist)
                     maybeFormat?.let { putExtra(FORMAT, it) }
                 }
     }

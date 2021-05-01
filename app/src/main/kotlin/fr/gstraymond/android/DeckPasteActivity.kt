@@ -31,7 +31,7 @@ class DeckPasteActivity : CustomActivity(R.layout.activity_deck_paste) {
             val data = editText.text.toString()
             if (data.isNotBlank()) {
                 startActivity {
-                    DeckImportProgressActivity.getIntentForDeckList(this, data, null)
+                    DeckImportProgressActivity.getIntent(this, data, null, false)
                 }
                 finish()
             }

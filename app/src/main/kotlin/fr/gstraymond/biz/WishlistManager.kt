@@ -1,34 +1,21 @@
 package fr.gstraymond.biz
 
+import android.content.ContentResolver
+import android.content.Context
+import android.net.Uri
+import androidx.documentfile.provider.DocumentFile
 import fr.gstraymond.db.json.WishList
 import fr.gstraymond.models.DeckLine
 import fr.gstraymond.models.ImportResult
-import java.io.File
+import java.nio.charset.Charset
 
 class WishlistManager(val wishlist: WishList) {
 
-    fun export(path: String): String {
-        val files = File(path).listFiles().map { it.name }
-        val filename = findUniqueName(files)
-        val targetPath = "$path/$filename"
-        File(targetPath).printWriter().use {
+    fun export(path: Uri, contentResolver: ContentResolver, context: Context): String {
+        contentResolver.openOutputStream(path)!!.writer(Charset.defaultCharset()).use {
             wishlist.all().forEach { card -> it.write(card.title + "\n") }
         }
-        return targetPath
-    }
-
-    private fun findUniqueName(files: List<String>,
-                               deckName: String = "wishlist"): String {
-        val targetName = "$deckName.txt"
-        return if (files.contains(targetName)) {
-            if (deckName.last().isDigit() && deckName.contains("_")) {
-                val rootName = deckName.dropLastWhile { it != '_' }
-                val counter = deckName.takeLastWhile { it != '_' }.toInt() + 1
-                findUniqueName(files, "$rootName$counter")
-            } else findUniqueName(files, "${deckName}_1")
-        } else {
-            targetName
-        }
+        return DocumentFile.fromSingleUri(context, path)?.name ?: ""
     }
 
     fun replace(cards: List<ImportResult>) {

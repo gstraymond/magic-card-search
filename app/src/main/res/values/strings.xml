@@ -126,7 +126,7 @@
     <string name="go_back">Go back</string>
     <string name="bad_format">Unable to parse deck: unrecognized format</string>
     <string name="decklist_menu_export">Export</string>
-    <string name="deck_exported">%1$s has been exported to: %2$s</string>
+    <string name="deck_exported">%1$s has been exported as: %2$s</string>
     <string name="snackbar_show">Browse</string>
     <string name="decklist_menu_refresh">Refresh</string>
     <string name="decklist_menu_duplicate">Clone</string>
