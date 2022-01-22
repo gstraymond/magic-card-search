@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
-import androidx.appcompat.widget.Toolbar
 import fr.gstraymond.R
 import fr.gstraymond.android.fragment.CardPagerFragment
 import fr.gstraymond.models.search.response.Card
@@ -13,7 +12,7 @@ import fr.gstraymond.utils.find
 class CardPagerActivity : CardCommonActivity(R.layout.activity_card_pager) {
 
     companion object {
-        val POSITION_EXTRA = "position"
+        const val POSITION_EXTRA = "position"
 
         fun getIntent(context: Context, card: Card) =
                 Intent(context, CardPagerActivity::class.java).apply {
@@ -30,7 +29,7 @@ class CardPagerActivity : CardCommonActivity(R.layout.activity_card_pager) {
         super.onCreate(savedInstanceState)
 
         setSupportActionBar(find(R.id.toolbar))
-        actionBarSetDisplayHomeAsUpEnabled(true)
+        true.actionBarSetDisplayHomeAsUpEnabled()
 
         replaceFragment(CardPagerFragment(), R.id.card_pager_container, getBundle())
     }

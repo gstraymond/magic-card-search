@@ -33,7 +33,7 @@ class HistoryActivity : CustomActivity(R.layout.activity_history) {
         super.onCreate(savedInstanceState)
 
         setSupportActionBar(find(R.id.toolbar))
-        actionBarSetDisplayHomeAsUpEnabled(true)
+        true.actionBarSetDisplayHomeAsUpEnabled()
 
         showHistory()
     }

@@ -15,6 +15,7 @@ import fr.gstraymond.android.adapter.RulesAdapter
 import fr.gstraymond.android.adapter.RulesCallback
 import fr.gstraymond.db.json.LazyJsonList
 import fr.gstraymond.utils.*
+import kotlin.math.min
 
 class RulesActivity : CustomActivity(R.layout.activity_rules), RulesCallback, LazyJsonList.LoadingCallback {
 
@@ -91,7 +92,7 @@ class RulesActivity : CustomActivity(R.layout.activity_rules), RulesCallback, La
                 object : SearchView.OnQueryTextListener {
                     override fun onQueryTextChange(text: String): Boolean {
                         synchronized(this@RulesActivity) {
-                            val tokens = text.toLowerCase().split(" ").filter { it.isNotBlank() }
+                            val tokens = text.lowercase().split(" ").filter { it.isNotBlank() }
                             searchResults = tokens.foldIndexed(setOf<Int>()) { index, acc, word ->
                                 when (index) {
                                     0 -> ruleList.trie.get(word)
@@ -181,7 +182,7 @@ class RulesActivity : CustomActivity(R.layout.activity_rules), RulesCallback, La
     }
 
     private fun updateResult() {
-        searchStatus.text = "%s/%s".format(Math.min(searchResults.size, searchPosition + 1), searchResults.size)
+        searchStatus.text = "%s/%s".format(min(searchResults.size, searchPosition + 1), searchResults.size)
     }
 
     override fun browse(url: String) = startActivity {

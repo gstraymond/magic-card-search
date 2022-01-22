@@ -11,7 +11,7 @@ import fr.gstraymond.network.ElasticSearchService
 
 class AutocompleteProcessor(private val mapperUtil: MapperUtil<AutocompleteRequest>,
                             private val searchService: ElasticSearchService,
-                            private val callbacks: AutocompleteProcessor.Callbacks) : AsyncTask<String, String, AutocompleteResult>() {
+                            private val callbacks: Callbacks) : AsyncTask<String, String, AutocompleteResult>() {
 
     private val log = Log(this)
 

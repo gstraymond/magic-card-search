@@ -71,9 +71,9 @@ class DeckDetailStatsFragment : Fragment() {
 
                 val typeDistribution = listOf(StringChart(resources.getString(R.string.stats_type_distribution), deckStats.typeDistribution(context!!)))
 
-                elements = listOf(getText(R.string.stats_total_price, "${deckStats.deckPrice}")) +
+                elements = listOf(getText(R.string.stats_total_price, deckStats.deckPrice)) +
                         (if (deck.isCommander()) listOf()
-                        else listOf(getText(R.string.stats_sideboard_price, "${deckStats.sideboardPrice}"))) +
+                        else listOf(getText(R.string.stats_sideboard_price, deckStats.sideboardPrice))) +
                         listOf(IntChart(resources.getString(R.string.stats_mana_curve), deckStats.manaCurve)) +
                         colorDistribution +
                         typeDistribution +

@@ -71,7 +71,7 @@ class DeckDetailCardsAdapter(private val app: CustomApplication,
         val grouped = app.cardListBuilder.build(deckId).all().filter { getMult(it) > 0 }.groupBy { types(it.card.type) }
         cards = CardTypes.values().flatMap {
             grouped[it]?.run {
-                val header = getText("card_type_${it.name.toLowerCase()}", "${sumBy { getMult(it) }}")
+                val header = getText("card_type_${it.name.lowercase()}", "${sumOf(this@DeckDetailCardsAdapter::getMult)}")
                 listOf(header) + sortedWith(comparator)
             } ?: listOf()
         }

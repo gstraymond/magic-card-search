@@ -215,7 +215,7 @@ class CardListActivity : CustomActivity(R.layout.activity_card_list),
             resetTextView.gone()
         }
 
-        actionBarSetHomeButtonEnabled(true)
+        true.actionBarSetHomeButtonEnabled()
 
         ChangeLog(this).apply {
             if (firstRun()) logDialog.show()

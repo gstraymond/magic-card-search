@@ -47,14 +47,13 @@ class LinearCardArrayAdapter(private val view: View,
 
     private val cardViews = data.cards?.run {
         FavoriteCardViews(context, this, FavoriteViewClickCallbacks())
-    } ?: {
-        DeckCardViews(
-                context,
-                view.context.applicationContext as CustomApplication,
-                data.deck!!.first.id,
-                dataUpdater.getCurrentSearch().board,
-                DeckCardClickCallbacks())
-    }()
+    } ?: DeckCardViews(
+        context,
+        view.context.applicationContext as CustomApplication,
+        data.deck!!.first.id,
+        dataUpdater.getCurrentSearch().board,
+        DeckCardClickCallbacks()
+    )
 
     private inner class FavoriteViewClickCallbacks : CardClickCallbacks {
 

@@ -55,7 +55,7 @@ class DeckDetailHandFragment : Fragment(), DeckDetailHandAdapter.ClickCallbacks 
         if (cards.size < 7) return
 
         deckDetailHandAdapter.cards =
-                if (ids != null && ids.all { cards.map { it.getId() }.contains(it) }) {
+                if (ids != null && ids.all { cards.map { it1 -> it1.getId() }.contains(it) }) {
                     ids.map { id -> cards.first { it.getId() == id } }
                 } else {
                     cards.shuffled()

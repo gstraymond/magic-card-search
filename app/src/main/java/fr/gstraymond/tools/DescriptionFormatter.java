@@ -13,7 +13,7 @@ import fr.gstraymond.models.search.response.Card;
 
 public class DescriptionFormatter {
 
-    private Pattern pattern;
+    private final Pattern pattern;
 
     public DescriptionFormatter() {
         this.pattern = Pattern.compile("\\{(.*?)\\}");
@@ -42,7 +42,7 @@ public class DescriptionFormatter {
         if (highlight) {
             /*for (String keywordAction: KeywordActions.ALL) {
                 join = join.replaceAll(keywordAction + " ", "<b>" + keywordAction + "</b> ");
-                join = join.replaceAll(keywordAction.toLowerCase() + " ", "<b>" + keywordAction.toLowerCase() + "</b> ");
+                join = join.replaceAll(keywordAction.lowercase() + " ", "<b>" + keywordAction.lowercase() + "</b> ");
             }*/
             for (String keywordAction : KeywordAbilities.ALL) {
                 join = join.replaceAll(keywordAction, "<b>" + keywordAction + "</b>");

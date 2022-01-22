@@ -15,5 +15,5 @@ class DeckList(context: Context,
 
     override fun Deck.uid() = id.toString()
 
-    fun getLastId() = elems.map(Deck::id).max() ?: 0
+    fun getLastId() = elems.map(Deck::id).maxOrNull() ?: 0
 }

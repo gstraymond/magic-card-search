@@ -26,7 +26,7 @@ data class Request(val query: Query,
                         sort = when {
                             options.sort != null -> {
                                 options.sort!!.split(",").map {
-                                    it.split(":").let { it[0] to Order(it[1]) }
+                                    it.split(":").let { it1 -> it1[0] to Order(it1[1]) }
                                 }.toMap()
                             }
                             SearchOptions.QUERY_ALL == options.query && !options.random -> mapOf("_id" to Order())

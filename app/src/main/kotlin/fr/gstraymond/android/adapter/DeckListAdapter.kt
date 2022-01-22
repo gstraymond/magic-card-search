@@ -42,7 +42,7 @@ class DeckListAdapter(private val context: Context) : RecyclerView.Adapter<Recyc
                         .fold(listOf()) { acc, (headers, decks) ->
                             acc + listOf("$headers (${decks.size})") + decks
                         }
-                SortTypes.Alpha -> filteredDecks.sortedBy { it.name.toLowerCase() }
+                SortTypes.Alpha -> filteredDecks.sortedBy { it.name.lowercase() }
             }
 
             field = filteredDecks

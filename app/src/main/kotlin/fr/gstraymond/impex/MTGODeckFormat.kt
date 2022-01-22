@@ -13,7 +13,7 @@ class MTGODeckFormat : DeckFormat {
             .filter(String::isNotEmpty)
             .all { it.first().isDigit() || isSideboard(it) }
 
-    private fun isSideboard(line: String) = line.toLowerCase().contains(SIDEBOARD)
+    private fun isSideboard(line: String) = line.lowercase().contains(SIDEBOARD)
 
     override fun parse(line: String, board: Board): DeckTextLine {
         val (occ, title) = line.split(Regex(" "), 2)
@@ -30,6 +30,6 @@ class MTGODeckFormat : DeckFormat {
             url.getParameters()
                     .values
                     .plus(url.getPathSegment().last())
-                    .run { maxBy { it.length } ?: first() }
+                    .run { maxByOrNull { it.length } ?: first() }
     } ?: "Deck"
 }

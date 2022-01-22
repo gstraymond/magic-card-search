@@ -46,29 +46,29 @@ class DeckStats(private val cards: List<DeckCard>,
 
     private fun computePrice(board: Board) =
             cards.map {
-                (it.card.publications.map { it.price }.filter { it > 0 }.min()
+                (it.card.publications.map { it.price }.filter { it > 0 }.minOrNull()
                         ?: 0.0) * getCount(it, board)
             }.sum()
 
     private fun formatPrice(double: Double) = "%.2f".format(double)
 
-    val deckSize by lazy { deck.sumBy { it.counts.deck } }
-    val sideboardSize by lazy { sideboard.sumBy { it.counts.sideboard } }
-    val maybeboardSize by lazy { maybeboard.sumBy { it.counts.maybe } }
+    val deckSize by lazy { deck.sumOf { it.counts.deck } }
+    val sideboardSize by lazy { sideboard.sumOf { it.counts.sideboard } }
+    val maybeboardSize by lazy { maybeboard.sumOf { it.counts.maybe } }
 
     val manaCurve by lazy {
         deck
                 .filterNot { it.card.type.run { startsWith("Land") || contains(" Land") } }
                 .groupBy { min(it.card.convertedManaCost, 7) }
-                .mapValues { it.value.sumBy { getDeckCount(it) } }
+                .mapValues { it.value.sumOf { getDeckCount(it) } }
     }
 
     fun colorDistribution(context: Context) =
             deck
                     .flatMap { line -> line.card.colors.filter { Colors.mainColors.contains(it) }.map { it to line } }
                     .groupBy { it.first }
-                    .mapValues { it.value.map { it.second }.distinctBy { it.card }.sumBy { getDeckCount(it) } }
-                    .mapKeys { getString(context, "color_${it.key.toLowerCase()}") }
+                    .mapValues { it.value.map { it.second }.distinctBy { it.card }.sumOf { getDeckCount(it) } }
+                    .mapKeys { getString(context, "color_${it.key.lowercase()}") }
 
     private fun getString(context: Context, id: String) =
             context.resources.getString(context.resources.getIdentifier(id, "string", context.packageName))
@@ -87,7 +87,7 @@ class DeckStats(private val cards: List<DeckCard>,
                         } to line
                     }
                     .groupBy { it.first }
-                    .mapValues { it.value.map { it.second }.sumBy { getDeckCount(it) } }
+                    .mapValues { it.value.map { it.second }.sumOf { getDeckCount(it) } }
 
     val typeCount by lazy {
         val primaryTypes =
@@ -105,9 +105,9 @@ class DeckStats(private val cards: List<DeckCard>,
                     }.distinct()
                     val secondary = secondaryTypes.map { secondaryType ->
                         val secondaryGroup = primaryGroup.filter { it.card.type.contains(secondaryType) }
-                        secondaryType to secondaryGroup.sumBy { getDeckCount(it) }
+                        secondaryType to secondaryGroup.sumOf { getDeckCount(it) }
                     }.toMap()
-                    TypeCount(primaryType, primaryGroup.sumBy { getDeckCount(it) }, secondary)
+                    TypeCount(primaryType, primaryGroup.sumOf { getDeckCount(it) }, secondary)
                 }
                 .sortedBy { -it.count }
     }
@@ -115,7 +115,7 @@ class DeckStats(private val cards: List<DeckCard>,
     val abilitiesCount by lazy {
         try {
             deck.flatMap { it.card.abilities ?: listOf() }.distinct().map { ability ->
-                ability to deck.filter { it.card.abilities.contains(ability) }.sumBy { it.counts.deck }
+                ability to deck.filter { it.card.abilities.contains(ability) }.sumOf { it.counts.deck }
             }.toMap()
         } catch (e: Exception) {
             log.e("${e.message} / $deck", e)

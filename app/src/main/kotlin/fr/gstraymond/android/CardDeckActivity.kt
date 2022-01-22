@@ -45,7 +45,7 @@ class CardDeckActivity : CardCommonActivity(R.layout.activity_card_deck) {
         super.onCreate(savedInstanceState)
 
         setSupportActionBar(findViewById(R.id.toolbar))
-        actionBarSetDisplayHomeAsUpEnabled(true)
+        true.actionBarSetDisplayHomeAsUpEnabled()
 
         val title = find<TextView>(R.id.toolbar_title)
         title.text = card.getLocalizedTitle(this, Card::title) { c, ft -> "$ft (${c.title})" }
@@ -78,9 +78,9 @@ class CardDeckActivity : CardCommonActivity(R.layout.activity_card_deck) {
         val cardTitle = """"title":""" + stringMapper.asJsonString(card.title)
         return deckFiles.map {
             val deck = app().deckList.getByUid(it.replace("deckcard_", ""))
-            deck!! to openFileInput(it).bufferedReader().useLines {
-                it.filter { it.contains(cardTitle) }.map {
-                    val deckCard = deckCardMapper.read(it)
+            deck!! to openFileInput(it).bufferedReader().useLines { it1 ->
+                it1.filter { it2 -> it2.contains(cardTitle) }.map { it2 ->
+                    val deckCard = deckCardMapper.read(it2)
                     deckCard.counts
                 }.toList()
             }

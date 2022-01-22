@@ -22,7 +22,6 @@ import fr.gstraymond.biz.Formats.BRAWL
 import fr.gstraymond.biz.Formats.COMMANDER
 import fr.gstraymond.biz.Formats.STANDARD
 import fr.gstraymond.biz.SearchOptions
-import fr.gstraymond.constants.FacetConst
 import fr.gstraymond.constants.FacetConst.FORMAT
 import fr.gstraymond.constants.FacetConst.TYPE
 import fr.gstraymond.db.json.DeckCardList
@@ -91,10 +90,8 @@ class DeckDetailCardsFragment : Fragment(), DeckCardCallback, DeckDetailActivity
         fabAdd.setOnClickListener {
             startActivity {
                 val searchOptions = deckList.getByUid(deckId)?.maybeFormat?.run {
-                    SearchOptions(facets = mapOf(FacetConst.FORMAT to listOf(getFormat())), deckId = deckId, board = board)
-                } ?: {
-                    SearchOptions.START_SEARCH_OPTIONS().copy(deckId = deckId)
-                }()
+                    SearchOptions(facets = mapOf(FORMAT to listOf(getFormat())), deckId = deckId, board = board)
+                } ?: SearchOptions.START_SEARCH_OPTIONS().copy(deckId = deckId)
                 CardListActivity.getIntent(activity!!, searchOptions)
             }
         }
