@@ -18,6 +18,7 @@ public class FacetConst {
     public static final String COLOR = "colors.exact";
     public static final String DUAL_COLOR = "dualColors.exact";
     public static final String TRIPLE_COLOR = "tripleColors.exact";
+    public static final String QUAD_COLOR = "quadColors.exact";
     public static final String DEVOTION = "devotions";
     public static final String SET = "editions.exact";
     public static final String FORMAT = "formats.exact";
@@ -26,13 +27,15 @@ public class FacetConst {
     public static final String TOUGHNESS = "toughness";
     public static final String TYPE = "type";
     public static final String PRICE = "priceRanges.exact";
+    public static final String MIN_PRICE_PAPER = "minPaperPriceRange.exact";
+    public static final String MIN_PRICE_MTGO = "minMtgoPriceRange.exact";
     public static final String BLOCK = "blocks.exact";
     public static final String LAYOUT = "layout.exact";
     public static final String LAND = "land.exact";
     public static final String SPECIAL = "special.exact";
 
-    private static Map<String, Integer> facetNames;
-    private static List<String> facetOrder;
+    private static final Map<String, Integer> facetNames;
+    private static final List<String> facetOrder;
 
     static {
         facetNames = new HashMap<>();
@@ -41,6 +44,7 @@ public class FacetConst {
         facetNames.put(COLOR, R.string.facet_color);
         facetNames.put(DUAL_COLOR, R.string.facet_dual_color);
         facetNames.put(TRIPLE_COLOR, R.string.facet_triple_color);
+        facetNames.put(QUAD_COLOR, R.string.facet_quad_color);
         facetNames.put(CMC, R.string.facet_cmc);
         facetNames.put(DEVOTION, R.string.facet_devotion);
         facetNames.put(FORMAT, R.string.facet_format);
@@ -52,6 +56,8 @@ public class FacetConst {
         facetNames.put(TYPE, R.string.facet_type);
         facetNames.put(LAYOUT, R.string.layout_type);
         facetNames.put(PRICE, R.string.facet_price);
+        facetNames.put(MIN_PRICE_PAPER, R.string.facet_min_price_paper);
+        facetNames.put(MIN_PRICE_MTGO, R.string.facet_min_price_mtgo);
         facetNames.put(LAND, R.string.facet_land);
         facetNames.put(SPECIAL, R.string.facet_special);
 
@@ -59,6 +65,7 @@ public class FacetConst {
         facetOrder.add(COLOR);
         facetOrder.add(DUAL_COLOR);
         facetOrder.add(TRIPLE_COLOR);
+        facetOrder.add(QUAD_COLOR);
         facetOrder.add(TYPE);
         facetOrder.add(LAND);
         facetOrder.add(LAYOUT);
@@ -73,6 +80,8 @@ public class FacetConst {
         facetOrder.add(POWER);
         facetOrder.add(TOUGHNESS);
         facetOrder.add(PRICE);
+        facetOrder.add(MIN_PRICE_PAPER);
+        facetOrder.add(MIN_PRICE_MTGO);
         facetOrder.add(ARTIST);
 
     }
@@ -89,6 +98,7 @@ public class FacetConst {
         putInFacets(facets, COLOR);
         putInFacets(facets, DUAL_COLOR);
         putInFacets(facets, TRIPLE_COLOR);
+        putInFacets(facets, QUAD_COLOR);
         putInFacets(facets, CMC);
         putInFacets(facets, DEVOTION);
         putInFacets(facets, FORMAT);
@@ -96,6 +106,8 @@ public class FacetConst {
         putInFacets(facets, LAYOUT);
         putInFacets(facets, POWER);
         putInFacets(facets, PRICE);
+        putInFacets(facets, MIN_PRICE_PAPER);
+        putInFacets(facets, MIN_PRICE_MTGO);
         putInFacets(facets, RARITY);
         putInFacets(facets, SPECIAL);
         putInFacets(facets, TOUGHNESS);

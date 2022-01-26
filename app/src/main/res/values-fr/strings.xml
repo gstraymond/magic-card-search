@@ -50,6 +50,7 @@
     <string name="facet_color">Couleur</string>
     <string name="facet_dual_color">Deck bicolore</string>
     <string name="facet_triple_color">Deck tricolore</string>
+    <string name="facet_quad_color">Deck quadricolore</string>
     <string name="facet_cmc">Coût converti de mana</string>
     <string name="facet_devotion">Dévotion</string>
     <string name="facet_format">Format</string>
@@ -60,6 +61,8 @@
     <string name="facet_toughness">Endurance</string>
     <string name="facet_type">Type</string>
     <string name="facet_price">Prix</string>
+    <string name="facet_min_price_paper">Prix min. papier</string>
+    <string name="facet_min_price_mtgo">Prix min. MTGO</string>
     <string name="facet_more">Plus de filtres…</string>
     <string name="block_set">Bloc</string>
     <string name="facet_special">Special</string>
