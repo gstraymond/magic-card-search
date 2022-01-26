@@ -66,12 +66,12 @@ class ShareView(private val app: CustomApplication,
 
             AlertDialog.Builder(context)
                     .setView(dialogView)
-                    .setPositiveButton(R.string.close, { _, _ ->
+                    .setPositiveButton(R.string.close) { _, _ ->
                         if (inWishlist != wishList.contains(card)) {
                             shareViewCallbacks?.wishlistChanged(position)
                         }
-                    })
-                    .create()
+                    }
+                .create()
                     .show()
         }
     }

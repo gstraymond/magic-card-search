@@ -77,14 +77,14 @@ class OcrDetectorProcessor(private val graphicOverlay: GraphicOverlay<OcrGraphic
         if (textBlocks.size > 1) {
             textBlocks.filter {
                 it.value.length < 100 && normTypes(it).any(expectedTypes::contains)
-            }.minBy {
+            }.minByOrNull {
                 it.boundingBox.top
             }?.let { detectedType ->
                 // title is above type / title starts to the same left
                 textBlocks
                         .filterNot { it == detectedType }
                         .filter { it.boundingBox.bottom < detectedType.boundingBox.top }
-                        .minBy { abs(it.boundingBox.left - detectedType.boundingBox.left) }
+                        .minByOrNull { abs(it.boundingBox.left - detectedType.boundingBox.left) }
                         ?.let { detectedTitle ->
 
                             listOf(detectedTitle, detectedType).map {
@@ -105,7 +105,7 @@ class OcrDetectorProcessor(private val graphicOverlay: GraphicOverlay<OcrGraphic
                                         it._source.frenchTitle?.levenshtein(trimmedTitle) ?: Int.MAX_VALUE)
                             }?.filter {
                                 it.second < 5
-                            }?.minBy {
+                            }?.minByOrNull {
                                 it.second
                             }?.let {
                                 cardDetector.onCardDetected(it.first._source)
@@ -116,7 +116,7 @@ class OcrDetectorProcessor(private val graphicOverlay: GraphicOverlay<OcrGraphic
     }
 
     private fun normTypes(it: TextBlock): List<String> {
-        return Normalizer.normalize(it.value.toLowerCase(), Normalizer.Form.NFD).replace(norm, "")
+        return Normalizer.normalize(it.value.lowercase(), Normalizer.Form.NFD).replace(norm, "")
                 .split(" ")
                 .flatMap { it.split("-") }
                 .map { it.replace(":", "") }

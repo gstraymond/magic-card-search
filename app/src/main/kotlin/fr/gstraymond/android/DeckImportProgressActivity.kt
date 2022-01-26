@@ -2,17 +2,20 @@ package fr.gstraymond.android
 
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import android.widget.Button
 import android.widget.TextView
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import fr.gstraymond.R
 import fr.gstraymond.impex.DeckImporterTask
 import fr.gstraymond.ui.adapter.DeckImporterAdapter
 import fr.gstraymond.utils.app
 import fr.gstraymond.utils.find
 import fr.gstraymond.utils.startActivity
+import java.io.BufferedReader
+import java.io.InputStreamReader
 
 class DeckImportProgressActivity : CustomActivity(R.layout.activity_deck_import_progress) {
 
@@ -30,6 +33,12 @@ class DeckImportProgressActivity : CustomActivity(R.layout.activity_deck_import_
                     putExtra(WISHLIST, wishlist)
                     maybeFormat?.let { putExtra(FORMAT, it) }
                 }
+
+        fun getIntent(context: Context, path: Uri) =
+                Intent(context, DeckImportProgressActivity::class.java).apply {
+                    putExtra(FILE_PATH, path.toString())
+                    putExtra(WISHLIST, false)
+                }
     }
 
     private val logView by lazy { find<TextView>(R.id.deck_importer_log) }
@@ -39,7 +48,7 @@ class DeckImportProgressActivity : CustomActivity(R.layout.activity_deck_import_
     private val adapter by lazy { DeckImporterAdapter(this) }
     private val layoutManager by lazy { LinearLayoutManager(this) }
 
-    private lateinit var urlOrDeck: String
+    private lateinit var deckAsString: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,9 +59,16 @@ class DeckImportProgressActivity : CustomActivity(R.layout.activity_deck_import_
             it.adapter = adapter
         }
 
-        urlOrDeck = intent.getStringExtra(FILE_PATH)?.run {
-            logView.text = String.format(getString(R.string.import_deck), split("/").last())
-            "file://$this"
+        deckAsString = intent.getStringExtra(FILE_PATH)?.run {
+            val stream = contentResolver.openInputStream(Uri.parse(this))
+            val reader = BufferedReader(InputStreamReader(stream))
+            val total = StringBuilder()
+            var line: String?
+            while (reader.readLine().also { line = it } != null) {
+                total.append(line).append('\n')
+            }
+            logView.text = String.format(getString(R.string.import_deck), this.split("/").last())
+            total.toString()
         } ?: intent.getStringExtra(DECK_LIST)!!.apply {
             logView.text = getString(R.string.refreshing)
         }
@@ -68,7 +84,7 @@ class DeckImportProgressActivity : CustomActivity(R.layout.activity_deck_import_
                 process,
                 intent.getStringExtra(FORMAT),
                 intent.getBooleanExtra(WISHLIST, false)
-        ).execute(urlOrDeck)
+        ).execute(deckAsString)
     }
 
     private val process = object : DeckImporterTask.ImporterProcess {

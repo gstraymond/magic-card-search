@@ -93,7 +93,7 @@ class Card(val title: String,
 }
 
 fun Card.getLocalizedTitle(context: Context): String =
-        getLocalizedTitle(context, Card::title, { _, ft -> ft })
+        getLocalizedTitle(context, Card::title) { _, ft -> ft }
 
 fun Card.getLocalizedTitle(context: Context,
                            english: (Card) -> String,

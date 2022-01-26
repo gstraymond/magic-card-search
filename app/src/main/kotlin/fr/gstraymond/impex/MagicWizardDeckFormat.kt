@@ -31,6 +31,6 @@ class MagicWizardDeckFormat : DeckFormat {
         url.getParameters()
                 .values
                 .plus(url.getPathSegment().last())
-                .run { maxBy { it.length } ?: first() }
+                .run { maxByOrNull { it.length } ?: first() }
     } ?: "Deck"
 }

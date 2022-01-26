@@ -23,7 +23,7 @@ class DeckParser {
 
         val lines = deckList.split("\n")
                 .map { it.replace("\r", "") }
-                .map { it.dropWhile { it == ' ' } }
+                .map { it.dropWhile { it1 -> it1 == ' ' } }
                 .map { it.trim() }
                 .dropLastWhile(String::isEmpty)
 

@@ -7,8 +7,6 @@ import android.widget.Button
 import fr.gstraymond.R
 import fr.gstraymond.utils.find
 import fr.gstraymond.utils.startActivity
-import java.io.BufferedReader
-import java.io.InputStreamReader
 
 class DeckImporterActivity : CustomActivity(R.layout.activity_deck_importer) {
 
@@ -51,14 +49,7 @@ class DeckImporterActivity : CustomActivity(R.layout.activity_deck_importer) {
             FILE_PICKER_CODE ->
                 data?.data?.let { path ->
                     startActivity {
-                        val stream = contentResolver.openInputStream(path)
-                        val r = BufferedReader(InputStreamReader(stream))
-                        val total = StringBuilder()
-                        var line: String?
-                        while (r.readLine().also { line = it } != null) {
-                            total.append(line).append('\n')
-                        }
-                        DeckImportProgressActivity.getIntent(this, total.toString(), null, false)
+                        DeckImportProgressActivity.getIntent(this, path)
                     }
                 }
         }

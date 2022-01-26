@@ -20,9 +20,9 @@ class RuleList(context: Context,
         val rangeSize = 2..15
         all().withIndex().forEach { (index, rule) ->
             rule.text
-                    .toLowerCase()
+                    .lowercase()
                     .split(" ")
-                    .map { it.filter { it.isLetterOrDigit() } }
+                    .map { it.filter { it1 -> it1.isLetterOrDigit() } }
                     .filter { rangeSize.contains(it.length) }
                     .forEach { trie.add(it, index) }
         }

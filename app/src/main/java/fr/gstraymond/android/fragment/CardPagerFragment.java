@@ -19,7 +19,7 @@ public class CardPagerFragment extends Fragment {
     private int position = 0;
 
     private String CARD = CardCommonActivity.CARD_EXTRA;
-    private String POSITION = CardPagerActivity.Companion.getPOSITION_EXTRA();
+    private String POSITION = CardPagerActivity.POSITION_EXTRA;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

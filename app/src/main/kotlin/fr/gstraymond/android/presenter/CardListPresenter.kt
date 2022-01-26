@@ -73,7 +73,7 @@ class CardListPresenter(private val context: Context) : DataUpdater {
             } else {
                 emptyTextView.visible()
                 if (searchOptions.isStartSearchOptions()) {
-                    result.hits.hits.firstOrNull()?._source?.publications?.maxBy {
+                    result.hits.hits.firstOrNull()?._source?.publications?.maxByOrNull {
                         it.editionReleaseDate?.time ?: 0
                     }?.edition?.let { lastEdition ->
                         val text = String.format(context.getString(R.string.search_last_extension), lastEdition, result.hits.total.value)

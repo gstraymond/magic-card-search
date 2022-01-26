@@ -2,10 +2,9 @@ package fr.gstraymond.android
 
 import android.content.res.Configuration
 import android.os.Bundle
-import androidx.fragment.app.Fragment
-import androidx.appcompat.app.AppCompatActivity
 import android.view.MenuItem
-import com.squareup.moshi.Moshi
+import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import fr.gstraymond.utils.app
 
 abstract class CustomActivity(private val layoutId: Int) : AppCompatActivity() {
@@ -26,12 +25,12 @@ abstract class CustomActivity(private val layoutId: Int) : AppCompatActivity() {
         supportFragmentManager.beginTransaction().replace(id, fragment).commitAllowingStateLoss()
     }
 
-    protected fun actionBarSetDisplayHomeAsUpEnabled(bool: Boolean) {
-        supportActionBar?.setDisplayHomeAsUpEnabled(bool)
+    protected fun Boolean.actionBarSetDisplayHomeAsUpEnabled() {
+        supportActionBar?.setDisplayHomeAsUpEnabled(this)
     }
 
-    protected fun actionBarSetHomeButtonEnabled(bool: Boolean) {
-        supportActionBar?.setHomeButtonEnabled(bool)
+    protected fun Boolean.actionBarSetHomeButtonEnabled() {
+        supportActionBar?.setHomeButtonEnabled(this)
     }
 
     protected fun actionBarSetTitle(titleId: Int) {

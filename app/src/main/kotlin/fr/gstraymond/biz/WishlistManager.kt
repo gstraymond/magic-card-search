@@ -5,6 +5,7 @@ import android.content.Context
 import android.net.Uri
 import androidx.documentfile.provider.DocumentFile
 import fr.gstraymond.db.json.WishList
+import fr.gstraymond.models.CardNotImported
 import fr.gstraymond.models.DeckLine
 import fr.gstraymond.models.ImportResult
 import java.nio.charset.Charset
@@ -23,6 +24,7 @@ class WishlistManager(val wishlist: WishList) {
         cards.forEach {
             when (it) {
                 is DeckLine -> wishlist.addOrRemove(it.card)
+                is CardNotImported -> Unit
             }
         }
     }

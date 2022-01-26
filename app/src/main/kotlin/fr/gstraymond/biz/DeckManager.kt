@@ -85,7 +85,7 @@ class DeckManager(private val deckList: DeckList,
             MTG_ARENA -> {
                 return all.filter { it.counts.deck > 0 }.flatMap {
                     it.card.publications
-                            .filter { it.editionCode.length == 3 && it.collectorNumber != null }
+                            .filter { it1 -> it1.editionCode.length == 3 && it1.collectorNumber != null }
                             .sortedBy(Publication::editionReleaseDate)
                             .lastOrNull()
                             ?.run { listOf("${it.counts.deck} ${it.card.title} (${mtgaSetMapping[editionCode] ?: editionCode}) $collectorNumber") }
@@ -101,7 +101,7 @@ class DeckManager(private val deckList: DeckList,
 
     fun normalizeName(deck: Deck) =
             Normalizer
-                    .normalize(deck.name.toLowerCase(), Normalizer.Form.NFD)
+                    .normalize(deck.name.lowercase(), Normalizer.Form.NFD)
                     .replace(" ", "_")
                     .replace("-", "_")
                     .replace("[^A-Za-z0-9_]".toRegex(), "")

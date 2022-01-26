@@ -88,11 +88,11 @@ class RulesAdapter(private val context: Context) :
 
         if (highlightWords.all { spannableBuilder.contains(it, true) }) {
             highlightWords.forEach {
-                Regex(it, RegexOption.IGNORE_CASE).findAll(spannableBuilder).forEach {
+                Regex(it, RegexOption.IGNORE_CASE).findAll(spannableBuilder).forEach { it1 ->
                     spannableBuilder.setSpan(
                             BackgroundColorSpan(context.resources.color(R.color.colorPrimaryDark)),
-                            it.range.start,
-                            it.range.endInclusive + 1,
+                            it1.range.first,
+                            it1.range.last + 1,
                             0)
                 }
             }

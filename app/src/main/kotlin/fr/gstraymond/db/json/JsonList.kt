@@ -27,15 +27,15 @@ abstract class JsonList<A>(private val context: Context,
                 try {
                     mutableListOf<A>().apply {
                         context.openFileInput(listName).bufferedReader().useLines {
-                            it.forEach {
-                                mapperUtil.read(it)?.let { add(it) }
+                            it.forEach { it1 ->
+                                mapperUtil.read(it1)?.let { it2 -> add(it2) }
                             }
                         }
                     }
                 } catch (e: FileNotFoundException) {
                     log.w("get: %s", e)
                     //save(listOf())
-                    mutableListOf<A>()
+                    mutableListOf()
                 })
 
         index.putAll(

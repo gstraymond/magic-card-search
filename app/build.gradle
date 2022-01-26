@@ -1,9 +1,9 @@
 buildscript {
-    ext.kotlin_version = '1.4.0'
+    ext.kotlin_version = '1.5.20'
 
     repositories {
         mavenCentral()
-        jcenter()
+        google()
     }
 
     dependencies {
@@ -19,7 +19,6 @@ apply plugin: 'kotlin-kapt'
 
 repositories {
     mavenCentral()
-    maven { url "https://dl.bintray.com/lukaville/maven" }
     maven { url "https://jitpack.io" }
     maven { url 'https://guardian.github.io/maven/repo-releases/' }
 }
@@ -31,8 +30,8 @@ android {
         applicationId "mtg.magic.search.deck.builder"
         minSdkVersion 19
         targetSdkVersion 30
-        versionCode 94
-        versionName "4.0.0"
+        versionCode 95
+        versionName "4.1.0"
     }
 
     signingConfigs {

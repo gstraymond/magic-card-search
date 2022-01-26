@@ -85,7 +85,7 @@ class DecksActivity : CustomActivity(R.layout.activity_decks) {
                 this,
                 android.R.layout.simple_spinner_dropdown_item,
                 SortTypes.values().map {
-                    val id = resources.getIdentifier("decks_sort_spinner_${it.name.toLowerCase()}", "string", packageName)
+                    val id = resources.getIdentifier("decks_sort_spinner_${it.name.lowercase()}", "string", packageName)
                     resources.getString(id)
                 }
         )
@@ -132,7 +132,7 @@ class DecksActivity : CustomActivity(R.layout.activity_decks) {
     enum class SortTypes { Format, Alpha }
 
     private fun colorFilterId(color: String) =
-            resources.getIdentifier("color_filter_${color.toLowerCase()}", "id", packageName)
+            resources.getIdentifier("color_filter_${color.lowercase()}", "id", packageName)
 
     override fun onResume() {
         super.onResume()

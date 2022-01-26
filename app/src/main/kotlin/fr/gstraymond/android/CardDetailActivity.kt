@@ -1,18 +1,14 @@
 package fr.gstraymond.android
 
-import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import android.widget.TextView
-import com.magic.card.search.commons.json.MapperUtil
 import fr.gstraymond.R
 import fr.gstraymond.affiliate.ebay.LinkGenerator
 import fr.gstraymond.android.fragment.CardDetailFragment
-import fr.gstraymond.biz.ExportFormat
-import fr.gstraymond.models.DeckCard
 import fr.gstraymond.models.search.response.Card
 import fr.gstraymond.models.search.response.getLocalizedTitle
 import fr.gstraymond.ui.adapter.CardDetailViews
@@ -46,7 +42,7 @@ class CardDetailActivity : CardCommonActivity(R.layout.activity_card_detail),
         super.onCreate(savedInstanceState)
 
         setSupportActionBar(find(R.id.toolbar))
-        actionBarSetDisplayHomeAsUpEnabled(true)
+        true.actionBarSetDisplayHomeAsUpEnabled()
 
         val title = find<TextView>(R.id.toolbar_title)
         title.text = card.getLocalizedTitle(this, Card::title) { c, ft -> "$ft (${c.title})" }

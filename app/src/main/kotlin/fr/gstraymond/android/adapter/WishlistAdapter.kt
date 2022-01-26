@@ -12,7 +12,7 @@ import fr.gstraymond.ui.adapter.WishlistCardViews
 
 class WishlistAdapter(context: Context,
                       private val wishList: WishList,
-                      private val clickCallbacks: WishlistAdapter.ClickCallbacks) :
+                      private val clickCallbacks: ClickCallbacks) :
         RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private val cardViews = WishlistCardViews(context, wishList, FavoriteViewClickCallbacks())

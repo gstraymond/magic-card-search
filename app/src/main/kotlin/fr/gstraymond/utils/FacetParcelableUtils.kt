@@ -24,7 +24,7 @@ object FacetParcelableUtils {
             val keyValues = facet.split("=".toRegex())
             val key = keyValues[0]
             val valuesAsString = keyValues[1]
-            facets.put(key, valuesAsString.split(",".toRegex()))
+            facets[key] = valuesAsString.split(",".toRegex())
         }
         return facets
     }
