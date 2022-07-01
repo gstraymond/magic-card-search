@@ -30,8 +30,8 @@ android {
         applicationId "mtg.magic.search.deck.builder"
         minSdkVersion 19
         targetSdkVersion 30
-        versionCode 95
-        versionName "4.1.0"
+        versionCode 96
+        versionName "4.1.1"
     }
 
     signingConfigs {
