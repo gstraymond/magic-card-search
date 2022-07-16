@@ -136,15 +136,20 @@ object Colors {
             "White" to "W")
 }
 
-object Formats {
-    const val STANDARD = "Standard"
-    const val MODERN = "Modern"
-    const val PIONEER = "Pioneer"
-    const val LEGACY = "Legacy"
-    const val VINTAGE = "Vintage"
-    const val COMMANDER = "Commander"
-    const val BRAWL = "Brawl"
-    const val PAUPER = "Pauper"
-    const val PENNY = "Penny"
-    val ordered = listOf(STANDARD, PIONEER, MODERN, LEGACY, VINTAGE, COMMANDER, BRAWL, PAUPER, PENNY)
+enum class Formats {
+    Standard,
+    Modern,
+    Pioneer,
+    Legacy,
+    Vintage,
+    Commander,
+    Brawl,
+    Pauper,
+    Penny,
+    Alchemy,
+    Historic;
+
+    companion object {
+        val ordered = values().map { it.name }
+    }
 }

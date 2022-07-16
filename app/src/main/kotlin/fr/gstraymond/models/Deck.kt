@@ -14,11 +14,15 @@ data class Deck(val id: Int = 0,
                 val maybeFormat: String? = null) {
     fun isCommander() = isCommander(maybeFormat)
 
+    fun format(): Formats? = format(maybeFormat)
+
     companion object {
-        fun isCommander(maybeFormat: String?) = when (maybeFormat) {
-            Formats.BRAWL, Formats.COMMANDER -> true
+        fun isCommander(maybeFormat: String?) = when (format(maybeFormat)) {
+            Formats.Brawl, Formats.Commander -> true
             else -> false
         }
+
+        fun format(maybeFormat: String?): Formats? = maybeFormat?.run { Formats.valueOf(this) }
     }
 }
 

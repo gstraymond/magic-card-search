@@ -18,9 +18,8 @@ import com.github.clans.fab.FloatingActionMenu
 import fr.gstraymond.R
 import fr.gstraymond.android.adapter.DeckCardCallback
 import fr.gstraymond.android.adapter.DeckDetailCardsAdapter
-import fr.gstraymond.biz.Formats.BRAWL
-import fr.gstraymond.biz.Formats.COMMANDER
-import fr.gstraymond.biz.Formats.STANDARD
+import fr.gstraymond.biz.Formats
+import fr.gstraymond.biz.Formats.*
 import fr.gstraymond.biz.SearchOptions
 import fr.gstraymond.constants.FacetConst.FORMAT
 import fr.gstraymond.constants.FacetConst.TYPE
@@ -65,7 +64,7 @@ class DeckDetailCardsFragment : Fragment(), DeckCardCallback, DeckDetailActivity
                               container: ViewGroup?,
                               savedInstanceState: Bundle?): View =
             inflater.inflate(R.layout.fragment_deck_detail_cards, container, false)
-                    .apply { savedInstanceState?.apply { board = values()[getInt("board")] } }
+                    .apply { savedInstanceState?.apply { board = Board.values()[getInt("board")] } }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -89,7 +88,8 @@ class DeckDetailCardsFragment : Fragment(), DeckCardCallback, DeckDetailActivity
 
         fabAdd.setOnClickListener {
             startActivity {
-                val searchOptions = deckList.getByUid(deckId)?.maybeFormat?.run {
+                val searchOptions =
+                    deckList.getByUid(deckId)?.format()?.run {
                     SearchOptions(facets = mapOf(FORMAT to listOf(getFormat())), deckId = deckId, board = board)
                 } ?: SearchOptions.START_SEARCH_OPTIONS().copy(deckId = deckId)
                 CardListActivity.getIntent(activity!!, searchOptions)
@@ -193,12 +193,12 @@ class DeckDetailCardsFragment : Fragment(), DeckCardCallback, DeckDetailActivity
 
             if (board == DECK) {
                 val deck = app().deckList.getByUid(deckId)
-                deck?.maybeFormat?.apply {
+                deck?.format()?.apply {
                     val msgs = mutableListOf<String>()
 
                     val (targetDeckSize, deckSize) = when (this) {
-                        COMMANDER -> SpecificSize(100) to deck.deckSize + deck.sideboardSize
-                        BRAWL -> SpecificSize(60) to deck.deckSize + deck.sideboardSize
+                        Commander -> SpecificSize(100) to deck.deckSize + deck.sideboardSize
+                        Brawl -> SpecificSize(60) to deck.deckSize + deck.sideboardSize
                         else -> MinSize(60) to deck.deckSize
                     }
 
@@ -221,7 +221,7 @@ class DeckDetailCardsFragment : Fragment(), DeckCardCallback, DeckDetailActivity
                             .forEach { msgs += getText(R.string.validation_max_occurrence, it.first.card.getLocalizedTitle(context!!), "${it.second}") }
 
                     cardList.filter { !it.card.formats.contains(getFormat()) }
-                            .forEach { msgs += getText(R.string.validation_bad_format, it.card.getLocalizedTitle(context!!), this) }
+                            .forEach { msgs += getText(R.string.validation_bad_format, it.card.getLocalizedTitle(context!!), name) }
 
                     if (msgs.isEmpty()) {
                         formatProblems.gone()
@@ -234,7 +234,10 @@ class DeckDetailCardsFragment : Fragment(), DeckCardCallback, DeckDetailActivity
         }
     }
 
-    private fun String.getFormat() = if (equals(BRAWL)) STANDARD else this
+    private fun Formats.getFormat() = when (this) {
+        Brawl -> Standard
+        else -> this
+    }.name
 
     private fun getText(textId: Int, vararg args: String) =
             String.format(resources.getString(textId), *args)
