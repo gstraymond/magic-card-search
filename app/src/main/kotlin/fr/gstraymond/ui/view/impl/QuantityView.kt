@@ -8,6 +8,7 @@ import androidx.appcompat.widget.AppCompatButton
 import fr.gstraymond.R
 import fr.gstraymond.android.CustomApplication
 import fr.gstraymond.android.adapter.DeckCardCallback
+import fr.gstraymond.biz.Formats
 import fr.gstraymond.models.Board
 import fr.gstraymond.models.Board.*
 import fr.gstraymond.models.DeckCard
@@ -60,7 +61,7 @@ class QuantityView(private val context: Context,
                 text = deckCard?.counts?.maybe?.toString() ?: "0"
             }
 
-            val maxOccurrence = FormatValidator.getMaxOccurrence(card, app.deckList.getByUid("$deckId")?.maybeFormat)
+            val maxOccurrence = FormatValidator.getMaxOccurrence(card, app.deckList.getByUid("$deckId")?.format())
 
             val megamap: Map<String, Map<String, View>> = listOf("card", "sb", "mb").map { line ->
                 line to (listOf("add", "remove").map {
