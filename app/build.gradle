@@ -24,14 +24,14 @@ repositories {
 }
 
 android {
-    compileSdkVersion 30
+    compileSdkVersion 32
 
     defaultConfig {
         applicationId "mtg.magic.search.deck.builder"
         minSdkVersion 19
-        targetSdkVersion 30
-        versionCode 97
-        versionName "4.2.0"
+        targetSdkVersion 32
+        versionCode 98
+        versionName "4.3.0"
     }
 
     signingConfigs {
