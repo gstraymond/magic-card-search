@@ -15,6 +15,7 @@ object FormatValidator {
             isBasicLand(card) -> 99
             isUnlimited(card) -> 99
             format == Commander -> 1
+            format == DuelCommander -> 1
             format == Brawl -> 1
             isRestricted(card, format) -> 1
             else -> 4

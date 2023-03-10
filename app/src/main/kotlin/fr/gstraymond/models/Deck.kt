@@ -18,11 +18,11 @@ data class Deck(val id: Int = 0,
 
     companion object {
         fun isCommander(maybeFormat: String?) = when (format(maybeFormat)) {
-            Formats.Brawl, Formats.Commander -> true
+            Formats.Brawl, Formats.Commander, Formats.DuelCommander -> true
             else -> false
         }
 
-        fun format(maybeFormat: String?): Formats? = maybeFormat?.run { Formats.valueOf(this) }
+        fun format(maybeFormat: String?): Formats? = maybeFormat?.run { Formats.fromString(this) }
     }
 }
 

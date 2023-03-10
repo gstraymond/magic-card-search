@@ -143,13 +143,26 @@ enum class Formats {
     Legacy,
     Vintage,
     Commander,
+    DuelCommander,
     Brawl,
     Pauper,
     Penny,
     Alchemy,
     Historic;
 
+    fun fullName(): String =
+        when (this) {
+            DuelCommander -> "Duel Commander"
+            else -> name
+        }
+
     companion object {
-        val ordered = values().map { it.name }
+        val ordered = values().map { it.fullName() }
+
+        fun fromString(maybeFormat: String): Formats =
+            when (maybeFormat) {
+                "Duel Commander" -> DuelCommander
+                else -> valueOf(maybeFormat)
+            }
     }
 }
