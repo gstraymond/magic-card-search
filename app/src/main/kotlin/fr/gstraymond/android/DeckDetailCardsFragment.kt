@@ -197,7 +197,7 @@ class DeckDetailCardsFragment : Fragment(), DeckCardCallback, DeckDetailActivity
                     val msgs = mutableListOf<String>()
 
                     val (targetDeckSize, deckSize) = when (this) {
-                        Commander -> SpecificSize(100) to deck.deckSize + deck.sideboardSize
+                        Commander, DuelCommander -> SpecificSize(100) to deck.deckSize + deck.sideboardSize
                         Brawl -> SpecificSize(60) to deck.deckSize + deck.sideboardSize
                         else -> MinSize(60) to deck.deckSize
                     }
@@ -221,7 +221,7 @@ class DeckDetailCardsFragment : Fragment(), DeckCardCallback, DeckDetailActivity
                             .forEach { msgs += getText(R.string.validation_max_occurrence, it.first.card.getLocalizedTitle(context!!), "${it.second}") }
 
                     cardList.filter { !it.card.formats.contains(getFormat()) }
-                            .forEach { msgs += getText(R.string.validation_bad_format, it.card.getLocalizedTitle(context!!), name) }
+                            .forEach { msgs += getText(R.string.validation_bad_format, it.card.getLocalizedTitle(context!!), fullName()) }
 
                     if (msgs.isEmpty()) {
                         formatProblems.gone()
@@ -237,7 +237,7 @@ class DeckDetailCardsFragment : Fragment(), DeckCardCallback, DeckDetailActivity
     private fun Formats.getFormat() = when (this) {
         Brawl -> Standard
         else -> this
-    }.name
+    }.fullName()
 
     private fun getText(textId: Int, vararg args: String) =
             String.format(resources.getString(textId), *args)
