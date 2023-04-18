@@ -1,17 +1,24 @@
 package fr.gstraymond.ocr
 
-import android.app.AlertDialog
+import android.Manifest
 import android.content.Context
 import android.content.Intent
-import android.content.IntentFilter
-import android.hardware.Camera
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.widget.CheckBox
 import android.widget.Toast
-import com.google.android.gms.common.ConnectionResult
-import com.google.android.gms.common.GoogleApiAvailability
-import com.google.android.gms.vision.text.TextRecognizer
+import androidx.appcompat.app.AlertDialog
+import androidx.camera.core.ImageProxy
+import androidx.camera.view.LifecycleCameraController
+import androidx.camera.view.PreviewView
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
+import com.google.android.gms.tasks.TaskCompletionSource
 import com.google.android.material.snackbar.Snackbar
+import com.google.mlkit.vision.common.InputImage
+import com.google.mlkit.vision.text.TextRecognition
+import com.google.mlkit.vision.text.TextRecognizer
+import com.google.mlkit.vision.text.latin.TextRecognizerOptions
 import com.magic.card.search.commons.log.Log
 import fr.gstraymond.R
 import fr.gstraymond.android.CardDetailActivity
@@ -20,122 +27,124 @@ import fr.gstraymond.models.Board
 import fr.gstraymond.models.Board.*
 import fr.gstraymond.models.DeckCard
 import fr.gstraymond.models.search.response.Card
-import fr.gstraymond.ocr.ui.camera.CameraSource
-import fr.gstraymond.ocr.ui.camera.CameraSourcePreview
-import fr.gstraymond.ocr.ui.camera.GraphicOverlay
 import fr.gstraymond.ui.adapter.SimpleCardViews
 import fr.gstraymond.utils.app
 import fr.gstraymond.utils.find
 import fr.gstraymond.utils.inflate
 import fr.gstraymond.utils.startActivity
-import java.io.IOException
 import java.util.concurrent.atomic.AtomicBoolean
 
 class OcrCaptureActivity : CustomActivity(R.layout.ocr_capture), OcrDetectorProcessor.CardDetector {
-
-    private var cameraSource: CameraSource? = null
-    private val preview by lazy { find<CameraSourcePreview>(R.id.preview) }
-    private val graphicOverlay by lazy { find<GraphicOverlay<OcrGraphic>>(R.id.graphicOverlay) }
-
     private val log = Log(javaClass)
+
+    private lateinit var recognizer: TextRecognizer
+
+    private val previewView by lazy { find<PreviewView>(R.id.viewFinder) }
 
     private val pause = AtomicBoolean(false)
 
     companion object {
         private const val RC_HANDLE_GMS = 9001
-        const val AUTO_FOCUS = "AutoFocus"
-        const val USE_FLASH = "UseFlash"
+        private val REQUIRED_PERMISSIONS =
+            mutableListOf (Manifest.permission.CAMERA).toTypedArray()
+
         const val DECK_ID = "DeckId"
         const val BOARD = "Board"
 
         fun getIntent(context: Context,
-                      autoFocus: Boolean,
-                      useFlash: Boolean,
                       deckId: String? = null,
-                      board: Board = DECK): Intent =
-                Intent(context, OcrCaptureActivity::class.java).apply {
-                    putExtra(AUTO_FOCUS, autoFocus)
-                    putExtra(USE_FLASH, useFlash)
-                    putExtra(DECK_ID, deckId)
-                    putExtra(BOARD, board.ordinal)
-                }
+                      board: Board = Board.DECK
+        ): Intent =
+            Intent(context, OcrCaptureActivity::class.java).apply {
+                putExtra(DECK_ID, deckId)
+                putExtra(BOARD, board.ordinal)
+            }
     }
 
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val autoFocus = intent.getBooleanExtra(AUTO_FOCUS, false)
-        val useFlash = intent.getBooleanExtra(USE_FLASH, false)
-
-        createCameraSource(autoFocus, useFlash)
-
-        Snackbar.make(graphicOverlay, getString(R.string.ocr_hint),
-                Snackbar.LENGTH_INDEFINITE)
-                .show()
-    }
-
-    private fun createCameraSource(autoFocus: Boolean, useFlash: Boolean) {
-        val textRecognizer = TextRecognizer.Builder(this).build()
-        textRecognizer.setProcessor(OcrDetectorProcessor(graphicOverlay, this, app().searchService))
-
-        if (!textRecognizer.isOperational) {
-            log.w("Detector dependencies are not yet available.")
-
-            val lowStorageFilter = IntentFilter(Intent.ACTION_DEVICE_STORAGE_LOW)
-            val hasLowStorage = registerReceiver(null, lowStorageFilter) != null
-
-            if (hasLowStorage) {
-                Toast.makeText(this, R.string.low_storage_error, Toast.LENGTH_LONG).show()
-                log.w(getString(R.string.low_storage_error))
-            }
+        if (allPermissionsGranted()) {
+            startCamera()
+        } else {
+            ActivityCompat.requestPermissions(
+                this, REQUIRED_PERMISSIONS, RC_HANDLE_GMS
+            )
         }
 
-        cameraSource = CameraSource.Builder(applicationContext, textRecognizer)
-                .setFacing(CameraSource.CAMERA_FACING_BACK)
-                .setRequestedPreviewSize(1280, 1024)
-                .setRequestedFps(2.0f)
-                .setFlashMode(if (useFlash) Camera.Parameters.FLASH_MODE_TORCH else Camera.Parameters.FLASH_MODE_AUTO)
-                .setFocusMode(if (autoFocus) Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE else Camera.Parameters.FOCUS_MODE_AUTO)
-                .build()
+        Snackbar.make(previewView, getString(R.string.ocr_hint),
+            Snackbar.LENGTH_INDEFINITE)
+            .show()
     }
 
-    override fun onResume() {
-        super.onResume()
-        startCameraSource()
+    private fun startCamera() {
+        val cameraController = LifecycleCameraController(baseContext)
+        recognizer = TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS)
+        cameraController.setImageAnalysisAnalyzer(ContextCompat.getMainExecutor(this)){ analyze(it) }
+        cameraController.bindToLifecycle(this)
+        previewView.controller = cameraController
     }
 
-    override fun onPause() {
-        super.onPause()
-        preview.stop()
+    private fun analyze(imageProxy: ImageProxy) {
+        val mediaImage = imageProxy.image
+        if (mediaImage != null) {
+            val image = InputImage.fromMediaImage(mediaImage, imageProxy.imageInfo.rotationDegrees)
+            TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS)
+                .process(image)
+                .continueWithTask(app().cameraExecutor) { visionText ->
+                    val completer = TaskCompletionSource<Unit>()
+                    OcrDetectorProcessor(
+                        previewView,
+                        this,
+                        app().searchService
+                    ).receiveDetections(visionText.result)
+                    completer.setResult(Unit)
+                    completer.task
+                }
+                .addOnSuccessListener {
+                    imageProxy.close()
+                }
+                .addOnFailureListener { e ->
+                    log.e("text recognition failed $e", e)
+                    imageProxy.close()
+                }
+        }
+    }
+
+
+    private fun allPermissionsGranted() = REQUIRED_PERMISSIONS.all {
+        ContextCompat.checkSelfPermission(baseContext, it) ==
+                PackageManager.PERMISSION_GRANTED
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        preview.release()
+        recognizer.close()
     }
 
-    override fun onRestart() {
-        super.onRestart()
-        // ugly hack to be sure everything is correctly when user is coming back
-        this@OcrCaptureActivity.recreate()
-    }
-
-    private fun startCameraSource() {
-        // Check that the device has play services available.
-        val code = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(applicationContext)
-        if (code != ConnectionResult.SUCCESS) {
-            GoogleApiAvailability.getInstance().getErrorDialog(this, code, RC_HANDLE_GMS).show()
-        }
-
-        cameraSource?.apply {
-            try {
-                preview.start(this, graphicOverlay)
-            } catch (e: IOException) {
-                log.e("Unable to start camera source.", e)
-                release()
-                cameraSource = null
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<String>,
+        grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == RC_HANDLE_GMS) {
+            if (allPermissionsGranted()) {
+                startCamera()
+            } else {
+                Toast.makeText(this,
+                    "Permissions not granted by the user.",
+                    Toast.LENGTH_SHORT).show()
+                finish()
             }
         }
+    }
+
+    override fun onTitleDetected(title: String) {
+        /*runOnUiThread {
+            Snackbar.make(previewView, title,
+                Snackbar.LENGTH_SHORT)
+                .show()
+        }*/
     }
 
     override fun onCardDetected(card: Card) {
@@ -145,8 +154,11 @@ class OcrCaptureActivity : CustomActivity(R.layout.ocr_capture), OcrDetectorProc
             runOnUiThread {
                 createScanDialog(deckId, card, values()[intent.getIntExtra(BOARD, 0)])
             }
-        } ?: startActivity {
-            CardDetailActivity.getIntent(this@OcrCaptureActivity, card)
+        } ?: run {
+            startActivity {
+                CardDetailActivity.getIntent(this@OcrCaptureActivity, card)
+            }
+            finish()
         }
     }
 
@@ -155,21 +167,21 @@ class OcrCaptureActivity : CustomActivity(R.layout.ocr_capture), OcrDetectorProc
                               board: Board) {
         val cardList = app().cardListBuilder.build(deckId.toInt())
         val newDeckLine = DeckCard(
-                card = card,
-                counts = when (board) {
-                    DECK -> DeckCard.Counts(deck = 1, sideboard = 0, maybe = 0)
-                    SB -> DeckCard.Counts(deck = 0, sideboard = 1, maybe = 0)
-                    MAYBE -> DeckCard.Counts(deck = 0, sideboard = 0, maybe = 1)
-                }
+            card = card,
+            counts = when (board) {
+                DECK -> DeckCard.Counts(deck = 1, sideboard = 0, maybe = 0)
+                SB -> DeckCard.Counts(deck = 0, sideboard = 1, maybe = 0)
+                MAYBE -> DeckCard.Counts(deck = 0, sideboard = 0, maybe = 1)
+            }
         )
         if (cardList.contains(newDeckLine)) {
             val deckLine = cardList.getByUid(newDeckLine.id())!!
             cardList.update(
-                    when (board) {
-                        DECK -> deckLine.setDeckCount(deckLine.counts.deck + 1)
-                        SB -> deckLine.setSBCount(deckLine.counts.sideboard + 1)
-                        MAYBE -> deckLine.setMaybeCount(deckLine.counts.maybe + 1)
-                    }
+                when (board) {
+                    DECK -> deckLine.setDeckCount(deckLine.counts.deck + 1)
+                    SB -> deckLine.setSBCount(deckLine.counts.sideboard + 1)
+                    MAYBE -> deckLine.setMaybeCount(deckLine.counts.maybe + 1)
+                }
             )
         } else {
             cardList.addOrRemove(newDeckLine)
@@ -185,16 +197,16 @@ class OcrCaptureActivity : CustomActivity(R.layout.ocr_capture), OcrDetectorProc
         val continueScan = view.find<CheckBox>(R.id.ocr_scan_continue_checkbox)
         cardViews.display(view, card, 0)
         AlertDialog.Builder(this)
-                .setView(view)
-                .setPositiveButton("Add") { _, _ ->
-                    addCardToDeck(deckId, card, board)
-                    finishScan(continueScan.isChecked)
-                }
-                .setNegativeButton("Discard") { _, _ ->
-                    finishScan(continueScan.isChecked)
-                }
-                .create()
-                .show()
+            .setView(view)
+            .setPositiveButton("Add") { _, _ ->
+                addCardToDeck(deckId, card, board)
+                finishScan(continueScan.isChecked)
+            }
+            .setNegativeButton("Discard") { _, _ ->
+                finishScan(continueScan.isChecked)
+            }
+            .create()
+            .show()
     }
 
     private fun finishScan(continueScan: Boolean) {

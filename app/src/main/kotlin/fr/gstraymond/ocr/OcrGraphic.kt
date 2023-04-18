@@ -1,38 +1,28 @@
 package fr.gstraymond.ocr
 
-import android.graphics.Canvas
-import android.graphics.Color
-import android.graphics.Paint
-import android.graphics.RectF
-import com.google.android.gms.vision.text.TextBlock
-import fr.gstraymond.ocr.ui.camera.GraphicOverlay
+import android.graphics.*
+import android.graphics.drawable.Drawable
+import com.google.mlkit.vision.text.Text
 
-class OcrGraphic(overlay: GraphicOverlay<*>,
-                 private val textBlock: TextBlock,
-                 private val textColor: Int = Color.WHITE) : GraphicOverlay.Graphic(overlay) {
+class OcrGraphic(private val textBlock: Text.TextBlock,
+                 private val textColor: Int = Color.WHITE) : Drawable() {
 
     private val rectPaint = Paint().apply {
         color = textColor
         style = Paint.Style.FILL
         alpha = 128
-        postInvalidate()
-    }
-
-    override fun contains(x: Float, y: Float) = RectF(textBlock.boundingBox).run {
-        left = translateX(left)
-        top = translateY(top)
-        right = translateX(right)
-        bottom = translateY(bottom)
-        left < x && right > x && top < y && bottom > y
     }
 
     override fun draw(canvas: Canvas) {
-        RectF(textBlock.boundingBox).apply {
-            left = translateX(left)
-            top = translateY(top)
-            right = translateX(right)
-            bottom = translateY(bottom)
-            canvas.drawRect(this, rectPaint)
-        }
+        canvas.drawRect(RectF(textBlock.boundingBox), rectPaint)
     }
+
+    override fun setAlpha(p0: Int) {
+    }
+
+    override fun setColorFilter(p0: ColorFilter?) {
+    }
+
+    @Deprecated("Deprecated in Java")
+    override fun getOpacity(): Int = 0
 }

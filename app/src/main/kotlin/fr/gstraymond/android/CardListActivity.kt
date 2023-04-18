@@ -330,7 +330,7 @@ class CardListActivity : CustomActivity(R.layout.activity_card_list),
 
     private fun startScanner() {
         startActivity {
-            OcrCaptureActivity.getIntent(this, autoFocus = true, useFlash = false)
+            OcrCaptureActivity.getIntent(this)
         }
     }
 

@@ -127,8 +127,6 @@ class DeckDetailCardsFragment : Fragment(), DeckCardCallback, DeckDetailActivity
         startActivity {
             OcrCaptureActivity.getIntent(
                     activity!!,
-                    autoFocus = true,
-                    useFlash = false,
                     deckId = deckId,
                     board = board)
         }

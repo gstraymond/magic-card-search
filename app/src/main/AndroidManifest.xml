@@ -12,6 +12,7 @@
         android:name=".android.CustomApplication"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"> <!-- android:usesCleartextTraffic="true" -->
+        <meta-data android:name="com.google.mlkit.vision.DEPENDENCIES" android:value="ocr"/>
         <!-- MAIN : Splash screen -->
         <activity
             android:name=".android.SplashScreenActivity"

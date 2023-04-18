@@ -12,6 +12,7 @@ import fr.gstraymond.models.search.request.Request
 import fr.gstraymond.network.ElasticSearchApi
 import fr.gstraymond.network.ElasticSearchService
 import fr.gstraymond.network.RetrofitBuilder.buildRetrofit
+import java.util.concurrent.Executors
 import kotlin.concurrent.thread
 
 val prefs: Prefs by lazy {
@@ -44,6 +45,8 @@ class CustomApplication : BaseApplication() {
     val deckResolver by lazy { DeckResolver(searchService) }
     val deckManager by lazy { DeckManager(deckList, cardListBuilder) }
     val wishlistManager by lazy { WishlistManager(wishList) }
+
+    val cameraExecutor by lazy { Executors.newSingleThreadExecutor() }
 
     override fun onCreate() {
         super.onCreate()

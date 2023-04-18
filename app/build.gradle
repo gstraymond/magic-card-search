@@ -28,10 +28,10 @@ android {
 
     defaultConfig {
         applicationId "mtg.magic.search.deck.builder"
-        minSdkVersion 19
+        minSdkVersion 21
         targetSdkVersion 32
-        versionCode 98
-        versionName "4.3.0"
+        versionCode 99
+        versionName "4.3.1"
     }
 
     signingConfigs {
@@ -86,7 +86,6 @@ ext {
     floatingactionbuttonVersion = '1.6.+'
     fileChooserVersion = '1.+'
     dirChooserVersion = '3.+'
-    gmsVisionVersion = '18.0.0'
 }
 
 dependencies {
@@ -99,7 +98,8 @@ dependencies {
     implementation "com.squareup.okhttp3:logging-interceptor:$retrofitLoggingVersion"
     implementation "com.github.PhilJay:MPAndroidChart:$androidChartVersion"
     implementation "com.github.clans:fab:$floatingactionbuttonVersion"
-    implementation "com.google.android.gms:play-services-vision:$gmsVisionVersion"
+    implementation 'com.google.android.gms:play-services-mlkit-text-recognition:18.0.2'
+    implementation 'com.google.mlkit:camera:16.0.0-beta3'
     implementation 'androidx.documentfile:documentfile:1.0.1'
     kapt 'com.google.auto.value:auto-value:1.5.2'
     testImplementation 'junit:junit:4.12'
