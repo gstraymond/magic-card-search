@@ -2,7 +2,9 @@ package fr.gstraymond.models.search.response
 
 import android.os.Parcel
 import android.os.Parcelable
+import com.squareup.moshi.JsonClass
 
+@JsonClass(generateAdapter = true)
 class Ruling(val date: String,
              val text: String) : Parcelable {
 

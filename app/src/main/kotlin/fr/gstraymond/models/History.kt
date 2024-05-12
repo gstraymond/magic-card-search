@@ -2,10 +2,12 @@ package fr.gstraymond.models
 
 import android.os.Parcel
 import android.os.Parcelable
+import com.squareup.moshi.JsonClass
 import fr.gstraymond.utils.FacetParcelableUtils.readFacets
 import fr.gstraymond.utils.FacetParcelableUtils.writeFacets
 import java.util.*
 
+@JsonClass(generateAdapter = true)
 data class History(val query: String,
                    var isFavorite: Boolean,
                    val facets: Map<String, List<String>>,

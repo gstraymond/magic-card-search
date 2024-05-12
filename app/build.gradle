@@ -1,5 +1,5 @@
 buildscript {
-    ext.kotlin_version = '1.5.20'
+    ext.kotlin_version = '1.9.20'
 
     repositories {
         mavenCentral()
@@ -24,14 +24,26 @@ repositories {
 }
 
 android {
-    compileSdkVersion 32
+    compileSdk 34
 
     defaultConfig {
         applicationId "mtg.magic.search.deck.builder"
         minSdkVersion 21
-        targetSdkVersion 32
-        versionCode 99
-        versionName "4.3.1"
+        targetSdkVersion 34
+        versionCode 100
+        versionName "4.3.2"
+    }
+
+    buildFeatures {
+        buildConfig = true
+    }
+
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = "1.8"
     }
 
     signingConfigs {
@@ -75,13 +87,14 @@ android {
     lintOptions {
         disable 'MissingTranslation'
     }
+    namespace 'fr.gstraymond'
 }
 
 ext {
     glideVersion = '4.9.0'
     supportLibVersion = '28.0.0'
     retrofitVersion = '2.1+'
-    retrofitLoggingVersion = '3.3+'
+    retrofitLoggingVersion = '3.4.1'
     androidChartVersion = 'v3.0.3'
     floatingactionbuttonVersion = '1.6.+'
     fileChooserVersion = '1.+'
@@ -96,12 +109,13 @@ dependencies {
     implementation "com.squareup.retrofit2:retrofit:$retrofitVersion"
     implementation "com.squareup.retrofit2:converter-moshi:$retrofitVersion"
     implementation "com.squareup.okhttp3:logging-interceptor:$retrofitLoggingVersion"
+    implementation "com.squareup.okhttp3:okhttp:$retrofitLoggingVersion"
     implementation "com.github.PhilJay:MPAndroidChart:$androidChartVersion"
     implementation "com.github.clans:fab:$floatingactionbuttonVersion"
     implementation 'com.google.android.gms:play-services-mlkit-text-recognition:18.0.2'
     implementation 'com.google.mlkit:camera:16.0.0-beta3'
     implementation 'androidx.documentfile:documentfile:1.0.1'
-    kapt 'com.google.auto.value:auto-value:1.5.2'
+    kapt "com.squareup.moshi:moshi-kotlin-codegen:1.15.1"
     testImplementation 'junit:junit:4.12'
     testImplementation 'io.kotlintest:kotlintest:2.0.7'
 

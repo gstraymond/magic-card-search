@@ -262,7 +262,7 @@ class CardListActivity : CustomActivity(R.layout.activity_card_list),
                     true
                 }
                 val galleryMode = it.menu.findItem(R.id.menu_gallery_mode)
-                galleryMode.actionView.find<Switch>(R.id.switch_gallery_mode).apply {
+                galleryMode.actionView?.find<Switch>(R.id.switch_gallery_mode)?.apply {
                     isChecked = prefs.galleryMode
                     setOnCheckedChangeListener { _, b ->
                         prefs.galleryMode = b
@@ -272,7 +272,7 @@ class CardListActivity : CustomActivity(R.layout.activity_card_list),
 
                 val frenchEnabled = it.menu.findItem(R.id.menu_french_enabled)
                 frenchEnabled.isVisible = LanguageUtil.isLocaleFrench(this)
-                frenchEnabled.actionView.find<Switch>(R.id.switch_french_enabled).apply {
+                frenchEnabled.actionView?.find<Switch>(R.id.switch_french_enabled)?.apply {
                     isChecked = prefs.frenchEnabled
                     setOnCheckedChangeListener { _, b ->
                         prefs.frenchEnabled = b
@@ -284,7 +284,7 @@ class CardListActivity : CustomActivity(R.layout.activity_card_list),
 
                 fun showPrice() { paperPriceEnabled.title = getString(if (prefs.paperPrice) R.string.paper_price_enabled else R.string.paper_price_disabled) }
                 showPrice()
-                paperPriceEnabled.actionView.find<Switch>(R.id.switch_paper_price_enabled).apply {
+                paperPriceEnabled.actionView?.find<Switch>(R.id.switch_paper_price_enabled)?.apply {
                     isChecked = prefs.paperPrice
                     setOnCheckedChangeListener { _, b ->
                         prefs.paperPrice = b

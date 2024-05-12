@@ -2,8 +2,10 @@ package fr.gstraymond.models.search.response
 
 import android.os.Parcel
 import android.os.Parcelable
+import com.squareup.moshi.JsonClass
 import java.util.*
 
+@JsonClass(generateAdapter = true)
 class Publication(val edition: String,
                   val editionCode: String,
                   val stdEditionCode: String?,

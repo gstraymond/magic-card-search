@@ -1,9 +1,11 @@
 package fr.gstraymond.models.search.request
 
+import com.squareup.moshi.JsonClass
 import fr.gstraymond.biz.SearchOptions
 import fr.gstraymond.constants.FacetConst
 import fr.gstraymond.models.search.request.facet.Facet
 
+@JsonClass(generateAdapter = true)
 data class Request(val query: Query,
                    val from: Int,
                    val size: Int,
@@ -36,6 +38,7 @@ data class Request(val query: Query,
     }
 }
 
+@JsonClass(generateAdapter = true)
 data class Query(val query_string: Query_string?,
                  val bool: Bool?) {
     companion object {
@@ -45,9 +48,11 @@ data class Query(val query_string: Query_string?,
     }
 }
 
+@JsonClass(generateAdapter = true)
 data class Query_string(val query: String,
                         val default_operator: String = "AND")
 
+@JsonClass(generateAdapter = true)
 data class Bool(val must: List<Any>) {
     companion object {
         fun fromOptions(options: SearchOptions): Bool {
@@ -66,15 +71,21 @@ data class Bool(val must: List<Any>) {
     }
 }
 
+@JsonClass(generateAdapter = true)
 data class QueryString(val query_string: Query_string)
 
+@JsonClass(generateAdapter = true)
 data class FunctionScore(val function_score: Function_score = Function_score())
 
+@JsonClass(generateAdapter = true)
 data class Function_score(val query: QueryMatchAll = QueryMatchAll(),
-                          val random_score: Any = object {})
+                          val random_score: Map<String,String> = HashMap())
 
-data class QueryMatchAll(val match_all: Any = object {})
+@JsonClass(generateAdapter = true)
+data class QueryMatchAll(val match_all: Map<String,String> = HashMap())
 
+@JsonClass(generateAdapter = true)
 data class Term(val term: Map<String, String>)
 
+@JsonClass(generateAdapter = true)
 data class Order(var order: String = "asc")

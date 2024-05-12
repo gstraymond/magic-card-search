@@ -3,9 +3,11 @@ package fr.gstraymond.models.search.response
 import android.content.Context
 import android.os.Parcel
 import android.os.Parcelable
+import com.squareup.moshi.JsonClass
 import fr.gstraymond.tools.LanguageUtil
 import java.util.*
 
+@JsonClass(generateAdapter = true)
 class Card(val title: String,
            val frenchTitle: String?,
            val type: String,
