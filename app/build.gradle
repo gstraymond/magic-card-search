@@ -93,8 +93,8 @@ android {
 ext {
     glideVersion = '4.9.0'
     supportLibVersion = '28.0.0'
-    retrofitVersion = '2.1+'
-    retrofitLoggingVersion = '3.4.1'
+    retrofitVersion = '2.11.0'
+    retrofitLoggingVersion = '3.14.9'
     androidChartVersion = 'v3.0.3'
     floatingactionbuttonVersion = '1.6.+'
     fileChooserVersion = '1.+'
