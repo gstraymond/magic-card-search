@@ -1,8 +1,10 @@
 package fr.gstraymond.models
 
+import com.squareup.moshi.JsonClass
 import fr.gstraymond.biz.Formats
 import java.util.*
 
+@JsonClass(generateAdapter = true)
 data class Deck(val id: Int = 0,
                 val timestamp: Date,
                 val name: String,

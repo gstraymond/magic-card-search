@@ -30,7 +30,7 @@ public class MapperUtil<T> {
     }
 
     public T read(InputStream stream) {
-        long now = System.currentTimeMillis();
+        //long now = System.currentTimeMillis();
         try {
             T t = jsonAdapter.fromJson(Okio.buffer(Okio.source(stream)));
             //log.d("read %s took %sms", jsonAdapter, System.currentTimeMillis() - now);
@@ -43,7 +43,7 @@ public class MapperUtil<T> {
     }
 
     public T read(String string) {
-        long now = System.currentTimeMillis();
+        //long now = System.currentTimeMillis();
         try {
             T t = jsonAdapter.fromJson(string);
             //log.d("read %s took %sms", jsonAdapter, System.currentTimeMillis() - now);
@@ -58,7 +58,7 @@ public class MapperUtil<T> {
     public String asJsonString(T t) {
         if (t == null) return null;
 
-        long now = System.currentTimeMillis();
+        //long now = System.currentTimeMillis();
         try {
             String s = jsonAdapter.toJson(t);
             //log.d("to json %s took %sms", t.getClass(), System.currentTimeMillis() - now);
