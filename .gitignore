@@ -18,3 +18,4 @@ commons/commons.iml
 app/.keyPassword
 app/.storePassword
 browser-app/src/main/res/raw/
+app/release
