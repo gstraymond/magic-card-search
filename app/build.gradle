@@ -1,5 +1,5 @@
 buildscript {
-    ext.kotlin_version = '1.9.20'
+    ext.kotlin_version = '2.2.10'
 
     repositories {
         mavenCentral()
@@ -12,9 +12,11 @@ buildscript {
     }
 }
 
+plugins {
+    id 'com.google.devtools.ksp' version '2.3.4'
+}
+
 apply plugin: 'com.android.application'
-apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-kapt'
 //apply plugin: 'com.getkeepsafe.dexcount'
 
 repositories {
@@ -24,7 +26,7 @@ repositories {
 }
 
 android {
-    compileSdk 34
+    compileSdk = 34
 
     defaultConfig {
         applicationId "mtg.magic.search.deck.builder"
@@ -35,21 +37,19 @@ android {
     }
 
     buildFeatures {
+        resValues = true
         buildConfig = true
     }
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
-    }
-    kotlinOptions {
-        jvmTarget = "1.8"
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
     }
 
     signingConfigs {
         release {
-            storeFile file("/Users/guillaume/androidKeystore/mtgsearch.jks")
-            //storeFile file("/home/guillaume/androidKeystore/mtgsearch.jks")
+            //storeFile file("/Users/guillaume/androidKeystore/mtgsearch.jks")
+            storeFile file("/home/guillaume/androidKeystore/mtgsearch.jks")
             keyAlias "mtgsearch"
             storePassword file(".storePassword").text
             keyPassword file(".keyPassword").text
@@ -70,11 +70,12 @@ android {
             resValue "string", "app_name", "MTG Search"
         }
     }
-
     packagingOptions {
-        exclude 'META-INF/LICENSE'
-        exclude 'META-INF/NOTICE'
+        resources {
+            excludes += ['META-INF/LICENSE', 'META-INF/NOTICE']
+        }
     }
+
 
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
@@ -84,10 +85,10 @@ android {
     testOptions {
         unitTests.returnDefaultValues = true
     }
-    lintOptions {
+    namespace 'fr.gstraymond'
+    lint {
         disable 'MissingTranslation'
     }
-    namespace 'fr.gstraymond'
 }
 
 ext {
@@ -115,7 +116,7 @@ dependencies {
     implementation 'com.google.android.gms:play-services-mlkit-text-recognition:18.0.2'
     implementation 'com.google.mlkit:camera:16.0.0-beta3'
     implementation 'androidx.documentfile:documentfile:1.0.1'
-    kapt "com.squareup.moshi:moshi-kotlin-codegen:1.15.1"
+    ksp "com.squareup.moshi:moshi-kotlin-codegen:1.15.2"
     testImplementation 'junit:junit:4.12'
     testImplementation 'io.kotlintest:kotlintest:2.0.7'
 
