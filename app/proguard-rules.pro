@@ -3,6 +3,15 @@
 -keep class fr.gstraymond.models.** { *; }
 -keep class fr.gstraymond.network.ElasticSearchApi { *; }
 -keep class com.magic.card.search.commons.application.** { *; }
+-keep class com.google.mlkit.vision.text.** { *; }
+-keep class com.google.android.gms.internal.mlkit_vision_text.** { *; }
+-keep class com.google.mlkit.common.sdkinternal.** { *; }
+-keep class com.google.firebase.components.** { *; }
+-keep class com.google.android.gms.common.internal.safeparcel.SafeParcelable { *; }
+
+-keepclassmembers class com.google.mlkit.** {
+    public <init>(...);
+}
 
 -assumenosideeffects class android.util.Log  {
     public static int d(...);
@@ -21,9 +30,7 @@
 # Platform used when running on Java 8 VMs. Will not be used at runtime.
 -dontwarn retrofit2.Platform$Java8
 # Retain generic type information for use by reflection by converters and adapters.
--keepattributes Signature
-# Retain declared checked exceptions for use by a Proxy instance.
--keepattributes Exceptions
+-keepattributes Signature, EnclosingMethod, InnerClasses, AnnotationDefault
 
 # crashlytics
 -keepattributes SourceFile,LineNumberTable

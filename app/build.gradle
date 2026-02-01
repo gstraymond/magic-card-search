@@ -32,8 +32,8 @@ android {
         applicationId "mtg.magic.search.deck.builder"
         minSdkVersion 21
         targetSdkVersion 36
-        versionCode 100
-        versionName "4.3.2"
+        versionCode 101
+        versionName "4.3.3"
     }
 
     buildFeatures {
@@ -113,7 +113,7 @@ dependencies {
     implementation "com.squareup.okhttp3:okhttp:$retrofitLoggingVersion"
     implementation "com.github.PhilJay:MPAndroidChart:$androidChartVersion"
     implementation "com.github.clans:fab:$floatingactionbuttonVersion"
-    implementation 'com.google.android.gms:play-services-mlkit-text-recognition:18.0.2'
+    implementation 'com.google.android.gms:play-services-mlkit-text-recognition:19.0.1'
     implementation 'com.google.mlkit:camera:16.0.0-beta3'
     implementation 'androidx.documentfile:documentfile:1.0.1'
     ksp "com.squareup.moshi:moshi-kotlin-codegen:1.15.2"
