@@ -7,10 +7,10 @@ buildscript {
 apply plugin: 'com.android.library'
 
 android {
-    compileSdk 35
+    compileSdk 36
 
     defaultConfig {
-        minSdkVersion 15
+        minSdkVersion 14
     }
     buildTypes {
         release {
@@ -24,10 +24,10 @@ android {
         targetCompatibility JavaVersion.VERSION_11
     }
     lint {
-        targetSdk 34
+        targetSdk 36
     }
     testOptions {
-        targetSdk 34
+        targetSdk 36
     }
 }
 
