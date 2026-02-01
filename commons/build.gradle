@@ -7,10 +7,10 @@ buildscript {
 apply plugin: 'com.android.library'
 
 android {
-    compileSdk 34
+    compileSdk 35
 
     defaultConfig {
-        minSdkVersion 14
+        minSdkVersion 15
     }
     buildTypes {
         release {
