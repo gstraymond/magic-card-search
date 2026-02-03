@@ -6,6 +6,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:baselineAligned="false"
     android:orientation="vertical"
+    android:fitsSystemWindows="true"
     tools:context=".android.HistoryActivity">
 
     <com.google.android.material.appbar.AppBarLayout
