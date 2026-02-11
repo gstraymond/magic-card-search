@@ -24,5 +24,5 @@ class OcrGraphic(private val textBlock: Text.TextBlock,
     }
 
     @Deprecated("Deprecated in Java")
-    override fun getOpacity(): Int = 0
+    override fun getOpacity(): Int = PixelFormat.UNKNOWN
 }

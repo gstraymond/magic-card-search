@@ -84,7 +84,7 @@ class OcrCaptureActivity : CustomActivity(R.layout.ocr_capture), OcrDetectorProc
         cameraController.bindToLifecycle(this)
         previewView.controller = cameraController
     }
-
+    @androidx.annotation.OptIn(androidx.camera.core.ExperimentalGetImage::class)
     private fun analyze(imageProxy: ImageProxy) {
         val mediaImage = imageProxy.image
         if (mediaImage != null) {
@@ -115,6 +115,11 @@ class OcrCaptureActivity : CustomActivity(R.layout.ocr_capture), OcrDetectorProc
     private fun allPermissionsGranted() = REQUIRED_PERMISSIONS.all {
         ContextCompat.checkSelfPermission(baseContext, it) ==
                 PackageManager.PERMISSION_GRANTED
+    }
+
+    override fun onResume() {
+        super.onResume()
+        pause.set(false)
     }
 
     override fun onDestroy() {
@@ -152,13 +157,12 @@ class OcrCaptureActivity : CustomActivity(R.layout.ocr_capture), OcrDetectorProc
 
         intent.getStringExtra(DECK_ID)?.let { deckId ->
             runOnUiThread {
-                createScanDialog(deckId, card, values()[intent.getIntExtra(BOARD, 0)])
+                createScanDialog(deckId, card, entries[intent.getIntExtra(BOARD, 0)])
             }
         } ?: run {
             startActivity {
                 CardDetailActivity.getIntent(this@OcrCaptureActivity, card)
             }
-            finish()
         }
     }
 

@@ -21,8 +21,8 @@ apply plugin: 'com.android.application'
 
 repositories {
     mavenCentral()
-    maven { url "https://jitpack.io" }
-    maven { url 'https://guardian.github.io/maven/repo-releases/' }
+    maven { url = "https://jitpack.io" }
+    maven { url = 'https://guardian.github.io/maven/repo-releases/' }
 }
 
 android {
@@ -32,8 +32,8 @@ android {
         applicationId "mtg.magic.search.deck.builder"
         minSdkVersion 21
         targetSdkVersion 36
-        versionCode 102
-        versionName "4.3.4"
+        versionCode 103
+        versionName "4.3.5"
     }
 
     buildFeatures {
@@ -54,8 +54,8 @@ android {
             storePassword file(".storePassword").text
             keyPassword file(".keyPassword").text
 
-            v1SigningEnabled true
-            v2SigningEnabled true
+            v1SigningEnabled = true
+            v2SigningEnabled = true
         }
     }
 
@@ -69,7 +69,7 @@ android {
         release {
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-            signingConfig signingConfigs.release
+            signingConfig = signingConfigs.release
             resValue "string", "app_name", "MTG Search"
         }
     }
@@ -88,7 +88,7 @@ android {
     testOptions {
         unitTests.returnDefaultValues = true
     }
-    namespace 'fr.gstraymond'
+    namespace = 'fr.gstraymond'
     lint {
         disable 'MissingTranslation'
     }
